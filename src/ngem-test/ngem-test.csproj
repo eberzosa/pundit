@@ -45,8 +45,13 @@
   <ItemGroup>
     <Compile Include="PomTest.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
+    <Compile Include="VersionPatternTest.cs" />
   </ItemGroup>
   <ItemGroup>
+    <ProjectReference Include="..\ngem-core\ngem-core.csproj">
+      <Project>{BEEA1FD6-D6DB-44BC-A4C4-F42321A6796F}</Project>
+      <Name>ngem-core</Name>
+    </ProjectReference>
     <ProjectReference Include="..\ngem\ngem.csproj">
       <Project>{9296FDE6-2BE9-472B-9E82-FC023959CBA2}</Project>
       <Name>ngem</Name>

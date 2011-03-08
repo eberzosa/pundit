@@ -42,7 +42,7 @@
         <xs:element name="version" type="version"/>
         <xs:element name="author" type="xs:string"/>
         <xs:element name="description" type="xs:string"/>
-        <xs:element name="releaseNotes" type="xs:string"/>
+        <xs:element name="release-notes" type="xs:string"/>
         <xs:element name="dependencies" type="dependencies"/>
       </xs:sequence>
     </xs:complexType>

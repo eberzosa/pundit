@@ -1,13 +1,9 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Xml.Serialization;
+﻿using System.Xml.Serialization;
 
-namespace NGem.Model
+namespace NGem.Core.Model
 {
    [XmlRoot("package")]
-   public class Dependency
+   public class PackageDependency
    {
       [XmlAttribute("id")]
       public string PackageId { get; set; }
