@@ -8,7 +8,7 @@ namespace NGem.Core.Model
 {
    public class VersionPattern : IComparable<VersionPattern>
    {
-      private static readonly Regex ValidationRgx = new Regex("[0-9\\*]+(\\.[0-9\\*]+){1,3}");
+      private static readonly Regex ValidationRgx = new Regex("[0-9\\*]+(\\.[0-9\\*]+){0,3}");
       private readonly Version _v;
 
       public VersionPattern(string pattern)
@@ -20,7 +20,7 @@ namespace NGem.Core.Model
 
          int major = (sp.Length == 0 || sp[0] == "*") ? int.MaxValue : int.Parse(sp[0]);
          int minor = (sp.Length < 2 || sp[1] == "*") ? int.MaxValue : int.Parse(sp[1]);
-         int build = (sp.Length < 4 || sp[2] == "*") ? int.MaxValue : int.Parse(sp[2]);
+         int build = (sp.Length < 3 || sp[2] == "*") ? int.MaxValue : int.Parse(sp[2]);
          int revision = (sp.Length < 4 || sp[3] == "*") ? int.MaxValue : int.Parse(sp[3]);
 
          _v = new Version(major, minor, build, revision);
@@ -76,6 +76,12 @@ namespace NGem.Core.Model
       public override int GetHashCode()
       {
          return _v.GetHashCode();
+      }
+
+      public static bool AreCompatible(VersionPattern p1, VersionPattern p2)
+      {
+         return p1._v.Major == p2._v.Major &&
+                p1._v.Minor == p2._v.Minor;
       }
    }
 }
