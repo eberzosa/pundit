@@ -31,6 +31,9 @@
     <WarningLevel>4</WarningLevel>
   </PropertyGroup>
   <ItemGroup>
+    <Reference Include="ICSharpCode.SharpZipLib">
+      <HintPath>..\..\lib\ICSharpCode.SharpZipLib.dll</HintPath>
+    </Reference>
     <Reference Include="System" />
     <Reference Include="System.Core" />
     <Reference Include="System.ServiceModel" />
@@ -41,6 +44,10 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="Application\PackageReader.cs" />
+    <Compile Include="Application\PackageWriter.cs" />
+    <Compile Include="Model\DevPackage.cs" />
+    <Compile Include="Model\InvalidPackageException.cs" />
     <Compile Include="Model\PackageDependency.cs" />
     <Compile Include="Model\IRepository.cs" />
     <Compile Include="Model\Package.cs" />

@@ -7,6 +7,8 @@ namespace NGem.Core.Model
    public interface IRepository
    {
       [OperationContract]
-      IEnumerable<Package> SearchPackage(string nameSubstring);
+      IEnumerable<Package> SearchPackage(string nameSubstring, VersionPattern minVersion);
+
+
    }
 }
