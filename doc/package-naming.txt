@@ -1,0 +1,37 @@
+Package name must strictly follow the rules inspired by RPM:
+
+<package_id>-<version>-<build>.<architecture>.ngem
+
+Obviously there are limitation in the form of the subset of the characters allowed to use in the package_id and platform part of the name due to the limitations of the filesystem file names.
+
+Allowed characters:
+a-z, A-Z, 0-9, '-', '_'
+
+
+<package_id>
+The package name limited by "allowed characters"
+
+<version>
+Three-number version number in form of X.Y.Z
+
+<build>
+The build number, which is a contuniously increasing number through the lifecycle of the <package_id>
+
+<architecture>
+Specifies the package target architecture.
+There are a number of reserved identifiers and recommended ids you must use:
+
+noarch - the package does not target any architecture (used by default). Can be used to package resource data like images, video, etc.
+src - the package contains only source. 
+x86 - the binary is built for general 32-bit processor architecture
+x64 - the binary is built for general 64-bit processor architecture
+
+Microsoft .NET specific:
+
+net - the package is built for .NET of unspecified version (not recommended to use, may be removed in the next release)
+net10 - the package is built to use in .NET 1.0
+net11 - the package is built to use in .NET 1.1
+net20 - the package is built to use in .NET 2.0
+net30 - the package is built to use in .NET 3.0
+net35 - the package is built to use in .NET 3.5
+net40 - the package is built to use in .NET 4.0

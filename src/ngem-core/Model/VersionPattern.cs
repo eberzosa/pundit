@@ -8,7 +8,7 @@ namespace NGem.Core.Model
 {
    public class VersionPattern : IComparable<VersionPattern>
    {
-      private static readonly Regex ValidationRgx = new Regex("[0-9\\*]+(\\.[0-9\\*]+){0,3}");
+      private static readonly Regex ValidationRgx = new Regex("^[0-9\\*]+(\\.[0-9\\*]+){0,3}$");
       private readonly Version _v;
 
       public VersionPattern(string pattern)

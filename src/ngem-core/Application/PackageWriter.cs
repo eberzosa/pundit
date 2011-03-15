@@ -8,7 +8,7 @@ using NGem.Core.Model;
 
 namespace NGem.Core.Application
 {
-   public class PackageWriter
+   public class PackageWriter : IDisposable
    {
       private readonly string _rootDirectory;
       private readonly Package _packageInfo;
@@ -36,7 +36,29 @@ namespace NGem.Core.Application
 
       public void CreatePackage()
       {
-         ZipFile zipFile = ZipFile.Create(_outputStream);
+         using (ZipOutputStream zipStream = new ZipOutputStream(_outputStream))
+         {
+            zipStream.SetLevel(9); //maximum compression
+
+            WriteManifest(zipStream);
+         }
+      }
+
+      private void WriteManifest(ZipOutputStream zipStream)
+      {
+         ZipEntry entry = new ZipEntry("manifest.");
+
+         //zipStream.
+      }
+
+      private void WriteFingerprints()
+      {
+         
+      }
+
+      public void Dispose()
+      {
+         throw new NotImplementedException();
       }
    }
 }

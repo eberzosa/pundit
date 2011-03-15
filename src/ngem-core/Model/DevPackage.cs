@@ -8,15 +8,27 @@ namespace NGem.Core.Model
 {
    public enum PackageFileKind
    {
+      /// <summary>
+      /// Placed in project-root/lib
+      /// </summary>
       [XmlEnum("bin")]
       Binary,
 
-      [XmlEnum("src")]
-      SourceCode,
+      /// <summary>
+      /// Placed in project-root/include/package-id
+      /// </summary>
+      [XmlEnum("include")]
+      Include,
 
-      [XmlEnum("res")]
-      Resource,
+      /// <summary>
+      /// Placed in project-root/tools/package-id
+      /// </summary>
+      [XmlEnum("tools")]
+      Tools,
 
+      /// <summary>
+      /// placed in project-root/other/package-id
+      /// </summary>
       [XmlEnum("other")]
       Other
    }
@@ -36,34 +48,15 @@ namespace NGem.Core.Model
       [XmlAttribute("src")]
       public string Source { get; set; }
 
-      /// <summary>
-      /// Profile name (optional). When providing the library for different platforms
-      /// or runtimes, can identify specific profile the client can choose from.
-      /// Known profiles recommended to use when possible:
-      /// 
-      /// NET10
-      /// NET11
-      /// NET20
-      /// NET30
-      /// NET35
-      /// NET40
-      /// WINx86 - native windows x86 binary
-      /// WINx64 - native windows Intel x64 binary
-      /// 
-      /// </summary>
-      [XmlAttribute("profile")]
-      public string Profile { get; set; }
-
       public PackageFiles()
       {
          
       }
 
-      public PackageFiles(string source, PackageFileKind kind = PackageFileKind.Binary, string profile = null)
+      public PackageFiles(string source, PackageFileKind kind = PackageFileKind.Binary)
       {
          this.Source = source;
          this.FileKind = kind;
-         this.Profile = profile;
       }
    }
 

@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.IO;
 using System.Linq;
 using System.Text;
+using System.Text.RegularExpressions;
 using System.Xml;
 using System.Xml.Serialization;
 
@@ -12,10 +13,15 @@ namespace NGem.Core.Model
    [XmlInclude(typeof(DevPackage))]
    public class Package
    {
+      private static Regex _packageIdRgx = new Regex("^[0-9a-zA-Z\\-]+$");
+
       private List<PackageDependency> _dependencies = new List<PackageDependency>();
 
       [XmlElement("packageId")]
       public string PackageId { get; set; }
+
+      [XmlElement("platform")]
+      public string Platform { get; set; }
 
       [XmlElement("project-url")]
       public string ProjectUrl { get; set; }
@@ -75,6 +81,9 @@ namespace NGem.Core.Model
 
          if(string.IsNullOrEmpty(PackageId))
             ex.AddError("PackageId", "package id is required");
+
+         if(!_packageIdRgx.IsMatch(PackageId))
+            ex.AddError("PackageId", "package id is invalid, allowed characters: a-z, A-Z, 0-9, '-'");
 
          if(Version == null)
             ex.AddError("Version", "version is required");

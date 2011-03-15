@@ -22,14 +22,14 @@ namespace NGem.Test
       [Test]
       public void DevPackageSerializationTest()
       {
-         DevPackage dp = new DevPackage()
+         DevPackage dp = new DevPackage
                             {
-                               PackageId = "nunit.framework",
+                               PackageId = "nunit-framework",
                                Version = new Version("4.5.1.345"),
                                Author = "NUnit team"
                             };
 
-         dp.Files.Add(new PackageFiles("framework\\nunit.framework.*", PackageFileKind.Binary, "NET40"));
+         dp.Files.Add(new PackageFiles("framework\\nunit.framework.*", PackageFileKind.Binary));
 
          string s = dp.ToString();
 
