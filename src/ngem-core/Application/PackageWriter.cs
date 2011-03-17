@@ -38,16 +38,20 @@ namespace NGem.Core.Application
 
       public void WriteAll()
       {
-         
+         WriteManifest();
       }
 
       //private 
 
       private void WriteManifest()
       {
-         ZipEntry entry = new ZipEntry("manifest.");
+         ZipEntry entry = new ZipEntry(Package.DefaultPackageFileName);
 
-         //zipStream.
+         _zipStream.PutNextEntry(entry);
+
+         Package manifestPackage = new Package(_packageInfo);
+
+         manifestPackage.WriteTo(_zipStream);
       }
 
       private void WriteFingerprints()

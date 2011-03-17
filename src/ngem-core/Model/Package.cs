@@ -13,6 +13,8 @@ namespace NGem.Core.Model
    [XmlInclude(typeof(DevPackage))]
    public class Package : ICloneable
    {
+      public const string DefaultPackageFileName = "pdef.xml"; //package definition
+
       private static Regex _packageIdRgx = new Regex("^[0-9a-zA-Z\\-]+$");
 
       private List<PackageDependency> _dependencies = new List<PackageDependency>();

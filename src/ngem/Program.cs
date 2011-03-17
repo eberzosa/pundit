@@ -6,43 +6,37 @@ using System.Reflection;
 using System.Text;
 using NDesk.Options;
 using NGem;
+using NGem.Commands;
 using NGem.Core.Application;
+using NGem.Core.Model;
 
 namespace ngem
 {
-   class Program
+   static class Program
    {
+      private const ConsoleColor ErrorColor = ConsoleColor.Red;
+
       static int Main(string[] args)
       {
          PrintBanner();
 
-         if(args.Length == 0)
+         try
          {
-            PrintHelp();
+            ICommand cmd = CommandFactory.CreateCommand(args);
+
+            cmd.Execute();
          }
-         else
+         catch(Exception ex)
          {
-            string command = args[0];
-
-            if(command == "pack")
+            using(new ColorChange(ErrorColor))
             {
-               CreatePackage(args.Length > 1 ? args[1] : null);
-            }
-            else if(command == "template")
-            {
-               
-            }
-            else
-            {
-               using (new ColorChange(ConsoleColor.Red))
-               {
-                  Console.WriteLine("wrong command");
-               }
+               Console.WriteLine(ex.Message);
 
-               PrintHelp();
-
-               return 1;
+               if(ex is InvalidPackageException)
+                  Console.Write(ex);
             }
+
+            return 1;
          }
 
          return 0;
@@ -56,16 +50,6 @@ namespace ngem
       private static void PrintHelp()
       {
          Console.Write(Strings.Help, AppDomain.CurrentDomain.FriendlyName);
-      }
-
-      private static string ResolvePomPath(string argPath)
-      {
-         return null;
-      }
-
-      private static void CreatePackage(string packageFilePath)
-      {
-         //using(PackageWriter writer = new PackageWriter())
       }
    }
 }

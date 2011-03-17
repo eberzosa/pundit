@@ -32,7 +32,11 @@ namespace NGem.Core.Model
       {
          XmlSerializer xmls = new XmlSerializer(typeof(DevPackage));
 
-         return (DevPackage)xmls.Deserialize(inputStream);
+         DevPackage dp = (DevPackage)xmls.Deserialize(inputStream);
+
+         dp.Validate();
+
+         return dp;
       }
 
       public override void Validate()

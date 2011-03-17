@@ -48,6 +48,11 @@
   </ItemGroup>
   <ItemGroup>
     <Compile Include="ColorChange.cs" />
+    <Compile Include="CommandFactory.cs" />
+    <Compile Include="Commands\ICommand.cs" />
+    <Compile Include="Commands\PackCommand.cs" />
+    <Compile Include="Commands\PublishCommand.cs" />
+    <Compile Include="Commands\RefreshCommand.cs" />
     <Compile Include="Options.cs" />
     <Compile Include="Program.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />

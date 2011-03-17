@@ -28,5 +28,22 @@ namespace NGem.Core.Model
       {
          get { return _listOfErrorMessages.Count > 0; }
       }
+
+      public override string ToString()
+      {
+         StringBuilder b = new StringBuilder();
+
+         foreach(var kvp in _listOfErrorMessages)
+         {
+            if (b.Length > 0) b.AppendLine();
+
+            b.Append("property: ");
+            b.Append(kvp.Key);
+            b.Append(", error: ");
+            b.Append(kvp.Value);
+         }
+
+         return b.ToString();
+      }
    }
 }
