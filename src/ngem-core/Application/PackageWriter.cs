@@ -12,7 +12,8 @@ namespace NGem.Core.Application
    {
       private readonly string _rootDirectory;
       private readonly Package _packageInfo;
-      private readonly Stream _outputStream;
+      private readonly ZipOutputStream _zipStream;
+
 
       /// <summary>
       /// 
@@ -31,20 +32,18 @@ namespace NGem.Core.Application
 
          _rootDirectory = rootDirectory;
          _packageInfo = packageInfo;
-         _outputStream = outputStream;
+         _zipStream = new ZipOutputStream(outputStream);
+         _zipStream.SetLevel(9);
       }
 
-      public void CreatePackage()
+      public void WriteAll()
       {
-         using (ZipOutputStream zipStream = new ZipOutputStream(_outputStream))
-         {
-            zipStream.SetLevel(9); //maximum compression
-
-            WriteManifest(zipStream);
-         }
+         
       }
 
-      private void WriteManifest(ZipOutputStream zipStream)
+      //private 
+
+      private void WriteManifest()
       {
          ZipEntry entry = new ZipEntry("manifest.");
 
@@ -58,7 +57,8 @@ namespace NGem.Core.Application
 
       public void Dispose()
       {
-         throw new NotImplementedException();
+         _zipStream.Close();
+         _zipStream.Dispose();
       }
    }
 }

@@ -1,79 +1,38 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.IO;
 using System.Linq;
 using System.Text;
 using System.Xml.Serialization;
 
 namespace NGem.Core.Model
 {
-   public enum PackageFileKind
-   {
-      /// <summary>
-      /// Placed in project-root/lib
-      /// </summary>
-      [XmlEnum("bin")]
-      Binary,
-
-      /// <summary>
-      /// Placed in project-root/include/package-id
-      /// </summary>
-      [XmlEnum("include")]
-      Include,
-
-      /// <summary>
-      /// Placed in project-root/tools/package-id
-      /// </summary>
-      [XmlEnum("tools")]
-      Tools,
-
-      /// <summary>
-      /// placed in project-root/other/package-id
-      /// </summary>
-      [XmlEnum("other")]
-      Other
-   }
-
-   public class PackageFiles
-   {
-      /// <summary>
-      /// Well-known file type
-      /// </summary>
-      [XmlAttribute("kind")]
-      public PackageFileKind FileKind { get; set; }
-
-      /// <summary>
-      /// Source to the files, relative to the location of the package manifest file.
-      /// Can be relative or absolute. Can include file masks.
-      /// </summary>
-      [XmlAttribute("src")]
-      public string Source { get; set; }
-
-      public PackageFiles()
-      {
-         
-      }
-
-      public PackageFiles(string source, PackageFileKind kind = PackageFileKind.Binary)
-      {
-         this.Source = source;
-         this.FileKind = kind;
-      }
-   }
-
    /// <summary>
    /// Package definition existing only at the time of development
    /// </summary>
    [XmlRoot("package")]
    public class DevPackage : Package
    {
-      private List<PackageFiles> _files = new List<PackageFiles>();
+      private List<SourceFiles> _files = new List<SourceFiles>();
 
       [XmlArray("files")]
       [XmlArrayItem("file")]
-      public List<PackageFiles> Files
+      public List<SourceFiles> Files
       {
          get { return _files; }
-         set { _files = new List<PackageFiles>(value);}
+         set { _files = new List<SourceFiles>(value);}
+      }
+
+      public DevPackage()
+      {
+         
+      }
+
+      public static DevPackage FromStream(Stream inputStream)
+      {
+         XmlSerializer xmls = new XmlSerializer(typeof(DevPackage));
+
+         return (DevPackage)xmls.Deserialize(inputStream);
       }
 
       public override void Validate()
@@ -96,6 +55,17 @@ namespace NGem.Core.Model
 
          if (ex.HasErrors)
             throw ex;
+      }
+
+      public string GetFileName()
+      {
+         Validate();
+
+         return string.Format("{0}-{1}.{2}.{3}-{4}-{5}.pundit",
+            PackageId,
+            Version.Major, Version.Minor, Version.Build,
+            Version.Revision,
+            string.IsNullOrEmpty(Platform) ? "noarch" : Platform);
       }
    }
 }

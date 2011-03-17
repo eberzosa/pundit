@@ -22,12 +22,11 @@ namespace ngem
          }
          else
          {
-            int retcode = 0;
             string command = args[0];
 
             if(command == "pack")
             {
-               return CreatePackage(args.Length > 1 ? args[1] : null);
+               CreatePackage(args.Length > 1 ? args[1] : null);
             }
             else if(command == "template")
             {
@@ -59,18 +58,14 @@ namespace ngem
          Console.Write(Strings.Help, AppDomain.CurrentDomain.FriendlyName);
       }
 
-      private static string ResolvePath(string argPath)
+      private static string ResolvePomPath(string argPath)
       {
          return null;
       }
 
-      private static int CreatePackage(string packageFilePath)
+      private static void CreatePackage(string packageFilePath)
       {
-         //if(Path.IsPathRooted(packageFilePath))
-
          //using(PackageWriter writer = new PackageWriter())
-
-         return 0;
       }
    }
 }

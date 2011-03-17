@@ -11,7 +11,7 @@ namespace NGem.Core.Model
 {
    [XmlRoot("package")]
    [XmlInclude(typeof(DevPackage))]
-   public class Package
+   public class Package : ICloneable
    {
       private static Regex _packageIdRgx = new Regex("^[0-9a-zA-Z\\-]+$");
 
@@ -54,6 +54,24 @@ namespace NGem.Core.Model
       {
          get { return _dependencies; }
          set { _dependencies = new List<PackageDependency>(value); }
+      }
+
+      public Package()
+      {
+         
+      }
+
+      public Package(Package copy)
+      {
+         _dependencies = new List<PackageDependency>(copy._dependencies);
+         PackageId = copy.PackageId;
+         Platform = copy.Platform;
+         ProjectUrl = copy.ProjectUrl;
+         Version = copy.Version;
+         Author = copy.Author;
+         Description = copy.Description;
+         ReleaseNotes = copy.ReleaseNotes;
+         License = copy.License;
       }
 
       public virtual void WriteTo(Stream s)
@@ -103,5 +121,9 @@ namespace NGem.Core.Model
          }
       }
 
+      public object Clone()
+      {
+         return new Package(this);
+      }
    }
 }

@@ -29,7 +29,7 @@ namespace NGem.Test
                                Author = "NUnit team"
                             };
 
-         dp.Files.Add(new PackageFiles("framework\\nunit.framework.*", PackageFileKind.Binary));
+         dp.Files.Add(new SourceFiles("framework\\nunit.framework.*", PackageFileKind.Binary));
 
          string s = dp.ToString();
 
