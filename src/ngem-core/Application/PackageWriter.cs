@@ -41,8 +41,6 @@ namespace NGem.Core.Application
          WriteManifest();
       }
 
-      //private 
-
       private void WriteManifest()
       {
          ZipEntry entry = new ZipEntry(Package.DefaultPackageFileName);
@@ -52,6 +50,11 @@ namespace NGem.Core.Application
          Package manifestPackage = new Package(_packageInfo);
 
          manifestPackage.WriteTo(_zipStream);
+      }
+
+      private void WriteFiles()
+      {
+         _packageInfo.Dependencies
       }
 
       private void WriteFingerprints()

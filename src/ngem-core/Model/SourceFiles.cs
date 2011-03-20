@@ -18,12 +18,25 @@ namespace NGem.Core.Model
       [XmlAttribute("src")]
       public string Source { get; set; }
 
+      /// <summary>
+      /// Ignore directory structure of source files, copy all files into a single directory.
+      /// The default is <see langword="false"/>
+      /// </summary>
+      [XmlAttribute("flatten")]
+      public bool Flatten { get; set; }
+
+      /// <summary>
+      /// Copy empty directories. The default is <see langword="true"/>
+      /// </summary>
+      [XmlAttribute("includeemptydirs")]
+      public bool IncludeEmptyDirs { get; set; }
+
       public SourceFiles()
       {
-         
+         this.IncludeEmptyDirs = true;
       }
 
-      public SourceFiles(string source, PackageFileKind kind = PackageFileKind.Binary)
+      public SourceFiles(string source, PackageFileKind kind = PackageFileKind.Binary) : this()
       {
          this.Source = source;
          this.FileKind = kind;
