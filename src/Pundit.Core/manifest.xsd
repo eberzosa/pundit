@@ -1,0 +1,50 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<xs:schema id="manifest"
+    targetNamespace="http://tempuri.org/manifest.xsd"
+    elementFormDefault="qualified"
+    xmlns="http://tempuri.org/manifest.xsd"
+    xmlns:mstns="http://tempuri.org/manifest.xsd"
+    xmlns:xs="http://www.w3.org/2001/XMLSchema"
+>
+  <xs:simpleType name="versionPattern">
+    <xs:restriction base="xs:string">
+      <xs:pattern value="[0-9\*]+(\.[0-9\*]+){0,3}"/>
+    </xs:restriction>
+  </xs:simpleType>
+
+  <xs:simpleType name="version">
+    <xs:restriction base="xs:string">
+      <xs:pattern value="[0-9]+(\.[0-9]+){3}"/>
+    </xs:restriction>
+  </xs:simpleType>
+  
+  <xs:complexType name="packageDependency">
+      <xs:attribute name="id" type="xs:string"/>
+      <xs:attribute name="version" type="versionPattern"/>
+  </xs:complexType>
+
+  <xs:complexType name="runtimeDependency">
+    <xs:attribute name="name" type="xs:string"/>
+    <xs:attribute name="version" type="versionPattern"/>
+  </xs:complexType>
+
+  <xs:complexType name="dependencies">
+    <xs:sequence>
+      <xs:element name="package" type="packageDependency" maxOccurs="unbounded"/>
+      <xs:element name="runtime" type="runtimeDependency" maxOccurs="unbounded"/>
+    </xs:sequence>
+  </xs:complexType>
+
+  <xs:element name="package">
+    <xs:complexType>
+      <xs:sequence>
+        <xs:element name="packageId" type="xs:string"/>
+        <xs:element name="version" type="version"/>
+        <xs:element name="author" type="xs:string"/>
+        <xs:element name="description" type="xs:string"/>
+        <xs:element name="release-notes" type="xs:string"/>
+        <xs:element name="dependencies" type="dependencies"/>
+      </xs:sequence>
+    </xs:complexType>
+  </xs:element>
+</xs:schema>
