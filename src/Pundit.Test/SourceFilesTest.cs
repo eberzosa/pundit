@@ -14,12 +14,13 @@ namespace Pundit.Test
       [Test]
       public void SearchEmptyDirsTest()
       {
-         string cd = Path.Combine(Environment.CurrentDirectory, "..\\..\\..\\test");
+         string cd = new DirectoryInfo(Path.Combine(Environment.CurrentDirectory, "..\\..\\..\\..\\test")).FullName;
 
          SourceFiles sf = new SourceFiles("**/Folder1");
 
          string[] files, directories;
-         sf.Resolve(cd, out files, out directories);
+         string searchBase;
+         sf.Resolve(cd, out searchBase, out files, out directories);
       }
    }
 }

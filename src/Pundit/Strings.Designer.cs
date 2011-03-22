@@ -61,7 +61,7 @@ namespace Pundit.Console {
         }
         
         /// <summary>
-        ///   Looks up a localized string similar to Pundit v{0} - package dependency management system. http://Pundit.codeplex.com.
+        ///   Looks up a localized string similar to pundit v{0} - http://pundit.codeplex.com.
         /// </summary>
         internal static string Banner {
             get {
@@ -71,7 +71,6 @@ namespace Pundit.Console {
         
         /// <summary>
         ///   Looks up a localized string similar to Copyright (c) 2011 Ivan Gavryliuk.
-        ///This is FREE software. See the source for copying conditions. There is NO WARRANTY, not even for MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.
         ///
         ///syntax: {0} &lt;command&gt; [options]
         ///

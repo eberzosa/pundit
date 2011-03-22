@@ -4,7 +4,6 @@
   <project-url>http://ngem.codeplex.com</project-url>
   <version>1.0.0.123</version>
   <files>
-    <file include="**/*.dll" flatten="false"/>
-    <file include="**/*.xml" flatten="true" kind="include"/>
+    <file basedir="src" include="**/*.cs" kind="other"/>
   </files>
 </package>

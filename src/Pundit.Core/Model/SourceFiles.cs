@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using System.IO;
 using System.Linq;
+using System.Threading;
 using System.Xml.Serialization;
 using NAnt.Core;
 using Pundit.Core.Utils;
@@ -34,6 +35,20 @@ namespace Pundit.Core.Model
       public bool Flatten { get; set; }
 
       /// <summary>
+      /// Base directory of the source files to be copied. The default is null which 
+      /// means destination folder will replicate directory structure from the
+      /// beginning of the project file.
+      /// </summary>
+      [XmlAttribute("basedir")]
+      public string BaseDirectory { get; set; }
+
+      /// <summary>
+      /// Target directory to copy the source files to. By default they will be copied to root.
+      /// </summary>
+      [XmlAttribute("targetdir")]
+      public string TargetDirectory { get; set; }
+
+      /// <summary>
       /// Copy empty directories. The default is <see langword="true"/>
       /// </summary>
       [XmlAttribute("includeemptydirs")]
@@ -57,12 +72,22 @@ namespace Pundit.Core.Model
                    : array.Split(new[] {';'}, StringSplitOptions.RemoveEmptyEntries);
       }
 
-      public void Resolve(string baseDir, out string[] files, out string[] directories)
+      public void Resolve(string baseDir, out string searchBase, out string[] files, out string[] directories)
       {
          if(!Directory.Exists(baseDir))
             throw new DirectoryNotFoundException("directory [" + baseDir + "] not found");
 
          baseDir = new DirectoryInfo(baseDir).FullName;
+
+         if (!string.IsNullOrEmpty(BaseDirectory))
+            baseDir = new DirectoryInfo(Path.Combine(baseDir, BaseDirectory)).FullName;
+
+         if(!Directory.Exists(baseDir))
+            throw new DirectoryNotFoundException("search base directory [" + baseDir + "] not found");
+
+         Console.WriteLine("searching from " + baseDir);
+
+         searchBase = baseDir;
 
          //using NAnt.Core for now, will continue working on FileSet later
          DirectoryScanner scanner = new DirectoryScanner(false);
@@ -86,14 +111,15 @@ namespace Pundit.Core.Model
          {
             path = path.Substring(baseDir.Length);
 
-            if (path.StartsWith("" + Path.DirectorySeparatorChar)) path = path.Substring(1);
-
-            path = path.Replace(Path.DirectorySeparatorChar, '/');
+            path = PathUtils.GetUnixPath(path);
          }
          else
          {
             path = new FileInfo(path).Name;
          }
+
+         if (!string.IsNullOrEmpty(TargetDirectory))
+            path = TargetDirectory + "/" + path;
 
          switch(FileKind)
          {

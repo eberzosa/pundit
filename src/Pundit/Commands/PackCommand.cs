@@ -3,6 +3,7 @@ using System.IO;
 using NDesk.Options;
 using Pundit.Core.Application;
 using Pundit.Core.Model;
+using Pundit.Core.Utils;
 
 namespace Pundit.Console.Commands
 {
@@ -91,13 +92,22 @@ namespace Pundit.Console.Commands
 
          System.Console.WriteLine("creating package at [" + destinationFile + "]");
 
+         long bytesWritten;
+
          using (Stream writeStream = File.Create(destinationFile))
          {
             using (PackageWriter pw = new PackageWriter(solutionRoot, devPack, writeStream))
             {
-               pw.WriteAll();
+               bytesWritten = pw.WriteAll();
             }
          }
+
+         long packageSize = new FileInfo(destinationFile).Length;
+
+         System.Console.WriteLine("Packed {0} to {1} (ratio: {2:D2}%)",
+            PathUtils.FileSizeToString(bytesWritten),
+            PathUtils.FileSizeToString(packageSize),
+            packageSize * 100 / bytesWritten);
       }
    }
 }

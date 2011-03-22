@@ -15,6 +15,7 @@ namespace Pundit.Core.Application
       private readonly DevPackage _packageInfo;
       private readonly ZipOutputStream _zipStream;
       private readonly Dictionary<string, bool> _packedFiles = new Dictionary<string, bool>();
+      private long _bytesWritten;
 
       /// <summary>
       /// 
@@ -39,11 +40,15 @@ namespace Pundit.Core.Application
          _zipStream.SetLevel(9);
       }
 
-      public void WriteAll()
+      public long WriteAll()
       {
          WriteManifest();
 
+         _bytesWritten += _zipStream.Length;
+
          WriteFiles();
+
+         return _bytesWritten;
       }
 
       private void WriteManifest()
@@ -62,12 +67,13 @@ namespace Pundit.Core.Application
          foreach(SourceFiles files in _packageInfo.Files)
          {
             string[] archiveFiles, archiveDirectories;
+            string searchBase;
 
-            files.Resolve(_rootDirectory, out archiveFiles, out archiveDirectories);
+            files.Resolve(_rootDirectory, out searchBase, out archiveFiles, out archiveDirectories);
 
             foreach(string afile in archiveFiles)
             {
-               WriteFile(files, _rootDirectory, afile);
+               WriteFile(files, searchBase, afile);
             }
          }
       }
@@ -81,6 +87,7 @@ namespace Pundit.Core.Application
             _packedFiles[unixPath] = true;
 
             long originalSize = new FileInfo(filePath).Length;
+            _bytesWritten += originalSize;
 
             Console.Write("packaging {0} ({1})... ", unixPath,
                           String.Format(new FileSizeFormatProvider(), "{0:fs}", originalSize));
@@ -95,11 +102,6 @@ namespace Pundit.Core.Application
 
             Console.WriteLine("ok.");
          }
-      }
-
-      private void WriteFingerprints()
-      {
-         
       }
 
       public void Dispose()

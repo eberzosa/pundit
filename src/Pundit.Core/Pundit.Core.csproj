@@ -60,11 +60,15 @@
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="Utils\FileSet.cs" />
     <Compile Include="Utils\FileSizeFormatProvider.cs" />
+    <Compile Include="Utils\PathUtils.cs" />
   </ItemGroup>
   <ItemGroup>
     <None Include="manifest.xsd">
       <SubType>Designer</SubType>
     </None>
+  </ItemGroup>
+  <ItemGroup>
+    <Folder Include="Application\Repository\" />
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
   <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 
