@@ -24,6 +24,9 @@ namespace NGem
             case "pack":
                cmd = new PackCommand(parameters);
                break;
+            case "publish":
+               cmd = new PublishCommand(parameters);
+               break;
             default:
                cmd = null;
                break;

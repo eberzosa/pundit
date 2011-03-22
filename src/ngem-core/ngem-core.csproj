@@ -44,6 +44,8 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="3rdparty\DirectoryScanner.cs" />
+    <Compile Include="3rdparty\Options.cs" />
     <Compile Include="Application\PackageReader.cs" />
     <Compile Include="Application\PackageWriter.cs" />
     <Compile Include="Model\DevPackage.cs" />
@@ -57,6 +59,7 @@
     <Compile Include="Model\VersionPattern.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="Utils\FileSet.cs" />
+    <Compile Include="Utils\FileSizeFormatProvider.cs" />
   </ItemGroup>
   <ItemGroup>
     <None Include="manifest.xsd">

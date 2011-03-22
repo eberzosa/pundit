@@ -45,6 +45,8 @@
   <ItemGroup>
     <Compile Include="PomTest.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
+    <Compile Include="SourceFilesTest.cs" />
+    <Compile Include="ThirdPartyTryOutTest.cs" />
     <Compile Include="VersionPatternTest.cs" />
   </ItemGroup>
   <ItemGroup>

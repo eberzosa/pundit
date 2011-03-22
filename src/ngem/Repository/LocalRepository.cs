@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.IO;
 using System.Linq;
 using System.Text;
 using NGem.Core.Model;
@@ -16,6 +17,21 @@ namespace NGem.Repository
       }
 
       public IEnumerable<Package> SearchPackage(string nameSubstring, VersionPattern minVersion)
+      {
+         throw new NotImplementedException();
+      }
+
+      public void Publish(Stream packageStream)
+      {
+         throw new NotImplementedException();
+      }
+
+      public IEnumerable<Package> Search(string nameSubstring, VersionPattern minVersion)
+      {
+         throw new NotImplementedException();
+      }
+
+      public Stream Download(string packageId, Version packageVersion)
       {
          throw new NotImplementedException();
       }

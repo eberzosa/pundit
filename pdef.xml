@@ -1,0 +1,10 @@
+<package>
+  <packageId>ngem-core-debug</packageId>
+  <platform>net40</platform>
+  <project-url>http://ngem.codeplex.com</project-url>
+  <version>1.0.0.123</version>
+  <files>
+    <file include="**/*.dll" flatten="true"/>
+    <file include="**/*.xml" flatten="true" kind="include"/>
+  </files>
+</package>

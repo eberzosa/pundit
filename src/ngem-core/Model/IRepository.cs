@@ -1,4 +1,6 @@
-﻿using System.Collections.Generic;
+﻿using System;
+using System.Collections.Generic;
+using System.IO;
 using System.ServiceModel;
 
 namespace NGem.Core.Model
@@ -7,8 +9,12 @@ namespace NGem.Core.Model
    public interface IRepository
    {
       [OperationContract]
-      IEnumerable<Package> SearchPackage(string nameSubstring, VersionPattern minVersion);
+      void Publish(Stream packageStream);
 
+      [OperationContract]
+      IEnumerable<Package> Search(string nameSubstring, VersionPattern minVersion);
 
+      [OperationContract]
+      Stream Download(string packageId, Version packageVersion);
    }
 }

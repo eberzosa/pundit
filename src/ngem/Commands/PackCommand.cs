@@ -84,6 +84,14 @@ namespace NGem.Commands
 
          string destinationFile = Path.Combine(destinationFolder, devPack.GetFileName());
 
+         if(File.Exists(destinationFile))
+         {
+            using(new ColorChange(ConsoleColor.Yellow))
+            {
+               Console.WriteLine("package exists at [{0}], deleting", destinationFile);
+            }
+         }
+
          Console.WriteLine("creating package at [" + destinationFile + "]");
 
          using (Stream writeStream = File.Create(destinationFile))

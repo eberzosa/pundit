@@ -7,6 +7,11 @@ namespace NGem.Commands
 {
    class PublishCommand : ICommand
    {
+      public PublishCommand(string[] args)
+      {
+         
+      }
+
       public void Execute()
       {
          throw new NotImplementedException();

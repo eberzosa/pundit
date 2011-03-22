@@ -5,15 +5,16 @@ using System.Linq;
 using System.Text;
 using ICSharpCode.SharpZipLib.Zip;
 using NGem.Core.Model;
+using NGem.Core.Utils;
 
 namespace NGem.Core.Application
 {
    public class PackageWriter : IDisposable
    {
       private readonly string _rootDirectory;
-      private readonly Package _packageInfo;
+      private readonly DevPackage _packageInfo;
       private readonly ZipOutputStream _zipStream;
-
+      private readonly Dictionary<string, bool> _packedFiles = new Dictionary<string, bool>();
 
       /// <summary>
       /// 
@@ -28,6 +29,8 @@ namespace NGem.Core.Application
          if (outputStream == null) throw new ArgumentNullException("outputStream");
          if (!outputStream.CanWrite) throw new ArgumentException("stream is not writable", "outputStream");
 
+         rootDirectory = new DirectoryInfo(rootDirectory).FullName;
+
          packageInfo.Validate();
 
          _rootDirectory = rootDirectory;
@@ -39,6 +42,8 @@ namespace NGem.Core.Application
       public void WriteAll()
       {
          WriteManifest();
+
+         WriteFiles();
       }
 
       private void WriteManifest()
@@ -54,7 +59,42 @@ namespace NGem.Core.Application
 
       private void WriteFiles()
       {
-         _packageInfo.Dependencies
+         foreach(SourceFiles files in _packageInfo.Files)
+         {
+            string[] archiveFiles, archiveDirectories;
+
+            files.Resolve(_rootDirectory, out archiveFiles, out archiveDirectories);
+
+            foreach(string afile in archiveFiles)
+            {
+               WriteFile(files, _rootDirectory, afile);
+            }
+         }
+      }
+
+      private void WriteFile(SourceFiles info, string baseDir, string filePath)
+      {
+         string unixPath = info.GetRelativeUnixPath(baseDir, filePath);
+
+         if (!_packedFiles.ContainsKey(unixPath))
+         {
+            _packedFiles[unixPath] = true;
+
+            long originalSize = new FileInfo(filePath).Length;
+
+            Console.Write("packaging {0} ({1})... ", unixPath,
+                          String.Format(new FileSizeFormatProvider(), "{0:fs}", originalSize));
+
+            ZipEntry entry = new ZipEntry(unixPath);
+            _zipStream.PutNextEntry(entry);
+
+            using (Stream fileStream = File.OpenRead(filePath))
+            {
+               fileStream.CopyTo(_zipStream);
+            }
+
+            Console.WriteLine("ok.");
+         }
       }
 
       private void WriteFingerprints()
