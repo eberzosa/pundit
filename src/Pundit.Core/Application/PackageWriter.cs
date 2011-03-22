@@ -75,6 +75,18 @@ namespace Pundit.Core.Application
             {
                WriteFile(files, searchBase, afile);
             }
+
+            if(files.IncludeEmptyDirs)
+            {
+               foreach(string adir in archiveDirectories)
+               {
+                  string dirPath = files.GetRelativeUnixPath(searchBase, adir);
+                  dirPath += "/";
+
+                  ZipEntry ed = new ZipEntry(dirPath);
+                  _zipStream.PutNextEntry(ed);
+               }
+            }
          }
       }
 

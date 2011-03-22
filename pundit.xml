@@ -5,5 +5,6 @@
   <version>1.0.0.123</version>
   <files>
     <file basedir="src" include="**/*.cs" kind="other"/>
+    <file include="test/**" kind="other" targetdir="empties"/>
   </files>
 </package>
