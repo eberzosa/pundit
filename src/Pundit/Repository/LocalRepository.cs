@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.IO;
+using Pundit.Core.Model;
 
 namespace Pundit.Console.Repository
 {

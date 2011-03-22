@@ -1,6 +1,8 @@
 ﻿using System;
 using System.IO;
 using NDesk.Options;
+using Pundit.Core.Application;
+using Pundit.Core.Model;
 
 namespace Pundit.Console.Commands
 {

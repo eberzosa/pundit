@@ -2,6 +2,7 @@
 using System.Reflection;
 using Pundit;
 using Pundit.Console.Commands;
+using Pundit.Core.Model;
 
 namespace Pundit.Console
 {
