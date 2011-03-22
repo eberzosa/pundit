@@ -4,9 +4,9 @@ using System.IO;
 using System.Linq;
 using System.Xml.Serialization;
 using NAnt.Core;
-using NGem.Core.Utils;
+using Pundit.Core.Utils;
 
-namespace NGem.Core.Model
+namespace Pundit.Core.Model
 {
    public class SourceFiles
    {

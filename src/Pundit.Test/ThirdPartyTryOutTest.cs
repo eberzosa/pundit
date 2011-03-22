@@ -7,7 +7,7 @@ using System.Text;
 using NAnt.Core;
 using NUnit.Framework;
 
-namespace NGem.Test
+namespace Pundit.Test
 {
    [TestFixture]
    public class ThirdPartyTryOutTest

@@ -8,8 +8,8 @@
     <ProjectGuid>{BEEA1FD6-D6DB-44BC-A4C4-F42321A6796F}</ProjectGuid>
     <OutputType>Library</OutputType>
     <AppDesignerFolder>Properties</AppDesignerFolder>
-    <RootNamespace>NGem.Core</RootNamespace>
-    <AssemblyName>ngem-core</AssemblyName>
+    <RootNamespace>Pundit.Core</RootNamespace>
+    <AssemblyName>Pundit.Core</AssemblyName>
     <TargetFrameworkVersion>v4.0</TargetFrameworkVersion>
     <FileAlignment>512</FileAlignment>
   </PropertyGroup>

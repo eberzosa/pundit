@@ -1,9 +1,6 @@
 ﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
 
-namespace NGem
+namespace Pundit.Console
 {
    class ColorChange : IDisposable
    {
@@ -11,13 +8,13 @@ namespace NGem
 
       public ColorChange(ConsoleColor color)
       {
-         _oldcolor = Console.ForegroundColor;
-         Console.ForegroundColor = color;
+         _oldcolor = System.Console.ForegroundColor;
+         System.Console.ForegroundColor = color;
       }
 
       public void Dispose()
       {
-         Console.ForegroundColor = _oldcolor;
+         System.Console.ForegroundColor = _oldcolor;
       }
    }
 }

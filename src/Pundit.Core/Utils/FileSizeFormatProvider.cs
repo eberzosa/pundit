@@ -3,7 +3,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 
-namespace NGem.Core.Utils
+namespace Pundit.Core.Utils
 {
    public class FileSizeFormatProvider : IFormatProvider, ICustomFormatter
    {

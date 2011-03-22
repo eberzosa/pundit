@@ -1,6 +1,6 @@
 ﻿using System.Xml.Serialization;
 
-namespace NGem.Core.Model
+namespace Pundit.Core.Model
 {
    public enum PackageFileKind
    {

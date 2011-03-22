@@ -7,7 +7,7 @@ using System.Text.RegularExpressions;
 using System.Xml;
 using System.Xml.Serialization;
 
-namespace NGem.Core.Model
+namespace Pundit.Core.Model
 {
    [XmlRoot("package")]
    [XmlInclude(typeof(DevPackage))]

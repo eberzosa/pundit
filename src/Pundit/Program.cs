@@ -1,16 +1,9 @@
 ﻿using System;
-using System.Collections.Generic;
-using System.IO;
-using System.Linq;
 using System.Reflection;
-using System.Text;
-using NDesk.Options;
-using NGem;
-using NGem.Commands;
-using NGem.Core.Application;
-using NGem.Core.Model;
+using Pundit;
+using Pundit.Console.Commands;
 
-namespace ngem
+namespace Pundit.Console
 {
    static class Program
    {
@@ -30,10 +23,10 @@ namespace ngem
          {
             using(new ColorChange(ErrorColor))
             {
-               Console.WriteLine(ex.Message);
+               System.Console.WriteLine(ex.Message);
 
                if(ex is InvalidPackageException)
-                  Console.Write(ex);
+                  System.Console.Write(ex);
             }
 
             return 1;
@@ -44,12 +37,12 @@ namespace ngem
 
       private static void PrintBanner()
       {
-         Console.WriteLine(Strings.Banner, Assembly.GetExecutingAssembly().GetName().Version);
+         System.Console.WriteLine(Strings.Banner, Assembly.GetExecutingAssembly().GetName().Version);
       }
 
       private static void PrintHelp()
       {
-         Console.Write(Strings.Help, AppDomain.CurrentDomain.FriendlyName);
+         System.Console.Write(Strings.Help, AppDomain.CurrentDomain.FriendlyName);
       }
    }
 }

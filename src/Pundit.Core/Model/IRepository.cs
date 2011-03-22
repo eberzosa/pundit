@@ -3,7 +3,7 @@ using System.Collections.Generic;
 using System.IO;
 using System.ServiceModel;
 
-namespace NGem.Core.Model
+namespace Pundit.Core.Model
 {
    [ServiceContract]
    public interface IRepository

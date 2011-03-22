@@ -4,7 +4,7 @@ using System.Linq;
 using System.Text;
 using System.Xml.Serialization;
 
-namespace NGem.Core.Model
+namespace Pundit.Core.Model
 {
    [XmlRoot("package")]
    public class ManifestPackage : Package

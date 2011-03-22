@@ -8,7 +8,7 @@
 // </auto-generated>
 //------------------------------------------------------------------------------
 
-namespace NGem {
+namespace Pundit.Console {
     using System;
     
     
@@ -39,7 +39,7 @@ namespace NGem {
         internal static global::System.Resources.ResourceManager ResourceManager {
             get {
                 if (object.ReferenceEquals(resourceMan, null)) {
-                    global::System.Resources.ResourceManager temp = new global::System.Resources.ResourceManager("NGem.Strings", typeof(Strings).Assembly);
+                    global::System.Resources.ResourceManager temp = new global::System.Resources.ResourceManager("Pundit.Console.Strings", typeof(Strings).Assembly);
                     resourceMan = temp;
                 }
                 return resourceMan;
@@ -61,7 +61,7 @@ namespace NGem {
         }
         
         /// <summary>
-        ///   Looks up a localized string similar to NGem v{0} - package dependency management system. http://ngem.codeplex.com.
+        ///   Looks up a localized string similar to Pundit v{0} - package dependency management system. http://Pundit.codeplex.com.
         /// </summary>
         internal static string Banner {
             get {
@@ -76,7 +76,7 @@ namespace NGem {
         ///syntax: {0} &lt;command&gt; [options]
         ///
         ///Commands:
-        ///pack [&lt;ngem package definition&gt;] - produces new package based on the package definition file. If the difinition file is not passed {0} will use default file in the current folder if there is one..
+        ///pack [&lt;Pundit package definition&gt;] - produces new package based on the package definition file. If the difinition file is not passed {0} will use default file in the current folder if there is one..
         /// </summary>
         internal static string Help {
             get {

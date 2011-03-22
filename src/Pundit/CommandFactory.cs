@@ -1,10 +1,7 @@
 ﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using NGem.Commands;
+using Pundit.Console.Commands;
 
-namespace NGem
+namespace Pundit.Console
 {
    class CommandFactory
    {

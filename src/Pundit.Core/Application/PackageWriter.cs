@@ -4,10 +4,10 @@ using System.IO;
 using System.Linq;
 using System.Text;
 using ICSharpCode.SharpZipLib.Zip;
-using NGem.Core.Model;
-using NGem.Core.Utils;
+using Pundit.Core.Model;
+using Pundit.Core.Utils;
 
-namespace NGem.Core.Application
+namespace Pundit.Core.Application
 {
    public class PackageWriter : IDisposable
    {

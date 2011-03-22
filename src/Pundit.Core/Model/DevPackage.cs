@@ -5,7 +5,7 @@ using System.Linq;
 using System.Text;
 using System.Xml.Serialization;
 
-namespace NGem.Core.Model
+namespace Pundit.Core.Model
 {
    /// <summary>
    /// Package definition existing only at the time of development

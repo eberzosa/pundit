@@ -4,7 +4,7 @@ using System.IO;
 using System.Linq;
 using System.Text;
 
-namespace NGem.Core.Application
+namespace Pundit.Core.Application
 {
    public class PackageReader
    {

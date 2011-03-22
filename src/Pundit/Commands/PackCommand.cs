@@ -1,13 +1,8 @@
 ﻿using System;
-using System.Collections.Generic;
 using System.IO;
-using System.Linq;
-using System.Text;
 using NDesk.Options;
-using NGem.Core.Application;
-using NGem.Core.Model;
 
-namespace NGem.Commands
+namespace Pundit.Console.Commands
 {
    public class PackCommand : ICommand
    {
@@ -72,9 +67,9 @@ namespace NGem.Commands
 
          ResolveParams(out solutionRoot, out packagePath, out destinationFolder);
 
-         Console.WriteLine("package: " + packagePath);
-         Console.WriteLine("solution root: " + solutionRoot);
-         Console.WriteLine("output folder: " + destinationFolder);
+         System.Console.WriteLine("package: " + packagePath);
+         System.Console.WriteLine("solution root: " + solutionRoot);
+         System.Console.WriteLine("output folder: " + destinationFolder);
 
          DevPackage devPack;
          using(Stream devPackStream = File.OpenRead(packagePath))
@@ -88,11 +83,11 @@ namespace NGem.Commands
          {
             using(new ColorChange(ConsoleColor.Yellow))
             {
-               Console.WriteLine("package exists at [{0}], deleting", destinationFile);
+               System.Console.WriteLine("package exists at [{0}], deleting", destinationFile);
             }
          }
 
-         Console.WriteLine("creating package at [" + destinationFile + "]");
+         System.Console.WriteLine("creating package at [" + destinationFile + "]");
 
          using (Stream writeStream = File.Create(destinationFile))
          {

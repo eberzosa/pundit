@@ -118,7 +118,7 @@
     <value>System.Resources.ResXResourceWriter, System.Windows.Forms, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
   </resheader>
   <data name="Banner" xml:space="preserve">
-    <value>NGem v{0} - package dependency management system. http://ngem.codeplex.com</value>
+    <value>Pundit v{0} - package dependency management system. http://Pundit.codeplex.com</value>
   </data>
   <data name="Help" xml:space="preserve">
     <value>Copyright (c) 2011 Ivan Gavryliuk.
@@ -127,6 +127,6 @@ This is FREE software. See the source for copying conditions. There is NO WARRAN
 syntax: {0} &lt;command&gt; [options]
 
 Commands:
-pack [&lt;ngem package definition&gt;] - produces new package based on the package definition file. If the difinition file is not passed {0} will use default file in the current folder if there is one.</value>
+pack [&lt;Pundit package definition&gt;] - produces new package based on the package definition file. If the difinition file is not passed {0} will use default file in the current folder if there is one.</value>
   </data>
 </root>

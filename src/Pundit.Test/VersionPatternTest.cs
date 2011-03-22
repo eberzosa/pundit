@@ -2,10 +2,10 @@
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
-using NGem.Core.Model;
+using Pundit.Core.Model;
 using NUnit.Framework;
 
-namespace NGem.Test
+namespace Pundit.Test
 {
    [TestFixture]
    public class VersionPatternTest

@@ -8,8 +8,8 @@
     <ProjectGuid>{5BF2B578-7F5A-4604-B49A-DBDB53B7AA13}</ProjectGuid>
     <OutputType>Library</OutputType>
     <AppDesignerFolder>Properties</AppDesignerFolder>
-    <RootNamespace>NGem.Test</RootNamespace>
-    <AssemblyName>ngem-test</AssemblyName>
+    <RootNamespace>Pundit.Test</RootNamespace>
+    <AssemblyName>Pundit.Test</AssemblyName>
     <TargetFrameworkVersion>v4.0</TargetFrameworkVersion>
     <FileAlignment>512</FileAlignment>
   </PropertyGroup>
@@ -50,13 +50,13 @@
     <Compile Include="VersionPatternTest.cs" />
   </ItemGroup>
   <ItemGroup>
-    <ProjectReference Include="..\ngem-core\ngem-core.csproj">
+    <ProjectReference Include="..\Pundit.Core\Pundit.Core.csproj">
       <Project>{BEEA1FD6-D6DB-44BC-A4C4-F42321A6796F}</Project>
-      <Name>ngem-core</Name>
+      <Name>Pundit.Core</Name>
     </ProjectReference>
-    <ProjectReference Include="..\ngem\ngem.csproj">
+    <ProjectReference Include="..\Pundit\Pundit.Console.csproj">
       <Project>{9296FDE6-2BE9-472B-9E82-FC023959CBA2}</Project>
-      <Name>ngem</Name>
+      <Name>Pundit.Console</Name>
     </ProjectReference>
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />

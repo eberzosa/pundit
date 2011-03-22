@@ -1,8 +1,8 @@
 ﻿using System;
 using NUnit.Framework;
-using NGem.Core.Model;
+using Pundit.Core.Model;
 
-namespace NGem.Test
+namespace Pundit.Test
 {
    [TestFixture]
    public class PomTest

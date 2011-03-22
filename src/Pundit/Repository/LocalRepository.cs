@@ -1,11 +1,8 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.IO;
-using System.Linq;
-using System.Text;
-using NGem.Core.Model;
 
-namespace NGem.Repository
+namespace Pundit.Console.Repository
 {
    class LocalRepository : IRepository
    {

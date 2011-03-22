@@ -4,7 +4,7 @@ using System.Linq;
 using System.Text;
 using System.Text.RegularExpressions;
 
-namespace NGem.Core.Model
+namespace Pundit.Core.Model
 {
    public class VersionPattern : IComparable<VersionPattern>
    {
