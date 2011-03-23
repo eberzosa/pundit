@@ -1,5 +1,5 @@
 <package>
-  <packageId>ngem-core-debug</packageId>
+  <packageId>pundit-core</packageId>
   <platform>net40</platform>
   <project-url>http://ngem.codeplex.com</project-url>
   <version>1.0.0.123</version>
@@ -7,4 +7,8 @@
     <file basedir="src" include="**/*.cs" kind="other"/>
     <file include="test/**" kind="other" targetdir="empties"/>
   </files>
+  <dependencies>
+    <package id="ISharpCode-SharpZipLib" version="0.85.5"/>
+    <package id="nunit-framework" version="2.5.3"/>
+  </dependencies>
 </package>
