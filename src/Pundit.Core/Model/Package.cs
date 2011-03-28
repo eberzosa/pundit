@@ -14,6 +14,7 @@ namespace Pundit.Core.Model
    public class Package : ICloneable
    {
       public const string DefaultPackageFileName = "pundit.xml"; //package definition
+      public const string PackedExtension = ".pundit";
 
       private static Regex _packageIdRgx = new Regex("^[0-9a-zA-Z\\-]+$");
 
@@ -74,6 +75,17 @@ namespace Pundit.Core.Model
          Description = copy.Description;
          ReleaseNotes = copy.ReleaseNotes;
          License = copy.License;
+      }
+
+      public static Package FromStream(Stream inputStream)
+      {
+         XmlSerializer xmls = new XmlSerializer(typeof(Package));
+
+         Package dp = (Package)xmls.Deserialize(inputStream);
+
+         dp.Validate();
+
+         return dp;
       }
 
       public virtual void WriteTo(Stream s)

@@ -80,7 +80,7 @@ namespace Pundit.Console.Commands
             devPack = DevPackage.FromStream(devPackStream);
          }
 
-         string destinationFile = Path.Combine(destinationFolder, devPack.GetFileName());
+         string destinationFile = Path.Combine(destinationFolder, PackageUtils.GetFileName(devPack));
 
          if(File.Exists(destinationFile))
          {

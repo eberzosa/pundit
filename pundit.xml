@@ -8,7 +8,7 @@
     <file include="test/**" kind="other" targetdir="empties"/>
   </files>
   <dependencies>
-    <package id="ISharpCode-SharpZipLib" version="0.85.5"/>
     <package id="nunit-framework" version="2.5.3"/>
+    <package id="ICSharpCode-SharpZipLib" version="0.85"/>
   </dependencies>
 </package>

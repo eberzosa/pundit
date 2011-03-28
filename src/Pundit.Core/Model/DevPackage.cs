@@ -60,16 +60,5 @@ namespace Pundit.Core.Model
          if (ex.HasErrors)
             throw ex;
       }
-
-      public string GetFileName()
-      {
-         Validate();
-
-         return string.Format("{0}-{1}.{2}.{3}-{4}-{5}.pundit",
-            PackageId,
-            Version.Major, Version.Minor, Version.Build,
-            Version.Revision,
-            string.IsNullOrEmpty(Platform) ? "noarch" : Platform);
-      }
    }
 }

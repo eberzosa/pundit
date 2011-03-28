@@ -1,37 +1,80 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.IO;
+using System.Security.AccessControl;
+using Pundit.Core.Application.Repository;
 using Pundit.Core.Model;
 
 namespace Pundit.Console.Repository
 {
-   class LocalRepository : IRepository
+   class LocalRepository : FileRepository
    {
-      private readonly string _rootPath;
+      private const string LocalRepositoryRootEnv = "PUNDIT_ROOT";
+      private const string LocalRepositoryDirName = ".pundit";
+      private const string LocalRepositoryDataDirName = "repository";
+      private const string RepoXmlFileName = "repositories.xml";
 
-      public LocalRepository(string rootPath)
+      private static string _localRepoRoot;
+      private static readonly Dictionary<string, string> _registeredRepositories = new Dictionary<string, string>();
+
+      public LocalRepository() : base(ResolveRootPath())
       {
-         _rootPath = rootPath;
       }
 
-      public IEnumerable<Package> SearchPackage(string nameSubstring, VersionPattern minVersion)
+      private static string ResolveRootPath()
       {
-         throw new NotImplementedException();
+         string path = Environment.GetEnvironmentVariable(LocalRepositoryRootEnv);
+
+         if(!string.IsNullOrEmpty(path) && Directory.Exists(path))
+         {
+         }
+         else
+         {
+            path = Path.Combine(Environment.GetFolderPath(Environment.SpecialFolder.UserProfile), LocalRepositoryDirName);
+
+            if(!Directory.Exists(path))
+            {
+               DirectoryInfo dir1 = Directory.CreateDirectory(path);
+               dir1.Attributes |= (FileAttributes.System | FileAttributes.Hidden);
+            }
+         }
+
+         _localRepoRoot = path;
+
+         path = Path.Combine(path, LocalRepositoryDataDirName);
+
+         if (!Directory.Exists(path))
+         {
+            Directory.CreateDirectory(path);
+         }
+
+         return path;
       }
 
-      public void Publish(Stream packageStream)
+      public static Dictionary<string, string> RegisteredRepositories
       {
-         throw new NotImplementedException();
-      }
+         get
+         {
+            if (_localRepoRoot == null)
+               ResolveRootPath();
 
-      public IEnumerable<Package> Search(string nameSubstring, VersionPattern minVersion)
-      {
-         throw new NotImplementedException();
-      }
+            if(_registeredRepositories.Count == 0)
+            {
+               _registeredRepositories["local"] = Path.Combine(_localRepoRoot, LocalRepositoryDataDirName);
 
-      public Stream Download(string packageId, Version packageVersion)
-      {
-         throw new NotImplementedException();
+               string repoTxtPath = Path.Combine(_localRepoRoot, RepoXmlFileName);
+
+               if(File.Exists(repoTxtPath))
+               {
+                  foreach(RegisteredRepository rr in Core.Model.RegisteredRepositories.LoadFrom(repoTxtPath).Repositories)
+                  {
+                     _registeredRepositories[rr.Name] = rr.Uri;
+                  }
+               }
+            }
+
+            return _registeredRepositories;
+         }
       }
    }
 }
