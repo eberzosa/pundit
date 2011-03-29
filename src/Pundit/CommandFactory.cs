@@ -8,7 +8,7 @@ namespace Pundit.Console
       public static ICommand CreateCommand(string[] cmdline)
       {
          if(cmdline == null || cmdline.Length == 0)
-            throw new ArgumentException("command line is empty", "cmdline");
+            throw new ArgumentException("command line is empty");
 
          string command = cmdline[0];
          string[] parameters = new string[cmdline.Length - 1];

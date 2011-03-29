@@ -66,7 +66,7 @@ namespace Pundit.Console.Repository
 
                if(File.Exists(repoTxtPath))
                {
-                  foreach(RegisteredRepository rr in Core.Model.RegisteredRepositories.LoadFrom(repoTxtPath).Repositories)
+                  foreach(RegisteredRepository rr in Console.RegisteredRepositories.LoadFrom(repoTxtPath).Repositories)
                   {
                      _registeredRepositories[rr.Name] = rr.Uri;
                   }

@@ -1,5 +1,6 @@
 ﻿using System;
 using System.IO;
+using log4net;
 using NDesk.Options;
 using Pundit.Console.Repository;
 using Pundit.Core;
@@ -9,6 +10,7 @@ namespace Pundit.Console.Commands
 {
    class PublishCommand : ICommand
    {
+      private static readonly ILog Log = LogManager.GetLogger(typeof (PublishCommand));
       private readonly string[] _cmdline;
 
       public PublishCommand(string[] args)
@@ -67,11 +69,11 @@ namespace Pundit.Console.Commands
          if(!LocalRepository.RegisteredRepositories.ContainsKey(repoName))
             throw new ArgumentException("repository [" + repoName + "] is not registered");
 
-         System.Console.WriteLine("publishing package {0} to repository [{1}]", packagePath, repoName);
+         Log.Info(string.Format("publishing package {0} to repository [{1}]", packagePath, repoName));
 
          string uri = LocalRepository.RegisteredRepositories[repoName];
 
-         System.Console.WriteLine("repository URI: {0}", uri);
+         Log.Info(string.Format("repository URI: {0}", uri));
 
          IRepository repo = RepositoryFactory.CreateFromUri(uri);
 
@@ -80,7 +82,7 @@ namespace Pundit.Console.Commands
             repo.Publish(package);   
          }
 
-         System.Console.WriteLine("published");
+         Log.Info("published");
       }
    }
 }

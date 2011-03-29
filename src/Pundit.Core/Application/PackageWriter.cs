@@ -4,6 +4,7 @@ using System.IO;
 using System.Linq;
 using System.Text;
 using ICSharpCode.SharpZipLib.Zip;
+using log4net;
 using Pundit.Core.Model;
 using Pundit.Core.Utils;
 
@@ -11,6 +12,7 @@ namespace Pundit.Core.Application
 {
    public class PackageWriter : IDisposable
    {
+      private static readonly ILog Log = LogManager.GetLogger(typeof (PackageWriter));
       private readonly string _rootDirectory;
       private readonly DevPackage _packageInfo;
       private readonly ZipOutputStream _zipStream;
@@ -101,8 +103,8 @@ namespace Pundit.Core.Application
             long originalSize = new FileInfo(filePath).Length;
             _bytesWritten += originalSize;
 
-            Console.Write("packaging {0} ({1})... ", unixPath,
-                          String.Format(new FileSizeFormatProvider(), "{0:fs}", originalSize));
+            Log.Debug(string.Format("packaging {0} ({1})... ", unixPath,
+                          String.Format(new FileSizeFormatProvider(), "{0:fs}", originalSize)));
 
             ZipEntry entry = new ZipEntry(unixPath);
             _zipStream.PutNextEntry(entry);
@@ -111,8 +113,6 @@ namespace Pundit.Core.Application
             {
                fileStream.CopyTo(_zipStream);
             }
-
-            Console.WriteLine("ok.");
          }
       }
 

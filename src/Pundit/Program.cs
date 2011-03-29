@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Reflection;
+using log4net;
 using Pundit;
 using Pundit.Console.Commands;
 using Pundit.Core.Model;
@@ -8,10 +9,12 @@ namespace Pundit.Console
 {
    static class Program
    {
-      private const ConsoleColor ErrorColor = ConsoleColor.Red;
+      private static readonly ILog Log = LogManager.GetLogger(typeof (Program));
 
       static int Main(string[] args)
       {
+         log4net.Config.XmlConfigurator.Configure();
+
          PrintBanner();
 
          try
@@ -22,13 +25,10 @@ namespace Pundit.Console
          }
          catch(Exception ex)
          {
-            using(new ColorChange(ErrorColor))
-            {
-               System.Console.WriteLine(ex.Message);
+            Log.Fatal(ex.Message);
 
-               if(ex is InvalidPackageException)
-                  System.Console.Write(ex);
-            }
+            if(ex is InvalidPackageException)
+               Log.Fatal(ex);
 
             return 1;
          }
@@ -38,7 +38,7 @@ namespace Pundit.Console
 
       private static void PrintBanner()
       {
-         System.Console.WriteLine(Strings.Banner, Assembly.GetExecutingAssembly().GetName().Version);
+         Log.Info(string.Format(Strings.Banner, Assembly.GetExecutingAssembly().GetName().Version));
       }
 
       private static void PrintHelp()

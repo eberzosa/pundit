@@ -4,6 +4,7 @@ using System.IO;
 using System.Linq;
 using System.Threading;
 using System.Xml.Serialization;
+using log4net;
 using NAnt.Core;
 using Pundit.Core.Utils;
 
@@ -11,6 +12,8 @@ namespace Pundit.Core.Model
 {
    public class SourceFiles
    {
+      private static readonly ILog Log = LogManager.GetLogger(typeof (SourceFiles));
+
       /// <summary>
       /// Well-known file type
       /// </summary>
@@ -54,6 +57,16 @@ namespace Pundit.Core.Model
       [XmlAttribute("includeemptydirs")]
       public bool IncludeEmptyDirs { get; set; }
 
+      /// <summary>
+      /// Configuration name. Package can include duplicated file names specific to a requested configuration.
+      /// Source files without configuration are always installed.
+      /// Known configurations are:
+      /// - debug
+      /// - release
+      /// </summary>
+      [XmlAttribute("configuration")]
+      public string Configuration { get; set; }
+
       public SourceFiles()
       {
          this.IncludeEmptyDirs = true;
@@ -85,7 +98,7 @@ namespace Pundit.Core.Model
          if(!Directory.Exists(baseDir))
             throw new DirectoryNotFoundException("search base directory [" + baseDir + "] not found");
 
-         Console.WriteLine("searching from " + baseDir);
+         Log.Debug("searching from " + baseDir);
 
          searchBase = baseDir;
 
@@ -118,8 +131,19 @@ namespace Pundit.Core.Model
             path = new FileInfo(path).Name;
          }
 
-         if (!string.IsNullOrEmpty(TargetDirectory))
-            path = TargetDirectory + "/" + path;
+         switch (FileKind)
+         {
+            case PackageFileKind.Binary:
+               string configurationName = (string.IsNullOrEmpty(Configuration) || Configuration == "release")
+                                             ? "release"
+                                             : Configuration;
+               path = configurationName + "/" + path;
+               break;
+            default:
+               if (!string.IsNullOrEmpty(TargetDirectory))
+                  path = TargetDirectory + "/" + path;
+               break;
+         }
 
          switch(FileKind)
          {

@@ -1,11 +1,7 @@
-﻿using System;
-using System.Collections.Generic;
-using System.IO;
-using System.Linq;
-using System.Text;
+﻿using System.IO;
 using System.Xml.Serialization;
 
-namespace Pundit.Core.Model
+namespace Pundit.Console
 {
    public class RegisteredRepository
    {
@@ -14,6 +10,14 @@ namespace Pundit.Core.Model
 
       [XmlAttribute("uri")]
       public string Uri { get; set; }
+
+      /// <summary>
+      /// If true, repository will be used for publishing.
+      /// Configuration may have more than one repository with this flag set to true,
+      /// in which case publishing will be performed to every of them.
+      /// </summary>
+      [XmlAttribute("publish")]
+      public bool UseForPublishing { get; set; }
    }
 
    [XmlRoot("repositories")]

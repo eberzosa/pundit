@@ -1,5 +1,6 @@
 ﻿using System;
 using System.IO;
+using log4net;
 using NDesk.Options;
 using Pundit.Core.Application;
 using Pundit.Core.Model;
@@ -9,6 +10,7 @@ namespace Pundit.Console.Commands
 {
    public class PackCommand : ICommand
    {
+      private static readonly ILog Log = LogManager.GetLogger(typeof (PackCommand));
       private string[] _cmdline;
 
       public PackCommand(string[] parameters)
@@ -28,12 +30,12 @@ namespace Pundit.Console.Commands
          oset.Parse(_cmdline);
 
          //resolve package path
-         if (po != null)
+         if (pi != null)
          {
-            if (Path.IsPathRooted(po))
-               packagePath = po;
+            if (Path.IsPathRooted(pi))
+               packagePath = pi;
             else
-               packagePath = Path.Combine(Environment.CurrentDirectory, po);
+               packagePath = Path.Combine(Environment.CurrentDirectory, pi);
          }
          else
          {
@@ -70,9 +72,9 @@ namespace Pundit.Console.Commands
 
          ResolveParams(out solutionRoot, out packagePath, out destinationFolder);
 
-         System.Console.WriteLine("package: " + packagePath);
-         System.Console.WriteLine("solution root: " + solutionRoot);
-         System.Console.WriteLine("output folder: " + destinationFolder);
+         Log.Debug("package: " + packagePath);
+         Log.Debug("solution root: " + solutionRoot);
+         Log.Debug("output folder: " + destinationFolder);
 
          DevPackage devPack;
          using(Stream devPackStream = File.OpenRead(packagePath))
@@ -84,13 +86,10 @@ namespace Pundit.Console.Commands
 
          if(File.Exists(destinationFile))
          {
-            using(new ColorChange(ConsoleColor.Yellow))
-            {
-               System.Console.WriteLine("package exists at [{0}], deleting", destinationFile);
-            }
+            Log.Warn(string.Format("package exists at [{0}], deleting", destinationFile));
          }
 
-         System.Console.WriteLine("creating package at [" + destinationFile + "]");
+         Log.Info("creating package at [" + destinationFile + "]");
 
          long bytesWritten;
 
@@ -104,10 +103,10 @@ namespace Pundit.Console.Commands
 
          long packageSize = new FileInfo(destinationFile).Length;
 
-         System.Console.WriteLine("Packed {0} to {1} (ratio: {2:D2}%)",
+         Log.Info(string.Format("Packed {0} to {1} (ratio: {2:D2}%)",
             PathUtils.FileSizeToString(bytesWritten),
             PathUtils.FileSizeToString(packageSize),
-            packageSize * 100 / bytesWritten);
+            packageSize * 100 / bytesWritten));
       }
    }
 }
