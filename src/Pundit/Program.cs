@@ -30,6 +30,8 @@ namespace Pundit.Console
             if(ex is InvalidPackageException)
                Log.Fatal(ex);
 
+            Log.Fatal(ex.StackTrace);
+
             return 1;
          }
 

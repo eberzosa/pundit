@@ -18,7 +18,7 @@ namespace Pundit.Console.Commands
          _cmdline = args;
       }
 
-      private void ResolveParameters(out string packagePath, out string repositoryName)
+      private void ResolveParameters(out string packagePath, out string[] repositoryName)
       {
          string pi = null;
          string ri = null;
@@ -52,37 +52,46 @@ namespace Pundit.Console.Commands
          //get repo uri
          if(ri == null)
          {
-            repositoryName = "local";
+            repositoryName = LocalRepository.Registered.PublishingNames;
          }
          else
          {
-            repositoryName = ri;
+            repositoryName = new[] {ri};
          }
       }
 
       public void Execute()
       {
-         string packagePath, repoName;
+         string packagePath;
+         string[] repoNames;
 
-         ResolveParameters(out packagePath, out repoName);
+         ResolveParameters(out packagePath, out repoNames);
 
-         if(!LocalRepository.RegisteredRepositories.ContainsKey(repoName))
-            throw new ArgumentException("repository [" + repoName + "] is not registered");
-
-         Log.Info(string.Format("publishing package {0} to repository [{1}]", packagePath, repoName));
-
-         string uri = LocalRepository.RegisteredRepositories[repoName];
-
-         Log.Info(string.Format("repository URI: {0}", uri));
-
-         IRepository repo = RepositoryFactory.CreateFromUri(uri);
-
-         using(Stream package = File.OpenRead(packagePath))
+         foreach (string rn in repoNames)
          {
-            repo.Publish(package);   
+            if (!LocalRepository.IsValidRepositoryName(rn))
+               throw new ArgumentException("repository [" + rn + "] does not exist");
          }
 
-         Log.Info("published");
+         Log.InfoFormat("Publishing package to {0} repository(ies)", repoNames.Length);
+
+         foreach (string rn in repoNames)
+         {
+            Log.Info(string.Format("publishing package {0} to repository [{1}]", packagePath, rn));
+
+            string uri = LocalRepository.GetRepositoryUriFromName(rn);
+
+            Log.Info(string.Format("repository URI: {0}", uri));
+
+            IRepository repo = RepositoryFactory.CreateFromUri(uri);
+
+            using (Stream package = File.OpenRead(packagePath))
+            {
+               repo.Publish(package);
+            }
+
+            Log.Info("published");
+         }
       }
    }
 }
