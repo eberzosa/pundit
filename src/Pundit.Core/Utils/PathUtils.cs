@@ -37,5 +37,10 @@ namespace Pundit.Core.Utils
       {
          return String.Format(new FileSizeFormatProvider(), "{0:fs}", size);
       }
+
+      public static string GetOSPath(string path)
+      {
+         return path.Replace('/', Path.DirectorySeparatorChar);
+      }
    }
 }

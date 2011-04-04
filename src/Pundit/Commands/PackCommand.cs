@@ -35,7 +35,7 @@ namespace Pundit.Console.Commands
             if (Path.IsPathRooted(pi))
                packagePath = pi;
             else
-               packagePath = Path.Combine(Environment.CurrentDirectory, pi);
+               packagePath = Path.Combine(Environment.CurrentDirectory, PathUtils.GetOSPath(pi));
          }
          else
          {
