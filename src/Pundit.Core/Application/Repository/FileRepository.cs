@@ -59,12 +59,12 @@ namespace Pundit.Core.Application.Repository
          File.Move(tempFile, targetPath);
       }
 
-      public IEnumerable<Package> Search(string nameSubstring, VersionPattern minVersion)
+      public IEnumerable<Package> Search(string nameSubstring)
       {
          throw new NotImplementedException();
       }
 
-      public Stream Download(string packageId, Version packageVersion)
+      public Stream Download(string exactName)
       {
          throw new NotImplementedException();
       }

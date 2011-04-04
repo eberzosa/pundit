@@ -18,14 +18,17 @@ namespace Pundit.Console.Commands
          _cmdline = parameters;
       }
 
-      private void ResolveParams(out string solutionRoot, out string packagePath, out string destinationFolder)
+      private void ResolveParams(out string solutionRoot, out string packagePath, out string destinationFolder, out Version overrideVersion)
       {
          string pi = null;
          string po = null;
+         string vi = null;
+
 
          OptionSet oset = new OptionSet()
             .Add("i:|input:", i => pi = i)
-            .Add("o:|output:", o => po = o);
+            .Add("o:|output:", o => po = o)
+            .Add("v:|version:", v => vi = v);
 
          oset.Parse(_cmdline);
 
@@ -55,6 +58,14 @@ namespace Pundit.Console.Commands
             destinationFolder = Environment.CurrentDirectory;
          }
 
+         //resolve override version
+         if (vi != null)
+         {
+            if (!Version.TryParse(vi, out overrideVersion))
+               throw new ArgumentException("version given [" + vi + "] is not in valid format");
+         }
+         else overrideVersion = null;
+
          //validate
 
          if(!File.Exists(packagePath))
@@ -69,8 +80,9 @@ namespace Pundit.Console.Commands
       public void Execute()
       {
          string solutionRoot, packagePath, destinationFolder;
+         Version overrideVersion;
 
-         ResolveParams(out solutionRoot, out packagePath, out destinationFolder);
+         ResolveParams(out solutionRoot, out packagePath, out destinationFolder, out overrideVersion);
 
          Log.Debug("package: " + packagePath);
          Log.Debug("solution root: " + solutionRoot);
@@ -80,6 +92,13 @@ namespace Pundit.Console.Commands
          using(Stream devPackStream = File.OpenRead(packagePath))
          {
             devPack = DevPackage.FromStream(devPackStream);
+         }
+
+         if(overrideVersion != null)
+         {
+            Log.InfoFormat("Overriding package version {0} with {1}", devPack.Version, overrideVersion);
+
+            devPack.Version = overrideVersion;
          }
 
          string destinationFile = Path.Combine(destinationFolder, PackageUtils.GetFileName(devPack));
