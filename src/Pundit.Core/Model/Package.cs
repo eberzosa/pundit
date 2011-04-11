@@ -16,9 +16,12 @@ namespace Pundit.Core.Model
       public const string DefaultPackageFileName = "pundit.xml"; //package definition
       public const string PackedExtension = ".pundit";
 
-      private static Regex _packageIdRgx = new Regex("^[0-9a-zA-Z\\-]+$");
+      private static Regex _packageStringRgx = new Regex("^[0-9a-zA-Z\\.]+$");
+      private const string PackageStringDescr = "allowed characters: letters (A-Z, a-z), numbers, and dot sign (.)";
 
       private List<PackageDependency> _dependencies = new List<PackageDependency>();
+
+      //WARNING!!! remember to reflect copy constructor if adding a new property to this class
 
       [XmlElement("packageId")]
       public string PackageId { get; set; }
@@ -59,13 +62,23 @@ namespace Pundit.Core.Model
          set { _dependencies = new List<PackageDependency>(value); }
       }
 
+      /// <summary>
+      /// Creates an instance of empty package (the state is invalid)
+      /// </summary>
       public Package()
       {
          
       }
 
+      /// <summary>
+      /// Crates an instance of a package copying it from the source package
+      /// </summary>
+      /// <param name="copy">The package to copy from. Must be valid,
+      /// otherwise <see cref="InvalidPackageException"/> is thrown</param>
       public Package(Package copy)
       {
+         copy.Validate();
+
          _dependencies = new List<PackageDependency>(copy._dependencies);
          PackageId = copy.PackageId;
          Platform = copy.Platform;
@@ -75,6 +88,14 @@ namespace Pundit.Core.Model
          Description = copy.Description;
          ReleaseNotes = copy.ReleaseNotes;
          License = copy.License;
+      }
+
+      public Package(string packageId, Version version)
+      {
+         if (packageId == null) throw new ArgumentNullException("packageId");
+
+         PackageId = packageId;
+         VersionString = version.ToString();
       }
 
       public static Package FromStream(Stream inputStream)
@@ -104,18 +125,26 @@ namespace Pundit.Core.Model
          }
       }
 
+      private bool IsValidPackageNameString(string s)
+      {
+         return _packageStringRgx.IsMatch(s);
+      }
+
       /// <summary>
       /// Validates the package. In case of invalid package throws <see cref="InvalidPackageException"/>
       /// </summary>
       public virtual void Validate()
       {
-         InvalidPackageException ex = new InvalidPackageException();
+         var ex = new InvalidPackageException();
 
          if(string.IsNullOrEmpty(PackageId))
             ex.AddError("PackageId", "package id is required");
 
-         if(!_packageIdRgx.IsMatch(PackageId))
-            ex.AddError("PackageId", "package id is invalid, allowed characters: a-z, A-Z, 0-9, '-'");
+         if(!IsValidPackageNameString(PackageId))
+            ex.AddError("PackageId", "package id is invalid, " + PackageStringDescr);
+
+         if(!string.IsNullOrEmpty(Platform) && !IsValidPackageNameString(Platform))
+            ex.AddError("Platform", "platform name is invalid, " + PackageStringDescr);
 
          if(Version == null)
             ex.AddError("Version", "version is required");
@@ -126,7 +155,7 @@ namespace Pundit.Core.Model
 
       public override string ToString()
       {
-         using (MemoryStream ms = new MemoryStream())
+         using (var ms = new MemoryStream())
          {
             WriteTo(ms);
             ms.Position = 0;

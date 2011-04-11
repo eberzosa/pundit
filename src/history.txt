@@ -1,0 +1,9 @@
+Legend:
+
+[+] new feature
+[-] bug fixed
+[*] improvement
+
+v0.0.0
+= package resolution
+- autoupdate

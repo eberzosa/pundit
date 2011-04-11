@@ -24,6 +24,9 @@ namespace Pundit.Console
             case "publish":
                cmd = new PublishCommand(parameters);
                break;
+            case "template":
+               cmd = new TemplateCommand(parameters);
+               break;
             default:
                cmd = null;
                break;

@@ -58,14 +58,10 @@ namespace Pundit.Core.Model
       public bool IncludeEmptyDirs { get; set; }
 
       /// <summary>
-      /// Configuration name. Package can include duplicated file names specific to a requested configuration.
-      /// Source files without configuration are always installed.
-      /// Known configurations are:
-      /// - debug
-      /// - release
+      /// Configuration name (debug or release)
       /// </summary>
       [XmlAttribute("configuration")]
-      public string Configuration { get; set; }
+      public FileConfiguration Configuration { get; set; }
 
       public SourceFiles()
       {
@@ -134,10 +130,7 @@ namespace Pundit.Core.Model
          switch (FileKind)
          {
             case PackageFileKind.Binary:
-               string configurationName = (string.IsNullOrEmpty(Configuration) || Configuration == "release")
-                                             ? "release"
-                                             : Configuration;
-               path = configurationName + "/" + path;
+               path = Configuration.ToString().ToLower() + "/" + path;
                break;
             default:
                if (!string.IsNullOrEmpty(TargetDirectory))

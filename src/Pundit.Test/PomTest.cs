@@ -24,7 +24,7 @@ namespace Pundit.Test
       {
          DevPackage dp = new DevPackage
                             {
-                               PackageId = "nunit-framework",
+                               PackageId = "nunit.framework",
                                Version = new Version("4.5.1.345"),
                                Author = "NUnit team"
                             };

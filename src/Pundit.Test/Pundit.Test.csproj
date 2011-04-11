@@ -44,8 +44,10 @@
   </ItemGroup>
   <ItemGroup>
     <Compile Include="FileRepositoryTest.cs" />
+    <Compile Include="Mocks\MockedRepository.cs" />
     <Compile Include="PomTest.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
+    <Compile Include="ResolutionsTest.cs" />
     <Compile Include="SourceFilesTest.cs" />
     <Compile Include="ThirdPartyTryOutTest.cs" />
     <Compile Include="VersionPatternTest.cs" />

@@ -64,7 +64,17 @@ namespace Pundit.Core.Application.Repository
          throw new NotImplementedException();
       }
 
-      public Stream Download(string exactName)
+      public Stream Download(PackageKey key)
+      {
+         throw new NotImplementedException();
+      }
+
+      public Version[] GetVersions(string packageid, string platform, VersionPattern pattern)
+      {
+         throw new NotImplementedException();
+      }
+
+      public Package GetManifest(PackageKey key)
       {
          throw new NotImplementedException();
       }

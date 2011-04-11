@@ -5,6 +5,9 @@ using System.ServiceModel;
 
 namespace Pundit.Core.Model
 {
+   /// <summary>
+   /// Repository contract
+   /// </summary>
    [ServiceContract]
    public interface IRepository
    {
@@ -16,18 +19,21 @@ namespace Pundit.Core.Model
       [OperationContract]
       void Publish(Stream packageStream);
 
-      //[OperationContract]
-      //bool[] Exists(string[] exactNames);
-
       [OperationContract]
       IEnumerable<Package> Search(string nameSubstring);
 
       /// <summary>
       /// Downloads package
       /// </summary>
-      /// <param name="exactName">exact package name excluding the extension</param>
+      /// <param name="key">Package unique identifier</param>
       /// <returns>Package stream</returns>
       [OperationContract]
-      Stream Download(string exactName);
+      Stream Download(PackageKey key);
+
+      [OperationContract]
+      Version[] GetVersions(string packageId, string platform, VersionPattern pattern);
+
+      [OperationContract]
+      Package GetManifest(PackageKey key);
    }
 }
