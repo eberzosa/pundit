@@ -41,7 +41,16 @@ namespace Pundit.Test.Mocks
 
       public Version[] GetVersions(string packageid, string platform, VersionPattern pattern)
       {
-         return _versions[packageid];
+         Version[] all = _versions[packageid];
+         List<Version> matching = new List<Version>();
+
+         foreach(Version v in all)
+         {
+            if(pattern.Matches(v))
+               matching.Add(v);
+         }
+
+         return matching.ToArray();
       }
 
       public Package GetManifest(PackageKey key)

@@ -6,10 +6,11 @@ using System.Text.RegularExpressions;
 
 namespace Pundit.Core.Model
 {
-   public class VersionPattern : IComparable<VersionPattern>
+   public class VersionPattern
    {
-      private static readonly Regex ValidationRgx = new Regex("^[0-9\\*]+(\\.[0-9\\*]+){0,3}$");
-      private readonly Version _v;
+      //at least two numbers
+      private static readonly Regex ValidationRgx = new Regex("^[0-9\\*]+(\\.[0-9\\*]+){1,3}$");
+      private Version _v;
 
       public VersionPattern(string pattern)
       {
@@ -18,70 +19,30 @@ namespace Pundit.Core.Model
 
          string[] sp = pattern.Split('.');
 
-         int major = (sp.Length == 0 || sp[0] == "*") ? int.MaxValue : int.Parse(sp[0]);
-         int minor = (sp.Length < 2 || sp[1] == "*") ? int.MaxValue : int.Parse(sp[1]);
-         int build = (sp.Length < 3 || sp[2] == "*") ? int.MaxValue : int.Parse(sp[2]);
-         int revision = (sp.Length < 4 || sp[3] == "*") ? int.MaxValue : int.Parse(sp[3]);
+         int major = int.Parse(sp[0]);
+         int minor = int.Parse(sp[1]);
+         int build = (sp.Length < 3 || sp[2] == "*") ? -1 : int.Parse(sp[2]);
+         int revision = (sp.Length < 4 || sp[3] == "*") ? -1 : int.Parse(sp[3]);
 
-         _v = new Version(major, minor, build, revision);
+         string s = major + "." + minor;
+         if (build != -1) s += ("." + build);
+         if (revision != -1) s += ("." + revision);
+
+         _v = new Version(s);
       }
 
-      public int CompareTo(VersionPattern other)
+      public bool Matches(Version v)
       {
-         return _v.CompareTo(other._v);
-      }
+         if (_v.Major != v.Major || _v.Minor != v.Minor)
+            return false;
 
-      public static bool operator ==(VersionPattern v1, VersionPattern v2)
-      {
-         return v1._v == v2._v;
-      }
+         if (_v.Build != -1 && (_v.Build != v.Build))
+            return false;
 
-      public static bool operator !=(VersionPattern v1, VersionPattern v2)
-      {
-         return v1._v != v2._v;
-      }
+         if (_v.Revision != -1 && (_v.Revision != v.Revision))
+            return false;
 
-      public static bool operator <(VersionPattern v1, VersionPattern v2)
-      {
-         return v1._v < v2._v;
-      }
-
-      public static bool operator <=(VersionPattern v1, VersionPattern v2)
-      {
-         return v1._v <= v2._v;
-      }
-
-      public static bool operator >(VersionPattern v1, VersionPattern v2)
-      {
-         return v1._v > v2._v;
-      }
-
-      public static bool operator >=(VersionPattern v1, VersionPattern v2)
-      {
-         return v1._v >= v2._v;
-      }
-
-      public override bool Equals(object obj)
-      {
-         if(obj is VersionPattern)
-         {
-            VersionPattern that = (VersionPattern) obj;
-
-            return that._v.Equals(_v);
-         }
-
-         return false;
-      }
-
-      public override int GetHashCode()
-      {
-         return _v.GetHashCode();
-      }
-
-      public static bool AreCompatible(VersionPattern p1, VersionPattern p2)
-      {
-         return p1._v.Major == p2._v.Major &&
-                p1._v.Minor == p2._v.Minor;
+         return true;
       }
    }
 }

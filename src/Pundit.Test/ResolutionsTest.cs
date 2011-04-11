@@ -33,17 +33,20 @@ namespace Pundit.Test
                           new Version(2, 1, 4, 567),
                           new Version(2, 1, 8, 1987),
                           new Version(3, 0, 0, 4863));
-         Package loggingManifest = new Package("Company.Logging", new Version(3, 0, 0, 4863));
-         loggingManifest.Dependencies.Add(new PackageDependency("log4net", "1.2.10"));
+         Package loggingManifest30 = new Package("Company.Logging", new Version(3, 0, 0, 4863));
+         loggingManifest30.Dependencies.Add(new PackageDependency("log4net", "1.2"));
          repo.SetManifest(
             new PackageKey("Company.Logging", new Version(3, 0, 0, 4863), null),
-            loggingManifest);
+            loggingManifest30);
 
          _repo = repo;
       }
 
+      /// <summary>
+      /// Single dependency, trivial resolution to highest version
+      /// </summary>
       [Test]
-      public void SingleDependencyHappyTest()
+      public void TrivialTest()
       {
          Package pkg = new Package("Self.Library", new Version(1, 2, 0, 0));
          pkg.Dependencies.Add(new PackageDependency("log4net", "1.2"));
@@ -62,8 +65,16 @@ namespace Pundit.Test
          Assert.IsTrue(log4net.HasManifest);
       }
 
+      /// <summary>
+      /// Two dependencies:
+      /// 
+      /// Self.Library => (Company.Logging 3.0; log4net 1.2.10)
+      /// Company.Logging => (log4net 1.2.10)
+      /// 
+      /// Simple resolution, no intersections or downgrades
+      /// </summary>
       [Test]
-      public void SimpleTreeDependencyHappyTest()
+      public void TrivialTreeTest()
       {
          Package pkg = new Package("Self.Library", new Version(1, 3, 0, 500));
          pkg.Dependencies.Add(new PackageDependency("Company.Logging", "3.0"));
@@ -80,6 +91,17 @@ namespace Pundit.Test
          Assert.AreEqual(new Version(1, 2, 10, 0), node2.ActiveVersion);
          Assert.AreEqual(1, node1.Children.Count());
          Assert.AreEqual(new Version(1, 2, 10, 0), node1.Children.First().ActiveVersion);
+      }
+
+      [Test, Ignore]
+      public void SimpleVersionIntersectionTest()
+      {
+         Package pkg = new Package("Self.Library", new Version(2, 0, 0, 501));
+         pkg.Dependencies.Add(new PackageDependency("Company.Logging", "3.0"));
+         pkg.Dependencies.Add(new PackageDependency("log4net", "1.2.10"));
+
+         DependencyResolution dr = new DependencyResolution(pkg, new[] { _repo });
+         DependencyNode result = dr.Resolve();
       }
    }
 }

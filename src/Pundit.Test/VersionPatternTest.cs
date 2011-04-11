@@ -13,8 +13,8 @@ namespace Pundit.Test
       [Test]
       public void ValidConstructorTest()
       {
-         VersionPattern p1 = new VersionPattern("*");
-         VersionPattern p2 = new VersionPattern("12.*");
+         VersionPattern p1 = new VersionPattern("11.1.1.*");
+         VersionPattern p2 = new VersionPattern("12.4.*");
       }
 
       [Test]
@@ -25,26 +25,33 @@ namespace Pundit.Test
       }
 
       [Test]
-      public void VersionComparisonTest()
+      public void Match1Test()
       {
-         VersionPattern p1 = new VersionPattern("1.20.*");
-         VersionPattern p2 = new VersionPattern("1.20.4");
+         VersionPattern vp = new VersionPattern("2.3");
 
-         //Version v1 = new Version(1, 20, int.MaxValue, int.MaxValue);
-         //Version v2 = new Version(1, 20, 4, int.MaxValue);
-
-         Assert.IsTrue(p1 > p2);
+         Assert.IsTrue(vp.Matches(new Version("2.3")));
+         Assert.IsTrue(vp.Matches(new Version("2.3.1")));
+         Assert.IsTrue(vp.Matches(new Version("2.3.4.1")));
       }
 
       [Test]
-      public void CompatibilityTest()
+      public void Match2Test()
       {
-         VersionPattern p1 = new VersionPattern("1.20.*");
-         VersionPattern p2 = new VersionPattern("1.20.4");
-         VersionPattern p3 = new VersionPattern("1.21.4.6");
+         VersionPattern vp = new VersionPattern("2.3.1");
 
-         Assert.IsTrue(VersionPattern.AreCompatible(p1, p2));
-         Assert.IsFalse(VersionPattern.AreCompatible(p2, p3));
+         Assert.IsFalse(vp.Matches(new Version("2.3")));
+         Assert.IsTrue(vp.Matches(new Version("2.3.1")));
+         Assert.IsTrue(vp.Matches(new Version("2.3.1.4")));
+      }
+
+      [Test]
+      public void Match3Test()
+      {
+         VersionPattern vp = new VersionPattern("2.3.1.4");
+
+         Assert.IsFalse(vp.Matches(new Version("2.3")));
+         Assert.IsFalse(vp.Matches(new Version("2.3.1")));
+         Assert.IsTrue(vp.Matches(new Version("2.3.1.4")));
       }
    }
 }
