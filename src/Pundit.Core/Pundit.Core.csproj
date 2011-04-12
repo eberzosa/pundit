@@ -64,7 +64,9 @@
     <Compile Include="Model\PackageFileKind.cs" />
     <Compile Include="Model\PackageKey.cs" />
     <Compile Include="Model\SourceFiles.cs" />
+    <Compile Include="Model\UnresolvedPackage.cs" />
     <Compile Include="Model\VersionPattern.cs" />
+    <Compile Include="Model\VersionResolutionTable.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="RepositoryFactory.cs" />
     <Compile Include="Utils\FileSet.cs" />

@@ -52,7 +52,7 @@ namespace Pundit.Test
          pkg.Dependencies.Add(new PackageDependency("log4net", "1.2"));
 
          DependencyResolution dr = new DependencyResolution(pkg, new[] { _repo });
-         DependencyNode node = dr.Resolve();
+         DependencyNode node = dr.Resolve().Item2;
 
          Assert.IsNotNull(node);
          Assert.IsTrue(node.HasVersions);
@@ -68,7 +68,7 @@ namespace Pundit.Test
       /// <summary>
       /// Two dependencies:
       /// 
-      /// Self.Library => (Company.Logging 3.0; log4net 1.2.10)
+      /// Self.Library => (Company.Logging 3.0; log4net 1.2)
       /// Company.Logging => (log4net 1.2.10)
       /// 
       /// Simple resolution, no intersections or downgrades
@@ -81,7 +81,7 @@ namespace Pundit.Test
          pkg.Dependencies.Add(new PackageDependency("log4net", "1.2.10"));
 
          DependencyResolution dr = new DependencyResolution(pkg, new[] { _repo });
-         DependencyNode result = dr.Resolve();
+         DependencyNode result = dr.Resolve().Item2;
 
          Assert.AreEqual(2, result.Children.Count());
          DependencyNode node1 = result.Children.ElementAt(0);
@@ -93,15 +93,27 @@ namespace Pundit.Test
          Assert.AreEqual(new Version(1, 2, 10, 0), node1.Children.First().ActiveVersion);
       }
 
-      [Test, Ignore]
+      /// <summary>
+      /// Simple intersection involved:
+      /// 
+      /// Self.Library => (Company.Logging 3.0; log4net 1.2.8)
+      /// Company.Logging 3.0 => (log4net 1.2)
+      /// 
+      /// log4net dependency 1: {1.2.8}
+      /// log4net dependency 2: {1.2.8, 1.2.10}
+      /// 
+      /// log4net must be downgraded to 1.2.8 for the dependency 2
+      /// 
+      /// </summary>
+      [Test]
       public void SimpleVersionIntersectionTest()
       {
          Package pkg = new Package("Self.Library", new Version(2, 0, 0, 501));
          pkg.Dependencies.Add(new PackageDependency("Company.Logging", "3.0"));
          pkg.Dependencies.Add(new PackageDependency("log4net", "1.2.10"));
 
-         DependencyResolution dr = new DependencyResolution(pkg, new[] { _repo });
-         DependencyNode result = dr.Resolve();
+         var dr = new DependencyResolution(pkg, new[] { _repo });
+         var result = dr.Resolve();
       }
    }
 }

@@ -22,23 +22,40 @@ namespace Pundit.Core.Application
          _root.MarkAsRoot(rootManifest);
       }
 
-      public DependencyNode Resolve()
+      /// <summary>
+      /// Resolution algorithm in V1 is fairly simple. Every dependency has a
+      /// version pattern and platform name. Steps:
+      /// 
+      /// 1) Starting from root, resolve version patterns to version array for every node
+      /// in the tree recursively (the whole structure is not known yet)
+      /// 
+      /// 2) Starting from root, resolve latest version's manifest to get dependencies of
+      /// dependencies.
+      /// 
+      /// 3) Repeat steps 1-2 until all the version patterns and manifests are resolved.
+      /// 
+      /// 4) Flatten the tree to array of (PackageId, Platform, Version[])
+      /// 
+      /// 5) Using (PackageId, Platform) as a key, merge array to a dictionary where
+      /// value is Version[] and is an intersection of all Version[] for the key from
+      /// array created in step 4.
+      /// 
+      /// Data structure received in step 5 is the result of dependency resolution.
+      /// Empty Version[] indicates a conflict for that package which can be displayed
+      /// to a user using information from DependencyNode tree.
+      /// 
+      /// </summary>
+      /// <returns></returns>
+      public Tuple<VersionResolutionTable, DependencyNode> Resolve()
       {
-         //int step = 0;
+         //steps 1-2-3
+         ResolveAll(_root);
 
-         //while(!_root.Resolved)
-         //{
-            //if (_log.IsDebugEnabled) _log.DebugFormat("resolving (step {0})...", ++step);
-
-            ResolveNext(_root);
-         //}
-
-         if(_log.IsDebugEnabled) _log.Debug("dependencies resolved");
-
-         return _root;
+         //steps 4-5
+         return Tuple.Create(Flatten(_root), _root);
       }
 
-      private void ResolveNext(DependencyNode node)
+      private void ResolveAll(DependencyNode node)
       {
          while (!node.IsFull)
          {
@@ -114,6 +131,13 @@ namespace Pundit.Core.Application
                ResolveManifests(child);
             }
          }
+      }
+
+      private VersionResolutionTable Flatten(DependencyNode rootNode)
+      {
+         var table = new VersionResolutionTable();
+
+         return table;
       }
    }
 }
