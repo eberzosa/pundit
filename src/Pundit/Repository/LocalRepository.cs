@@ -2,8 +2,10 @@
 using System.Collections.Generic;
 using System.IO;
 using System.Security.AccessControl;
+using log4net;
 using Pundit.Core.Application.Repository;
 using Pundit.Core.Model;
+using log4net;
 
 namespace Pundit.Console.Repository
 {
@@ -17,6 +19,7 @@ namespace Pundit.Console.Repository
       private static readonly string LocalRepoRoot;     //path to local repository root (not the file folder)
       private static readonly string LocalRepoFileRoot; //path for file repository
       private static readonly RegisteredRepositories Repos;
+      private static readonly ILog Log = LogManager.GetLogger(typeof (LocalRepository));
 
       public LocalRepository() : base(LocalRepoFileRoot)
       {
@@ -27,6 +30,8 @@ namespace Pundit.Console.Repository
          ResolveRootPath(out LocalRepoRoot, out LocalRepoFileRoot);
 
          Repos = LoadRegisteredRepositories();
+
+         if(Log.IsDebugEnabled) Log.Debug("registered repositories: " + Repos.Names.Length);
       }
 
       public static RegisteredRepositories Registered { get { return Repos; } }
@@ -64,6 +69,8 @@ namespace Pundit.Console.Repository
       private static RegisteredRepositories LoadRegisteredRepositories()
       {
          string repoTxtPath = Path.Combine(LocalRepoRoot, RepoXmlFileName);
+
+         if(Log.IsDebugEnabled) Log.Debug("Loading registered repositories from " + repoTxtPath);
 
          if (File.Exists(repoTxtPath))
          {

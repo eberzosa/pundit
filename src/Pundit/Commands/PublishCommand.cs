@@ -42,6 +42,9 @@ namespace Pundit.Console.Commands
             FileInfo[] packedFiles =
                new DirectoryInfo(Environment.CurrentDirectory).GetFiles("*" + Package.PackedExtension);
 
+            if(packedFiles.Length == 0)
+               throw new ApplicationException("no files specified for publishing");
+
             if (packedFiles.Length > 1)
                throw new ArgumentException("more than one candidate found for publishing, did you mean " +
                                            packedFiles[0].Name + "?");

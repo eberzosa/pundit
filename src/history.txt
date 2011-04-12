@@ -6,4 +6,6 @@ Legend:
 
 v0.0.0
 = package resolution
+- publish command to acccept patterns
+- local repository creation on start with fake config
 - autoupdate
