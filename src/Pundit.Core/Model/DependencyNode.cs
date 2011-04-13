@@ -99,17 +99,22 @@ namespace Pundit.Core.Model
 
       public bool IsFull
       {
+         get { return _hasVersions && _hasManifest; }
+      }
+
+      public bool IsRecursivelyFull
+      {
          get
          {
             foreach(DependencyNode child in _children)
             {
-               if(!child.IsFull)
+               if(!child.IsRecursivelyFull)
                {
                   return false;
                }
             }
 
-            return _hasVersions && _hasManifest;
+            return IsFull;
          }
       }
 
@@ -123,6 +128,24 @@ namespace Pundit.Core.Model
          }
       }
 
+      /// <summary>
+      /// Versions from lowest to latest active (<see cref="ActiveVersion"/>)
+      /// </summary>
+      public IEnumerable<Version> ActiveVersions
+      {
+         get
+         {
+            var active = new List<Version>();
+
+            for (int i = 0; i <= _activeVersionIndex; i++ )
+            {
+               active.Add(_versions[i]);   
+            }
+
+            return active;
+         }
+      }
+
       public PackageKey ActiveVersionKey
       {
          get
@@ -131,6 +154,14 @@ namespace Pundit.Core.Model
                throw new ArgumentException("node has no active version");
 
             return new PackageKey(_packageId, ActiveVersion, _platform);
+         }
+      }
+
+      public UnresolvedPackage UnresolvedPackage
+      {
+         get
+         {
+            return new UnresolvedPackage(_packageId, _platform);
          }
       }
 

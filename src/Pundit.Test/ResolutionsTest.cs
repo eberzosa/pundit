@@ -24,6 +24,9 @@ namespace Pundit.Test
          repo.SetManifest(
             new PackageKey("log4net", new Version(1, 2, 10, 0), null),
             new Package("log4net", new Version(1, 2, 10, 0)));
+         repo.SetManifest(
+            new PackageKey("log4net", new Version(1, 2, 8, 0), null),
+            new Package("log4net", new Version(1, 2, 8, 0)));
 
          //Company.Logging
          repo.SetVersions("Company.Logging",
@@ -108,12 +111,37 @@ namespace Pundit.Test
       [Test]
       public void SimpleVersionIntersectionTest()
       {
-         Package pkg = new Package("Self.Library", new Version(2, 0, 0, 501));
+         var pkg = new Package("Self.Library", new Version(2, 0, 0, 501));
          pkg.Dependencies.Add(new PackageDependency("Company.Logging", "3.0"));
-         pkg.Dependencies.Add(new PackageDependency("log4net", "1.2.10"));
+         pkg.Dependencies.Add(new PackageDependency("log4net", "1.2.8"));
 
          var dr = new DependencyResolution(pkg, new[] { _repo });
          var result = dr.Resolve();
+         VersionResolutionTable table = result.Item1;
+         IEnumerable<PackageKey> packages = table.GetPackages();
+
+         Assert.IsFalse(table.HasConflicts);
+         Assert.AreEqual(3, packages.Count());
+         Assert.AreEqual(new Version(3, 0, 0, 4863), packages.ElementAt(1).Version);
+         Assert.AreEqual(new Version(2, 0, 0, 501), packages.ElementAt(0).Version);
+         Assert.AreEqual(new Version(1, 2, 8, 0), packages.ElementAt(2).Version);
+
+      }
+
+      [Test]
+      public void EqualityTest()
+      {
+         var pkg1 = new UnresolvedPackage("p1", null);
+         var pkg2 = new UnresolvedPackage("p2", null);
+
+         Assert.IsFalse(pkg1.Equals(pkg2));
+         Assert.IsTrue(pkg1.Equals(pkg1));
+
+         var dic = new Dictionary<UnresolvedPackage, bool>();
+         dic[pkg1] = true;
+
+         var pkg11 = new UnresolvedPackage("p1", null);
+         Assert.IsTrue(dic.ContainsKey(pkg11));
       }
    }
 }

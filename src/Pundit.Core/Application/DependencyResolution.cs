@@ -57,7 +57,7 @@ namespace Pundit.Core.Application
 
       private void ResolveAll(DependencyNode node)
       {
-         while (!node.IsFull)
+         while (!node.IsRecursivelyFull)
          {
             //first step: resolve version patterns
             //(at least root must have all the dependencies populated already)
@@ -133,9 +133,32 @@ namespace Pundit.Core.Application
          }
       }
 
-      private VersionResolutionTable Flatten(DependencyNode rootNode)
+      private static void FlattenNode(DependencyNode node, VersionResolutionTable collector)
+      {
+         if(node != null)
+         {
+            if(!node.IsFull) throw new InvalidOperationException("Cannot flatten unresolved node");
+
+            collector.Intersect(node.UnresolvedPackage, node.ActiveVersions);
+
+            foreach(DependencyNode child in node.Children)
+            {
+               FlattenNode(child, collector);
+            }
+         }
+      }
+
+      /// <summary>
+      /// Creates <see cref="VersionResolutionTable"/> from <see cref="DependencyNode"/>
+      /// tree
+      /// </summary>
+      /// <param name="rootNode"></param>
+      /// <returns></returns>
+      private static VersionResolutionTable Flatten(DependencyNode rootNode)
       {
          var table = new VersionResolutionTable();
+
+         FlattenNode(rootNode, table);
 
          return table;
       }

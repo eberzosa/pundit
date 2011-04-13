@@ -1,4 +1,5 @@
 ﻿using System;
+using Pundit.Core.Utils;
 
 namespace Pundit.Core.Model
 {
@@ -22,7 +23,7 @@ namespace Pundit.Core.Model
 
          PackageId = packageId;
          Version = version;
-         Platform = platform;
+         Platform = PackageUtils.TrimPlatformName(platform);
       }
 
       public string PackageId
@@ -60,12 +61,18 @@ namespace Pundit.Core.Model
 
       public override int GetHashCode()
       {
-         return PackageId.GetHashCode()*Version.GetHashCode();
+         return PackageId.GetHashCode()*Version.GetHashCode()*Platform.GetHashCode();
       }
 
       public object Clone()
       {
          return new PackageKey(PackageId, Version, Platform);
+      }
+
+      public override string ToString()
+      {
+         return string.Format("package id: [{0}], platform: [{1}], exact version: [{2}]",
+                              PackageId, Platform, Version);
       }
    }
 }
