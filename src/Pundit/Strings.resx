@@ -121,11 +121,32 @@
     <value>pundit v{0} - http://pundit.codeplex.com</value>
   </data>
   <data name="Help" xml:space="preserve">
-    <value>Copyright (c) 2011 Ivan Gavryliuk.
+    <value>
+Copyright (c) 2011 Ivan Gavryliuk.
 
-syntax: {0} &lt;command&gt; [options]
+syntax: {0} &lt;command&gt; [&lt;parameter&gt; [&lt;parameter&gt;[...]]] [&lt;options&gt;]
+
+to get extended help on a command type "{0} help &lt;command&gt;" i.e "{0} help pack"
 
 Commands:
-pack [&lt;Pundit package definition&gt;] - produces new package based on the package definition file. If the difinition file is not passed {0} will use default file in the current folder if there is one.</value>
+  pack - create package based on manifest definition
+  publish - publish package to a repository(ies)
+  template - create an empty (and invalid) manifest
+  resolve - resolve dependencies and refresh project packages specifiend in the manifest</value>
+  </data>
+  <data name="Help_pack" xml:space="preserve">
+    <value>syntax: {0} pack [&lt;manifest location&gt;] [-o:&lt;target folder&gt;]
+
+Creates a package based on the manifest file. Source files required for the package must exist.
+  &lt;manifest location&gt; is optional and if not specified  default manifest in current folder will be used
+  "o" parameter is optional and specifies output folder for the compiled package; by default folder of manifest's location is used
+
+examples:
+  {0} pack
+  {0} pack mymanifest.pundit
+  {0} pack -o:c:\packages\</value>
+  </data>
+  <data name="Help_publish" xml:space="preserve">
+    <value>syntax: {0} publish [&lt;package&gt;] [-r:&lt;repository name&gt;]</value>
   </data>
 </root>
