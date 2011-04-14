@@ -78,7 +78,7 @@ namespace Pundit.Core.Application
 
             foreach(IRepository repo in _activeRepositories)
             {
-               Version[] vs = repo.GetVersions(node.PackageId, node.Platform, node.VersionPattern);
+               Version[] vs = repo.GetVersions(node.UnresolvedPackage, node.VersionPattern);
 
                if(vs != null)
                {

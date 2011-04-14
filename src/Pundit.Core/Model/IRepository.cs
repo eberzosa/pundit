@@ -31,9 +31,12 @@ namespace Pundit.Core.Model
       Stream Download(PackageKey key);
 
       [OperationContract]
-      Version[] GetVersions(string packageId, string platform, VersionPattern pattern);
+      Version[] GetVersions(UnresolvedPackage package, VersionPattern pattern);
 
       [OperationContract]
       Package GetManifest(PackageKey key);
+
+      [OperationContract]
+      bool[] PackagesExist(PackageKey[] packages);
    }
 }

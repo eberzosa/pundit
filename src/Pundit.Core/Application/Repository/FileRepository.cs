@@ -69,12 +69,17 @@ namespace Pundit.Core.Application.Repository
          throw new NotImplementedException();
       }
 
-      public Version[] GetVersions(string packageid, string platform, VersionPattern pattern)
+      public Version[] GetVersions(UnresolvedPackage package, VersionPattern pattern)
       {
          throw new NotImplementedException();
       }
 
       public Package GetManifest(PackageKey key)
+      {
+         throw new NotImplementedException();
+      }
+
+      public bool[] PackagesExist(PackageKey[] packages)
       {
          throw new NotImplementedException();
       }

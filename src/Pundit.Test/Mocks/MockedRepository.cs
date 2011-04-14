@@ -39,9 +39,9 @@ namespace Pundit.Test.Mocks
          throw new NotImplementedException();
       }
 
-      public Version[] GetVersions(string packageid, string platform, VersionPattern pattern)
+      public Version[] GetVersions(UnresolvedPackage package, VersionPattern pattern)
       {
-         Version[] all = _versions[packageid];
+         Version[] all = _versions[package.PackageId];
          List<Version> matching = new List<Version>();
 
          foreach(Version v in all)
@@ -56,6 +56,11 @@ namespace Pundit.Test.Mocks
       public Package GetManifest(PackageKey key)
       {
          return _manifests[key];
+      }
+
+      public bool[] PackagesExist(PackageKey[] packages)
+      {
+         throw new NotImplementedException();
       }
 
       #endregion
