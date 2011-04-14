@@ -153,7 +153,7 @@ examples:
     <value>syntax: {0} publish [-p:&lt;package&gt;] [-r:&lt;repository name&gt;]
 
 Publishes packages to repositories. By default all the packages in the current folders are published. Use optional parameters to override this behavior.
-  &lt;package&gt; specificies packages to publish
+  &lt;package&gt; specificies a package to publish; by default all packages in the current folder are published
   &lt;repository name&gt; specifies repository to publish to; by default packages are published to repositories specified in the local configuration file; &lt;repository name&gt; is a "name" attribute of a repository from the local configuration file; for testing purposes publishing to local repository can be done specifyint "local" as the repository name
 
 examples:

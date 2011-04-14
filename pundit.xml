@@ -1,8 +1,8 @@
 <package>
-  <packageId>pundit-core</packageId>
+  <packageId>Pundit.Core</packageId>
   <platform>net40</platform>
   <project-url>http://ngem.codeplex.com</project-url>
-  <version>1.0.0.123</version>
+  <version>1.1.0.2</version>
   <files>
     <file basedir="src" include="**/*.cs" kind="other"/>
     <file include="test/**" kind="other" targetdir="empties"/>

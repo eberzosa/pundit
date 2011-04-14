@@ -1,4 +1,5 @@
 ﻿using System;
+using System.IO;
 using System.Reflection;
 using log4net;
 using Pundit;
@@ -10,7 +11,7 @@ namespace Pundit.Console
    static class Program
    {
       private static readonly ILog Log = LogManager.GetLogger(typeof (Program));
-      private static readonly string ExeName = AppDomain.CurrentDomain.FriendlyName;
+      private static readonly string ExeName = Assembly.GetExecutingAssembly().GetName().Name;
       private static readonly Version CoreVersion = typeof (IRepository).Assembly.GetName().Version;
 
       static int Main(string[] args)

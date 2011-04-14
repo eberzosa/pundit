@@ -1,5 +1,6 @@
 ﻿using System;
 using System.IO;
+using System.Linq;
 using log4net;
 using NDesk.Options;
 using Pundit.Console.Repository;
@@ -18,13 +19,13 @@ namespace Pundit.Console.Commands
          _cmdline = args;
       }
 
-      private void ResolveParameters(out string packagePath, out string[] repositoryName)
+      private void ResolveParameters(out string[] packages, out string[] repositoryName)
       {
          string pi = null;
          string ri = null;
 
          OptionSet oset = new OptionSet()
-            .Add("i:|input:", i => pi = i)
+            .Add("p:|package:", i => pi = i)
             .Add("r:|repository:", r => ri = r);
 
          oset.Parse(_cmdline);
@@ -32,10 +33,10 @@ namespace Pundit.Console.Commands
          //get package)))
          if(pi != null)
          {
-            packagePath = pi;
-
             if(!File.Exists(pi))
                throw new ArgumentException("package [" + pi + "] does not exist");
+
+            packages = new[] { pi };
          }
          else
          {
@@ -43,13 +44,9 @@ namespace Pundit.Console.Commands
                new DirectoryInfo(Environment.CurrentDirectory).GetFiles("*" + Package.PackedExtension);
 
             if(packedFiles.Length == 0)
-               throw new ApplicationException("no files specified for publishing");
+               throw new ApplicationException("no packages found for publishing");
 
-            if (packedFiles.Length > 1)
-               throw new ArgumentException("more than one candidate found for publishing, did you mean " +
-                                           packedFiles[0].Name + "?");
-
-            packagePath = packedFiles[0].FullName;
+            packages = packedFiles.Select(fi => fi.FullName).ToArray();
          }
 
          //get repo uri
@@ -65,10 +62,10 @@ namespace Pundit.Console.Commands
 
       public void Execute()
       {
-         string packagePath;
+         string[] packages;
          string[] repoNames;
 
-         ResolveParameters(out packagePath, out repoNames);
+         ResolveParameters(out packages, out repoNames);
 
          foreach (string rn in repoNames)
          {
@@ -80,20 +77,23 @@ namespace Pundit.Console.Commands
 
          foreach (string rn in repoNames)
          {
-            Log.Info(string.Format("publishing package {0} to repository [{1}]", packagePath, rn));
-
-            string uri = LocalRepository.GetRepositoryUriFromName(rn);
-
-            Log.Info(string.Format("repository URI: {0}", uri));
-
-            IRepository repo = RepositoryFactory.CreateFromUri(uri);
-
-            using (Stream package = File.OpenRead(packagePath))
+            foreach (string packagePath in packages)
             {
-               repo.Publish(package);
-            }
+               Log.Info(string.Format("publishing package {0} to repository [{1}]", packagePath, rn));
 
-            Log.Info("published");
+               string uri = LocalRepository.GetRepositoryUriFromName(rn);
+
+               Log.Info(string.Format("repository URI: {0}", uri));
+
+               IRepository repo = RepositoryFactory.CreateFromUri(uri);
+
+               using (Stream package = File.OpenRead(packagePath))
+               {
+                  repo.Publish(package);
+               }
+
+               Log.Info("published");
+            }
          }
       }
    }

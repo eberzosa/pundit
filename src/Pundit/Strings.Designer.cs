@@ -108,8 +108,8 @@ namespace Pundit.Console {
         ///   Looks up a localized string similar to syntax: {0} publish [-p:&lt;package&gt;] [-r:&lt;repository name&gt;]
         ///
         ///Publishes packages to repositories. By default all the packages in the current folders are published. Use optional parameters to override this behavior.
-        ///  &lt;package&gt; specificies packages to publish
-        ///  &lt;repository name&gt; specifies repository to publish to; by default packages are published to repositories specified in the local configuration file; &lt;repository name&gt; is a &quot;name&quot; attribute of a repository from the local configuration file; for testing  [rest of string was truncated]&quot;;.
+        ///  &lt;package&gt; specificies a package to publish; by default all packages in the current folder are published
+        ///  &lt;repository name&gt; specifies repository to publish to; by default packages are published to repositories specified in the local configuration file; &lt;repository name&gt; is a &quot;name&quot; attribute o [rest of string was truncated]&quot;;.
         /// </summary>
         internal static string Help_publish {
             get {
