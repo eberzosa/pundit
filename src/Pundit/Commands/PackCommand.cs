@@ -12,6 +12,7 @@ namespace Pundit.Console.Commands
    {
       private static readonly ILog Log = LogManager.GetLogger(typeof (PackCommand));
       private string[] _cmdline;
+      private string _packagePath;
 
       public PackCommand(string[] parameters)
       {
@@ -26,8 +27,8 @@ namespace Pundit.Console.Commands
 
 
          OptionSet oset = new OptionSet()
-            .Add("i:|input:", i => pi = i)
-            .Add("o:|output:", o => po = o)
+            .Add("m:|manifest:", i => pi = i)
+            .Add("f:|folder:", o => po = o)
             .Add("v:|version:", v => vi = v);
 
          oset.Parse(_cmdline);

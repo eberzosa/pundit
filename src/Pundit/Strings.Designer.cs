@@ -73,8 +73,9 @@ namespace Pundit.Console {
         ///   Looks up a localized string similar to 
         ///Copyright (c) 2011 Ivan Gavryliuk.
         ///
-        ///syntax: {0} &lt;command&gt; [&lt;parameter&gt; [&lt;parameter&gt;[...]]] [&lt;options&gt;]
+        ///syntax: {0} &lt;command&gt; [&lt;options&gt;]
         ///
+        ///any options are optional and always have default values
         ///to get extended help on a command type &quot;{0} help &lt;command&gt;&quot; i.e &quot;{0} help pack&quot;
         ///
         ///Commands:
@@ -90,16 +91,12 @@ namespace Pundit.Console {
         }
         
         /// <summary>
-        ///   Looks up a localized string similar to syntax: {0} pack [&lt;manifest location&gt;] [-o:&lt;target folder&gt;]
+        ///   Looks up a localized string similar to syntax: {0} pack [-m:&lt;manifest location&gt;] [-o:&lt;target folder&gt;] [-v:&lt;version override&gt;]
         ///
         ///Creates a package based on the manifest file. Source files required for the package must exist.
-        ///  &lt;manifest location&gt; is optional and if not specified  default manifest in current folder will be used
-        ///  &quot;o&quot; parameter is optional and specifies output folder for the compiled package; by default folder of manifest&apos;s location is used
-        ///
-        ///examples:
-        ///  {0} pack
-        ///  {0} pack mymanifest.pundit
-        ///  {0} pack -o:c:\packages\.
+        ///  &lt;manifest location&gt; is a name or path to manifest file; by default manifest is taken from the current folder
+        ///  &lt;target folder&gt; specifies output folder for the compiled package; by default folder of manifest&apos;s location is used
+        ///  &lt;version override&gt; is used to override the version number inside the manifest; very useful in [rest of string was truncated]&quot;;.
         /// </summary>
         internal static string Help_pack {
             get {
@@ -108,11 +105,26 @@ namespace Pundit.Console {
         }
         
         /// <summary>
-        ///   Looks up a localized string similar to syntax: {0} publish [&lt;package&gt;] [-r:&lt;repository name&gt;].
+        ///   Looks up a localized string similar to syntax: {0} publish [-p:&lt;package&gt;] [-r:&lt;repository name&gt;]
+        ///
+        ///Publishes packages to repositories. By default all the packages in the current folders are published. Use optional parameters to override this behavior.
+        ///  &lt;package&gt; specificies packages to publish
+        ///  &lt;repository name&gt; specifies repository to publish to; by default packages are published to repositories specified in the local configuration file; &lt;repository name&gt; is a &quot;name&quot; attribute of a repository from the local configuration file; for testing  [rest of string was truncated]&quot;;.
         /// </summary>
         internal static string Help_publish {
             get {
                 return ResourceManager.GetString("Help_publish", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to syntax: {0} template
+        ///
+        ///Has no extra parameters. Creates template manifest file with fake data..
+        /// </summary>
+        internal static string Help_template {
+            get {
+                return ResourceManager.GetString("Help_template", resourceCulture);
             }
         }
     }
