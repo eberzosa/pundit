@@ -162,5 +162,55 @@ namespace Pundit.Core.Application
 
          return table;
       }
+
+      private static void FindNodes(DependencyNode rootNode, UnresolvedPackage package, ICollection<DependencyNode> collector)
+      {
+         if(rootNode.UnresolvedPackage.Equals(package))
+            collector.Add(rootNode);
+
+         foreach(DependencyNode child in rootNode.Children)
+            FindNodes(child, package, collector);
+      }
+
+      public string DescribeConflict(DependencyNode rootNode, UnresolvedPackage package)
+      {
+         var b = new StringBuilder();
+         var found = new List<DependencyNode>();
+
+         FindNodes(rootNode, package, found);
+
+         if(found.Count > 0)
+         {
+            foreach (DependencyNode node in found)
+            {
+               if (b.Length != 0) b.AppendLine();
+
+               b.Append("dependency: [");
+               b.Append(node.Path);
+               b.Append("], version: [");
+               b.Append(node.VersionPattern);
+               b.Append("], resolved to: [");
+
+               bool isFirst = true;
+               foreach (Version v in node.AllVersions)
+               {
+                  if (!isFirst)
+                  {
+                     b.Append(", ");
+                  }
+                  else
+                  {
+                     isFirst = false;
+                  }
+
+                  b.Append(v.ToString());
+               }
+
+               b.Append("]");
+            }
+         }
+
+         return b.ToString();
+      }
    }
 }

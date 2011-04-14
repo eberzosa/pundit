@@ -146,6 +146,11 @@ namespace Pundit.Core.Model
          }
       }
 
+      public IEnumerable<Version> AllVersions
+      {
+         get { return _versions; }
+      }
+
       public PackageKey ActiveVersionKey
       {
          get

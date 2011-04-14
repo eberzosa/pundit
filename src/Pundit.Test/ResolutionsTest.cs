@@ -20,13 +20,16 @@ namespace Pundit.Test
          var repo = new MockedRepository();
 
          //log4net
-         repo.SetVersions("log4net", new Version(1, 2, 10, 0), new Version(1, 2, 8, 0));
+         repo.SetVersions("log4net", new Version(1, 2, 10, 0), new Version(1, 2, 8, 0), new Version(1, 1, 0, 0));
          repo.SetManifest(
             new PackageKey("log4net", new Version(1, 2, 10, 0), null),
             new Package("log4net", new Version(1, 2, 10, 0)));
          repo.SetManifest(
             new PackageKey("log4net", new Version(1, 2, 8, 0), null),
             new Package("log4net", new Version(1, 2, 8, 0)));
+         repo.SetManifest(
+            new PackageKey("log4net", new Version(1, 1, 0, 0), null),
+            new Package("log4net", new Version(1, 1, 0, 0)));
 
          //Company.Logging
          repo.SetVersions("Company.Logging",
@@ -128,20 +131,39 @@ namespace Pundit.Test
 
       }
 
+      /// <summary>
+      /// Simple conflict:
+      /// 
+      /// Self.Library => (Company.Logging 3.0; log4net 1.1.0)
+      /// Company.Logging 3.0 => (log4net 1.2)
+      /// 
+      /// log4net dependency 1: {1.1.0}
+      /// log4net dependency 2: {1.2.8, 1.2.10}
+      /// 
+      /// log4net dependency cannot be satisfied
+      /// 
+      /// </summary>
       [Test]
-      public void EqualityTest()
+      public void SimpleConflictTest()
       {
-         var pkg1 = new UnresolvedPackage("p1", null);
-         var pkg2 = new UnresolvedPackage("p2", null);
+         var pkg = new Package("Self.Library", new Version(2, 0, 0, 501));
+         pkg.Dependencies.Add(new PackageDependency("Company.Logging", "3.0"));
+         pkg.Dependencies.Add(new PackageDependency("log4net", "1.1"));
 
-         Assert.IsFalse(pkg1.Equals(pkg2));
-         Assert.IsTrue(pkg1.Equals(pkg1));
+         var dr = new DependencyResolution(pkg, new[] { _repo });
+         var result = dr.Resolve();
+         VersionResolutionTable table = result.Item1;
 
-         var dic = new Dictionary<UnresolvedPackage, bool>();
-         dic[pkg1] = true;
+         Assert.IsTrue(table.HasConflicts);
+         Assert.AreEqual(1, table.ConflictCount);
 
-         var pkg11 = new UnresolvedPackage("p1", null);
-         Assert.IsTrue(dic.ContainsKey(pkg11));
+         var resolved = table.GetPackages();
+         var unresolved = table.GetConflictedPackages();
+
+         Assert.AreEqual(2, resolved.Count());
+         Assert.AreEqual(1, unresolved.Count());
+
+         string cd = dr.DescribeConflict(result.Item2, unresolved.First());
       }
    }
 }

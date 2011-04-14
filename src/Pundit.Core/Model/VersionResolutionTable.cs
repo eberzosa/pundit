@@ -53,6 +53,13 @@ namespace Pundit.Core.Model
                 select new PackageKey(package.PackageId, v, package.Platform);
       }
 
+      public IEnumerable<UnresolvedPackage> GetConflictedPackages()
+      {
+         return _resolution
+            .Where(r => r.Value.Count == 0)
+            .Select(r => new UnresolvedPackage(r.Key.PackageId, r.Key.Platform));
+      }
+
       /// <summary>
       /// 
       /// </summary>

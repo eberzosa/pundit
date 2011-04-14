@@ -9,6 +9,7 @@ namespace Pundit.Core.Model
    public class VersionPattern
    {
       //at least two numbers
+      private string _originalPattern;
       private static readonly Regex ValidationRgx = new Regex("^[0-9\\*]+(\\.[0-9\\*]+){1,3}$");
       private Version _v;
 
@@ -16,6 +17,8 @@ namespace Pundit.Core.Model
       {
          if(!ValidationRgx.IsMatch(pattern))
             throw new ArgumentException("Version pattern is not valid", "pattern");
+
+         _originalPattern = pattern;
 
          string[] sp = pattern.Split('.');
 
@@ -43,6 +46,11 @@ namespace Pundit.Core.Model
             return false;
 
          return true;
+      }
+
+      public override string ToString()
+      {
+         return _originalPattern;
       }
    }
 }
