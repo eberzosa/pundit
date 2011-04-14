@@ -9,15 +9,10 @@ using Pundit.Core.Model;
 
 namespace Pundit.Console.Commands
 {
-   class PublishCommand : ICommand
+   class PublishCommand : BaseCommand
    {
-      private static readonly ILog Log = LogManager.GetLogger(typeof (PublishCommand));
-      private readonly string[] _cmdline;
-
-      public PublishCommand(string[] args)
-      {
-         _cmdline = args;
-      }
+      public PublishCommand(string[] args) : base(args)
+      {}
 
       private void ResolveParameters(out string[] packages, out string[] repositoryName)
       {
@@ -28,7 +23,7 @@ namespace Pundit.Console.Commands
             .Add("p:|package:", i => pi = i)
             .Add("r:|repository:", r => ri = r);
 
-         oset.Parse(_cmdline);
+         oset.Parse(GetCommandLine());
 
          //get package)))
          if(pi != null)
@@ -60,7 +55,7 @@ namespace Pundit.Console.Commands
          }
       }
 
-      public void Execute()
+      public override void Execute()
       {
          string[] packages;
          string[] repoNames;

@@ -48,10 +48,11 @@
   </ItemGroup>
   <ItemGroup>
     <Compile Include="CommandFactory.cs" />
+    <Compile Include="Commands\BaseCommand.cs" />
     <Compile Include="Commands\ICommand.cs" />
     <Compile Include="Commands\PackCommand.cs" />
     <Compile Include="Commands\PublishCommand.cs" />
-    <Compile Include="Commands\RefreshCommand.cs" />
+    <Compile Include="Commands\ResolveCommand.cs" />
     <Compile Include="Commands\TemplateCommand.cs" />
     <Compile Include="Program.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />

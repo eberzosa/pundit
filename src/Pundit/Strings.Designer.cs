@@ -118,6 +118,19 @@ namespace Pundit.Console {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to syntax: {0} resolve [-m:&lt;manifest location&gt;] [-d:&lt;depth&gt;]
+        ///
+        ///Resolves manifest version dependencies, checking for conflicts, downloading missing libraries and installing them into the solution.
+        ///  &lt;manifest location&gt; is a name or path to manifest file; by default manifest is taken from the current folder
+        ///  &lt;depth&gt; is a repository search depth; by default all the repositories are searched, however this can be overriden; set depth &quot;local&quot; to search only the local repository or to a number which specifies how [rest of string was truncated]&quot;;.
+        /// </summary>
+        internal static string Help_resolve {
+            get {
+                return ResourceManager.GetString("Help_resolve", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized string similar to syntax: {0} template
         ///
         ///Has no extra parameters. Creates template manifest file with fake data..

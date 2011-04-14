@@ -8,43 +8,27 @@ using Pundit.Core.Utils;
 
 namespace Pundit.Console.Commands
 {
-   public class PackCommand : ICommand
+   class PackCommand : BaseCommand
    {
-      private static readonly ILog Log = LogManager.GetLogger(typeof (PackCommand));
-      private string[] _cmdline;
       private string _packagePath;
 
-      public PackCommand(string[] parameters)
+      public PackCommand(string[] parameters) : base(parameters)
       {
-         _cmdline = parameters;
       }
 
       private void ResolveParams(out string solutionRoot, out string packagePath, out string destinationFolder, out Version overrideVersion)
       {
-         string pi = null;
+         packagePath = GetLocalManifest();
+
          string po = null;
          string vi = null;
 
 
          OptionSet oset = new OptionSet()
-            .Add("m:|manifest:", i => pi = i)
             .Add("f:|folder:", o => po = o)
             .Add("v:|version:", v => vi = v);
 
-         oset.Parse(_cmdline);
-
-         //resolve package path
-         if (pi != null)
-         {
-            if (Path.IsPathRooted(pi))
-               packagePath = pi;
-            else
-               packagePath = Path.Combine(Environment.CurrentDirectory, PathUtils.GetOSPath(pi));
-         }
-         else
-         {
-            packagePath = Path.Combine(Environment.CurrentDirectory, Package.DefaultPackageFileName);
-         }
+         oset.Parse(GetCommandLine());
 
          //resolve output path
          if(po != null)
@@ -69,16 +53,13 @@ namespace Pundit.Console.Commands
 
          //validate
 
-         if(!File.Exists(packagePath))
-            throw new ArgumentException("package definition doesn't exist at [" + packagePath + "]");
-
          if(!Directory.Exists(destinationFolder))
             throw new ArgumentException("destination directory does not exist at [" + destinationFolder + "]");
 
          solutionRoot = new FileInfo(packagePath).DirectoryName;
       }
 
-      public void Execute()
+      public override void Execute()
       {
          string solutionRoot, packagePath, destinationFolder;
          Version overrideVersion;

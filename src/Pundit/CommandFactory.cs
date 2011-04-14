@@ -27,6 +27,9 @@ namespace Pundit.Console
             case "template":
                cmd = new TemplateCommand(parameters);
                break;
+            case "resolve":
+               cmd = new ResolveCommand(parameters);
+               break;
             default:
                cmd = null;
                break;

@@ -3,7 +3,7 @@ using System.IO;
 using System.Xml.Serialization;
 using System.Linq;
 
-namespace Pundit.Console
+namespace Pundit.Console.Repository
 {
    public class RegisteredRepository
    {
@@ -28,6 +28,7 @@ namespace Pundit.Console
       public const string LocalRepositoryName = "local";
 
       private Dictionary<string, RegisteredRepository> _repos = new Dictionary<string, RegisteredRepository>();
+      private List<RegisteredRepository> _reposList = new List<RegisteredRepository>();
 
       [XmlArray("list")]
       [XmlArrayItem("repository")]
@@ -37,10 +38,16 @@ namespace Pundit.Console
          set
          {
             _repos.Clear();
+            _reposList.Clear();
 
             if (value != null)
+            {
                foreach (RegisteredRepository rr in value)
+               {
                   _repos[rr.Name] = rr;
+                  _reposList.Add(rr);
+               }
+            }
          }
       }
 
@@ -75,6 +82,18 @@ namespace Pundit.Console
       public string this[string name]
       {
          get { return _repos[name].Uri; }
+      }
+
+      [XmlIgnore]
+      public string this[int index]
+      {
+         get { return _reposList[index].Name; }
+      }
+
+      [XmlIgnore]
+      public int TotalCount
+      {
+         get { return _reposList.Count; }
       }
    }
 }

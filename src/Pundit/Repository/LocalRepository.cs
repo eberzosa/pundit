@@ -95,5 +95,23 @@ namespace Pundit.Console.Repository
 
          return Repos[name];
       }
+
+      public static IEnumerable<string> TakeFirstRegisteredNames(int reposToTake, bool includeLocal)
+      {
+         var names = new List<string>();
+
+         if(includeLocal)
+         {
+            names.Add(RegisteredRepositories.LocalRepositoryName);
+            reposToTake--;
+         }
+
+         for(int i = 0; i < Math.Min(reposToTake, Registered.TotalCount); i++)
+         {
+            names.Add(Registered[i]);
+         }
+
+         return names;
+      }
    }
 }
