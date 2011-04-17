@@ -124,10 +124,10 @@ namespace Pundit.Test
          IEnumerable<PackageKey> packages = table.GetPackages();
 
          Assert.IsFalse(table.HasConflicts);
-         Assert.AreEqual(3, packages.Count());
-         Assert.AreEqual(new Version(3, 0, 0, 4863), packages.ElementAt(1).Version);
-         Assert.AreEqual(new Version(2, 0, 0, 501), packages.ElementAt(0).Version);
-         Assert.AreEqual(new Version(1, 2, 8, 0), packages.ElementAt(2).Version);
+         Assert.AreEqual(2, packages.Count());
+         Assert.AreEqual(new Version(3, 0, 0, 4863), packages.ElementAt(0).Version);
+         //Assert.AreEqual(new Version(2, 0, 0, 501), packages.ElementAt(0).Version);
+         Assert.AreEqual(new Version(1, 2, 8, 0), packages.ElementAt(1).Version);
 
       }
 
@@ -160,7 +160,7 @@ namespace Pundit.Test
          var resolved = table.GetPackages();
          var unresolved = table.GetConflictedPackages();
 
-         Assert.AreEqual(2, resolved.Count());
+         Assert.AreEqual(1, resolved.Count());
          Assert.AreEqual(1, unresolved.Count());
 
          string cd = dr.DescribeConflict(result.Item2, unresolved.First());
