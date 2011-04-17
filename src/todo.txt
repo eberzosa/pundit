@@ -1,7 +1,9 @@
 
 0.0.0
-- support devtime packages
++ support devtime packages
++ repository search command
 - if the package doesn't have DEBUG configuration and debug is requested, use release instead
 - install includes
 - install tools and other
-- repository search command
+- check that all dependencies are valid when publishing
+- don't delete lib, other, include, tools folders when re-setting folders

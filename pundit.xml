@@ -1,14 +1,15 @@
 <package>
   <packageId>Pundit.Core</packageId>
   <platform>net40</platform>
-  <project-url>http://ngem.codeplex.com</project-url>
-  <version>1.1.0.2</version>
+  <project-url>http://pundit.codeplex.com</project-url>
+  <version>1.0.0.2</version>
   <files>
-    <file basedir="src" include="**/*.cs" kind="other"/>
-    <file include="test/**" kind="other" targetdir="empties"/>
+    <file basedir="src/Pundit.Core/bin/Release" include="Pundit*.dll"/>
+    <file basedir="src/Pundit.Core/bin/Debug" include="Pundit*.dll;Pundit*.pdb" configuration="debug"/>
   </files>
   <dependencies>
-    <package id="nunit-framework" version="2.5.3"/>
-    <package id="ICSharpCode-SharpZipLib" version="0.85"/>
+    <package id="NUnit.Framework" version="2.5" platform="net20"/>
+    <package id="sharpziplib" version="0.86" platform="net20"/>
+    <package id="log4net" version="1.2" platform="net20"/>
   </dependencies>
 </package>
