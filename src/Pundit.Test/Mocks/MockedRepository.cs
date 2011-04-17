@@ -29,11 +29,6 @@ namespace Pundit.Test.Mocks
          throw new NotImplementedException();
       }
 
-      public IEnumerable<Package> Search(string nameSubstring)
-      {
-         throw new NotImplementedException();
-      }
-
       public Stream Download(PackageKey key)
       {
          throw new NotImplementedException();
@@ -59,6 +54,11 @@ namespace Pundit.Test.Mocks
       }
 
       public bool[] PackagesExist(PackageKey[] packages)
+      {
+         throw new NotImplementedException();
+      }
+
+      public PackageKey[] Search(string substring)
       {
          throw new NotImplementedException();
       }

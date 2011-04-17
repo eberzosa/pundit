@@ -82,7 +82,8 @@ namespace Pundit.Console {
         ///  pack - create package based on manifest definition
         ///  publish - publish package to a repository(ies)
         ///  template - create an empty (and invalid) manifest
-        ///  resolve - resolve dependencies and refresh project packages specifiend in the manifest.
+        ///  resolve - resolve dependencies and refresh project packages specifiend in the manifest
+        ///  search - search for packages in rep [rest of string was truncated]&quot;;.
         /// </summary>
         internal static string Help {
             get {
@@ -127,6 +128,22 @@ namespace Pundit.Console {
         internal static string Help_resolve {
             get {
                 return ResourceManager.GetString("Help_resolve", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to syntax: {0} search &lt;-t:text&gt; [&lt;-d:depth&gt;]
+        ///
+        ///  &lt;text&gt; is mandatory package name or name part (case insensitive&gt;
+        ///  &lt;depth&gt; is a repository search depth; by default all the repositories are searched, however this can be overriden; set depth &quot;local&quot; to search only the local repository or to a number which specifies how many repositories specified in the local configuration file to search
+        ///
+        ///examples:
+        ///  {0} search -t:log4net
+        ///  {0} search -t:log4net -d:local.
+        /// </summary>
+        internal static string Help_search {
+            get {
+                return ResourceManager.GetString("Help_search", resourceCulture);
             }
         }
         

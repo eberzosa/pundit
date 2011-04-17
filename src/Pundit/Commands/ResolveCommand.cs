@@ -19,23 +19,13 @@ namespace Pundit.Console.Commands
 
       private void ResolveParameters(out int depthIndex, out BuildConfiguration configuration)
       {
-         depthIndex = int.MaxValue;
+         depthIndex = GetDepth();
          configuration = BuildConfiguration.Release;
-         string sdepth = null;
          string sconfiguration = null;
 
          new OptionSet()
-            .Add("d:|depth:", d => sdepth = d)
             .Add("c:|configuration:", c => sconfiguration = c)
             .Parse(GetCommandLine());
-
-         if(sdepth != null)
-         {
-            if(sdepth == "local")
-               depthIndex = 0;
-            else if (!int.TryParse(sdepth, out depthIndex))
-               throw new ArgumentException("wrong depth: " + sdepth);
-         }
 
          if (sconfiguration != null && sconfiguration == "debug")
             configuration = BuildConfiguration.Debug;

@@ -53,6 +53,7 @@
     <Compile Include="Commands\PackCommand.cs" />
     <Compile Include="Commands\PublishCommand.cs" />
     <Compile Include="Commands\ResolveCommand.cs" />
+    <Compile Include="Commands\SearchCommand.cs" />
     <Compile Include="Commands\TemplateCommand.cs" />
     <Compile Include="Program.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />

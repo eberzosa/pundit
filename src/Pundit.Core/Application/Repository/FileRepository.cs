@@ -111,5 +111,28 @@ namespace Pundit.Core.Application.Repository
 
          return results;
       }
+
+      public PackageKey[] Search(string substring)
+      {
+         var result = new List<PackageKey>();
+
+         foreach(FileInfo fi in new DirectoryInfo(_rootPath).GetFiles("*" + substring + "*"))
+         {
+            PackageKey key = null;
+
+            try
+            {
+               key = PackageUtils.GetPackageKeyFromFileName(fi.Name);
+            }
+            catch(ArgumentException)
+            {
+               
+            }
+
+            if(key != null) result.Add(key);
+         }
+
+         return result.ToArray();
+      }
    }
 }

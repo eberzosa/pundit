@@ -39,5 +39,8 @@ namespace Pundit.Core.Model
 
       [OperationContract]
       bool[] PackagesExist(PackageKey[] packages);
+
+      [OperationContract]
+      PackageKey[] Search(string substring);
    }
 }

@@ -133,7 +133,8 @@ Commands:
   pack - create package based on manifest definition
   publish - publish package to a repository(ies)
   template - create an empty (and invalid) manifest
-  resolve - resolve dependencies and refresh project packages specifiend in the manifest</value>
+  resolve - resolve dependencies and refresh project packages specifiend in the manifest
+  search - search for packages in repositories</value>
   </data>
   <data name="Help_pack" xml:space="preserve">
     <value>syntax: {0} pack [-m:&lt;manifest location&gt;] [-o:&lt;target folder&gt;] [-v:&lt;version override&gt;]
@@ -175,6 +176,16 @@ examples:
   {0} resolve -d:local
   {0} resolve -d:2
   {0} resolve -c:debug</value>
+  </data>
+  <data name="Help_search" xml:space="preserve">
+    <value>syntax: {0} search &lt;-t:text&gt; [&lt;-d:depth&gt;]
+
+  &lt;text&gt; is mandatory package name or name part (case insensitive&gt;
+  &lt;depth&gt; is a repository search depth; by default all the repositories are searched, however this can be overriden; set depth "local" to search only the local repository or to a number which specifies how many repositories specified in the local configuration file to search
+
+examples:
+  {0} search -t:log4net
+  {0} search -t:log4net -d:local</value>
   </data>
   <data name="Help_template" xml:space="preserve">
     <value>syntax: {0} template

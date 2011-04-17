@@ -47,6 +47,39 @@ namespace Pundit.Console.Commands
          return manifestPath;
       }
 
+      protected int GetDepth()
+      {
+         int depth = int.MaxValue;
+
+         string sdepth = null;
+
+         new OptionSet()
+            .Add("d:|depth:", d => sdepth = d)
+            .Parse(_args);
+
+         if(sdepth != null)
+         {
+            if(sdepth == "local")
+               depth = 0;
+            else if (!int.TryParse(sdepth, out depth))
+               throw new ArgumentException("wrong depth: " + sdepth);
+         }
+
+         return depth;
+      }
+
+      protected string GetText()
+      {
+         string text = null;
+
+         new OptionSet().Add("t:|text:|s:|string:", s => text = s).Parse(_args);
+
+         if(text == null)
+            throw new ArgumentException("search text not specified");
+
+         return text;
+      }
+
       public abstract void Execute();
    }
 }

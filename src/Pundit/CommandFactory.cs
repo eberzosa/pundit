@@ -30,6 +30,9 @@ namespace Pundit.Console
             case "resolve":
                cmd = new ResolveCommand(parameters);
                break;
+            case "search":
+               cmd = new SearchCommand(parameters);
+               break;
             default:
                cmd = null;
                break;
