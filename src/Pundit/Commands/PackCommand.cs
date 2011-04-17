@@ -96,7 +96,7 @@ namespace Pundit.Console.Commands
 
          using (Stream writeStream = File.Create(destinationFile))
          {
-            using (PackageWriter pw = new PackageWriter(solutionRoot, devPack, writeStream))
+            using (var pw = new PackageWriter(solutionRoot, devPack, writeStream))
             {
                bytesWritten = pw.WriteAll();
             }

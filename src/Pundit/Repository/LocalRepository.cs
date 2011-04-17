@@ -1,8 +1,10 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.IO;
+using System.Linq;
 using System.Security.AccessControl;
 using log4net;
+using Pundit.Core;
 using Pundit.Core.Application.Repository;
 using Pundit.Core.Model;
 using log4net;
@@ -112,6 +114,54 @@ namespace Pundit.Console.Repository
          }
 
          return names;
+      }
+
+      public static void DownloadLocally(IEnumerable<PackageKey> packages, IEnumerable<IRepository> activeRepositories)
+      {
+         IRepository localRepo =
+            RepositoryFactory.CreateFromUri(GetRepositoryUriFromName(RegisteredRepositories.LocalRepositoryName));
+
+         PackageKey[] packagesArray = packages.ToArray();
+         bool[] existance = localRepo.PackagesExist(packagesArray);
+
+         for(int i = 0; i < packagesArray.Length; i++)
+         {
+            PackageKey pck = packagesArray[i];
+
+            if(existance[i])
+            {
+               Log.InfoFormat("[+] {0}", pck);
+            }
+            else
+            {
+               bool downloaded = false;
+
+               foreach(IRepository activeRepository in activeRepositories)
+               {
+                  try
+                  {
+                     using (Stream pckStream = activeRepository.Download(pck))
+                     {
+                        Log.InfoFormat("Downoading {0} to the local repository", pck);
+
+                        localRepo.Publish(pckStream);
+                     }
+
+                     downloaded = true;
+                     break;
+                  }
+                  catch(FileNotFoundException)
+                  {
+                     
+                  }
+               }
+
+               if(!downloaded)
+               {
+                  throw new ApplicationException("could not find package in any repository: " + pck);
+               }
+            }
+         }
       }
    }
 }

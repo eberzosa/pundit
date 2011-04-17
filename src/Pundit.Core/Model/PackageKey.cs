@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Xml.Serialization;
 using Pundit.Core.Utils;
 
 namespace Pundit.Core.Model
@@ -26,18 +27,29 @@ namespace Pundit.Core.Model
          Platform = PackageUtils.TrimPlatformName(platform);
       }
 
+      [XmlAttribute("id")]
       public string PackageId
       {
          get { return _packageId; }
          set { _packageId = value; }
       }
 
+      //[XmlAttribute("version")]
+      [XmlIgnore]
       public Version Version
       {
          get { return _version; }
          set { _version = value; }
       }
 
+      [XmlAttribute("version")]
+      public string VersionString
+      {
+         get { return _version.ToString(); }
+         set { _version = new Version(value);}
+      }
+
+      [XmlAttribute("platform")]
       public string Platform
       {
          get { return _platform; }

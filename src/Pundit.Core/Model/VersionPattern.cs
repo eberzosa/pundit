@@ -48,6 +48,11 @@ namespace Pundit.Core.Model
          return true;
       }
 
+      public Version ToVersion()
+      {
+         return _v;
+      }
+
       public override string ToString()
       {
          return _originalPattern;

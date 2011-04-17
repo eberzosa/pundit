@@ -17,12 +17,17 @@ namespace Pundit.Console.Commands
       {
       }
 
-      private void ResolveParameters(out int depthIndex)
+      private void ResolveParameters(out int depthIndex, out BuildConfiguration configuration)
       {
          depthIndex = int.MaxValue;
+         configuration = BuildConfiguration.Release;
          string sdepth = null;
+         string sconfiguration = null;
 
-         new OptionSet().Add("d:|depth:", d => sdepth = d).Parse(GetCommandLine());
+         new OptionSet()
+            .Add("d:|depth:", d => sdepth = d)
+            .Add("c:|configuration:", c => sconfiguration = c)
+            .Parse(GetCommandLine());
 
          if(sdepth != null)
          {
@@ -31,6 +36,9 @@ namespace Pundit.Console.Commands
             else if (!int.TryParse(sdepth, out depthIndex))
                throw new ArgumentException("wrong depth: " + sdepth);
          }
+
+         if (sconfiguration != null && sconfiguration == "debug")
+            configuration = BuildConfiguration.Debug;
       }
 
       private IEnumerable<IRepository> GetRepositories(int depth)
@@ -55,21 +63,37 @@ namespace Pundit.Console.Commands
          }
       }
 
+      private void PrintSuccess(VersionResolutionTable tbl)
+      {
+         Log.Info("Dependencies resolved:");
+
+         foreach(var pck in tbl.GetPackages())
+         {
+            Log.InfoFormat("  > [{0}] ({1}) --> v{2}", pck.PackageId, pck.Platform, pck.Version);
+         }
+      }
+
       public override void Execute()
       {
+         //parse command and read manifest
          string manifestPath = GetLocalManifest();
+         string projectRoot = new FileInfo(manifestPath).Directory.FullName;
          int depth;
-         ResolveParameters(out depth);
+         BuildConfiguration configuration;
+         ResolveParameters(out depth, out configuration);
 
          Log.InfoFormat("manifest: {0}", manifestPath);
          Log.InfoFormat("depth: {0}", depth == int.MaxValue ? "max" : depth.ToString());
+         Log.InfoFormat("configuration: {0}", configuration);
 
          Log.Info("reading manifest...");
          DevPackage devPackage = DevPackage.FromStream(File.OpenRead(manifestPath));
 
+         //get the repository list
          Log.InfoFormat("getting repositories up to depth {0}", depth);
          IEnumerable<IRepository> repositories = GetRepositories(depth);
 
+         //resolve dependencies
          Log.Info("resolving dependencies...");
          DependencyResolution dr = new DependencyResolution(devPackage, repositories.ToArray());
          var resolutionResult = dr.Resolve();
@@ -82,8 +106,19 @@ namespace Pundit.Console.Commands
          }
          else
          {
-            
+            PrintSuccess(resolutionResult.Item1);
          }
+
+         //ensure that all packages exist in local repository
+         LocalRepository.DownloadLocally(resolutionResult.Item1.GetPackages(),
+            repositories.Skip(1));
+
+         //install all packages
+         Log.Info("Installing packages");
+         var installer = new PackageInstaller(projectRoot,
+            resolutionResult.Item1,
+            repositories.First());
+         installer.InstallAll(configuration);
       }
    }
 }

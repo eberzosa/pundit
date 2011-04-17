@@ -162,17 +162,19 @@ examples:
   {0} publish -r:corporate</value>
   </data>
   <data name="Help_resolve" xml:space="preserve">
-    <value>syntax: {0} resolve [-m:&lt;manifest location&gt;] [-d:&lt;depth&gt;]
+    <value>syntax: {0} resolve [-m:&lt;manifest location&gt;] [-d:&lt;depth&gt;] [-c:&lt;configuration name&gt;]
 
 Resolves manifest version dependencies, checking for conflicts, downloading missing libraries and installing them into the solution.
   &lt;manifest location&gt; is a name or path to manifest file; by default manifest is taken from the current folder
   &lt;depth&gt; is a repository search depth; by default all the repositories are searched, however this can be overriden; set depth "local" to search only the local repository or to a number which specifies how many repositories specified in the local configuration file to search
+  &lt;configuration name&gt; build configuration (debug or release); by default release is used; if a dependency doesn't include debug build release will be used
 
 examples:
   {0} resolve
   {0} resolve -p:Pundit.Extensions.xml
   {0} resolve -d:local
-  {0} resolve -d:2</value>
+  {0} resolve -d:2
+  {0} resolve -c:debug</value>
   </data>
   <data name="Help_template" xml:space="preserve">
     <value>syntax: {0} template

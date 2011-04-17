@@ -54,8 +54,8 @@ namespace Pundit.Core.Model
             ex = ex1;
          }
 
-         if(Files.Count == 0)
-            ex.AddError("Files", "package requires files to be included");
+         //if(Files.Count == 0)
+         //   ex.AddError("Files", "package requires files to be included");
 
          if (ex.HasErrors)
             throw ex;

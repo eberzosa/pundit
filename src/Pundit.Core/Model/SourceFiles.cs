@@ -61,7 +61,7 @@ namespace Pundit.Core.Model
       /// Configuration name (debug or release)
       /// </summary>
       [XmlAttribute("configuration")]
-      public FileConfiguration Configuration { get; set; }
+      public BuildConfiguration Configuration { get; set; }
 
       public SourceFiles()
       {

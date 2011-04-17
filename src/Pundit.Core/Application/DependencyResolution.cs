@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.IO;
 using System.Linq;
 using System.Text;
 using log4net;
@@ -11,7 +12,7 @@ namespace Pundit.Core.Application
    {
       private readonly IRepository[] _activeRepositories;
       private readonly DependencyNode _root;
-      private readonly ILog _log = LogManager.GetLogger(typeof (DependencyResolution));
+      //private readonly ILog _log = LogManager.GetLogger(typeof (DependencyResolution));
 
       public DependencyResolution(Package rootManifest, IRepository[] activeRepositories)
       {
@@ -70,7 +71,7 @@ namespace Pundit.Core.Application
 
       private void ResolveVersions(DependencyNode node)
       {
-         if(_log.IsDebugEnabled) _log.Debug("resolving " + node.Path);
+         //if(_log.IsDebugEnabled) _log.Debug("resolving " + node.Path);
 
          if(!node.HasVersions)
          {
@@ -93,7 +94,7 @@ namespace Pundit.Core.Application
          }
          else
          {
-            if(_log.IsDebugEnabled) _log.Debug("node already has versions resolved");
+            //if(_log.IsDebugEnabled) _log.Debug("node already has versions resolved");
          }
 
          if(node.HasManifest)
@@ -107,13 +108,20 @@ namespace Pundit.Core.Application
 
       private void ResolveManifests(DependencyNode node)
       {
-         if(node.HasVersions && !node.HasManifest && node.ActiveVersion != null)
+         if(node.HasVersions && !node.HasManifest)
          {
             Package manifest = null;
 
             foreach(var repo in _activeRepositories)
             {
-               manifest = repo.GetManifest(node.ActiveVersionKey);
+               try
+               {
+                  manifest = repo.GetManifest(node.ActiveVersionKey);
+               }
+               catch(FileNotFoundException)
+               {
+                  
+               }
 
                if (manifest != null) break;
             }
@@ -158,7 +166,8 @@ namespace Pundit.Core.Application
       {
          var table = new VersionResolutionTable();
 
-         FlattenNode(rootNode, table);
+         foreach(var node in rootNode.Children)
+            FlattenNode(node, table);
 
          return table;
       }

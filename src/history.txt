@@ -1,11 +1,16 @@
+Latest Released Version: none
+
 Legend:
 
 [+] new feature
 [-] bug fixed
 [*] improvement
 
-v0.0.0
-= package resolution
-- publish command to acccept patterns
-- local repository creation on start with fake config
+v0.0.1
 - autoupdate
+
+v0.0.0
+[+] package publishing
+[+] dependency resolution
+[+] repository chaining
+[+] publishing to more than one repository

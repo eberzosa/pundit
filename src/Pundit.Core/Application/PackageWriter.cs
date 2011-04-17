@@ -42,9 +42,9 @@ namespace Pundit.Core.Application
          _zipStream.SetLevel(9);
       }
 
-      public long WriteAll()
+      public long WriteAll(bool includeDevTime = false)
       {
-         WriteManifest();
+         WriteManifest(includeDevTime);
 
          _bytesWritten += _zipStream.Length;
 
@@ -53,7 +53,7 @@ namespace Pundit.Core.Application
          return _bytesWritten;
       }
 
-      private void WriteManifest()
+      private void WriteManifest(bool includeDevTime)
       {
          ZipEntry entry = new ZipEntry(Package.DefaultPackageFileName);
 

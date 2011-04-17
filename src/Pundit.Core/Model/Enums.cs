@@ -6,7 +6,7 @@ using System.Xml.Serialization;
 
 namespace Pundit.Core.Model
 {
-   public enum FileConfiguration
+   public enum BuildConfiguration
    {
       [XmlEnum("release")]
       Release = 0,

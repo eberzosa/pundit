@@ -50,6 +50,7 @@
     <Compile Include="3rdparty\DirectoryScanner.cs" />
     <Compile Include="3rdparty\Options.cs" />
     <Compile Include="Application\DependencyResolution.cs" />
+    <Compile Include="Application\PackageInstaller.cs" />
     <Compile Include="Application\PackageReader.cs" />
     <Compile Include="Application\PackageWriter.cs" />
     <Compile Include="Application\Repository\FileRepository.cs" />

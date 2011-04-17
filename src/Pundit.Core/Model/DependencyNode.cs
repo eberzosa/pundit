@@ -70,7 +70,7 @@ namespace Pundit.Core.Model
          _hasVersions = true;
 
          _children.Clear();
-         _hasManifest = false;
+         _hasManifest = (versions.Length == 0); //if there are no versions, no point to fetch manifest
       }
 
       public void SetManifest(Package thisManifest)

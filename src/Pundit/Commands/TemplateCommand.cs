@@ -32,7 +32,7 @@ namespace Pundit.Console.Commands
 
          SourceFiles sampleFile =  new SourceFiles("*.h");
          sampleFile.BaseDirectory = "base/dir";
-         sampleFile.Configuration = FileConfiguration.Debug;
+         sampleFile.Configuration = BuildConfiguration.Debug;
          sampleFile.TargetDirectory = "targetdir";
          dp.Files.Add(sampleFile);
 

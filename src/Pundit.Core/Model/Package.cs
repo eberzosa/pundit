@@ -75,11 +75,16 @@ namespace Pundit.Core.Model
       /// </summary>
       /// <param name="copy">The package to copy from. Must be valid,
       /// otherwise <see cref="InvalidPackageException"/> is thrown</param>
-      public Package(Package copy)
+      /// <param name="includeDevTime"></param>
+      public Package(Package copy, bool includeDevTime = false)
       {
          copy.Validate();
 
-         _dependencies = new List<PackageDependency>(copy._dependencies);
+         if(includeDevTime)
+            _dependencies = new List<PackageDependency>(copy._dependencies);
+         else
+            _dependencies = new List<PackageDependency>(copy._dependencies.Where(pd => !pd.DevTimeOnly));
+
          PackageId = copy.PackageId;
          Platform = copy.Platform;
          ProjectUrl = copy.ProjectUrl;

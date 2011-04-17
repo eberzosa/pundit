@@ -59,29 +59,57 @@ namespace Pundit.Core.Application.Repository
          File.Move(tempFile, targetPath);
       }
 
-      public IEnumerable<Package> Search(string nameSubstring)
-      {
-         throw new NotImplementedException();
-      }
-
       public Stream Download(PackageKey key)
       {
-         throw new NotImplementedException();
+         string fullPath = Path.Combine(_rootPath, PackageUtils.GetFileName(key));
+
+         if(!File.Exists(fullPath))
+            throw new FileNotFoundException("package not found");
+
+         return File.OpenRead(fullPath);
       }
 
       public Version[] GetVersions(UnresolvedPackage package, VersionPattern pattern)
       {
-         throw new NotImplementedException();
+         var versions = new List<Version>();
+
+         string filePattern = PackageUtils.GetSearchPattern(package, pattern);
+         
+         foreach(FileInfo file in new DirectoryInfo(_rootPath).GetFiles(filePattern))
+         {
+            PackageKey key = PackageUtils.GetPackageKeyFromFileName(file.Name);
+
+            versions.Add(key.Version);
+         }
+
+         return versions.ToArray();
       }
 
       public Package GetManifest(PackageKey key)
       {
-         throw new NotImplementedException();
+         string fullPath = Path.Combine(_rootPath, PackageUtils.GetFileName(key));
+
+         if(!File.Exists(fullPath))
+            throw new FileNotFoundException("package not found");
+
+         using(PackageReader reader = new PackageReader(File.OpenRead(fullPath)))
+         {
+            return reader.ReadManifest();
+         }
       }
 
       public bool[] PackagesExist(PackageKey[] packages)
       {
-         throw new NotImplementedException();
+         var results = new bool[packages.Length];
+
+         for (int i = 0; i < packages.Length; i++ )
+         {
+            string fullPath = Path.Combine(_rootPath, PackageUtils.GetFileName(packages[i]));
+
+            results[i] = File.Exists(fullPath);
+         }
+
+         return results;
       }
    }
 }

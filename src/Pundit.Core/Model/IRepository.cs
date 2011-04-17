@@ -14,13 +14,11 @@ namespace Pundit.Core.Model
       /// <summary>
       /// Publishes package in the repository. Only package stream should be passes as
       /// the rest of the info is alredy in the package's manifest.
+      /// All the builds are removed and only this one is kept.
       /// </summary>
       /// <param name="packageStream">Package stream</param>
       [OperationContract]
       void Publish(Stream packageStream);
-
-      [OperationContract]
-      IEnumerable<Package> Search(string nameSubstring);
 
       /// <summary>
       /// Downloads package
@@ -28,12 +26,15 @@ namespace Pundit.Core.Model
       /// <param name="key">Package unique identifier</param>
       /// <returns>Package stream</returns>
       [OperationContract]
+      [FaultContract(typeof(FileNotFoundException))]
       Stream Download(PackageKey key);
 
       [OperationContract]
+      [FaultContract(typeof(FileNotFoundException))]
       Version[] GetVersions(UnresolvedPackage package, VersionPattern pattern);
 
       [OperationContract]
+      [FaultContract(typeof(FileNotFoundException))]
       Package GetManifest(PackageKey key);
 
       [OperationContract]
