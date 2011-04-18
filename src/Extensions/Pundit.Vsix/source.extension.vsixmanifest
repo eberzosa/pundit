@@ -1,0 +1,30 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<Vsix xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:xsd="http://www.w3.org/2001/XMLSchema" Version="1.0.0" xmlns="http://schemas.microsoft.com/developer/vsx-schema/2010">
+  <Identifier Id="bc15a5f2-9b23-42ff-820a-d67674e3a80f">
+    <Name>Pundit</Name>
+    <Author>Ivan Gavryliuk</Author>
+    <Version>1.0.0</Version>
+    <Description xml:space="preserve">Pundit Dependency Management Visual Studio Package</Description>
+    <Locale>1033</Locale>
+    <MoreInfoUrl>http://pundit.codeplex.com</MoreInfoUrl>
+    <GettingStartedGuide>http://pundit.codeplex.com/documentation</GettingStartedGuide>
+    <InstalledByMsi>false</InstalledByMsi>
+    <SupportedProducts>
+      <VisualStudio Version="10.0">
+        <Edition>Ultimate</Edition>
+        <Edition>Premium</Edition>
+        <Edition>Pro</Edition>
+        <Edition>Express_All</Edition>
+      </VisualStudio>
+    </SupportedProducts>
+    <SupportedFrameworkRuntimeEdition MinVersion="4.0" MaxVersion="4.0" />
+  </Identifier>
+  <References>
+    <Reference Id="Microsoft.VisualStudio.MPF" MinVersion="10.0">
+      <Name>Visual Studio MPF</Name>
+    </Reference>
+  </References>
+  <Content>
+    <VsPackage>|%CurrentProject%;PkgdefProjectOutputGroup|</VsPackage>
+  </Content>
+</Vsix>
