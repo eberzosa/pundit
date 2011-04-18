@@ -3,7 +3,7 @@ using System.IO;
 using System.Xml.Serialization;
 using System.Linq;
 
-namespace Pundit.Console.Repository
+namespace Pundit.Core.Model
 {
    public class RegisteredRepository
    {

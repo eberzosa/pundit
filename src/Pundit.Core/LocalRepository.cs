@@ -2,16 +2,13 @@
 using System.Collections.Generic;
 using System.IO;
 using System.Linq;
-using System.Security.AccessControl;
 using log4net;
-using Pundit.Core;
 using Pundit.Core.Application.Repository;
 using Pundit.Core.Model;
-using log4net;
 
-namespace Pundit.Console.Repository
+namespace Pundit.Core
 {
-   class LocalRepository : FileRepository
+   public class LocalRepository : FileRepository
    {
       private const string LocalRepositoryRootEnv = "PUNDIT_ROOT";
       private const string LocalRepositoryDirName = ".pundit";

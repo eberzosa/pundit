@@ -4,7 +4,6 @@ using System.IO;
 using System.Linq;
 using log4net;
 using NDesk.Options;
-using Pundit.Console.Repository;
 using Pundit.Core;
 using Pundit.Core.Application;
 using Pundit.Core.Model;
