@@ -28,6 +28,8 @@ namespace Pundit.Console.Commands
          //get package)))
          if(pi != null)
          {
+            pi = Path.GetFullPath(pi);
+
             if(!File.Exists(pi))
                throw new ArgumentException("package [" + pi + "] does not exist");
 
