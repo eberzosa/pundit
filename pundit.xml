@@ -8,7 +8,7 @@
     <file basedir="src/Pundit.Core/bin/Debug" include="Pundit*.dll;Pundit*.pdb" configuration="debug"/>
   </files>
   <dependencies>
-    <package id="NUnit.Framework" version="2.5" platform="net20"/>
+    <package id="NUnit.Framework" version="2.5" platform="net20" devtime="true"/>
     <package id="sharpziplib" version="0.86" platform="net20"/>
     <package id="log4net" version="1.2" platform="net20"/>
   </dependencies>
