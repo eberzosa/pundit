@@ -122,21 +122,30 @@ namespace Pundit.Core.Application
          _otherFolderPath = Path.Combine(rootDirectory, "other");
       }
 
+      private void CleanupFolder(string fullPath)
+      {
+         if(Directory.Exists(fullPath))
+         {
+            foreach(string file in Directory.GetFiles(fullPath, "*", SearchOption.TopDirectoryOnly))
+            {
+               try
+               {
+                  File.Delete(file);
+               }
+               catch
+               {
+                  
+               }
+            }
+         }
+      }
+
       private void ClearAllFolders()
       {
-         if (Directory.Exists(_libFolderPath))
-            foreach (string file in Directory.GetFiles(_libFolderPath))
-               File.Delete(file);
-
-         if(Directory.Exists(_includeFolderPath))
-            Directory.Delete(_includeFolderPath, true);
-
-         if(Directory.Exists(_toolsFolderPath))
-            Directory.Delete(_toolsFolderPath, true);
-
-         if(Directory.Exists(_otherFolderPath))
-            
-            Directory.Delete(_otherFolderPath, true);
+         CleanupFolder(_libFolderPath);
+         CleanupFolder(_includeFolderPath);
+         CleanupFolder(_toolsFolderPath);
+         CleanupFolder(_otherFolderPath);
       }
 
       private bool DependenciesChanged(IEnumerable<PackageKey> currentDependencies, BuildConfiguration configuration)

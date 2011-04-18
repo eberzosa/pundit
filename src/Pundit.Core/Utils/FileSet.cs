@@ -71,11 +71,5 @@ namespace Pundit.Core.Utils
 
          return rgx.IsMatch(fullPath);
       }
-
-      public string[] GetAllDirectories()
-      {
-         //foreach()
-         return null;
-      }
    }
 }
