@@ -124,8 +124,9 @@ namespace Pundit.Core.Application
 
       private void ClearAllFolders()
       {
-         if(Directory.Exists(_libFolderPath))
-            Directory.Delete(_libFolderPath, true);
+         if (Directory.Exists(_libFolderPath))
+            foreach (string file in Directory.GetFiles(_libFolderPath))
+               File.Delete(file);
 
          if(Directory.Exists(_includeFolderPath))
             Directory.Delete(_includeFolderPath, true);
