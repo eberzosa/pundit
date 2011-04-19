@@ -1,32 +1,29 @@
-﻿using System;
-using System.Collections.Generic;
-using System.IO;
-using System.Linq;
-using System.Threading;
-using System.Xml.Serialization;
-using log4net;
-using NAnt.Core;
-using Pundit.Core.Utils;
+﻿using System.Xml.Serialization;
 
 namespace Pundit.Core.Model
 {
+   /// <summary>
+   /// Files that represent a part of the compiled package.
+   /// </summary>
    public class SourceFiles
    {
-      private static readonly ILog Log = LogManager.GetLogger(typeof (SourceFiles));
-
       /// <summary>
-      /// Well-known file type
+      /// Well-known file type. Default is <see cref="PackageFileKind.Binary"/>
       /// </summary>
       [XmlAttribute("kind")]
       public PackageFileKind FileKind { get; set; }
 
       /// <summary>
-      /// Source to the files, relative to the location of the package manifest file.
+      /// File pattern, relative to the location of the package manifest file.
       /// Can be relative or absolute. Can include file masks.
       /// </summary>
       [XmlAttribute("include")]
       public string Include { get; set; }
 
+      /// <summary>
+      /// File pattern, relative to the location of the package manifest file.
+      /// Can be relative or absolute. Can include file masks.
+      /// </summary>
       [XmlAttribute("exclude")]
       public string Exclude { get; set; }
 
@@ -47,6 +44,7 @@ namespace Pundit.Core.Model
 
       /// <summary>
       /// Target directory to copy the source files to. By default they will be copied to root.
+      /// Ignored for binary files.
       /// </summary>
       [XmlAttribute("targetdir")]
       public string TargetDirectory { get; set; }
@@ -58,7 +56,7 @@ namespace Pundit.Core.Model
       public bool IncludeEmptyDirs { get; set; }
 
       /// <summary>
-      /// Configuration name (debug or release)
+      /// Configuration name (debug or release). Release is default.
       /// </summary>
       [XmlAttribute("configuration")]
       public BuildConfiguration Configuration { get; set; }
@@ -72,89 +70,6 @@ namespace Pundit.Core.Model
       {
          this.Include = include;
          this.FileKind = kind;
-      }
-
-      private static string[] ParsePatternArray(string array)
-      {
-         return string.IsNullOrEmpty(array)
-                   ? new string[0]
-                   : array.Split(new[] {';'}, StringSplitOptions.RemoveEmptyEntries);
-      }
-
-      public void Resolve(string baseDir, out string searchBase, out string[] files, out string[] directories)
-      {
-         if(!Directory.Exists(baseDir))
-            throw new DirectoryNotFoundException("directory [" + baseDir + "] not found");
-
-         baseDir = new DirectoryInfo(baseDir).FullName;
-
-         if (!string.IsNullOrEmpty(BaseDirectory))
-            baseDir = new DirectoryInfo(Path.Combine(baseDir, BaseDirectory)).FullName;
-
-         if(!Directory.Exists(baseDir))
-            throw new DirectoryNotFoundException("search base directory [" + baseDir + "] not found");
-
-         Log.Debug("searching from " + baseDir);
-
-         searchBase = baseDir;
-
-         //using NAnt.Core for now, will continue working on FileSet later
-         DirectoryScanner scanner = new DirectoryScanner(false);
-         scanner.BaseDirectory = new DirectoryInfo(baseDir);
-         scanner.Excludes.AddRange(FileSet.DefaultExcludesList.ToArray());
-         scanner.Excludes.AddRange(ParsePatternArray(Exclude));
-         scanner.Includes.AddRange(ParsePatternArray(Include));
-
-         scanner.Scan();
-
-         files = new string[scanner.FileNames.Count];
-         directories = new string[scanner.DirectoryNames.Count];
-         
-         scanner.FileNames.CopyTo(files, 0);
-         scanner.DirectoryNames.CopyTo(directories, 0);
-      }
-
-      public string GetRelativeUnixPath(string baseDir, string path)
-      {
-         if (!Flatten)
-         {
-            path = path.Substring(baseDir.Length);
-
-            path = PathUtils.GetUnixPath(path);
-         }
-         else
-         {
-            path = new FileInfo(path).Name;
-         }
-
-         switch (FileKind)
-         {
-            case PackageFileKind.Binary:
-               path = Configuration.ToString().ToLower() + "/" + path;
-               break;
-            default:
-               if (!string.IsNullOrEmpty(TargetDirectory))
-                  path = TargetDirectory + "/" + path;
-               break;
-         }
-
-         switch(FileKind)
-         {
-            case PackageFileKind.Binary:
-               path = "bin/" + path;
-               break;
-            case PackageFileKind.Include:
-               path = "include/" + path;
-               break;
-            case PackageFileKind.Tools:
-               path = "tools/" + path;
-               break;
-            case PackageFileKind.Other:
-               path = "other/" + path;
-               break;
-         }
-
-         return path;
       }
    }
 }

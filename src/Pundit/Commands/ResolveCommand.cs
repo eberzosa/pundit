@@ -26,8 +26,13 @@ namespace Pundit.Console.Commands
             .Add("c:|configuration:", c => sconfiguration = c)
             .Parse(GetCommandLine());
 
-         if (sconfiguration != null && sconfiguration == "debug")
-            configuration = BuildConfiguration.Debug;
+         if (sconfiguration != null)
+         {
+            if (sconfiguration == "any")
+               configuration = BuildConfiguration.Any;
+            else if (sconfiguration == "deub")
+               configuration = BuildConfiguration.Debug;
+         }
       }
 
       private IEnumerable<IRepository> GetRepositories(int depth)

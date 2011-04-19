@@ -4,8 +4,8 @@
   <project-url>http://pundit.codeplex.com</project-url>
   <version>1.0.0.2</version>
   <files>
-    <file basedir="src/Pundit.Core/bin/Release" include="Pundit*.dll"/>
-    <file basedir="src/Pundit.Core/bin/Debug" include="Pundit*.dll;Pundit*.pdb" configuration="debug"/>
+    <file basedir="src/Pundit.Core/bin/Release" include="Pundit*.dll;Pundit*.xml"/>
+    <file basedir="src/Pundit.Core/bin/Debug" include="Pundit*.dll;Pundit*.pdb;Pundit*.xml" configuration="debug"/>
   </files>
   <dependencies>
     <package id="NUnit.Framework" version="2.5" platform="net20" devtime="true"/>

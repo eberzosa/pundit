@@ -10,7 +10,7 @@ using Pundit.Core.Utils;
 
 namespace Pundit.Core.Application
 {
-   public class PackageWriter : IDisposable
+   public class PackageWriter : PackageStreamer
    {
       private static readonly ILog Log = LogManager.GetLogger(typeof (PackageWriter));
       private readonly string _rootDirectory;
@@ -35,6 +35,11 @@ namespace Pundit.Core.Application
          rootDirectory = new DirectoryInfo(rootDirectory).FullName;
 
          packageInfo.Validate();
+         packageInfo.HasDebug = packageInfo.Files
+                                   .Count(
+                                      f =>
+                                      f.FileKind == PackageFileKind.Binary ||
+                                      f.Configuration == BuildConfiguration.Debug) > 0;
 
          _rootDirectory = rootDirectory;
          _packageInfo = packageInfo;
@@ -55,11 +60,11 @@ namespace Pundit.Core.Application
 
       private void WriteManifest(bool includeDevTime)
       {
-         ZipEntry entry = new ZipEntry(Package.DefaultPackageFileName);
+         var entry = new ZipEntry(Package.DefaultPackageFileName);
 
          _zipStream.PutNextEntry(entry);
 
-         Package manifestPackage = new Package(_packageInfo);
+         var manifestPackage = new Package(_packageInfo, includeDevTime);
 
          manifestPackage.WriteTo(_zipStream);
       }
@@ -71,7 +76,11 @@ namespace Pundit.Core.Application
             string[] archiveFiles, archiveDirectories;
             string searchBase;
 
-            files.Resolve(_rootDirectory, out searchBase, out archiveFiles, out archiveDirectories);
+            Resolve(files,
+               _rootDirectory,   //root directory to start search from
+               out searchBase,   //full path to the returned files and dirs search root
+               out archiveFiles,          //full path to found files
+               out archiveDirectories);   //full path to found folders
 
             foreach(string afile in archiveFiles)
             {
@@ -82,8 +91,8 @@ namespace Pundit.Core.Application
             {
                foreach(string adir in archiveDirectories)
                {
-                  string dirPath = files.GetRelativeUnixPath(searchBase, adir);
-                  dirPath += "/";
+                  string dirPath = GetRelativeUnixPath(files, searchBase, adir);
+                  if(!dirPath.EndsWith("/")) dirPath += "/";
 
                   ZipEntry ed = new ZipEntry(dirPath);
                   _zipStream.PutNextEntry(ed);
@@ -92,9 +101,15 @@ namespace Pundit.Core.Application
          }
       }
 
+      /// <summary>
+      /// 
+      /// </summary>
+      /// <param name="info"></param>
+      /// <param name="baseDir">file base dir (full path)</param>
+      /// <param name="filePath">file to archive (full path)</param>
       private void WriteFile(SourceFiles info, string baseDir, string filePath)
       {
-         string unixPath = info.GetRelativeUnixPath(baseDir, filePath);
+         string unixPath = GetRelativeUnixPath(info, baseDir, filePath);
 
          if (!_packedFiles.ContainsKey(unixPath))
          {
@@ -107,6 +122,8 @@ namespace Pundit.Core.Application
                           String.Format(new FileSizeFormatProvider(), "{0:fs}", originalSize)));
 
             ZipEntry entry = new ZipEntry(unixPath);
+            entry.DateTime = DateTime.Now;
+            entry.Size = originalSize;
             _zipStream.PutNextEntry(entry);
 
             using (Stream fileStream = File.OpenRead(filePath))
@@ -116,7 +133,7 @@ namespace Pundit.Core.Application
          }
       }
 
-      public void Dispose()
+      protected override void Dispose(bool disposing)
       {
          _zipStream.Close();
          _zipStream.Dispose();

@@ -1,10 +1,25 @@
 
-0.0.0
+1.2.0
+- repository server
+- refactor RepositoryStreamer to use compression methods different from ZIP (for example 7z)
+
+1.1.0
+- optimize dependency resolution to use less calls to IRepository, better batching
+
+1.0.0
 + support devtime packages
 + repository search command
 + don't delete lib, other, include, tools folders when re-setting folders
-- if the package doesn't have DEBUG configuration and debug is requested, use release instead
++ ability to install both release and debug configurations of a library; added third configuration
+instead - "any" which contains files common to both configurations; if a library publisher
+requires a user to use both debug and release libraries at the same time (like boost) then
+he just publishes them as configuration="any" (which is a default configuration now)
++ if the package doesn't have DEBUG configuration and debug is requested, use release instead;
+"any" is always used
 = install includes
-- install tools and other
+= install tools and other
 - check that all dependencies are valid when publishing
-- sometimes VS locks XML documentation files in the LIB folder, think what to do with that
+- sometimes VS locks XML documentation files in the LIB folder, think what to do with that; probably
+just ignore all XML files
+- support platform compatibility i.e. if manifest declares platform net40, use it as a default one
+after noarch, then try to use net35, net30 and net20.

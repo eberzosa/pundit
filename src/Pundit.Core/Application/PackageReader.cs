@@ -1,21 +1,16 @@
 ﻿using System;
-using System.Collections.Generic;
 using System.IO;
-using System.Linq;
-using System.Text;
 using ICSharpCode.SharpZipLib.Zip;
 using log4net;
 using Pundit.Core.Model;
 
 namespace Pundit.Core.Application
 {
-   public class PackageReader : IDisposable
+   public class PackageReader : PackageStreamer
    {
-      private static readonly ILog Log = LogManager.GetLogger(typeof (PackageReader));
-      public const string LocalLibFolderName = "lib";
+      private readonly ILog _log = LogManager.GetLogger(typeof (PackageReader));
 
-      private readonly ZipInputStream _zipStream;
-
+      private ZipInputStream _zipStream;
 
       public PackageReader(Stream packageStream)
       {
@@ -41,7 +36,7 @@ namespace Pundit.Core.Application
 
       private void InstallLib(string libFolder, string entryName)
       {
-         Log.DebugFormat("installing lib: {0}", entryName);
+         _log.DebugFormat("installing lib: {0}", entryName);
 
          if (!Directory.Exists(libFolder)) Directory.CreateDirectory(libFolder);
 
@@ -53,33 +48,101 @@ namespace Pundit.Core.Application
          }
       }
 
+      private PackageFileKind GetKind(ZipEntry entry)
+      {
+         if(entry.IsFile)
+         {
+            int idx = entry.Name.IndexOf("/");
+
+            if (idx != -1)
+            {
+               string folderName = entry.Name.Substring(0, idx);
+
+               if (folderName == "bin")
+                  return PackageFileKind.Binary;
+
+               if (folderName == "include")
+                  return PackageFileKind.Include;
+
+               if (folderName == "tools")
+                  return PackageFileKind.Tools;
+
+               if (folderName == "other")
+                  return PackageFileKind.Other;
+            }
+         }
+
+         return PackageFileKind.Unknown;
+      }
+
+      private void InstallGenericFile(string root, string name)
+      {
+         
+      }
+
+      private void InstallLibrary(string root, string name, BuildConfiguration targetConfig)
+      {
+         name = name.Substring(name.IndexOf("/") + 1);
+        
+         BuildConfiguration config =
+            (BuildConfiguration) Enum.Parse(typeof (BuildConfiguration), name.Substring(0, name.IndexOf("/")), true);
+
+         bool install = (targetConfig == BuildConfiguration.Any) ||
+                        (config == BuildConfiguration.Debug &&
+                         (targetConfig == BuildConfiguration.Any || targetConfig == BuildConfiguration.Debug)) ||
+                        (config == BuildConfiguration.Release &&
+                         (targetConfig == BuildConfiguration.Any || targetConfig == BuildConfiguration.Release));
+
+         if (install)
+         {
+            name = name.Substring(name.IndexOf("/") + 1);
+
+            _log.DebugFormat("[lib|{0}]: {1}", config, name);
+
+            string targetPath = Path.Combine(root, "lib");
+            targetPath = Path.Combine(targetPath, name);
+
+            if(File.Exists(targetPath)) File.Delete(targetPath);
+
+            using(Stream ts = File.Create(targetPath))
+            {
+               _zipStream.CopyTo(ts);
+            }
+         }
+      }
+
       public void InstallTo(string rootFolder, BuildConfiguration configuration)
       {
          ZipEntry entry;
-         string libFolder = Path.Combine(rootFolder, "lib");
-
-         while((entry = _zipStream.GetNextEntry()) != null)
+         while ((entry = _zipStream.GetNextEntry()) != null)
          {
-            string binInConfig = "bin/" + configuration.ToString().ToLower() + "/";
-
-            string entryName = entry.Name.Replace("//", "/");
-
-            if (entryName.StartsWith(binInConfig))
+            if (entry.IsFile)
             {
-               string shortEntryName = entryName.Substring(binInConfig.Length);
+               PackageFileKind kind = GetKind(entry);
 
-               if (string.Empty != shortEntryName)
+               switch(kind)
                {
-                  InstallLib(libFolder, shortEntryName);
+                  case PackageFileKind.Binary:
+                     InstallLibrary(rootFolder, entry.Name, configuration);
+                     break;
+                  case PackageFileKind.Include:
+                  case PackageFileKind.Tools:
+                  case PackageFileKind.Other:
+                     InstallGenericFile(rootFolder, entry.Name);
+                     break;
                }
             }
          }
       }
 
-      public void Dispose()
+      protected override void Dispose(bool disposing)
       {
-         _zipStream.Close();
-         _zipStream.Dispose();
+         if (_zipStream != null)
+         {
+            _zipStream.Close();
+            _zipStream.Dispose();
+            _zipStream = null;
+         }
       }
    }
 }
