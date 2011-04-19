@@ -15,5 +15,15 @@ namespace Pundit.GuiConfigure
       {
          InitializeComponent();
       }
+
+      private void cmdAddDependency_LinkClicked(object sender, LinkLabelLinkClickedEventArgs e)
+      {
+         SearchForm searchForm = new SearchForm();
+
+         if(DialogResult.OK == searchForm.ShowDialog(this))
+         {
+            //...
+         }
+      }
    }
 }

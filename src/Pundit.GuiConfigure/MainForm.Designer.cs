@@ -42,12 +42,17 @@
          this.linkLabel2 = new System.Windows.Forms.LinkLabel();
          this.linkLabel3 = new System.Windows.Forms.LinkLabel();
          this.gridDependencies = new System.Windows.Forms.DataGridView();
-         this.label6 = new System.Windows.Forms.Label();
-         this.textBox4 = new System.Windows.Forms.TextBox();
          this.Column1 = new System.Windows.Forms.DataGridViewTextBoxColumn();
          this.Column2 = new System.Windows.Forms.DataGridViewTextBoxColumn();
          this.Column3 = new System.Windows.Forms.DataGridViewTextBoxColumn();
          this.Column4 = new System.Windows.Forms.DataGridViewCheckBoxColumn();
+         this.label6 = new System.Windows.Forms.Label();
+         this.textBox4 = new System.Windows.Forms.TextBox();
+         this.button1 = new System.Windows.Forms.Button();
+         this.cmdCancel = new System.Windows.Forms.Button();
+         this.button3 = new System.Windows.Forms.Button();
+         this.cmdAddDependency = new System.Windows.Forms.LinkLabel();
+         this.linkLabel5 = new System.Windows.Forms.LinkLabel();
          ((System.ComponentModel.ISupportInitialize)(this.gridDependencies)).BeginInit();
          this.SuspendLayout();
          // 
@@ -72,8 +77,8 @@
          // 
          // textBox1
          // 
-         this.textBox1.Anchor = ((System.Windows.Forms.AnchorStyles)(((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Left)
-                     | System.Windows.Forms.AnchorStyles.Right)));
+         this.textBox1.Anchor = ((System.Windows.Forms.AnchorStyles)(((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Left) 
+            | System.Windows.Forms.AnchorStyles.Right)));
          this.textBox1.Location = new System.Drawing.Point(79, 8);
          this.textBox1.Name = "textBox1";
          this.textBox1.Size = new System.Drawing.Size(355, 20);
@@ -113,8 +118,8 @@
          // 
          // textBox2
          // 
-         this.textBox2.Anchor = ((System.Windows.Forms.AnchorStyles)(((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Left)
-                     | System.Windows.Forms.AnchorStyles.Right)));
+         this.textBox2.Anchor = ((System.Windows.Forms.AnchorStyles)(((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Left) 
+            | System.Windows.Forms.AnchorStyles.Right)));
          this.textBox2.Location = new System.Drawing.Point(253, 34);
          this.textBox2.Name = "textBox2";
          this.textBox2.Size = new System.Drawing.Size(338, 20);
@@ -140,8 +145,8 @@
          // 
          // textBox3
          // 
-         this.textBox3.Anchor = ((System.Windows.Forms.AnchorStyles)(((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Left)
-                     | System.Windows.Forms.AnchorStyles.Right)));
+         this.textBox3.Anchor = ((System.Windows.Forms.AnchorStyles)(((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Left) 
+            | System.Windows.Forms.AnchorStyles.Right)));
          this.textBox3.Location = new System.Drawing.Point(79, 61);
          this.textBox3.Name = "textBox3";
          this.textBox3.Size = new System.Drawing.Size(341, 20);
@@ -183,9 +188,9 @@
          // gridDependencies
          // 
          this.gridDependencies.AllowUserToAddRows = false;
-         this.gridDependencies.Anchor = ((System.Windows.Forms.AnchorStyles)((((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Bottom)
-                     | System.Windows.Forms.AnchorStyles.Left)
-                     | System.Windows.Forms.AnchorStyles.Right)));
+         this.gridDependencies.Anchor = ((System.Windows.Forms.AnchorStyles)((((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Bottom) 
+            | System.Windows.Forms.AnchorStyles.Left) 
+            | System.Windows.Forms.AnchorStyles.Right)));
          this.gridDependencies.ColumnHeadersBorderStyle = System.Windows.Forms.DataGridViewHeaderBorderStyle.None;
          this.gridDependencies.ColumnHeadersHeightSizeMode = System.Windows.Forms.DataGridViewColumnHeadersHeightSizeMode.AutoSize;
          this.gridDependencies.Columns.AddRange(new System.Windows.Forms.DataGridViewColumn[] {
@@ -202,25 +207,8 @@
          this.gridDependencies.RowHeadersVisible = false;
          this.gridDependencies.ScrollBars = System.Windows.Forms.ScrollBars.Vertical;
          this.gridDependencies.SelectionMode = System.Windows.Forms.DataGridViewSelectionMode.FullRowSelect;
-         this.gridDependencies.Size = new System.Drawing.Size(576, 165);
+         this.gridDependencies.Size = new System.Drawing.Size(576, 247);
          this.gridDependencies.TabIndex = 20;
-         // 
-         // label6
-         // 
-         this.label6.AutoSize = true;
-         this.label6.Location = new System.Drawing.Point(12, 94);
-         this.label6.Name = "label6";
-         this.label6.Size = new System.Drawing.Size(77, 13);
-         this.label6.TabIndex = 21;
-         this.label6.Text = "dependencies:";
-         // 
-         // textBox4
-         // 
-         this.textBox4.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Right)));
-         this.textBox4.Location = new System.Drawing.Point(490, 8);
-         this.textBox4.Name = "textBox4";
-         this.textBox4.Size = new System.Drawing.Size(101, 20);
-         this.textBox4.TabIndex = 22;
          // 
          // Column1
          // 
@@ -248,11 +236,87 @@
          this.Column4.Name = "Column4";
          this.Column4.ReadOnly = true;
          // 
+         // label6
+         // 
+         this.label6.AutoSize = true;
+         this.label6.Location = new System.Drawing.Point(12, 94);
+         this.label6.Name = "label6";
+         this.label6.Size = new System.Drawing.Size(77, 13);
+         this.label6.TabIndex = 21;
+         this.label6.Text = "dependencies:";
+         // 
+         // textBox4
+         // 
+         this.textBox4.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Right)));
+         this.textBox4.Location = new System.Drawing.Point(490, 8);
+         this.textBox4.Name = "textBox4";
+         this.textBox4.Size = new System.Drawing.Size(101, 20);
+         this.textBox4.TabIndex = 22;
+         // 
+         // button1
+         // 
+         this.button1.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Right)));
+         this.button1.Location = new System.Drawing.Point(432, 369);
+         this.button1.Name = "button1";
+         this.button1.Size = new System.Drawing.Size(75, 23);
+         this.button1.TabIndex = 23;
+         this.button1.Text = "&Save";
+         this.button1.UseVisualStyleBackColor = true;
+         // 
+         // cmdCancel
+         // 
+         this.cmdCancel.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Right)));
+         this.cmdCancel.DialogResult = System.Windows.Forms.DialogResult.Cancel;
+         this.cmdCancel.Location = new System.Drawing.Point(513, 369);
+         this.cmdCancel.Name = "cmdCancel";
+         this.cmdCancel.Size = new System.Drawing.Size(75, 23);
+         this.cmdCancel.TabIndex = 24;
+         this.cmdCancel.Text = "&Cancel";
+         this.cmdCancel.UseVisualStyleBackColor = true;
+         // 
+         // button3
+         // 
+         this.button3.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Left)));
+         this.button3.Location = new System.Drawing.Point(12, 369);
+         this.button3.Name = "button3";
+         this.button3.Size = new System.Drawing.Size(75, 23);
+         this.button3.TabIndex = 25;
+         this.button3.Text = "&Test";
+         this.button3.UseVisualStyleBackColor = true;
+         // 
+         // cmdAddDependency
+         // 
+         this.cmdAddDependency.AutoSize = true;
+         this.cmdAddDependency.Location = new System.Drawing.Point(96, 94);
+         this.cmdAddDependency.Name = "cmdAddDependency";
+         this.cmdAddDependency.Size = new System.Drawing.Size(34, 13);
+         this.cmdAddDependency.TabIndex = 26;
+         this.cmdAddDependency.TabStop = true;
+         this.cmdAddDependency.Text = "add...";
+         this.cmdAddDependency.LinkClicked += new System.Windows.Forms.LinkLabelLinkClickedEventHandler(this.cmdAddDependency_LinkClicked);
+         // 
+         // linkLabel5
+         // 
+         this.linkLabel5.AutoSize = true;
+         this.linkLabel5.Enabled = false;
+         this.linkLabel5.Location = new System.Drawing.Point(132, 94);
+         this.linkLabel5.Name = "linkLabel5";
+         this.linkLabel5.Size = new System.Drawing.Size(85, 13);
+         this.linkLabel5.TabIndex = 27;
+         this.linkLabel5.TabStop = true;
+         this.linkLabel5.Text = "remove selected";
+         // 
          // MainForm
          // 
          this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
          this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
+         this.BackColor = System.Drawing.SystemColors.Window;
          this.ClientSize = new System.Drawing.Size(603, 417);
+         this.Controls.Add(this.linkLabel5);
+         this.Controls.Add(this.cmdAddDependency);
+         this.Controls.Add(this.button3);
+         this.Controls.Add(this.cmdCancel);
+         this.Controls.Add(this.button1);
          this.Controls.Add(this.textBox4);
          this.Controls.Add(this.label6);
          this.Controls.Add(this.gridDependencies);
@@ -299,6 +363,11 @@
       private System.Windows.Forms.DataGridViewTextBoxColumn Column2;
       private System.Windows.Forms.DataGridViewTextBoxColumn Column3;
       private System.Windows.Forms.DataGridViewCheckBoxColumn Column4;
+      private System.Windows.Forms.Button button1;
+      private System.Windows.Forms.Button cmdCancel;
+      private System.Windows.Forms.Button button3;
+      private System.Windows.Forms.LinkLabel cmdAddDependency;
+      private System.Windows.Forms.LinkLabel linkLabel5;
    }
 }
 
