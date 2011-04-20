@@ -30,14 +30,14 @@
       {
          this.label1 = new System.Windows.Forms.Label();
          this.label2 = new System.Windows.Forms.Label();
-         this.textBox1 = new System.Windows.Forms.TextBox();
+         this.txtPackageId = new System.Windows.Forms.TextBox();
          this.statusStrip1 = new System.Windows.Forms.StatusStrip();
          this.label3 = new System.Windows.Forms.Label();
          this.cbPlatform = new System.Windows.Forms.ComboBox();
-         this.textBox2 = new System.Windows.Forms.TextBox();
+         this.txtProjectUrl = new System.Windows.Forms.TextBox();
          this.label4 = new System.Windows.Forms.Label();
          this.label5 = new System.Windows.Forms.Label();
-         this.textBox3 = new System.Windows.Forms.TextBox();
+         this.txtAuthor = new System.Windows.Forms.TextBox();
          this.linkLabel1 = new System.Windows.Forms.LinkLabel();
          this.linkLabel2 = new System.Windows.Forms.LinkLabel();
          this.linkLabel3 = new System.Windows.Forms.LinkLabel();
@@ -47,10 +47,10 @@
          this.Column3 = new System.Windows.Forms.DataGridViewTextBoxColumn();
          this.Column4 = new System.Windows.Forms.DataGridViewCheckBoxColumn();
          this.label6 = new System.Windows.Forms.Label();
-         this.textBox4 = new System.Windows.Forms.TextBox();
-         this.button1 = new System.Windows.Forms.Button();
+         this.txtVersion = new System.Windows.Forms.TextBox();
+         this.cmdSave = new System.Windows.Forms.Button();
          this.cmdCancel = new System.Windows.Forms.Button();
-         this.button3 = new System.Windows.Forms.Button();
+         this.cmdTest = new System.Windows.Forms.Button();
          this.cmdAddDependency = new System.Windows.Forms.LinkLabel();
          this.linkLabel5 = new System.Windows.Forms.LinkLabel();
          ((System.ComponentModel.ISupportInitialize)(this.gridDependencies)).BeginInit();
@@ -75,14 +75,14 @@
          this.label2.TabIndex = 1;
          this.label2.Text = "version:";
          // 
-         // textBox1
+         // txtPackageId
          // 
-         this.textBox1.Anchor = ((System.Windows.Forms.AnchorStyles)(((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Left) 
+         this.txtPackageId.Anchor = ((System.Windows.Forms.AnchorStyles)(((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Left) 
             | System.Windows.Forms.AnchorStyles.Right)));
-         this.textBox1.Location = new System.Drawing.Point(79, 8);
-         this.textBox1.Name = "textBox1";
-         this.textBox1.Size = new System.Drawing.Size(355, 20);
-         this.textBox1.TabIndex = 2;
+         this.txtPackageId.Location = new System.Drawing.Point(79, 8);
+         this.txtPackageId.Name = "txtPackageId";
+         this.txtPackageId.Size = new System.Drawing.Size(355, 20);
+         this.txtPackageId.TabIndex = 2;
          // 
          // statusStrip1
          // 
@@ -116,14 +116,14 @@
          this.cbPlatform.Size = new System.Drawing.Size(98, 21);
          this.cbPlatform.TabIndex = 9;
          // 
-         // textBox2
+         // txtProjectUrl
          // 
-         this.textBox2.Anchor = ((System.Windows.Forms.AnchorStyles)(((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Left) 
+         this.txtProjectUrl.Anchor = ((System.Windows.Forms.AnchorStyles)(((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Left) 
             | System.Windows.Forms.AnchorStyles.Right)));
-         this.textBox2.Location = new System.Drawing.Point(253, 34);
-         this.textBox2.Name = "textBox2";
-         this.textBox2.Size = new System.Drawing.Size(338, 20);
-         this.textBox2.TabIndex = 10;
+         this.txtProjectUrl.Location = new System.Drawing.Point(253, 34);
+         this.txtProjectUrl.Name = "txtProjectUrl";
+         this.txtProjectUrl.Size = new System.Drawing.Size(338, 20);
+         this.txtProjectUrl.TabIndex = 10;
          // 
          // label4
          // 
@@ -143,14 +143,14 @@
          this.label5.TabIndex = 12;
          this.label5.Text = "author:";
          // 
-         // textBox3
+         // txtAuthor
          // 
-         this.textBox3.Anchor = ((System.Windows.Forms.AnchorStyles)(((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Left) 
+         this.txtAuthor.Anchor = ((System.Windows.Forms.AnchorStyles)(((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Left) 
             | System.Windows.Forms.AnchorStyles.Right)));
-         this.textBox3.Location = new System.Drawing.Point(79, 61);
-         this.textBox3.Name = "textBox3";
-         this.textBox3.Size = new System.Drawing.Size(341, 20);
-         this.textBox3.TabIndex = 16;
+         this.txtAuthor.Location = new System.Drawing.Point(79, 61);
+         this.txtAuthor.Name = "txtAuthor";
+         this.txtAuthor.Size = new System.Drawing.Size(341, 20);
+         this.txtAuthor.TabIndex = 16;
          // 
          // linkLabel1
          // 
@@ -245,23 +245,23 @@
          this.label6.TabIndex = 21;
          this.label6.Text = "dependencies:";
          // 
-         // textBox4
+         // txtVersion
          // 
-         this.textBox4.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Right)));
-         this.textBox4.Location = new System.Drawing.Point(490, 8);
-         this.textBox4.Name = "textBox4";
-         this.textBox4.Size = new System.Drawing.Size(101, 20);
-         this.textBox4.TabIndex = 22;
+         this.txtVersion.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Right)));
+         this.txtVersion.Location = new System.Drawing.Point(490, 8);
+         this.txtVersion.Name = "txtVersion";
+         this.txtVersion.Size = new System.Drawing.Size(101, 20);
+         this.txtVersion.TabIndex = 22;
          // 
-         // button1
+         // cmdSave
          // 
-         this.button1.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Right)));
-         this.button1.Location = new System.Drawing.Point(432, 369);
-         this.button1.Name = "button1";
-         this.button1.Size = new System.Drawing.Size(75, 23);
-         this.button1.TabIndex = 23;
-         this.button1.Text = "&Save";
-         this.button1.UseVisualStyleBackColor = true;
+         this.cmdSave.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Right)));
+         this.cmdSave.Location = new System.Drawing.Point(432, 369);
+         this.cmdSave.Name = "cmdSave";
+         this.cmdSave.Size = new System.Drawing.Size(75, 23);
+         this.cmdSave.TabIndex = 23;
+         this.cmdSave.Text = "&Save";
+         this.cmdSave.UseVisualStyleBackColor = true;
          // 
          // cmdCancel
          // 
@@ -273,16 +273,17 @@
          this.cmdCancel.TabIndex = 24;
          this.cmdCancel.Text = "&Cancel";
          this.cmdCancel.UseVisualStyleBackColor = true;
+         this.cmdCancel.Click += new System.EventHandler(this.cmdCancel_Click);
          // 
-         // button3
+         // cmdTest
          // 
-         this.button3.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Left)));
-         this.button3.Location = new System.Drawing.Point(12, 369);
-         this.button3.Name = "button3";
-         this.button3.Size = new System.Drawing.Size(75, 23);
-         this.button3.TabIndex = 25;
-         this.button3.Text = "&Test";
-         this.button3.UseVisualStyleBackColor = true;
+         this.cmdTest.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Left)));
+         this.cmdTest.Location = new System.Drawing.Point(12, 369);
+         this.cmdTest.Name = "cmdTest";
+         this.cmdTest.Size = new System.Drawing.Size(75, 23);
+         this.cmdTest.TabIndex = 25;
+         this.cmdTest.Text = "&Test";
+         this.cmdTest.UseVisualStyleBackColor = true;
          // 
          // cmdAddDependency
          // 
@@ -314,23 +315,23 @@
          this.ClientSize = new System.Drawing.Size(603, 417);
          this.Controls.Add(this.linkLabel5);
          this.Controls.Add(this.cmdAddDependency);
-         this.Controls.Add(this.button3);
+         this.Controls.Add(this.cmdTest);
          this.Controls.Add(this.cmdCancel);
-         this.Controls.Add(this.button1);
-         this.Controls.Add(this.textBox4);
+         this.Controls.Add(this.cmdSave);
+         this.Controls.Add(this.txtVersion);
          this.Controls.Add(this.label6);
          this.Controls.Add(this.gridDependencies);
          this.Controls.Add(this.linkLabel3);
          this.Controls.Add(this.linkLabel2);
          this.Controls.Add(this.linkLabel1);
-         this.Controls.Add(this.textBox3);
+         this.Controls.Add(this.txtAuthor);
          this.Controls.Add(this.label5);
          this.Controls.Add(this.label4);
-         this.Controls.Add(this.textBox2);
+         this.Controls.Add(this.txtProjectUrl);
          this.Controls.Add(this.cbPlatform);
          this.Controls.Add(this.label3);
          this.Controls.Add(this.statusStrip1);
-         this.Controls.Add(this.textBox1);
+         this.Controls.Add(this.txtPackageId);
          this.Controls.Add(this.label2);
          this.Controls.Add(this.label1);
          this.Name = "MainForm";
@@ -345,27 +346,27 @@
 
       private System.Windows.Forms.Label label1;
       private System.Windows.Forms.Label label2;
-      private System.Windows.Forms.TextBox textBox1;
+      private System.Windows.Forms.TextBox txtPackageId;
       private System.Windows.Forms.StatusStrip statusStrip1;
       private System.Windows.Forms.Label label3;
       private System.Windows.Forms.ComboBox cbPlatform;
-      private System.Windows.Forms.TextBox textBox2;
+      private System.Windows.Forms.TextBox txtProjectUrl;
       private System.Windows.Forms.Label label4;
       private System.Windows.Forms.Label label5;
-      private System.Windows.Forms.TextBox textBox3;
+      private System.Windows.Forms.TextBox txtAuthor;
       private System.Windows.Forms.LinkLabel linkLabel1;
       private System.Windows.Forms.LinkLabel linkLabel2;
       private System.Windows.Forms.LinkLabel linkLabel3;
       private System.Windows.Forms.DataGridView gridDependencies;
       private System.Windows.Forms.Label label6;
-      private System.Windows.Forms.TextBox textBox4;
+      private System.Windows.Forms.TextBox txtVersion;
       private System.Windows.Forms.DataGridViewTextBoxColumn Column1;
       private System.Windows.Forms.DataGridViewTextBoxColumn Column2;
       private System.Windows.Forms.DataGridViewTextBoxColumn Column3;
       private System.Windows.Forms.DataGridViewCheckBoxColumn Column4;
-      private System.Windows.Forms.Button button1;
+      private System.Windows.Forms.Button cmdSave;
       private System.Windows.Forms.Button cmdCancel;
-      private System.Windows.Forms.Button button3;
+      private System.Windows.Forms.Button cmdTest;
       private System.Windows.Forms.LinkLabel cmdAddDependency;
       private System.Windows.Forms.LinkLabel linkLabel5;
    }
