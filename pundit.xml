@@ -4,11 +4,13 @@
   <project-url>http://pundit.codeplex.com</project-url>
   <version>1.0.0.2</version>
   <files>
-    <file basedir="src/Pundit.Core/bin/Release" include="Pundit*.dll;Pundit*.xml"/>
-    <file basedir="src/Pundit.Core/bin/Debug" include="Pundit*.dll;Pundit*.pdb;Pundit*.xml" configuration="debug"/>
+    <file basedir="src/Pundit.Core/bin/Debug" include="Pundit*.xml"/>
+    <file basedir="src/Pundit.Core/bin/Debug" include="Pundit*.dll;Pundit*.pdb" configuration="debug"/>
+    <file basedir="src/Pundit.Core/bin/Release" include="Pundit*.dll" configuration="release"/>
   </files>
   <dependencies>
     <package id="NUnit.Framework" version="2.5" platform="net20" devtime="true"/>
+    <package id="ILMerge" version="2.10" platform="net20" devtime="true"/>
     <package id="sharpziplib" version="0.86" platform="net20"/>
     <package id="log4net" version="1.2" platform="net20"/>
   </dependencies>

@@ -23,12 +23,6 @@ namespace Pundit.Core.Model
 
       //WARNING!!! remember to reflect copy constructor if adding a new property to this class
 
-      /// <summary>
-      /// Don't set directly, used by package writer/reader
-      /// </summary>
-      [XmlAttribute("hasdebug")]
-      public bool HasDebug { get; set; }
-
       [XmlElement("packageId")]
       public string PackageId { get; set; }
 
@@ -91,7 +85,6 @@ namespace Pundit.Core.Model
          else
             _dependencies = new List<PackageDependency>(copy._dependencies.Where(pd => !pd.DevTimeOnly));
 
-         HasDebug = copy.HasDebug;
          PackageId = copy.PackageId;
          Platform = copy.Platform;
          ProjectUrl = copy.ProjectUrl;

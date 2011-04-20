@@ -74,6 +74,7 @@
     <Compile Include="Model\VersionResolutionTable.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="RepositoryFactory.cs" />
+    <Compile Include="Utils\Exceptional.cs" />
     <Compile Include="Utils\FileSet.cs" />
     <Compile Include="Utils\FileSizeFormatProvider.cs" />
     <Compile Include="Utils\PackageUtils.cs" />

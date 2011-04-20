@@ -3,6 +3,7 @@ using System.IO;
 using ICSharpCode.SharpZipLib.Zip;
 using log4net;
 using Pundit.Core.Model;
+using Pundit.Core.Utils;
 
 namespace Pundit.Core.Application
 {
@@ -34,21 +35,7 @@ namespace Pundit.Core.Application
          return null;
       }
 
-      private void InstallLib(string libFolder, string entryName)
-      {
-         _log.DebugFormat("installing lib: {0}", entryName);
-
-         if (!Directory.Exists(libFolder)) Directory.CreateDirectory(libFolder);
-
-         string destFile = Path.Combine(libFolder, entryName);
-
-         using (Stream os = File.Create(destFile))
-         {
-            _zipStream.CopyTo(os);
-         }
-      }
-
-      private PackageFileKind GetKind(ZipEntry entry)
+      private static PackageFileKind GetKind(ZipEntry entry)
       {
          if(entry.IsFile)
          {
@@ -75,9 +62,26 @@ namespace Pundit.Core.Application
          return PackageFileKind.Unknown;
       }
 
-      private void InstallGenericFile(string root, string name)
+      private void InstallGenericFile(string root, string name, string kindName, string packageId)
       {
-         
+         string shortName = name.Substring(name.IndexOf("/") + 1);
+         string fullName = kindName + "/" + packageId + "/" + shortName;
+
+         if(_log.IsDebugEnabled) _log.DebugFormat("[{0}/{1}]: {2}", kindName, packageId, fullName);
+
+         string fullPath = Path.Combine(root, fullName);
+         string fullDirPath = new FileInfo(fullName).Directory.FullName;
+
+         //_log.Debug("installing to " + fullPath);
+         //_log.Debug("dir: " + fullDirPath);
+
+         PathUtils.EnsureDirectoryExists(fullDirPath);
+         if(File.Exists(fullPath)) File.Delete(fullPath);
+
+         using(Stream df = File.Create(fullPath))
+         {
+            _zipStream.CopyTo(df);
+         }
       }
 
       private void InstallLibrary(string root, string name, BuildConfiguration targetConfig)
@@ -104,15 +108,33 @@ namespace Pundit.Core.Application
 
             if(File.Exists(targetPath)) File.Delete(targetPath);
 
-            using(Stream ts = File.Create(targetPath))
+            try
             {
-               _zipStream.CopyTo(ts);
+               using (Stream ts = File.Create(targetPath))
+               {
+                  _zipStream.CopyTo(ts);
+               }
+            }
+            catch(UnauthorizedAccessException)
+            {
+               if(Exceptional.IsVsDocFile(targetPath))
+               {
+                  if(_log.IsWarnEnabled) _log.Warn("  ! couldn't overwrite documentation file, however it can be safely ignored");
+               }
             }
          }
       }
 
+      /// <summary>
+      /// Installs the package to a specific location. If destination files exist
+      /// they will be silently overwritten.
+      /// </summary>
+      /// <param name="rootFolder">Solution's root folder</param>
+      /// <param name="configuration">Desired configuration name</param>
       public void InstallTo(string rootFolder, BuildConfiguration configuration)
       {
+         Package pkg = ReadManifest();
+
          ZipEntry entry;
          while ((entry = _zipStream.GetNextEntry()) != null)
          {
@@ -128,7 +150,8 @@ namespace Pundit.Core.Application
                   case PackageFileKind.Include:
                   case PackageFileKind.Tools:
                   case PackageFileKind.Other:
-                     InstallGenericFile(rootFolder, entry.Name);
+                     InstallGenericFile(rootFolder, entry.Name,
+                        kind.ToString().ToLower(), pkg.PackageId);
                      break;
                }
             }

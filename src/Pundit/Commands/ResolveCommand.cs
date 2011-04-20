@@ -16,21 +16,25 @@ namespace Pundit.Console.Commands
       {
       }
 
-      private void ResolveParameters(out int depthIndex, out BuildConfiguration configuration)
+      private void ResolveParameters(out int depthIndex, out BuildConfiguration configuration, out bool force)
       {
          depthIndex = GetDepth();
          configuration = BuildConfiguration.Release;
          string sconfiguration = null;
+         bool force1 = false;
 
          new OptionSet()
             .Add("c:|configuration:", c => sconfiguration = c)
+            .Add("f|force", f => force1 = f != null)
             .Parse(GetCommandLine());
+
+         force = force1;
 
          if (sconfiguration != null)
          {
             if (sconfiguration == "any")
                configuration = BuildConfiguration.Any;
-            else if (sconfiguration == "deub")
+            else if (sconfiguration == "debug")
                configuration = BuildConfiguration.Debug;
          }
       }
@@ -73,12 +77,14 @@ namespace Pundit.Console.Commands
          string manifestPath = GetLocalManifest();
          string projectRoot = new FileInfo(manifestPath).Directory.FullName;
          int depth;
+         bool force;
          BuildConfiguration configuration;
-         ResolveParameters(out depth, out configuration);
+         ResolveParameters(out depth, out configuration, out force);
 
          Log.InfoFormat("manifest: {0}", manifestPath);
          Log.InfoFormat("depth: {0}", depth == int.MaxValue ? "max" : depth.ToString());
          Log.InfoFormat("configuration: {0}", configuration);
+         Log.InfoFormat("force: {0}", force);
 
          Log.Info("reading manifest...");
          DevPackage devPackage = DevPackage.FromStream(File.OpenRead(manifestPath));
@@ -112,7 +118,7 @@ namespace Pundit.Console.Commands
          var installer = new PackageInstaller(projectRoot,
             resolutionResult.Item1,
             repositories.First());
-         installer.InstallAll(configuration);
+         installer.InstallAll(configuration, force);
       }
    }
 }

@@ -188,12 +188,17 @@ namespace Pundit.Core.Application
          }
       }
 
-      public void InstallAll(BuildConfiguration configuration)
+      ///<summary>
+      /// Installs the package
+      ///</summary>
+      ///<param name="configuration"></param>
+      ///<param name="forceReset"></param>
+      public void InstallAll(BuildConfiguration configuration, bool forceReset = false)
       {
          _index = InstalledPackagesIndex.ReadFromFolder(_rootDirectory);
          IEnumerable<PackageKey> currentDependencies = _versionTable.GetPackages();
 
-         if (DependenciesChanged(currentDependencies, configuration))
+         if (forceReset || DependenciesChanged(currentDependencies, configuration))
          {
             ResetFiles(configuration);
 

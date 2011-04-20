@@ -35,11 +35,6 @@ namespace Pundit.Core.Application
          rootDirectory = new DirectoryInfo(rootDirectory).FullName;
 
          packageInfo.Validate();
-         packageInfo.HasDebug = packageInfo.Files
-                                   .Count(
-                                      f =>
-                                      f.FileKind == PackageFileKind.Binary ||
-                                      f.Configuration == BuildConfiguration.Debug) > 0;
 
          _rootDirectory = rootDirectory;
          _packageInfo = packageInfo;

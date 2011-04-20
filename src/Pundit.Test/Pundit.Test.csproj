@@ -43,6 +43,7 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="ExceptionalTest.cs" />
     <Compile Include="FileRepositoryTest.cs" />
     <Compile Include="Mocks\MockedRepository.cs" />
     <Compile Include="ModelTest.cs" />
@@ -62,6 +63,14 @@
       <Project>{9296FDE6-2BE9-472B-9E82-FC023959CBA2}</Project>
       <Name>Pundit.Console</Name>
     </ProjectReference>
+  </ItemGroup>
+  <ItemGroup>
+    <Content Include="Data\nodoc.xml">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </Content>
+    <Content Include="Data\vsdoc.xml">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </Content>
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
   <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 

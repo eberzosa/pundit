@@ -57,7 +57,9 @@ namespace Pundit.Console
             if(ex is InvalidPackageException)
                Log.Fatal(ex);
 
-            Log.Fatal(ex.StackTrace);
+#if DEBUG
+            Log.Fatal(ex);
+#endif
 
             return 1;
          }

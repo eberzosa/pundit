@@ -16,10 +16,10 @@ requires a user to use both debug and release libraries at the same time (like b
 he just publishes them as configuration="any" (which is a default configuration now)
 + if the package doesn't have DEBUG configuration and debug is requested, use release instead;
 "any" is always used
-= install includes
-= install tools and other
-- check that all dependencies are valid when publishing
-- sometimes VS locks XML documentation files in the LIB folder, think what to do with that; probably
++ install includes
++ install tools and other
++ ignore XML documentation files overwrite errors in the LIB folder which VS sometimes stupidly locks
 just ignore all XML files
 - support platform compatibility i.e. if manifest declares platform net40, use it as a default one
-after noarch, then try to use net35, net30 and net20.
+after noarch, then try to use net35, net30 and net20
+- check that all dependencies are valid when publishing

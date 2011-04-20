@@ -6,6 +6,7 @@ using System.Text;
 
 namespace Pundit.Core.Utils
 {
+   //todo: make internal
    public static class PathUtils
    {
       public static string GetUnixPath(string path)
@@ -41,6 +42,30 @@ namespace Pundit.Core.Utils
       public static string GetOSPath(string path)
       {
          return path.Replace('/', Path.DirectorySeparatorChar);
+      }
+
+      /// <summary>
+      /// Ensures that the directory exists. Otherwise creates the directory (including all levels)
+      /// </summary>
+      /// <param name="fullPath"></param>
+      public static void EnsureDirectoryExists(string fullPath)
+      {
+         if (string.IsNullOrEmpty(fullPath))
+            throw new ArgumentNullException("fullPath");
+
+         fullPath = fullPath.Replace('/', Path.DirectorySeparatorChar);
+         string diskName = fullPath.Substring(0, 3); //dumb, will return "X:\")
+         string[] parts = fullPath.Substring(3).Split(Path.DirectorySeparatorChar);
+         string currentPath = (diskName[diskName.Length - 1] == Path.DirectorySeparatorChar) ?
+             diskName : (diskName + Path.DirectorySeparatorChar);
+
+         foreach (string part in parts)
+         {
+            currentPath = Path.Combine(currentPath, part);
+
+            if (!Directory.Exists(currentPath))
+               Directory.CreateDirectory(currentPath);
+         }
       }
    }
 }
