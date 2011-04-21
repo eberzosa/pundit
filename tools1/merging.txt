@@ -1,3 +1,0 @@
-C:\devel\pundit\src\Pundit\bin\Debug>..\..\..\..\tools\ILMerge.exe /targetplatfo
-rm:v4,C:\WINDOWS\Microsoft.NET\Framework\v4.0.30319 /target:winexe /out:pundit-s
-tandalone.exe pundit.exe Pundit.Core.dll ICsharpCode.SharpZipLib.dll

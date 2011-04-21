@@ -91,7 +91,9 @@ namespace Pundit.Core.Application
          BuildConfiguration config =
             (BuildConfiguration) Enum.Parse(typeof (BuildConfiguration), name.Substring(0, name.IndexOf("/")), true);
 
-         bool install = (targetConfig == BuildConfiguration.Any) ||
+         _log.Debug("config: " + config);
+
+         bool install = (targetConfig == BuildConfiguration.Any) || (config == BuildConfiguration.Any) ||
                         (config == BuildConfiguration.Debug &&
                          (targetConfig == BuildConfiguration.Any || targetConfig == BuildConfiguration.Debug)) ||
                         (config == BuildConfiguration.Release &&
@@ -122,6 +124,10 @@ namespace Pundit.Core.Application
                   if(_log.IsWarnEnabled) _log.Warn("  ! couldn't overwrite documentation file, however it can be safely ignored");
                }
             }
+         }
+         else
+         {
+            _log.Debug("ignoring " + name);
          }
       }
 
