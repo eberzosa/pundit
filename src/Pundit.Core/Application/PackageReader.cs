@@ -64,6 +64,9 @@ namespace Pundit.Core.Application
 
       private void InstallGenericFile(string root, string name, string kindName, string packageId)
       {
+         string relativeKindRoot = Path.Combine(root, kindName);
+         if (!Directory.Exists(relativeKindRoot)) Directory.CreateDirectory(relativeKindRoot);
+
          string shortName = name.Substring(name.IndexOf("/") + 1);
          string fullName = kindName + "/" + packageId + "/" + shortName;
 
@@ -106,6 +109,7 @@ namespace Pundit.Core.Application
             _log.DebugFormat("[lib|{0}]: {1}", config, name);
 
             string targetPath = Path.Combine(root, "lib");
+            if (!Directory.Exists(targetPath)) Directory.CreateDirectory(targetPath);
             targetPath = Path.Combine(targetPath, name);
 
             if(File.Exists(targetPath)) File.Delete(targetPath);
