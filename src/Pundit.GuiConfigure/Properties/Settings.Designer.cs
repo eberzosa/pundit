@@ -8,7 +8,7 @@
 // </auto-generated>
 //------------------------------------------------------------------------------
 
-namespace Pundit.GuiConfigure.Properties {
+namespace Pundit.WinForms.App.Properties {
     
     
     [global::System.Runtime.CompilerServices.CompilerGeneratedAttribute()]

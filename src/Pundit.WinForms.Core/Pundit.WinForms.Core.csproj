@@ -2,34 +2,32 @@
 <Project ToolsVersion="4.0" DefaultTargets="Build" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
   <PropertyGroup>
     <Configuration Condition=" '$(Configuration)' == '' ">Debug</Configuration>
-    <Platform Condition=" '$(Platform)' == '' ">x86</Platform>
+    <Platform Condition=" '$(Platform)' == '' ">AnyCPU</Platform>
     <ProductVersion>8.0.30703</ProductVersion>
     <SchemaVersion>2.0</SchemaVersion>
-    <ProjectGuid>{A244D1D4-A881-458D-A074-BF3C321DCF9C}</ProjectGuid>
-    <OutputType>WinExe</OutputType>
+    <ProjectGuid>{6EAB50C9-B099-4811-A609-636F0A5F0893}</ProjectGuid>
+    <OutputType>Library</OutputType>
     <AppDesignerFolder>Properties</AppDesignerFolder>
-    <RootNamespace>Pundit.GuiConfigure</RootNamespace>
-    <AssemblyName>pundit-gui</AssemblyName>
+    <RootNamespace>Pundit.WinForms.Core</RootNamespace>
+    <AssemblyName>Pundit.WinForms.Core</AssemblyName>
     <TargetFrameworkVersion>v4.0</TargetFrameworkVersion>
     <TargetFrameworkProfile>
     </TargetFrameworkProfile>
     <FileAlignment>512</FileAlignment>
   </PropertyGroup>
-  <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Debug|x86' ">
-    <PlatformTarget>AnyCPU</PlatformTarget>
+  <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Debug|AnyCPU' ">
     <DebugSymbols>true</DebugSymbols>
     <DebugType>full</DebugType>
     <Optimize>false</Optimize>
-    <OutputPath>..\..\bin\core\</OutputPath>
+    <OutputPath>bin\Debug\</OutputPath>
     <DefineConstants>DEBUG;TRACE</DefineConstants>
     <ErrorReport>prompt</ErrorReport>
     <WarningLevel>4</WarningLevel>
   </PropertyGroup>
-  <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Release|x86' ">
-    <PlatformTarget>x86</PlatformTarget>
+  <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Release|AnyCPU' ">
     <DebugType>pdbonly</DebugType>
     <Optimize>true</Optimize>
-    <OutputPath>..\..\bin\core\</OutputPath>
+    <OutputPath>bin\Release\</OutputPath>
     <DefineConstants>TRACE</DefineConstants>
     <ErrorReport>prompt</ErrorReport>
     <WarningLevel>4</WarningLevel>
@@ -41,58 +39,60 @@
     <Reference Include="System.Data.DataSetExtensions" />
     <Reference Include="Microsoft.CSharp" />
     <Reference Include="System.Data" />
-    <Reference Include="System.Deployment" />
     <Reference Include="System.Drawing" />
     <Reference Include="System.Windows.Forms" />
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
-    <Compile Include="MainForm.cs">
+    <Compile Include="PackageDependencies.cs">
+      <SubType>UserControl</SubType>
+    </Compile>
+    <Compile Include="PackageDependencies.Designer.cs">
+      <DependentUpon>PackageDependencies.cs</DependentUpon>
+    </Compile>
+    <Compile Include="PackageSearchForm.cs">
       <SubType>Form</SubType>
     </Compile>
-    <Compile Include="MainForm.Designer.cs">
-      <DependentUpon>MainForm.cs</DependentUpon>
+    <Compile Include="PackageSearchForm.Designer.cs">
+      <DependentUpon>PackageSearchForm.cs</DependentUpon>
     </Compile>
-    <Compile Include="Program.cs" />
+    <Compile Include="PackageMetadata.cs">
+      <SubType>UserControl</SubType>
+    </Compile>
+    <Compile Include="PackageMetadata.Designer.cs">
+      <DependentUpon>PackageMetadata.cs</DependentUpon>
+    </Compile>
+    <Compile Include="PlainTextModalEditForm.cs">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="PlainTextModalEditForm.Designer.cs">
+      <DependentUpon>PlainTextModalEditForm.cs</DependentUpon>
+    </Compile>
     <Compile Include="Properties\AssemblyInfo.cs" />
-    <Compile Include="SearchForm.cs">
-      <SubType>Form</SubType>
-    </Compile>
-    <Compile Include="SearchForm.Designer.cs">
-      <DependentUpon>SearchForm.cs</DependentUpon>
-    </Compile>
-    <EmbeddedResource Include="MainForm.resx">
-      <DependentUpon>MainForm.cs</DependentUpon>
-    </EmbeddedResource>
-    <EmbeddedResource Include="Properties\Resources.resx">
-      <Generator>ResXFileCodeGenerator</Generator>
-      <LastGenOutput>Resources.Designer.cs</LastGenOutput>
-      <SubType>Designer</SubType>
-    </EmbeddedResource>
-    <Compile Include="Properties\Resources.Designer.cs">
-      <AutoGen>True</AutoGen>
-      <DependentUpon>Resources.resx</DependentUpon>
-      <DesignTime>True</DesignTime>
-    </Compile>
-    <EmbeddedResource Include="SearchForm.resx">
-      <DependentUpon>SearchForm.cs</DependentUpon>
-    </EmbeddedResource>
-    <None Include="app.config" />
-    <None Include="Properties\Settings.settings">
-      <Generator>SettingsSingleFileGenerator</Generator>
-      <LastGenOutput>Settings.Designer.cs</LastGenOutput>
-    </None>
-    <Compile Include="Properties\Settings.Designer.cs">
-      <AutoGen>True</AutoGen>
-      <DependentUpon>Settings.settings</DependentUpon>
-      <DesignTimeSharedInput>True</DesignTimeSharedInput>
-    </Compile>
+    <Service Include="{94E38DFF-614B-4cbd-B67C-F211BB35CE8B}" />
   </ItemGroup>
   <ItemGroup>
     <ProjectReference Include="..\Pundit.Core\Pundit.Core.csproj">
       <Project>{BEEA1FD6-D6DB-44BC-A4C4-F42321A6796F}</Project>
       <Name>Pundit.Core</Name>
     </ProjectReference>
+  </ItemGroup>
+  <ItemGroup>
+    <EmbeddedResource Include="PackageDependencies.resx">
+      <DependentUpon>PackageDependencies.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="PackageMetadata.resx">
+      <DependentUpon>PackageMetadata.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="PackageSearchForm.resx">
+      <DependentUpon>PackageSearchForm.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="PlainTextModalEditForm.resx">
+      <DependentUpon>PlainTextModalEditForm.cs</DependentUpon>
+    </EmbeddedResource>
+  </ItemGroup>
+  <ItemGroup>
+    <Content Include="app.ico" />
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
   <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 

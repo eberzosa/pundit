@@ -1,6 +1,6 @@
-﻿namespace Pundit.GuiConfigure
+﻿namespace Pundit.WinForms.Core
 {
-   partial class SearchForm
+   partial class PackageSearchForm
    {
       /// <summary>
       /// Required designer variable.
@@ -59,7 +59,7 @@
          this.cmdClose.Text = "&Close";
          this.cmdClose.UseVisualStyleBackColor = true;
          // 
-         // SearchForm
+         // PackageSearchForm
          // 
          this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
          this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
@@ -68,7 +68,7 @@
          this.Controls.Add(this.txtText);
          this.Controls.Add(this.gridResult);
          this.FormBorderStyle = System.Windows.Forms.FormBorderStyle.SizableToolWindow;
-         this.Name = "SearchForm";
+         this.Name = "PackageSearchForm";
          this.Text = "Search Package";
          ((System.ComponentModel.ISupportInitialize)(this.gridResult)).EndInit();
          this.ResumeLayout(false);
