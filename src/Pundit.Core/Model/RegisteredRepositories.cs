@@ -20,6 +20,11 @@ namespace Pundit.Core.Model
       /// </summary>
       [XmlAttribute("publish")]
       public bool UseForPublishing { get; set; }
+
+      public override string ToString()
+      {
+         return Name;
+      }
    }
 
    [XmlRoot("repositories")]
@@ -56,6 +61,13 @@ namespace Pundit.Core.Model
          var xs = new XmlSerializer(typeof(RegisteredRepositories));
 
          return xs.Deserialize(File.OpenRead(filePath)) as RegisteredRepositories;
+      }
+
+      public void SaveTo(Stream s)
+      {
+         var xs = new XmlSerializer(typeof (RegisteredRepositories));
+
+         xs.Serialize(s, this);
       }
 
       /// <summary>

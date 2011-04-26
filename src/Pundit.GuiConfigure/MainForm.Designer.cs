@@ -34,21 +34,21 @@
          this.cmdMetadata = new System.Windows.Forms.Button();
          this.packageDependencies1 = new Pundit.WinForms.Core.PackageDependencies();
          this.label1 = new System.Windows.Forms.Label();
-         this.groupBox1 = new System.Windows.Forms.GroupBox();
+         this.cmdGlobalSettings = new System.Windows.Forms.Button();
          this.SuspendLayout();
          // 
          // statusStrip1
          // 
-         this.statusStrip1.Location = new System.Drawing.Point(0, 305);
+         this.statusStrip1.Location = new System.Drawing.Point(0, 304);
          this.statusStrip1.Name = "statusStrip1";
-         this.statusStrip1.Size = new System.Drawing.Size(464, 22);
+         this.statusStrip1.Size = new System.Drawing.Size(460, 22);
          this.statusStrip1.TabIndex = 7;
          this.statusStrip1.Text = "statusStrip1";
          // 
          // cmdSave
          // 
          this.cmdSave.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Right)));
-         this.cmdSave.Location = new System.Drawing.Point(293, 279);
+         this.cmdSave.Location = new System.Drawing.Point(289, 278);
          this.cmdSave.Name = "cmdSave";
          this.cmdSave.Size = new System.Drawing.Size(75, 23);
          this.cmdSave.TabIndex = 23;
@@ -60,7 +60,7 @@
          // 
          this.cmdCancel.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Right)));
          this.cmdCancel.DialogResult = System.Windows.Forms.DialogResult.Cancel;
-         this.cmdCancel.Location = new System.Drawing.Point(374, 279);
+         this.cmdCancel.Location = new System.Drawing.Point(370, 278);
          this.cmdCancel.Name = "cmdCancel";
          this.cmdCancel.Size = new System.Drawing.Size(75, 23);
          this.cmdCancel.TabIndex = 24;
@@ -71,7 +71,7 @@
          // cmdMetadata
          // 
          this.cmdMetadata.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Left)));
-         this.cmdMetadata.Location = new System.Drawing.Point(12, 279);
+         this.cmdMetadata.Location = new System.Drawing.Point(12, 278);
          this.cmdMetadata.Name = "cmdMetadata";
          this.cmdMetadata.Size = new System.Drawing.Size(75, 23);
          this.cmdMetadata.TabIndex = 26;
@@ -86,7 +86,7 @@
             | System.Windows.Forms.AnchorStyles.Right)));
          this.packageDependencies1.Location = new System.Drawing.Point(12, 30);
          this.packageDependencies1.Name = "packageDependencies1";
-         this.packageDependencies1.Size = new System.Drawing.Size(452, 228);
+         this.packageDependencies1.Size = new System.Drawing.Size(448, 242);
          this.packageDependencies1.TabIndex = 25;
          // 
          // label1
@@ -98,22 +98,23 @@
          this.label1.TabIndex = 27;
          this.label1.Text = "References:";
          // 
-         // groupBox1
+         // cmdGlobalSettings
          // 
-         this.groupBox1.Anchor = ((System.Windows.Forms.AnchorStyles)(((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Left) 
-            | System.Windows.Forms.AnchorStyles.Right)));
-         this.groupBox1.Location = new System.Drawing.Point(12, 264);
-         this.groupBox1.Name = "groupBox1";
-         this.groupBox1.Size = new System.Drawing.Size(436, 10);
-         this.groupBox1.TabIndex = 28;
-         this.groupBox1.TabStop = false;
+         this.cmdGlobalSettings.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Left)));
+         this.cmdGlobalSettings.Location = new System.Drawing.Point(93, 278);
+         this.cmdGlobalSettings.Name = "cmdGlobalSettings";
+         this.cmdGlobalSettings.Size = new System.Drawing.Size(107, 23);
+         this.cmdGlobalSettings.TabIndex = 28;
+         this.cmdGlobalSettings.Text = "&Global settings...";
+         this.cmdGlobalSettings.UseVisualStyleBackColor = true;
+         this.cmdGlobalSettings.Click += new System.EventHandler(this.cmdGlobalSettings_Click);
          // 
          // MainForm
          // 
          this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
          this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
-         this.ClientSize = new System.Drawing.Size(464, 327);
-         this.Controls.Add(this.groupBox1);
+         this.ClientSize = new System.Drawing.Size(460, 326);
+         this.Controls.Add(this.cmdGlobalSettings);
          this.Controls.Add(this.label1);
          this.Controls.Add(this.cmdMetadata);
          this.Controls.Add(this.packageDependencies1);
@@ -135,7 +136,7 @@
       private WinForms.Core.PackageDependencies packageDependencies1;
       private System.Windows.Forms.Button cmdMetadata;
       private System.Windows.Forms.Label label1;
-      private System.Windows.Forms.GroupBox groupBox1;
+      private System.Windows.Forms.Button cmdGlobalSettings;
    }
 }
 

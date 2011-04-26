@@ -33,6 +33,40 @@ namespace Pundit.Core
          if(Log.IsDebugEnabled) Log.Debug("registered repositories: " + Repos.Names.Length);
       }
 
+      public static string GlobalRootPath
+      {
+         get { return LocalRepoRoot; }
+      }
+
+      public static string GlobalRootFilePath
+      {
+         get { return LocalRepoFileRoot; }
+      }
+
+      public static string GlobalSettingsFilePath
+      {
+         get { return Path.Combine(LocalRepoRoot, RepoXmlFileName); }
+      }
+
+      public static long OccupiedSpace
+      {
+         get
+         {
+            long space = 0;
+
+            string repoTxtPath = Path.Combine(LocalRepoRoot, RepoXmlFileName);
+
+            if (File.Exists(repoTxtPath)) space += new FileInfo(repoTxtPath).Length;
+
+            foreach(FileInfo fi in new DirectoryInfo(GlobalRootFilePath).GetFiles("*", SearchOption.AllDirectories))
+            {
+               space += fi.Length;
+            }
+
+            return space;
+         }
+      }
+
       public static RegisteredRepositories Registered { get { return Repos; } }
 
       private static void ResolveRootPath(out string localRepoRoot, out string localRepoFileRoot)
@@ -113,6 +147,11 @@ namespace Pundit.Core
          return names;
       }
 
+      /// <summary>
+      /// Downloads specified packages to the local repository
+      /// </summary>
+      /// <param name="packages"></param>
+      /// <param name="activeRepositories"></param>
       public static void DownloadLocally(IEnumerable<PackageKey> packages, IEnumerable<IRepository> activeRepositories)
       {
          IRepository localRepo =
