@@ -15,5 +15,6 @@ namespace Pundit.Vsix
 		public const int cmdidDynVisibility1 = 0x2005;
 		public const int cmdidDynVisibility2 = 0x2006;
 	   public const int cmdidAddPackages = 0x2007;
+	   public const int cmdidGlobalSettings = 0x2008;
 	}
 }

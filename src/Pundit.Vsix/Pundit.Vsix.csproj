@@ -133,6 +133,7 @@
     </BootstrapperPackage>
   </ItemGroup>
   <ItemGroup>
+    <Content Include="Graphics\bullet_wrench.png" />
     <Content Include="license.txt">
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
       <IncludeInVSIX>true</IncludeInVSIX>
@@ -143,6 +144,10 @@
     </Content>
   </ItemGroup>
   <ItemGroup>
+    <ProjectReference Include="..\Pundit.Core\Pundit.Core.csproj">
+      <Project>{BEEA1FD6-D6DB-44BC-A4C4-F42321A6796F}</Project>
+      <Name>Pundit.Core</Name>
+    </ProjectReference>
     <ProjectReference Include="..\Pundit.WinForms.Core\Pundit.WinForms.Core.csproj">
       <Project>{6EAB50C9-B099-4811-A609-636F0A5F0893}</Project>
       <Name>Pundit.WinForms.Core</Name>

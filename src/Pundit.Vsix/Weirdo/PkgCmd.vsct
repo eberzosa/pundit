@@ -81,7 +81,7 @@
       To define a menu group we have to specify its ID, the parent menu and its display priority.
       In this case we use as parent menu the Tools menu of VS; its ID is defined in vsshlids.h.
       -->
-      <Group guid="guidPunditCmdSet" id="MyMenuGroup" priority="0x600">
+      <Group guid="guidPunditCmdSet" id="PunditToolsMenuGroup" priority="0x600">
         <Parent guid="guidSHLMainMenu" id="IDM_VS_MENU_TOOLS"/>
       </Group>
 
@@ -105,9 +105,11 @@
       Now create a new group inside the standard editor's context menu. As always the ID of this
       menu is defined inside vsshlids.h.
       -->
+      <!--
       <Group guid="guidPunditCmdSet" id="MyEditorCtxGroup" priority="0x600">
         <Parent guid="guidSHLMainMenu" id="IDM_VS_CTXT_CODEWIN"/>
       </Group>
+      -->
     </Groups>
 
     <!--
@@ -127,13 +129,15 @@
       An element inside this section is defined by its ID and must specify a parent group, a display
       priority, an image, a type, some visibility flags (optional) and a default text.
       -->
+      <!--
       <Button guid="guidPunditCmdSet" id="cmdidMyCommand" priority="0x100" type="Button">
-        <Parent guid="guidPunditCmdSet" id="MyMenuGroup"/>
+        <Parent guid="guidPunditCmdSet" id="PunditToolsMenuGroup"/>
         <Icon guid="guidGenericCmdBmp" id="bmpArrow"/>
         <Strings>
           <ButtonText>C# Command Sample</ButtonText>
         </Strings>
       </Button>
+      -->
 
       <!--
       Here there is the definition of the commands placed inside the toolbars. Notice that there is
@@ -147,6 +151,7 @@
           <ButtonText>C# Sample Graph Command</ButtonText>
         </Strings>
       </Button>-->
+      <!--
       <Button guid="guidPunditCmdSet" id="cmdidMyZoom" priority="0x100" type="Button">
         <Parent guid="guidPunditCmdSet" id="PunditToolbarGroup"/>
         <Icon guid="guidOfficeIcon" id="msotcidZoom"/>
@@ -154,6 +159,7 @@
           <ButtonText>Solution Dependencies</ButtonText>
         </Strings>
       </Button>
+      -->
 
       <!--
       Now we define a menu item with dynamic text. From the VSCT point of view all we have to do is to add a
@@ -162,11 +168,22 @@
       implies that when the package is loaded Visual Studio will ask the package for the text before display
       the command.
       -->
+      <!--
       <Button guid="guidPunditCmdSet" id="cmdidDynamicTxt" priority="0x200" type="Button">
-        <Parent guid="guidPunditCmdSet" id="MyMenuGroup"/>
+        <Parent guid="guidPunditCmdSet" id="PunditToolsMenuGroup"/>
+        <Icon guid="guidBulletWrench" id="pngWrench"/>
         <CommandFlag>TextChanges</CommandFlag>
         <Strings>
           <ButtonText>C# Text Changes</ButtonText>
+        </Strings>
+      </Button>
+      -->
+
+      <Button guid="guidPunditCmdSet" id="cmdidGlobalSettings" priority="0x200" type="Button">
+        <Parent guid="guidPunditCmdSet" id="PunditToolsMenuGroup"/>
+        <Icon guid="guidBulletWrench" id="pngWrench"/>
+        <Strings>
+          <ButtonText>Pundit Global Settings...</ButtonText>
         </Strings>
       </Button>
 
@@ -178,21 +195,22 @@
       In this example, when the MenuAndCommands package is not loaded, the first command will be
       visible and the second invisible; when the package is loaded it will control the visibility.
       -->
+      <!--
       <Button guid="guidPunditCmdSet" id="cmdidDynVisibility1" priority="0x300" type="Button">
-        <Parent guid="guidPunditCmdSet" id="MyMenuGroup"/>
+        <Parent guid="guidPunditCmdSet" id="PunditToolsMenuGroup"/>
         <CommandFlag>DynamicVisibility</CommandFlag>
         <Strings>
           <ButtonText>C# Dynamic Visibility 1</ButtonText>
         </Strings>
       </Button>
       <Button guid="guidPunditCmdSet" id="cmdidDynVisibility2" priority="0x300" type="Button">
-        <Parent guid="guidPunditCmdSet" id="MyMenuGroup"/>
+        <Parent guid="guidPunditCmdSet" id="PunditToolsMenuGroup"/>
         <CommandFlag>DynamicVisibility</CommandFlag>
         <CommandFlag>DefaultInvisible</CommandFlag>
         <Strings>
           <ButtonText>C# Dynamic Visibility 2</ButtonText>
         </Strings>
-      </Button>
+      </Button>-->
     </Buttons>
 
     <!--
@@ -209,7 +227,8 @@
       element; we want to define as ID for this element guidPunditCmdSet:bmpArrow, so we
       have to define bmpArrow as 1 and is the delaration of the bitmap:
       -->
-      <Bitmap guid="guidGenericCmdBmp" href="GenericCmd.bmp" usedList="bmpArrow"/>
+      <!--<Bitmap guid="guidGenericCmdBmp" href="GenericCmd.bmp" usedList="bmpArrow"/>-->
+      <Bitmap guid="guidBulletWrench" href="../Graphics/bullet_wrench.png" usedList="pngWrench"/>
     </Bitmaps>
   </Commands>
 
@@ -222,12 +241,14 @@
   -->
   <CommandPlacements>
     <!--Here we place two commands inside the empty menu group we created in the Groups section.-->
+    <!--
     <CommandPlacement guid="guidPunditCmdSet" id="cmdidMyCommand" priority="0x100">
       <Parent guid="guidPunditCmdSet" id="MyEditorCtxGroup"/>
     </CommandPlacement>
     <CommandPlacement guid="guidPunditCmdSet" id="cmdidMyZoom" priority="0x200">
       <Parent guid="guidPunditCmdSet" id="MyEditorCtxGroup"/>
     </CommandPlacement>
+    -->
 
     <!--Now we place a previously defined group inside the Solution Explorer's toolbar.-->
     <CommandPlacement guid="guidPunditCmdSet" id="PunditToolbarGroup" priority="0x600">
@@ -269,7 +290,9 @@
     In this example we want to use the <Control><1> accelerator for the first command defined in
     the Buttons section above, so this is its definition:
     -->
+    <!--
     <KeyBinding guid="guidPunditCmdSet" id="cmdidMyCommand" editor="guidVSStd97" key1="1" mod1="Control" />
+    -->
   </KeyBindings>
 
 
@@ -300,7 +323,7 @@
       <!--Menus-->
       <IDSymbol name="PunditToolbar" value="0x101" />
       <!--Groups-->
-      <IDSymbol name="MyMenuGroup" value="0x1010" />
+      <IDSymbol name="PunditToolsMenuGroup" value="0x1010" />
       <IDSymbol name="PunditToolbarGroup" value="0x1011" />
       <IDSymbol name="MyMainToolbarGroup" value="0x1012" />
       <IDSymbol name="MyEditorCtxGroup" value="0x1013" />
@@ -312,11 +335,18 @@
       <IDSymbol name="cmdidDynVisibility1" value="0x2005" />
       <IDSymbol name="cmdidDynVisibility2" value="0x2006" />
       <IDSymbol name="cmdidAddPackages" value="0x2007"/>
+      <IDSymbol name="cmdidGlobalSettings" value="0x2008"/>
     </GuidSymbol>
     
     <!--Last is the definition of the GUID used for the Bitmap and the ID of its used slots.-->
+    <!--
     <GuidSymbol name="guidGenericCmdBmp" value="{0A4C51BD-3239-4370-8869-16E0AE8C0A46}">
       <IDSymbol name="bmpArrow" value="1" />
+    </GuidSymbol>
+    -->
+
+    <GuidSymbol name="guidBulletWrench" value="{1203AEA0-726C-40B3-8444-165ADA07EB16}">
+      <IDSymbol name="pngWrench" value="1"/>
     </GuidSymbol>
 
     <GuidSymbol name="guidReferenceContext" value="{D309F791-903F-11D0-9EFC-00A0C911004F}">
