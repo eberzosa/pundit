@@ -35,14 +35,17 @@
          // 
          // textMultiText
          // 
-         this.textMultiText.Anchor = ((System.Windows.Forms.AnchorStyles)((((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Bottom) 
-            | System.Windows.Forms.AnchorStyles.Left) 
-            | System.Windows.Forms.AnchorStyles.Right)));
+         this.textMultiText.Anchor = ((System.Windows.Forms.AnchorStyles)((((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Bottom)
+                     | System.Windows.Forms.AnchorStyles.Left)
+                     | System.Windows.Forms.AnchorStyles.Right)));
+         this.textMultiText.Font = new System.Drawing.Font("Arial Narrow", 11.25F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
          this.textMultiText.Location = new System.Drawing.Point(1, 4);
          this.textMultiText.Multiline = true;
          this.textMultiText.Name = "textMultiText";
+         this.textMultiText.ScrollBars = System.Windows.Forms.ScrollBars.Vertical;
          this.textMultiText.Size = new System.Drawing.Size(462, 315);
          this.textMultiText.TabIndex = 0;
+         this.textMultiText.Text = "sample text";
          // 
          // cmdSave
          // 
@@ -78,7 +81,7 @@
          this.Controls.Add(this.textMultiText);
          this.FormBorderStyle = System.Windows.Forms.FormBorderStyle.SizableToolWindow;
          this.Name = "PlainTextModalEditForm";
-         this.Text = "PlainTextModalEditForm";
+         this.Text = "Text Editor";
          this.ResumeLayout(false);
          this.PerformLayout();
 

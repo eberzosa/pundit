@@ -127,6 +127,10 @@ namespace Pundit.Core.Application
                {
                   if(_log.IsWarnEnabled) _log.Warn("  ! couldn't overwrite documentation file, however it can be safely ignored");
                }
+               else
+               {
+                  throw;
+               }
             }
          }
          else
