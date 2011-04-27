@@ -160,6 +160,13 @@
         </Strings>
       </Button>
       -->
+      <Button guid="guidPunditCmdSet" id="cmdidResolveDependencies" priority="0x100" type="Button">
+        <Parent guid="guidPunditCmdSet" id="PunditToolbarGroup"/>
+        <Icon guid="guidDatabaseRefresh" id="pngDbRefresh"/>
+        <Strings>
+          <ButtonText>Resolve Solution Dependencies</ButtonText>
+        </Strings>
+      </Button>
 
       <!--
       Now we define a menu item with dynamic text. From the VSCT point of view all we have to do is to add a
@@ -229,6 +236,7 @@
       -->
       <!--<Bitmap guid="guidGenericCmdBmp" href="GenericCmd.bmp" usedList="bmpArrow"/>-->
       <Bitmap guid="guidBulletWrench" href="../Graphics/bullet_wrench.png" usedList="pngWrench"/>
+      <Bitmap guid="guidDatabaseRefresh" href="../Graphics/database_refresh.png" usedList="pngDbRefresh"/>
     </Bitmaps>
   </Commands>
 
@@ -336,6 +344,7 @@
       <IDSymbol name="cmdidDynVisibility2" value="0x2006" />
       <IDSymbol name="cmdidAddPackages" value="0x2007"/>
       <IDSymbol name="cmdidGlobalSettings" value="0x2008"/>
+      <IDSymbol name="cmdidResolveDependencies" value="0x2009"/>
     </GuidSymbol>
     
     <!--Last is the definition of the GUID used for the Bitmap and the ID of its used slots.-->
@@ -347,6 +356,10 @@
 
     <GuidSymbol name="guidBulletWrench" value="{1203AEA0-726C-40B3-8444-165ADA07EB16}">
       <IDSymbol name="pngWrench" value="1"/>
+    </GuidSymbol>
+
+    <GuidSymbol name="guidDatabaseRefresh" value="{382D7CE9-A8E9-440D-A6D9-7D4D24CA6508}">
+      <IDSymbol name="pngDbRefresh" value="1"/>
     </GuidSymbol>
 
     <GuidSymbol name="guidReferenceContext" value="{D309F791-903F-11D0-9EFC-00A0C911004F}">

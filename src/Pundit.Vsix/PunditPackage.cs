@@ -85,6 +85,7 @@ namespace Pundit.Vsix
 
 			   BindHandler(PkgCmdIDList.cmdidAddPackages, AddReferenceCommandCallback);
 			   BindHandler(PkgCmdIDList.cmdidGlobalSettings, GlobalSettingsCommandCallback);
+			   BindHandler(PkgCmdIDList.cmdidResolveDependencies, ResolveDependenciesCommandCallback);
 
 				// Create the MenuCommand object for the command placed in the main toolbar.
 				id = new CommandID(GuidsList.guidPunditCmdSet, PkgCmdIDList.cmdidMyGraph);
@@ -194,6 +195,26 @@ namespace Pundit.Vsix
       private void GlobalSettingsCommandCallback(object caller, EventArgs args)
       {
          new GlobalSettingsForm().ShowDialog();
+      }
+
+      [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Globalization", "CA1303:DoNotPassLiteralsAsLocalizedParameters", MessageId = "Microsoft.Samples.VisualStudio.MenuCommands.PunditPackage.OutputCommandString(System.String)")]
+      private void ResolveDependenciesCommandCallback(object caller, EventArgs args)
+      {
+         IVsSolution solution = GetService(typeof(SVsSolution)) as IVsSolution;
+
+         if(solution != null)
+         {
+            object objSolutionDir;
+
+            solution.GetProperty((int)__VSPROPID.VSPROPID_SolutionDirectory, out objSolutionDir);
+
+            if(objSolutionDir != null)
+            {
+               string solutionDir = (string) objSolutionDir;
+
+               MessageBox.Show(solutionDir);
+            }
+         }
       }
 
 	   /// <summary>

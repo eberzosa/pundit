@@ -56,6 +56,18 @@
     <Compile Include="PackageDependencies.Designer.cs">
       <DependentUpon>PackageDependencies.cs</DependentUpon>
     </Compile>
+    <Compile Include="PackageFiles.cs">
+      <SubType>UserControl</SubType>
+    </Compile>
+    <Compile Include="PackageFiles.Designer.cs">
+      <DependentUpon>PackageFiles.cs</DependentUpon>
+    </Compile>
+    <Compile Include="PackageFilesForm.cs">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="PackageFilesForm.Designer.cs">
+      <DependentUpon>PackageFilesForm.cs</DependentUpon>
+    </Compile>
     <Compile Include="PackageSearchForm.cs">
       <SubType>Form</SubType>
     </Compile>
@@ -94,6 +106,12 @@
     </EmbeddedResource>
     <EmbeddedResource Include="PackageDependencies.resx">
       <DependentUpon>PackageDependencies.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="PackageFiles.resx">
+      <DependentUpon>PackageFiles.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="PackageFilesForm.resx">
+      <DependentUpon>PackageFilesForm.cs</DependentUpon>
     </EmbeddedResource>
     <EmbeddedResource Include="PackageMetadata.resx">
       <DependentUpon>PackageMetadata.cs</DependentUpon>

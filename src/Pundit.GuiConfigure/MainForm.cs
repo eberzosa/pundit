@@ -64,7 +64,12 @@ namespace Pundit.WinForms.App
 
       private void cmdPublishing_Click(object sender, EventArgs e)
       {
-         MessageBox.Show("coming soon :)");
+         PackageFilesForm form = new PackageFilesForm(_manifest.Files);
+
+         if(form.ShowDialog() == DialogResult.OK)
+         {
+            _manifest.Files = new List<SourceFiles>(form.Files);
+         }
       }
    }
 }
