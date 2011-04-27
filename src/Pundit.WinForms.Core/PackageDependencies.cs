@@ -13,7 +13,7 @@ namespace Pundit.WinForms.Core
    public partial class PackageDependencies : UserControl
    {
       readonly PackageSearchForm _searchForm = new PackageSearchForm();
-      private BindingList<PackageDependency> _dependencies = new BindingList<PackageDependency>();
+      private readonly BindingList<PackageDependency> _dependencies = new BindingList<PackageDependency>();
 
       public PackageDependencies()
       {
@@ -23,9 +23,30 @@ namespace Pundit.WinForms.Core
 
          gridDependencies.AutoGenerateColumns = false;
          gridDependencies.DataSource = _dependencies;
+         gridDependencies.ReadOnly = false;
       }
 
-      void _searchForm_PackageSelected(Pundit.Core.Model.PackageKey obj)
+      public PackageDependencies(IEnumerable<PackageDependency> dependencies) : this()
+      {
+         Dependencies = dependencies;
+      }
+
+      [Browsable(false)]
+      public IEnumerable<PackageDependency> Dependencies
+      {
+         get { return new List<PackageDependency>(_dependencies); }
+         set
+         {
+            _dependencies.Clear();
+
+            if (value != null)
+            {
+               foreach (var d in value) _dependencies.Add(d);
+            }
+         }
+      }
+
+      void _searchForm_PackageSelected(PackageKey obj)
       {
          PackageDependency pd = new PackageDependency(obj.PackageId,
             obj.Version.Major + "." + obj.Version.Minor);
@@ -37,6 +58,16 @@ namespace Pundit.WinForms.Core
       private void cmdAdd_Click(object sender, EventArgs e)
       {
          _searchForm.Show();
+      }
+
+      private void gridDependencies_SelectionChanged(object sender, EventArgs e)
+      {
+         cmdRemove.Enabled = gridDependencies.SelectedRows.Count > 0;
+      }
+
+      private void cmdRemove_Click(object sender, EventArgs e)
+      {
+         _dependencies.RemoveAt(gridDependencies.SelectedRows[0].Index);
       }
    }
 }

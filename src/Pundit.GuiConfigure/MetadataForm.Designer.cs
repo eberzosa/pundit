@@ -77,7 +77,7 @@
          this.Controls.Add(this.ucMetadata);
          this.FormBorderStyle = System.Windows.Forms.FormBorderStyle.FixedToolWindow;
          this.Name = "MetadataForm";
-         this.Text = "MetadataForm";
+         this.Text = "Package Metadata";
          this.ResumeLayout(false);
 
       }

@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Collections.Generic;
 using System.IO;
 using System.Windows.Forms;
 using Pundit.Core.Model;
@@ -20,6 +21,7 @@ namespace Pundit.WinForms.App
          if(_manifest == null) _manifest = new DevPackage();
 
          Text = string.Format(Text, _manifest.PackageId);
+         ucPackageDependencies.Dependencies = _manifest.Dependencies;
       }
 
       private DevPackage TryReadManifest()
@@ -53,12 +55,16 @@ namespace Pundit.WinForms.App
 
       private void cmdSave_Click(object sender, EventArgs e)
       {
-         using (Stream s = File.Open(_manifestPath, FileMode.OpenOrCreate, FileAccess.Write))
-         {
-            _manifest.WriteTo(s);
-         }
+         _manifest.Dependencies = new List<PackageDependency>(ucPackageDependencies.Dependencies);
+
+         _manifest.WriteTo(_manifestPath, true);
 
          MessageBox.Show("manifest saved to " + _manifestPath, "Success");
+      }
+
+      private void cmdPublishing_Click(object sender, EventArgs e)
+      {
+         MessageBox.Show("coming soon :)");
       }
    }
 }

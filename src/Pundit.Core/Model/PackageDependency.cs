@@ -1,9 +1,11 @@
 ﻿using System;
+using System.ComponentModel;
 using System.Xml.Serialization;
 
 namespace Pundit.Core.Model
 {
    [XmlRoot("package")]
+   [Serializable]
    public class PackageDependency
    {
       public PackageDependency()
@@ -54,6 +56,7 @@ namespace Pundit.Core.Model
       /// 
       /// </summary>
       [XmlAttribute("devtime")]
+      [DefaultValue(false)]
       public bool DevTimeOnly { get; set; }
    }
 }

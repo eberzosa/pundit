@@ -130,6 +130,25 @@ namespace Pundit.Core.Model
          }
       }
 
+      public virtual void WriteTo(string destFileName, bool createBackup = true)
+      {
+         if (createBackup)
+         {
+            string backupName = destFileName + ".bak";
+
+            if(File.Exists(backupName)) File.Delete(backupName);
+
+            if(File.Exists(destFileName)) File.Move(destFileName, backupName);
+         }
+
+         if(File.Exists(destFileName)) File.Delete(destFileName);
+
+         using(Stream s = File.Create(destFileName))
+         {
+            WriteTo(s);
+         }
+      }
+
       private bool IsValidPackageNameString(string s)
       {
          return _packageStringRgx.IsMatch(s);

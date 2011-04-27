@@ -28,12 +28,14 @@
       /// </summary>
       private void InitializeComponent()
       {
+         System.ComponentModel.ComponentResourceManager resources = new System.ComponentModel.ComponentResourceManager(typeof(MainForm));
          this.statusStrip1 = new System.Windows.Forms.StatusStrip();
          this.cmdSave = new System.Windows.Forms.Button();
          this.cmdCancel = new System.Windows.Forms.Button();
          this.cmdMetadata = new System.Windows.Forms.Button();
-         this.packageDependencies1 = new Pundit.WinForms.Core.PackageDependencies();
+         this.ucPackageDependencies = new Pundit.WinForms.Core.PackageDependencies();
          this.label1 = new System.Windows.Forms.Label();
+         this.cmdPublishing = new System.Windows.Forms.Button();
          this.SuspendLayout();
          // 
          // statusStrip1
@@ -63,7 +65,7 @@
          this.cmdCancel.Name = "cmdCancel";
          this.cmdCancel.Size = new System.Drawing.Size(75, 23);
          this.cmdCancel.TabIndex = 24;
-         this.cmdCancel.Text = "&Cancel";
+         this.cmdCancel.Text = "&Close";
          this.cmdCancel.UseVisualStyleBackColor = true;
          this.cmdCancel.Click += new System.EventHandler(this.cmdCancel_Click);
          // 
@@ -78,15 +80,16 @@
          this.cmdMetadata.UseVisualStyleBackColor = true;
          this.cmdMetadata.Click += new System.EventHandler(this.cmdMetadata_Click);
          // 
-         // packageDependencies1
+         // ucPackageDependencies
          // 
-         this.packageDependencies1.Anchor = ((System.Windows.Forms.AnchorStyles)((((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Bottom) 
+         this.ucPackageDependencies.Anchor = ((System.Windows.Forms.AnchorStyles)((((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Bottom) 
             | System.Windows.Forms.AnchorStyles.Left) 
             | System.Windows.Forms.AnchorStyles.Right)));
-         this.packageDependencies1.Location = new System.Drawing.Point(12, 30);
-         this.packageDependencies1.Name = "packageDependencies1";
-         this.packageDependencies1.Size = new System.Drawing.Size(448, 242);
-         this.packageDependencies1.TabIndex = 25;
+         this.ucPackageDependencies.Dependencies = ((System.Collections.Generic.IEnumerable<Pundit.Core.Model.PackageDependency>)(resources.GetObject("ucPackageDependencies.Dependencies")));
+         this.ucPackageDependencies.Location = new System.Drawing.Point(12, 30);
+         this.ucPackageDependencies.Name = "ucPackageDependencies";
+         this.ucPackageDependencies.Size = new System.Drawing.Size(448, 242);
+         this.ucPackageDependencies.TabIndex = 25;
          // 
          // label1
          // 
@@ -97,14 +100,26 @@
          this.label1.TabIndex = 27;
          this.label1.Text = "References:";
          // 
+         // cmdPublishing
+         // 
+         this.cmdPublishing.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Left)));
+         this.cmdPublishing.Location = new System.Drawing.Point(93, 278);
+         this.cmdPublishing.Name = "cmdPublishing";
+         this.cmdPublishing.Size = new System.Drawing.Size(75, 23);
+         this.cmdPublishing.TabIndex = 28;
+         this.cmdPublishing.Text = "&Publishing...";
+         this.cmdPublishing.UseVisualStyleBackColor = true;
+         this.cmdPublishing.Click += new System.EventHandler(this.cmdPublishing_Click);
+         // 
          // MainForm
          // 
          this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
          this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
          this.ClientSize = new System.Drawing.Size(460, 326);
+         this.Controls.Add(this.cmdPublishing);
          this.Controls.Add(this.label1);
          this.Controls.Add(this.cmdMetadata);
-         this.Controls.Add(this.packageDependencies1);
+         this.Controls.Add(this.ucPackageDependencies);
          this.Controls.Add(this.cmdCancel);
          this.Controls.Add(this.cmdSave);
          this.Controls.Add(this.statusStrip1);
@@ -120,9 +135,10 @@
       private System.Windows.Forms.StatusStrip statusStrip1;
       private System.Windows.Forms.Button cmdSave;
       private System.Windows.Forms.Button cmdCancel;
-      private WinForms.Core.PackageDependencies packageDependencies1;
+      private WinForms.Core.PackageDependencies ucPackageDependencies;
       private System.Windows.Forms.Button cmdMetadata;
       private System.Windows.Forms.Label label1;
+      private System.Windows.Forms.Button cmdPublishing;
    }
 }
 

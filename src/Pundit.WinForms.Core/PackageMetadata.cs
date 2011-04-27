@@ -38,13 +38,17 @@ namespace Pundit.WinForms.Core
 
       private void CollectPackage()
       {
-         _pkg.PackageId = txtPackageId.Text;
-         _pkg.Version = new Version(txtVersion.Text);
-         _pkg.Platform = cbPlatform.Text;
-         _pkg.ProjectUrl = txtProjectUri.Text;
-         _pkg.Author = txtAuthor.Text;
+         if (_pkg != null)
+         {
+            _pkg.PackageId = txtPackageId.Text;
+            _pkg.Version = new Version(txtVersion.Text);
+            _pkg.Platform = cbPlatform.Text;
+            _pkg.ProjectUrl = txtProjectUri.Text;
+            _pkg.Author = txtAuthor.Text;
+         }
       }
 
+      [Browsable(false)]
       public Package Package
       {
          set { _pkg = value; }
