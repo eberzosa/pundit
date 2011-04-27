@@ -1,6 +1,6 @@
 ﻿namespace Pundit.WinForms.Core
 {
-   partial class GlobalOptionsForm
+   partial class GlobalSettingsForm
    {
       /// <summary>
       /// Required designer variable.
@@ -29,7 +29,7 @@
       private void InitializeComponent()
       {
          this.components = new System.ComponentModel.Container();
-         System.ComponentModel.ComponentResourceManager resources = new System.ComponentModel.ComponentResourceManager(typeof(GlobalOptionsForm));
+         System.ComponentModel.ComponentResourceManager resources = new System.ComponentModel.ComponentResourceManager(typeof(GlobalSettingsForm));
          this.label1 = new System.Windows.Forms.Label();
          this.txtLocalRepoPath = new System.Windows.Forms.TextBox();
          this.label2 = new System.Windows.Forms.Label();

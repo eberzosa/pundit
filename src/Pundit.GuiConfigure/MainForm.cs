@@ -60,10 +60,5 @@ namespace Pundit.WinForms.App
 
          MessageBox.Show("manifest saved to " + _manifestPath, "Success");
       }
-
-      private void cmdGlobalSettings_Click(object sender, EventArgs e)
-      {
-         new GlobalOptionsForm().ShowDialog();
-      }
    }
 }

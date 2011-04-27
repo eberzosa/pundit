@@ -34,7 +34,6 @@
          this.cmdMetadata = new System.Windows.Forms.Button();
          this.packageDependencies1 = new Pundit.WinForms.Core.PackageDependencies();
          this.label1 = new System.Windows.Forms.Label();
-         this.cmdGlobalSettings = new System.Windows.Forms.Button();
          this.SuspendLayout();
          // 
          // statusStrip1
@@ -98,23 +97,11 @@
          this.label1.TabIndex = 27;
          this.label1.Text = "References:";
          // 
-         // cmdGlobalSettings
-         // 
-         this.cmdGlobalSettings.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Left)));
-         this.cmdGlobalSettings.Location = new System.Drawing.Point(93, 278);
-         this.cmdGlobalSettings.Name = "cmdGlobalSettings";
-         this.cmdGlobalSettings.Size = new System.Drawing.Size(107, 23);
-         this.cmdGlobalSettings.TabIndex = 28;
-         this.cmdGlobalSettings.Text = "&Global settings...";
-         this.cmdGlobalSettings.UseVisualStyleBackColor = true;
-         this.cmdGlobalSettings.Click += new System.EventHandler(this.cmdGlobalSettings_Click);
-         // 
          // MainForm
          // 
          this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
          this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
          this.ClientSize = new System.Drawing.Size(460, 326);
-         this.Controls.Add(this.cmdGlobalSettings);
          this.Controls.Add(this.label1);
          this.Controls.Add(this.cmdMetadata);
          this.Controls.Add(this.packageDependencies1);
@@ -136,7 +123,6 @@
       private WinForms.Core.PackageDependencies packageDependencies1;
       private System.Windows.Forms.Button cmdMetadata;
       private System.Windows.Forms.Label label1;
-      private System.Windows.Forms.Button cmdGlobalSettings;
    }
 }
 

@@ -117,4 +117,30 @@
   <resheader name="writer">
     <value>System.Resources.ResXResourceWriter, System.Windows.Forms, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
   </resheader>
+  <metadata name="PackageId.UserAddedColumn" type="System.Boolean, mscorlib, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089">
+    <value>True</value>
+  </metadata>
+  <metadata name="Version.UserAddedColumn" type="System.Boolean, mscorlib, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089">
+    <value>True</value>
+  </metadata>
+  <metadata name="Platform.UserAddedColumn" type="System.Boolean, mscorlib, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089">
+    <value>True</value>
+  </metadata>
+  <assembly alias="System.Drawing" name="System.Drawing, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a" />
+  <data name="cmdFind.Image" type="System.Drawing.Bitmap, System.Drawing" mimetype="application/x-microsoft.net.object.bytearray.base64">
+    <value>
+        iVBORw0KGgoAAAANSUhEUgAAABAAAAAQCAYAAAAf8/9hAAAAAXNSR0IArs4c6QAAAARnQU1BAACxjwv8
+        YQUAAAAgY0hSTQAAeiYAAICEAAD6AAAAgOgAAHUwAADqYAAAOpgAABdwnLpRPAAAAjFJREFUOE9j/P//
+        PwNFAGQAJRhDc3P/nEdLNuz53zpxLtDc/wyTF6wDs0NjU29hswjDgIrmvkfrdhwGaQAbkFFU879v9or/
+        QIOf4DUgKbvkf9f0Jf9rO6f+b5s0/7+JpR3YAAc3n/9ZJXX/C6pawWJW9q7LFZRUeQSFRZnA4bdgzU6O
+        otp2j6a+2WCnFla3/ffwD/vv4hXwP6es4X9sWt7/iJym/7UTl/0vaZkCluPm5qliY2dnBBswYe5qlikL
+        1z9ctG7X/9zyJjCunrjq/5Tlu/73Ldn+q3H6hv+1vfP/R+c2/w9PLgS7kJmF5QEw5pjBBgCdywqyedri
+        jf+zS+v/g/ycklv+Pzo557+alh7YRpBLYOJx6QWgeP8HxKxgA9IKKln9QmN+Wtg6/fcKjPhvbGH7X1vf
+        +L+sgvJTETFxA0kZua1iElL/gf7+Lyou+Z+Xj/8/IyPjO6ABkDAAET5BUYdBAbfr8Jn/q7Yc+N89Yxko
+        wFaA5FQ1dVZUtkz4v3bHIbAcKEb4+AUPw2IEbICbT/Cf/IpmsAFAF/2Pzyj8r2dsfhUkB7T5KigGQAak
+        5lf8Ty+s/s/ByfUHxQBHd9//MANgijS09X8qqqgzSkjLvgMFHMwAUFiwsrKBoxjuBWtHN3A8gxIQSAEo
+        MHWNzP4D/c+vpKpxBWQAKJZgcsAwQDUAlEAMTCzBgQf083+gzf+lZRX+AwNRCujf25xc3P+B8Q6KPlAM
+        gDGKC6iamUg1DAByyDu7k2g8RgAAAABJRU5ErkJggg==
+</value>
+  </data>
 </root>

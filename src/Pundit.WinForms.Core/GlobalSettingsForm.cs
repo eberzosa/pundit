@@ -14,11 +14,11 @@ using Pundit.Core.Utils;
 
 namespace Pundit.WinForms.Core
 {
-   public partial class GlobalOptionsForm : Form
+   public partial class GlobalSettingsForm : Form
    {
       private BindingList<RegisteredRepository> _rr;
 
-      public GlobalOptionsForm()
+      public GlobalSettingsForm()
       {
          InitializeComponent();
 

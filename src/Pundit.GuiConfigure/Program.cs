@@ -1,10 +1,8 @@
 ﻿using System;
-using System.Collections.Generic;
-using System.Linq;
 using System.Windows.Forms;
-using Pundit.WinForms.App;
+using Pundit.WinForms.Core;
 
-namespace Pundit.GuiConfigure
+namespace Pundit.WinForms.App
 {
    static class Program
    {
@@ -12,11 +10,15 @@ namespace Pundit.GuiConfigure
       /// The main entry point for the application.
       /// </summary>
       [STAThread]
-      static void Main()
+      static void Main(string[] args)
       {
          Application.EnableVisualStyles();
          Application.SetCompatibleTextRenderingDefault(false);
-         Application.Run(new MainForm());
+
+         if(args != null && args.Length > 0 && args[0] == "--global")
+            Application.Run(new GlobalSettingsForm());
+         else
+            Application.Run(new MainForm());
       }
    }
 }
