@@ -193,7 +193,7 @@ namespace Pundit.Vsix
       [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Globalization", "CA1303:DoNotPassLiteralsAsLocalizedParameters", MessageId = "Microsoft.Samples.VisualStudio.MenuCommands.PunditPackage.OutputCommandString(System.String)")]
       private void GlobalSettingsCommandCallback(object caller, EventArgs args)
       {
-         new GlobalOptionsForm().ShowDialog();
+         new GlobalSettingsForm().ShowDialog();
       }
 
 	   /// <summary>
