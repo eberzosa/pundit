@@ -1,7 +1,6 @@
 ﻿using System;
 using System.IO;
 using System.Linq;
-using log4net;
 using NDesk.Options;
 using Pundit.Core;
 using Pundit.Core.Model;
@@ -69,17 +68,17 @@ namespace Pundit.Console.Commands
                throw new ArgumentException("repository [" + rn + "] does not exist");
          }
 
-         Log.InfoFormat("Publishing package to {0} repository(ies)", repoNames.Length);
+         GlamTerm.WriteLine("Publishing package to {0} repository(ies)", repoNames.Length);
 
          foreach (string rn in repoNames)
          {
             foreach (string packagePath in packages)
             {
-               Log.Info(string.Format("publishing package {0} to repository [{1}]", packagePath, rn));
+               GlamTerm.WriteLine(string.Format("publishing package {0} to repository [{1}]", packagePath, rn));
 
                string uri = LocalRepository.GetRepositoryUriFromName(rn);
 
-               Log.Info(string.Format("repository URI: {0}", uri));
+               GlamTerm.WriteLine(string.Format("repository URI: {0}", uri));
 
                IRepository repo = RepositoryFactory.CreateFromUri(uri);
 
@@ -88,7 +87,7 @@ namespace Pundit.Console.Commands
                   repo.Publish(package);
                }
 
-               Log.Info("published");
+               GlamTerm.WriteLine("published");
             }
          }
       }

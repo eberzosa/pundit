@@ -25,7 +25,7 @@ namespace Pundit.Console.Commands
          //search
          foreach(string repoName in names)
          {
-            Log.InfoFormat("searching [{0}]...", repoName);
+            GlamTerm.WriteLine("searching [{0}]...", repoName);
 
             IRepository repo = RepositoryFactory.CreateFromUri(LocalRepository.GetRepositoryUriFromName(repoName));
 
@@ -37,13 +37,13 @@ namespace Pundit.Console.Commands
          //display results
          if(result.Count == 0)
          {
-            Log.Error("nothing found");
+            GlamTerm.WriteErrorLine("nothing found");
          }
          else
          {
             foreach(var r in result)
             {
-               Log.InfoFormat("id: [{0}], platform: [{1}], version: {2}, repository: [{3}]",
+               GlamTerm.WriteLine("id: [{0}], platform: [{1}], version: {2}, repository: [{3}]",
                   r.Key.PackageId, r.Key.Platform, r.Key.Version, r.Value);
             }
          }

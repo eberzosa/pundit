@@ -1,9 +1,5 @@
 ﻿using System;
-using System.Collections.Generic;
 using System.IO;
-using System.Linq;
-using System.Text;
-using log4net;
 using NDesk.Options;
 using Pundit.Core.Model;
 using Pundit.Core.Utils;
@@ -13,7 +9,6 @@ namespace Pundit.Console.Commands
    abstract class BaseCommand : ICommand
    {
       private string[] _args;
-      protected readonly ILog Log = LogManager.GetLogger(typeof (BaseCommand));
 
       protected BaseCommand(string[] args)
       {

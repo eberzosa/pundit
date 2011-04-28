@@ -2,7 +2,6 @@
 using System.Collections.Generic;
 using System.IO;
 using System.Linq;
-using log4net;
 using NDesk.Options;
 using Pundit.Core;
 using Pundit.Core.Application;
@@ -43,8 +42,8 @@ namespace Pundit.Console.Commands
       {
          var names = LocalRepository.TakeFirstRegisteredNames(depth, true);
 
-         Log.Info("participating repisitories:");
-         foreach(string name in names) Log.Info("  " + name);
+         GlamTerm.WriteLine("participating repisitories:");
+         foreach(string name in names) GlamTerm.WriteLine("  " + name);
 
          return names.Select(n =>
                              RepositoryFactory.CreateFromUri(
@@ -53,21 +52,21 @@ namespace Pundit.Console.Commands
 
       private void PrintConflicts(DependencyResolution dr, VersionResolutionTable tbl, DependencyNode rootNode)
       {
-         Log.Error("Found conflicts!!!");
+         GlamTerm.WriteErrorLine("Found conflicts!!!");
 
          foreach(UnresolvedPackage conflict in tbl.GetConflictedPackages())
          {
-            Log.Error(dr.DescribeConflict(rootNode, conflict));
+            GlamTerm.WriteErrorLine(dr.DescribeConflict(rootNode, conflict));
          }
       }
 
       private void PrintSuccess(VersionResolutionTable tbl)
       {
-         Log.Info("Dependencies resolved:");
+         GlamTerm.WriteLine("Dependencies resolved:");
 
          foreach(var pck in tbl.GetPackages())
          {
-            Log.InfoFormat("  > [{0}] ({1}) --> v{2}", pck.PackageId, pck.Platform, pck.Version);
+            GlamTerm.WriteLine("  > [{0}] ({1}) --> v{2}", pck.PackageId, pck.Platform, pck.Version);
          }
       }
 
@@ -81,20 +80,20 @@ namespace Pundit.Console.Commands
          BuildConfiguration configuration;
          ResolveParameters(out depth, out configuration, out force);
 
-         Log.InfoFormat("manifest: {0}", manifestPath);
-         Log.InfoFormat("depth: {0}", depth == int.MaxValue ? "max" : depth.ToString());
-         Log.InfoFormat("configuration: {0}", configuration);
-         Log.InfoFormat("force: {0}", force);
+         GlamTerm.WriteLine("manifest: {0}", manifestPath);
+         GlamTerm.WriteLine("depth: {0}", depth == int.MaxValue ? "max" : depth.ToString());
+         GlamTerm.WriteLine("configuration: {0}", configuration);
+         GlamTerm.WriteLine("force: {0}", force);
 
-         Log.Info("reading manifest...");
+         GlamTerm.WriteLine("reading manifest...");
          DevPackage devPackage = DevPackage.FromStream(File.OpenRead(manifestPath));
 
          //get the repository list
-         Log.InfoFormat("getting repositories up to depth {0}", depth);
+         GlamTerm.WriteLine("getting repositories up to depth {0}", depth);
          IEnumerable<IRepository> repositories = GetRepositories(depth);
 
          //resolve dependencies
-         Log.Info("resolving dependencies...");
+         GlamTerm.WriteLine("resolving dependencies...");
          DependencyResolution dr = new DependencyResolution(devPackage, repositories.ToArray());
          var resolutionResult = dr.Resolve();
 
@@ -114,7 +113,7 @@ namespace Pundit.Console.Commands
             repositories.Skip(1));
 
          //install all packages
-         Log.Info("Installing packages");
+         GlamTerm.WriteLine("Installing packages");
          var installer = new PackageInstaller(projectRoot,
             resolutionResult.Item1,
             repositories.First());

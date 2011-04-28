@@ -1,7 +1,7 @@
 ﻿using System;
 using System.IO;
-using log4net;
 using NDesk.Options;
+using Pundit.Core;
 using Pundit.Core.Application;
 using Pundit.Core.Model;
 using Pundit.Core.Utils;
@@ -66,9 +66,9 @@ namespace Pundit.Console.Commands
 
          ResolveParams(out solutionRoot, out packagePath, out destinationFolder, out overrideVersion);
 
-         Log.Debug("package: " + packagePath);
-         Log.Debug("solution root: " + solutionRoot);
-         Log.Debug("output folder: " + destinationFolder);
+         GlamTerm.WriteLine("package: " + packagePath);
+         GlamTerm.WriteLine("solution root: " + solutionRoot);
+         GlamTerm.WriteLine("output folder: " + destinationFolder);
 
          DevPackage devPack;
          using(Stream devPackStream = File.OpenRead(packagePath))
@@ -78,7 +78,7 @@ namespace Pundit.Console.Commands
 
          if(overrideVersion != null)
          {
-            Log.InfoFormat("Overriding package version {0} with {1}", devPack.Version, overrideVersion);
+            GlamTerm.WriteLine("Overriding package version {0} with {1}", devPack.Version, overrideVersion);
 
             devPack.Version = overrideVersion;
          }
@@ -87,10 +87,10 @@ namespace Pundit.Console.Commands
 
          if(File.Exists(destinationFile))
          {
-            Log.Warn(string.Format("package exists at [{0}], deleting", destinationFile));
+            GlamTerm.WriteWarnLine(string.Format("package exists at [{0}], deleting", destinationFile));
          }
 
-         Log.Info("creating package at [" + destinationFile + "]");
+         GlamTerm.WriteLine("creating package at [" + destinationFile + "]");
 
          long bytesWritten;
 
@@ -104,7 +104,7 @@ namespace Pundit.Console.Commands
 
          long packageSize = new FileInfo(destinationFile).Length;
 
-         Log.Info(string.Format("Packed {0} to {1} (ratio: {2:D2}%)",
+         GlamTerm.WriteLine(string.Format("Packed {0} to {1} (ratio: {2:D2}%)",
             PathUtils.FileSizeToString(bytesWritten),
             PathUtils.FileSizeToString(packageSize),
             packageSize * 100 / bytesWritten));

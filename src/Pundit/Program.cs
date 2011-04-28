@@ -1,22 +1,20 @@
 ﻿using System;
-using System.IO;
 using System.Reflection;
-using log4net;
-using Pundit;
 using Pundit.Console.Commands;
+using Pundit.Core;
 using Pundit.Core.Model;
 
 namespace Pundit.Console
 {
    static class Program
    {
-      private static readonly ILog Log = LogManager.GetLogger(typeof (Program));
+      //private static readonly ILog Log = LogManager.GetLogger(typeof (Program));
       private static readonly string ExeName = Assembly.GetExecutingAssembly().GetName().Name;
       private static readonly Version CoreVersion = typeof (IRepository).Assembly.GetName().Version;
 
       static int Main(string[] args)
       {
-         log4net.Config.XmlConfigurator.Configure();
+         //log4net.Config.XmlConfigurator.Configure();
 
          PrintBanner();
 
@@ -34,11 +32,11 @@ namespace Pundit.Console
 
             if(helpString != null)
             {
-               Log.InfoFormat(helpString, ExeName);
+               GlamTerm.WriteLine(helpString, ExeName);
             }
             else
             {
-               Log.ErrorFormat("Article {0} not found", args[1]);
+               GlamTerm.WriteWarnLine("Article {0} not found", args[1]);
             }
 
             return 0;
@@ -52,14 +50,17 @@ namespace Pundit.Console
          }
          catch(Exception ex)
          {
-            Log.Fatal(ex.Message);
+            GlamTerm.WriteErrorLine(ex.Message);
 
-            if(ex is InvalidPackageException)
-               Log.Fatal(ex);
+            if (ex is InvalidPackageException)
+               GlamTerm.WriteErrorLine(ex.ToString());
+            else
+            {
 
 #if DEBUG
-            Log.Fatal(ex);
+               GlamTerm.WriteErrorLine(ex.ToString());
 #endif
+            }
 
             return 1;
          }
@@ -69,12 +70,12 @@ namespace Pundit.Console
 
       private static void PrintBanner()
       {
-         Log.InfoFormat(Strings.Banner, CoreVersion);
+         GlamTerm.WriteLine(Strings.Banner, CoreVersion);
       }
 
       private static void PrintHelp()
       {
-         Log.InfoFormat(Strings.Help, ExeName);
+         GlamTerm.WriteLine(Strings.Help, ExeName);
       }
    }
 }

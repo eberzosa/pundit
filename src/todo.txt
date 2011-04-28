@@ -27,3 +27,4 @@ after noarch, then try to use net35, net30 and net20
   apparently the whole lib folder content shouldn't be deleted when resolve fails
 - throw out log4net, all the algorithms must throw progress events to indicate something is happening instead
   of logging; this will allow to adopt them both to console and UI
+- ResolveCommand was using LocalRepository which lost log4net logging, must use new events now to display the same level of info
