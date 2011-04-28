@@ -23,3 +23,7 @@ just ignore all XML files
 - support platform compatibility i.e. if manifest declares platform net40, use it as a default one
 after noarch, then try to use net35, net30 and net20
 - check that all dependencies are valid when publishing
+- do not reinstall the whole folder if a dependency changed, update only the dependency;
+  apparently the whole lib folder content shouldn't be deleted when resolve fails
+- throw out log4net, all the algorithms must throw progress events to indicate something is happening instead
+  of logging; this will allow to adopt them both to console and UI

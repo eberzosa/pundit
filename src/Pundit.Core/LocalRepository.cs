@@ -2,13 +2,15 @@
 using System.Collections.Generic;
 using System.IO;
 using System.Linq;
-using log4net;
-using Pundit.Core.Application.Repository;
 using Pundit.Core.Model;
+using Pundit.Core.Model.EventArguments;
 
 namespace Pundit.Core
 {
-   public class LocalRepository : FileRepository
+   /// <summary>
+   /// Represents local repository and utility methods to work with it
+   /// </summary>
+   public static class LocalRepository
    {
       private const string LocalRepositoryRootEnv = "PUNDIT_ROOT";
       private const string LocalRepositoryDirName = ".pundit";
@@ -18,19 +20,23 @@ namespace Pundit.Core
       private static readonly string LocalRepoRoot;     //path to local repository root (not the file folder)
       private static readonly string LocalRepoFileRoot; //path for file repository
       private static readonly RegisteredRepositories Repos;
-      private static readonly ILog Log = LogManager.GetLogger(typeof (LocalRepository));
+      //private static readonly ILog Log = LogManager.GetLogger(typeof (LocalRepository));
 
-      public LocalRepository() : base(LocalRepoFileRoot)
-      {
-      }
+      /// <summary>
+      /// Occurs when a package is started downloading to the local repository
+      /// </summary>
+      public static event EventHandler<PackageKeyEventArgs> PackageDownloadToLocalRepositoryStarted;
+
+      /// <summary>
+      /// Occurs when a package is finished downloading to the local repository
+      /// </summary>
+      public static event EventHandler<PackageKeyEventArgs> PackageDownloadToLocalRepositoryFinished;
 
       static LocalRepository()
       {
          ResolveRootPath(out LocalRepoRoot, out LocalRepoFileRoot);
 
          Repos = LoadRegisteredRepositories();
-
-         if(Log.IsDebugEnabled) Log.Debug("registered repositories: " + Repos.Names.Length);
       }
 
       public static string GlobalRootPath
@@ -103,8 +109,6 @@ namespace Pundit.Core
       {
          string repoTxtPath = Path.Combine(LocalRepoRoot, RepoXmlFileName);
 
-         if(Log.IsDebugEnabled) Log.Debug("Loading registered repositories from " + repoTxtPath);
-
          if (File.Exists(repoTxtPath))
          {
             return RegisteredRepositories.LoadFrom(repoTxtPath);
@@ -166,7 +170,8 @@ namespace Pundit.Core
 
             if(existance[i])
             {
-               Log.InfoFormat("[+] {0}", pck);
+               //package already here
+               //Log.InfoFormat("[+] {0}", pck);
             }
             else
             {
@@ -178,12 +183,14 @@ namespace Pundit.Core
                   {
                      using (Stream pckStream = activeRepository.Download(pck))
                      {
-                        Log.InfoFormat("Downoading {0} to the local repository", pck);
+                        if(PackageDownloadToLocalRepositoryStarted != null)
+                           PackageDownloadToLocalRepositoryStarted(null, new PackageKeyEventArgs(pck, true));
 
                         localRepo.Publish(pckStream);
                      }
 
                      downloaded = true;
+
                      break;
                   }
                   catch(FileNotFoundException)
@@ -192,10 +199,8 @@ namespace Pundit.Core
                   }
                }
 
-               if(!downloaded)
-               {
-                  throw new ApplicationException("could not find package in any repository: " + pck);
-               }
+               if (PackageDownloadToLocalRepositoryFinished != null)
+                  PackageDownloadToLocalRepositoryFinished(null, new PackageKeyEventArgs(pck, downloaded));
             }
          }
       }

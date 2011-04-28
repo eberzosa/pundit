@@ -65,6 +65,7 @@
     <Compile Include="Model\DependencyNode.cs" />
     <Compile Include="Model\DevPackage.cs" />
     <Compile Include="Model\Enums.cs" />
+    <Compile Include="Model\EventArguments\PackageKeyEventArgs.cs" />
     <Compile Include="Model\InvalidPackageException.cs" />
     <Compile Include="Model\ManifestPackage.cs" />
     <Compile Include="Model\PackageDependency.cs" />

@@ -3,7 +3,6 @@ using System.Collections.Generic;
 using System.IO;
 using System.Linq;
 using System.Text;
-using log4net;
 using Pundit.Core.Model;
 
 namespace Pundit.Core.Application
@@ -12,7 +11,6 @@ namespace Pundit.Core.Application
    {
       private readonly IRepository[] _activeRepositories;
       private readonly DependencyNode _root;
-      //private readonly ILog _log = LogManager.GetLogger(typeof (DependencyResolution));
 
       public DependencyResolution(Package rootManifest, IRepository[] activeRepositories)
       {

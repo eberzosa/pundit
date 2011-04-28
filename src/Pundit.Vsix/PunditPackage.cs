@@ -2,6 +2,7 @@ using System;
 using System.ComponentModel.Design;
 using System.Diagnostics;
 using System.Globalization;
+using System.IO;
 using System.Runtime.InteropServices;
 using System.Security.Permissions;
 using System.Text;
@@ -26,7 +27,7 @@ namespace Pundit.Vsix
    [Guid("3C7C5ABE-82AC-4A37-B077-0FF60E8B1FD3")]
    [InstalledProductRegistration("#110", "#112", "1.0", IconResourceID = 400)]
 	[ComVisible(true)]
-	public sealed class PunditPackage : Package
+	public partial class PunditPackage : Package
 	{
 	   private OleMenuCommandService _mcs;
 
@@ -185,37 +186,7 @@ namespace Pundit.Vsix
 			OutputCommandString("Zoom Command Callback.");
 		}
 
-      [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Globalization", "CA1303:DoNotPassLiteralsAsLocalizedParameters", MessageId = "Microsoft.Samples.VisualStudio.MenuCommands.PunditPackage.OutputCommandString(System.String)")]
-      private void AddReferenceCommandCallback(object caller, EventArgs args)
-      {
-         MessageBox.Show("Good news, 'add referene' menu extended!");
-      }
 
-      [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Globalization", "CA1303:DoNotPassLiteralsAsLocalizedParameters", MessageId = "Microsoft.Samples.VisualStudio.MenuCommands.PunditPackage.OutputCommandString(System.String)")]
-      private void GlobalSettingsCommandCallback(object caller, EventArgs args)
-      {
-         new GlobalSettingsForm().ShowDialog();
-      }
-
-      [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Globalization", "CA1303:DoNotPassLiteralsAsLocalizedParameters", MessageId = "Microsoft.Samples.VisualStudio.MenuCommands.PunditPackage.OutputCommandString(System.String)")]
-      private void ResolveDependenciesCommandCallback(object caller, EventArgs args)
-      {
-         IVsSolution solution = GetService(typeof(SVsSolution)) as IVsSolution;
-
-         if(solution != null)
-         {
-            object objSolutionDir;
-
-            solution.GetProperty((int)__VSPROPID.VSPROPID_SolutionDirectory, out objSolutionDir);
-
-            if(objSolutionDir != null)
-            {
-               string solutionDir = (string) objSolutionDir;
-
-               MessageBox.Show(solutionDir);
-            }
-         }
-      }
 
 	   /// <summary>
 		/// Event handler called when the user selects one of the two menus with
