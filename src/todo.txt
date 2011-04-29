@@ -1,10 +1,14 @@
 
 1.2.0
-- repository server
 - refactor RepositoryStreamer to use compression methods different from ZIP (for example 7z)
 
 1.1.0
 - optimize dependency resolution to use less calls to IRepository, better batching
+- repository server
+- check that all dependencies are valid when publishing
+- support platform compatibility i.e. if manifest declares platform net40, use it as a default one
+after noarch, then try to use net35, net30 and net20
+
 
 1.0.0
 + support devtime packages
@@ -20,6 +24,12 @@ he just publishes them as configuration="any" (which is a default configuration 
 + install tools and other
 + ignore XML documentation files overwrite errors in the LIB folder which VS sometimes stupidly locks
 just ignore all XML files
+- because of VS "add reference" dialog needs an assembly, there should be "entry point" assembly
+  used for that
++ VSIX: configure global settings
+- VSIX: "Package Dependencies" with an option to test the resolution
+- VSIX: dependency resolution (refresh), try to use active build configuration (debug/release);
+  show version changes; in case of conflicts redirect to "Package Dependencies" dialog
 - support platform compatibility i.e. if manifest declares platform net40, use it as a default one
 after noarch, then try to use net35, net30 and net20
 - check that all dependencies are valid when publishing

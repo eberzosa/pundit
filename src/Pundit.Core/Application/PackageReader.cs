@@ -1,15 +1,15 @@
 ﻿using System;
 using System.IO;
 using ICSharpCode.SharpZipLib.Zip;
-using log4net;
 using Pundit.Core.Model;
+using Pundit.Core.Model.EventArguments;
 using Pundit.Core.Utils;
 
 namespace Pundit.Core.Application
 {
    public class PackageReader : PackageStreamer
    {
-      private readonly ILog _log = LogManager.GetLogger(typeof (PackageReader));
+      public event EventHandler<ResolvedFileEventArgs> InstallingResolvedFile;
 
       private ZipInputStream _zipStream;
 
@@ -62,21 +62,20 @@ namespace Pundit.Core.Application
          return PackageFileKind.Unknown;
       }
 
-      private void InstallGenericFile(string root, string name, string kindName, string packageId)
+      private void InstallGenericFile(string root, string name, PackageFileKind kind, string packageId)
       {
+         string kindName = kind.ToString().ToLower();
          string relativeKindRoot = Path.Combine(root, kindName);
          if (!Directory.Exists(relativeKindRoot)) Directory.CreateDirectory(relativeKindRoot);
 
          string shortName = name.Substring(name.IndexOf("/") + 1);
          string fullName = kindName + "/" + packageId + "/" + shortName;
 
-         if(_log.IsDebugEnabled) _log.DebugFormat("[{0}/{1}]: {2}", kindName, packageId, fullName);
+         if(InstallingResolvedFile != null)
+            InstallingResolvedFile(this, new ResolvedFileEventArgs(packageId, kind, BuildConfiguration.Any, fullName));
 
          string fullPath = Path.Combine(root, fullName);
          string fullDirPath = new FileInfo(fullName).Directory.FullName;
-
-         //_log.Debug("installing to " + fullPath);
-         //_log.Debug("dir: " + fullDirPath);
 
          PathUtils.EnsureDirectoryExists(fullDirPath);
          if(File.Exists(fullPath)) File.Delete(fullPath);
@@ -87,14 +86,12 @@ namespace Pundit.Core.Application
          }
       }
 
-      private void InstallLibrary(string root, string name, BuildConfiguration targetConfig)
+      private void InstallLibrary(string packageId, string root, string name, BuildConfiguration targetConfig)
       {
          name = name.Substring(name.IndexOf("/") + 1);
         
          BuildConfiguration config =
             (BuildConfiguration) Enum.Parse(typeof (BuildConfiguration), name.Substring(0, name.IndexOf("/")), true);
-
-         _log.Debug("config: " + config);
 
          bool install = (targetConfig == BuildConfiguration.Any) || (config == BuildConfiguration.Any) ||
                         (config == BuildConfiguration.Debug &&
@@ -106,7 +103,8 @@ namespace Pundit.Core.Application
          {
             name = name.Substring(name.IndexOf("/") + 1);
 
-            _log.DebugFormat("[lib|{0}]: {1}", config, name);
+            if(InstallingResolvedFile != null)
+               InstallingResolvedFile(this, new ResolvedFileEventArgs(packageId, PackageFileKind.Binary, config, name));
 
             string targetPath = Path.Combine(root, "lib");
             if (!Directory.Exists(targetPath)) Directory.CreateDirectory(targetPath);
@@ -125,7 +123,7 @@ namespace Pundit.Core.Application
             {
                if(Exceptional.IsVsDocFile(targetPath))
                {
-                  if(_log.IsWarnEnabled) _log.Warn("  ! couldn't overwrite documentation file, however it can be safely ignored");
+                  //if(_log.IsWarnEnabled) _log.Warn("  ! couldn't overwrite documentation file, however it can be safely ignored");
                }
                else
                {
@@ -135,7 +133,7 @@ namespace Pundit.Core.Application
          }
          else
          {
-            _log.Debug("ignoring " + name);
+            //_log.Debug("ignoring " + name);
          }
       }
 
@@ -159,13 +157,12 @@ namespace Pundit.Core.Application
                switch(kind)
                {
                   case PackageFileKind.Binary:
-                     InstallLibrary(rootFolder, entry.Name, configuration);
+                     InstallLibrary(pkg.PackageId, rootFolder, entry.Name, configuration);
                      break;
                   case PackageFileKind.Include:
                   case PackageFileKind.Tools:
                   case PackageFileKind.Other:
-                     InstallGenericFile(rootFolder, entry.Name,
-                        kind.ToString().ToLower(), pkg.PackageId);
+                     InstallGenericFile(rootFolder, entry.Name, kind, pkg.PackageId);
                      break;
                }
             }

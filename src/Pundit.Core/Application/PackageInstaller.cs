@@ -2,11 +2,9 @@
 using System.Collections.Generic;
 using System.IO;
 using System.Linq;
-using System.Security.AccessControl;
-using System.Text;
 using System.Xml.Serialization;
-using log4net;
 using Pundit.Core.Model;
+using Pundit.Core.Model.EventArguments;
 
 namespace Pundit.Core.Application
 {
@@ -93,8 +91,6 @@ namespace Pundit.Core.Application
 
    public class PackageInstaller
    {
-      private static readonly ILog Log = LogManager.GetLogger(typeof (PackageInstaller));
-
       private readonly string _rootDirectory;
       private readonly VersionResolutionTable _versionTable;
       private readonly IRepository _localRepository;
@@ -104,6 +100,9 @@ namespace Pundit.Core.Application
       private readonly string _includeFolderPath;
       private readonly string _toolsFolderPath;
       private readonly string _otherFolderPath;
+
+      public event EventHandler<PackageKeyEventArgs> BeginInstallPackage;
+      public event EventHandler<PackageKeyEventArgs> FinishInstallPackage;
 
       public PackageInstaller(string rootDirectory, VersionResolutionTable versionTable,
          IRepository localRepository)
@@ -174,17 +173,17 @@ namespace Pundit.Core.Application
             {
                using (PackageReader reader = new PackageReader(s))
                {
-                  Log.InfoFormat("installing: {0}...", pck);
+                  if(BeginInstallPackage != null)
+                     BeginInstallPackage(this, new PackageKeyEventArgs(pck, true));
 
                   reader.InstallTo(_rootDirectory, configuration);
                }
             }
 
             _index.Install(pck);
-         }
-         else
-         {
-            Log.InfoFormat("already installed: {0}", pck);
+
+            if(FinishInstallPackage != null)
+               FinishInstallPackage(this, new PackageKeyEventArgs(pck, true));
          }
       }
 
@@ -193,7 +192,7 @@ namespace Pundit.Core.Application
       ///</summary>
       ///<param name="configuration"></param>
       ///<param name="forceReset"></param>
-      public void InstallAll(BuildConfiguration configuration, bool forceReset = false)
+      public bool InstallAll(BuildConfiguration configuration, bool forceReset = false)
       {
          _index = InstalledPackagesIndex.ReadFromFolder(_rootDirectory);
          IEnumerable<PackageKey> currentDependencies = _versionTable.GetPackages();
@@ -208,10 +207,12 @@ namespace Pundit.Core.Application
             }
 
             _index.WriteToFolder(_rootDirectory);
+
+            return true;
          }
          else
          {
-            Log.Info("no dependencies changed since the last time");
+            return false;
          }
       }
    }

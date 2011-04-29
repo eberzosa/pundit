@@ -40,9 +40,6 @@
     <Reference Include="ICSharpCode.SharpZipLib">
       <HintPath>..\..\lib\ICSharpCode.SharpZipLib.dll</HintPath>
     </Reference>
-    <Reference Include="log4net">
-      <HintPath>..\..\lib\log4net.dll</HintPath>
-    </Reference>
     <Reference Include="System" />
     <Reference Include="System.Core" />
     <Reference Include="System.ServiceModel" />
@@ -66,7 +63,9 @@
     <Compile Include="Model\DependencyNode.cs" />
     <Compile Include="Model\DevPackage.cs" />
     <Compile Include="Model\Enums.cs" />
+    <Compile Include="Model\EventArguments\PackageFileEventArgs.cs" />
     <Compile Include="Model\EventArguments\PackageKeyEventArgs.cs" />
+    <Compile Include="Model\EventArguments\ResolvedFileEventArgs.cs" />
     <Compile Include="Model\InvalidPackageException.cs" />
     <Compile Include="Model\ManifestPackage.cs" />
     <Compile Include="Model\PackageDependency.cs" />

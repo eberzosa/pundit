@@ -3,7 +3,6 @@ using System.Collections.Generic;
 using System.IO;
 using System.Linq;
 using System.Text;
-using log4net;
 using NAnt.Core;
 using Pundit.Core.Model;
 using Pundit.Core.Utils;
@@ -12,8 +11,6 @@ namespace Pundit.Core.Application
 {
    public abstract class PackageStreamer : IDisposable
    {
-      private readonly ILog _log = LogManager.GetLogger(typeof (PackageStreamer));
-
       protected virtual void Dispose(bool disposing)
       {
          
@@ -43,8 +40,6 @@ namespace Pundit.Core.Application
 
          if (!Directory.Exists(manifestDir))
             throw new DirectoryNotFoundException("search base directory [" + manifestDir + "] not found");
-
-         _log.Debug("searching from " + manifestDir);
 
          searchBase = manifestDir;
 

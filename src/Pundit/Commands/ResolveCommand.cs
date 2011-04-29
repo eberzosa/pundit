@@ -42,9 +42,6 @@ namespace Pundit.Console.Commands
       {
          var names = LocalRepository.TakeFirstRegisteredNames(depth, true);
 
-         GlamTerm.WriteLine("participating repisitories:");
-         foreach(string name in names) GlamTerm.WriteLine("  " + name);
-
          return names.Select(n =>
                              RepositoryFactory.CreateFromUri(
                                 LocalRepository.GetRepositoryUriFromName(n)));
@@ -52,8 +49,6 @@ namespace Pundit.Console.Commands
 
       private void PrintConflicts(DependencyResolution dr, VersionResolutionTable tbl, DependencyNode rootNode)
       {
-         GlamTerm.WriteErrorLine("Found conflicts!!!");
-
          foreach(UnresolvedPackage conflict in tbl.GetConflictedPackages())
          {
             GlamTerm.WriteErrorLine(dr.DescribeConflict(rootNode, conflict));
@@ -62,12 +57,18 @@ namespace Pundit.Console.Commands
 
       private void PrintSuccess(VersionResolutionTable tbl)
       {
-         GlamTerm.WriteLine("Dependencies resolved:");
+         GlamTerm.WriteLine();
 
          foreach(var pck in tbl.GetPackages())
          {
-            GlamTerm.WriteLine("  > [{0}] ({1}) --> v{2}", pck.PackageId, pck.Platform, pck.Version);
+            GlamTerm.Write(ConsoleColor.White, pck.PackageId);
+            GlamTerm.Write(" ");
+            GlamTerm.Write(ConsoleColor.Yellow, pck.Platform);
+            GlamTerm.Write(" --> ");
+            GlamTerm.WriteLine(ConsoleColor.Green, pck.Version.ToString());
          }
+
+         //GlamTerm.WriteLine();
       }
 
       public override void Execute()
@@ -80,22 +81,37 @@ namespace Pundit.Console.Commands
          BuildConfiguration configuration;
          ResolveParameters(out depth, out configuration, out force);
 
-         GlamTerm.WriteLine("manifest: {0}", manifestPath);
-         GlamTerm.WriteLine("depth: {0}", depth == int.MaxValue ? "max" : depth.ToString());
-         GlamTerm.WriteLine("configuration: {0}", configuration);
-         GlamTerm.WriteLine("force: {0}", force);
+         GlamTerm.Write(ConsoleColor.White, "manifest:\t");
+         GlamTerm.WriteLine(manifestPath);
 
-         GlamTerm.WriteLine("reading manifest...");
+         GlamTerm.Write(ConsoleColor.White, "depth:\t\t");
+         GlamTerm.WriteLine(depth == int.MaxValue ? "max" : depth.ToString());
+
+         GlamTerm.Write(ConsoleColor.White, "configuration:\t");
+         GlamTerm.WriteLine(configuration == BuildConfiguration.Debug ? ConsoleColor.Yellow : ConsoleColor.Green,
+                            configuration.ToString().ToLower());
+
+         GlamTerm.Write("force:\t\t");
+         if(force)
+            GlamTerm.WriteLine(ConsoleColor.Red, "yes");
+         else
+            GlamTerm.WriteLine("no");
+         GlamTerm.WriteLine();
+
+         GlamTerm.Write("reading manifest...\t\t");
          DevPackage devPackage = DevPackage.FromStream(File.OpenRead(manifestPath));
+         GlamTerm.WriteOk();
 
          //get the repository list
-         GlamTerm.WriteLine("getting repositories up to depth {0}", depth);
          IEnumerable<IRepository> repositories = GetRepositories(depth);
 
          //resolve dependencies
-         GlamTerm.WriteLine("resolving dependencies...");
-         DependencyResolution dr = new DependencyResolution(devPackage, repositories.ToArray());
+         GlamTerm.Write("resolving...\t\t\t");
+
+         var dr = new DependencyResolution(devPackage, repositories.ToArray());
          var resolutionResult = dr.Resolve();
+
+         GlamTerm.WriteBool(!resolutionResult.Item1.HasConflicts);
 
          if(resolutionResult.Item1.HasConflicts)
          {
@@ -109,15 +125,45 @@ namespace Pundit.Console.Commands
          }
 
          //ensure that all packages exist in local repository
+         LocalRepository.PackageDownloadToLocalRepositoryStarted += LocalRepository_PackageDownloadToLocalRepositoryStarted;
+         LocalRepository.PackageDownloadToLocalRepositoryFinished += LocalRepository_PackageDownloadToLocalRepositoryFinished;
          LocalRepository.DownloadLocally(resolutionResult.Item1.GetPackages(),
             repositories.Skip(1));
 
          //install all packages
-         GlamTerm.WriteLine("Installing packages");
          var installer = new PackageInstaller(projectRoot,
             resolutionResult.Item1,
             repositories.First());
-         installer.InstallAll(configuration, force);
+         installer.BeginInstallPackage += installer_BeginInstallPackage;
+         installer.FinishInstallPackage += installer_FinishInstallPackage;
+
+         bool changed = installer.InstallAll(configuration, force);
+
+         if(!changed)
+         {
+            GlamTerm.WriteLine();
+            GlamTerm.WriteLine(ConsoleColor.Green, "no changes");
+         }
+      }
+
+      void installer_FinishInstallPackage(object sender, Core.Model.EventArguments.PackageKeyEventArgs e)
+      {
+         GlamTerm.Write("installing {0}...", e.PackageKey.PackageId);
+      }
+
+      void installer_BeginInstallPackage(object sender, Core.Model.EventArguments.PackageKeyEventArgs e)
+      {
+         GlamTerm.WriteBool(e.Succeeded);
+      }
+
+      void LocalRepository_PackageDownloadToLocalRepositoryFinished(object sender, Core.Model.EventArguments.PackageKeyEventArgs e)
+      {
+         GlamTerm.WriteBool(e.Succeeded);
+      }
+
+      void LocalRepository_PackageDownloadToLocalRepositoryStarted(object sender, Core.Model.EventArguments.PackageKeyEventArgs e)
+      {
+         GlamTerm.Write("downloading {0}...", e.PackageKey.PackageId);
       }
    }
 }

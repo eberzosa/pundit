@@ -4,15 +4,17 @@ using System.IO;
 using System.Linq;
 using System.Text;
 using ICSharpCode.SharpZipLib.Zip;
-using log4net;
 using Pundit.Core.Model;
+using Pundit.Core.Model.EventArguments;
 using Pundit.Core.Utils;
 
 namespace Pundit.Core.Application
 {
    public class PackageWriter : PackageStreamer
    {
-      private static readonly ILog Log = LogManager.GetLogger(typeof (PackageWriter));
+      public event EventHandler<PackageFileEventArgs> BeginPackingFile;
+      public event EventHandler<PackageFileEventArgs> EndPackingFile;
+
       private readonly string _rootDirectory;
       private readonly DevPackage _packageInfo;
       private readonly ZipOutputStream _zipStream;
@@ -113,8 +115,8 @@ namespace Pundit.Core.Application
             long originalSize = new FileInfo(filePath).Length;
             _bytesWritten += originalSize;
 
-            Log.Debug(string.Format("packaging {0} ({1})... ", unixPath,
-                          String.Format(new FileSizeFormatProvider(), "{0:fs}", originalSize)));
+            if(BeginPackingFile != null)
+               BeginPackingFile(this, new PackageFileEventArgs(unixPath, originalSize));
 
             ZipEntry entry = new ZipEntry(unixPath);
             entry.DateTime = DateTime.Now;
@@ -125,6 +127,9 @@ namespace Pundit.Core.Application
             {
                fileStream.CopyTo(_zipStream);
             }
+
+            if(EndPackingFile != null)
+               EndPackingFile(this, new PackageFileEventArgs(unixPath, originalSize));
          }
       }
 

@@ -8,14 +8,11 @@ namespace Pundit.Console
 {
    static class Program
    {
-      //private static readonly ILog Log = LogManager.GetLogger(typeof (Program));
       private static readonly string ExeName = Assembly.GetExecutingAssembly().GetName().Name;
       private static readonly Version CoreVersion = typeof (IRepository).Assembly.GetName().Version;
 
       static int Main(string[] args)
       {
-         //log4net.Config.XmlConfigurator.Configure();
-
          PrintBanner();
 
          if(args != null && args.Length == 1 &&
@@ -70,7 +67,7 @@ namespace Pundit.Console
 
       private static void PrintBanner()
       {
-         GlamTerm.WriteLine(Strings.Banner, CoreVersion);
+         GlamTerm.WriteLine(ConsoleColor.Green, Strings.Banner, CoreVersion);
       }
 
       private static void PrintHelp()
