@@ -85,9 +85,25 @@ namespace Pundit.Core
          if (word.Length > 4) word = word.Substring(0, 4);
          if (word.Length < 4) word = word.PadLeft(4);
 
-         int width = Console.WindowWidth;
+         int width = 80;
 
-         Console.SetCursorPosition(width - 8, Console.CursorTop);
+         try
+         {
+            width = Console.WindowWidth;
+         }
+         catch
+         {
+         }
+
+         try
+         {
+            Console.SetCursorPosition(width - 8, Console.CursorTop);
+         }
+         catch
+         {
+         }
+
+
          Write(ConsoleColor.White, "[");
          Write(wordColor, word);
          WriteLine(ConsoleColor.White, "]");
