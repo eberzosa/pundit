@@ -4,8 +4,9 @@ using System.IO;
 using System.Linq;
 using System.Text;
 using System.Windows.Forms;
-using Microsoft.VisualStudio.Shell;
+using Pundit.Core.Model;
 using Pundit.WinForms.Core;
+using Package = Microsoft.VisualStudio.Shell.Package;
 
 namespace Pundit.Vsix
 {
@@ -14,7 +15,7 @@ namespace Pundit.Vsix
       [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Globalization", "CA1303:DoNotPassLiteralsAsLocalizedParameters", MessageId = "Microsoft.Samples.VisualStudio.MenuCommands.PunditPackage.OutputCommandString(System.String)")]
       private void AddReferenceCommandCallback(object caller, EventArgs args)
       {
-         MessageBox.Show("Good news, 'add referene' menu extended!");
+         Alert.Message("Good news, 'add referene' menu extended!");
       }
 
       [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Globalization", "CA1303:DoNotPassLiteralsAsLocalizedParameters", MessageId = "Microsoft.Samples.VisualStudio.MenuCommands.PunditPackage.OutputCommandString(System.String)")]
@@ -30,6 +31,26 @@ namespace Pundit.Vsix
 
          if (sd != null)
             MessageBox.Show(sd.FullName);
+      }
+
+      [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Globalization", "CA1303:DoNotPassLiteralsAsLocalizedParameters", MessageId = "Microsoft.Samples.VisualStudio.MenuCommands.PunditPackage.OutputCommandString(System.String)")]
+      private void ManageDependenciesCommandCallback(object caller, EventArgs args)
+      {
+         if(IsInValidState)
+         {
+            DevPackage pkg = InstantManifest;
+
+            var form = new EditDependenciesForm(pkg.Dependencies);
+
+            if(DialogResult.OK == form.ShowDialog())
+            {
+               pkg.Dependencies = new List<PackageDependency>(form.Dependencies);
+
+               pkg.WriteTo(ManifestPath);
+
+               Alert.MessageManifestSaved(ManifestPath);
+            }
+         }
       }
    }
 }

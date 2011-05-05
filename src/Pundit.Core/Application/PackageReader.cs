@@ -24,7 +24,7 @@ namespace Pundit.Core.Application
 
          while((entry = _zipStream.GetNextEntry()) != null)
          {
-            if(entry.IsFile && entry.Name == Package.DefaultPackageFileName)
+            if(entry.IsFile && entry.Name == Package.DefaultManifestFileName)
             {
                Package manifest = Package.FromStream(_zipStream);
 

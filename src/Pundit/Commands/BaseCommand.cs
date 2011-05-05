@@ -33,7 +33,7 @@ namespace Pundit.Console.Commands
          }
          else
          {
-            manifestPath = Path.Combine(Environment.CurrentDirectory, Package.DefaultPackageFileName);
+            manifestPath = Path.Combine(Environment.CurrentDirectory, Package.DefaultManifestFileName);
          }
 
          if (!File.Exists(manifestPath))

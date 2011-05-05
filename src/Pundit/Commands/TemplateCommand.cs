@@ -32,7 +32,7 @@ namespace Pundit.Console.Commands
 
          dp.Dependencies.Add(new PackageDependency("log4net", "1.2.10"));
 
-         string path = Path.Combine(Environment.CurrentDirectory, Package.DefaultPackageFileName);
+         string path = Path.Combine(Environment.CurrentDirectory, Package.DefaultManifestFileName);
 
          GlamTerm.WriteLine("writing package to " + path);
 

@@ -87,6 +87,7 @@ namespace Pundit.Vsix
 			   BindHandler(PkgCmdIDList.cmdidAddPackages, AddReferenceCommandCallback);
 			   BindHandler(PkgCmdIDList.cmdidGlobalSettings, GlobalSettingsCommandCallback);
 			   BindHandler(PkgCmdIDList.cmdidResolveDependencies, ResolveDependenciesCommandCallback);
+			   BindHandler(PkgCmdIDList.cmdidDependencies, ManageDependenciesCommandCallback);
 
 				// Create the MenuCommand object for the command placed in the main toolbar.
 				id = new CommandID(GuidsList.guidPunditCmdSet, PkgCmdIDList.cmdidMyGraph);

@@ -1,4 +1,10 @@
 
+not scheduled:
+high priority:
+
+low priority:
+- check that all dependencies are valid when publishing
+
 1.2.0
 - refactor RepositoryStreamer to use compression methods different from ZIP (for example 7z)
 
@@ -24,17 +30,18 @@ he just publishes them as configuration="any" (which is a default configuration 
 + install tools and other
 + ignore XML documentation files overwrite errors in the LIB folder which VS sometimes stupidly locks
 just ignore all XML files
-- because of VS "add reference" dialog needs an assembly, there should be "entry point" assembly
-  used for that
 + VSIX: configure global settings
-- VSIX: "Package Dependencies" with an option to test the resolution
++ throw out log4net, all the algorithms must throw progress events to indicate something is happening instead
+  of logging; this will allow to adopt them both to console and UI
++ ResolveCommand was using LocalRepository which lost log4net logging, must use new events now to display the same level of info
++ VSIX: "Package Dependencies" dialog.
 - VSIX: dependency resolution (refresh), try to use active build configuration (debug/release);
   show version changes; in case of conflicts redirect to "Package Dependencies" dialog
 - support platform compatibility i.e. if manifest declares platform net40, use it as a default one
 after noarch, then try to use net35, net30 and net20
-- check that all dependencies are valid when publishing
 - do not reinstall the whole folder if a dependency changed, update only the dependency;
   apparently the whole lib folder content shouldn't be deleted when resolve fails
-- throw out log4net, all the algorithms must throw progress events to indicate something is happening instead
-  of logging; this will allow to adopt them both to console and UI
-- ResolveCommand was using LocalRepository which lost log4net logging, must use new events now to display the same level of info
+- CORE: because of VS "add reference" dialog needs an assembly, there should be "entry point" assembly
+  used for that, if a form of recommendation. User may even choose different assembly
+- CONSOLE: important! Autoupdate. Check for updates once a week (save state in the local folder). Display
+  red flashing message in the console that there is a new version.

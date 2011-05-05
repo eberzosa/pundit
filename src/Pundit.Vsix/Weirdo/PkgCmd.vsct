@@ -168,6 +168,14 @@
         </Strings>
       </Button>
 
+      <Button guid="guidPunditCmdSet" id="cmdidDependencies" priority="0x100" type="Button">
+        <Parent guid="guidPunditCmdSet" id="PunditToolbarGroup"/>
+        <Icon guid="guidBricks" id="pngBricks"/>
+        <Strings>
+          <ButtonText>Manage Solution Dependencies</ButtonText>
+        </Strings>
+      </Button>
+
       <!--
       Now we define a menu item with dynamic text. From the VSCT point of view all we have to do is to add a
       "CommandFlag" section to the button definition and make sure that it contains the "TextChanges" flag; we
@@ -237,6 +245,7 @@
       <!--<Bitmap guid="guidGenericCmdBmp" href="GenericCmd.bmp" usedList="bmpArrow"/>-->
       <Bitmap guid="guidBulletWrench" href="../Graphics/bullet_wrench.png" usedList="pngWrench"/>
       <Bitmap guid="guidDatabaseRefresh" href="../Graphics/database_refresh.png" usedList="pngDbRefresh"/>
+      <Bitmap guid="guidBricks" href="../Graphics/bricks.png" usedList="pngBricks"/>
     </Bitmaps>
   </Commands>
 
@@ -345,6 +354,7 @@
       <IDSymbol name="cmdidAddPackages" value="0x2007"/>
       <IDSymbol name="cmdidGlobalSettings" value="0x2008"/>
       <IDSymbol name="cmdidResolveDependencies" value="0x2009"/>
+      <IDSymbol name="cmdidDependencies" value="0x200A"/>
     </GuidSymbol>
     
     <!--Last is the definition of the GUID used for the Bitmap and the ID of its used slots.-->
@@ -360,6 +370,10 @@
 
     <GuidSymbol name="guidDatabaseRefresh" value="{382D7CE9-A8E9-440D-A6D9-7D4D24CA6508}">
       <IDSymbol name="pngDbRefresh" value="1"/>
+    </GuidSymbol>
+
+    <GuidSymbol name="guidBricks" value="{5FD3E81E-E79C-4495-AE23-5FA4212433EF}">
+      <IDSymbol name="pngBricks" value="1"/>
     </GuidSymbol>
 
     <GuidSymbol name="guidReferenceContext" value="{D309F791-903F-11D0-9EFC-00A0C911004F}">

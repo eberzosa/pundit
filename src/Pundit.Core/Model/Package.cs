@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using System.IO;
 using System.Linq;
+using System.Reflection;
 using System.Text;
 using System.Text.RegularExpressions;
 using System.Xml;
@@ -13,13 +14,16 @@ namespace Pundit.Core.Model
    [XmlInclude(typeof(DevPackage))]
    public class Package : ICloneable
    {
-      public const string DefaultPackageFileName = "pundit.xml"; //package definition
+      public const string DefaultManifestFileName = "pundit.xml"; //package definition
       public const string PackedExtension = ".pundit";
 
       private static Regex _packageStringRgx = new Regex("^[0-9a-zA-Z\\.]+$");
       private const string PackageStringDescr = "allowed characters: letters (A-Z, a-z), numbers, and dot sign (.)";
 
       private List<PackageDependency> _dependencies = new List<PackageDependency>();
+
+      [XmlAttribute("coreVersion")]
+      public string CoreVersion { get; set; }
 
       //WARNING!!! remember to reflect copy constructor if adding a new property to this class
 
@@ -67,7 +71,7 @@ namespace Pundit.Core.Model
       /// </summary>
       public Package()
       {
-         
+         CoreVersion = Assembly.GetExecutingAssembly().GetName().Version.ToString();
       }
 
       /// <summary>
@@ -76,7 +80,7 @@ namespace Pundit.Core.Model
       /// <param name="copy">The package to copy from. Must be valid,
       /// otherwise <see cref="InvalidPackageException"/> is thrown</param>
       /// <param name="includeDevTime"></param>
-      public Package(Package copy, bool includeDevTime = false)
+      public Package(Package copy, bool includeDevTime = false) : this()
       {
          copy.Validate();
 

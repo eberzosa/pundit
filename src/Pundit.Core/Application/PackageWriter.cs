@@ -57,7 +57,7 @@ namespace Pundit.Core.Application
 
       private void WriteManifest(bool includeDevTime)
       {
-         var entry = new ZipEntry(Package.DefaultPackageFileName);
+         var entry = new ZipEntry(Package.DefaultManifestFileName);
 
          _zipStream.PutNextEntry(entry);
 

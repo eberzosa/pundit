@@ -36,6 +36,7 @@
          this.txtText = new System.Windows.Forms.TextBox();
          this.cmdClose = new System.Windows.Forms.Button();
          this.cmdFind = new System.Windows.Forms.Button();
+         this.label1 = new System.Windows.Forms.Label();
          ((System.ComponentModel.ISupportInitialize)(this.gridResult)).BeginInit();
          this.SuspendLayout();
          // 
@@ -92,6 +93,8 @@
          // 
          // txtText
          // 
+         this.txtText.Anchor = ((System.Windows.Forms.AnchorStyles)(((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Left) 
+            | System.Windows.Forms.AnchorStyles.Right)));
          this.txtText.Location = new System.Drawing.Point(3, 3);
          this.txtText.Name = "txtText";
          this.txtText.Size = new System.Drawing.Size(521, 20);
@@ -100,6 +103,7 @@
          // 
          // cmdClose
          // 
+         this.cmdClose.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Right)));
          this.cmdClose.Location = new System.Drawing.Point(474, 325);
          this.cmdClose.Name = "cmdClose";
          this.cmdClose.Size = new System.Drawing.Size(75, 23);
@@ -119,18 +123,28 @@
          this.cmdFind.UseVisualStyleBackColor = true;
          this.cmdFind.Click += new System.EventHandler(this.cmdFind_Click);
          // 
+         // label1
+         // 
+         this.label1.AutoSize = true;
+         this.label1.Location = new System.Drawing.Point(0, 330);
+         this.label1.Name = "label1";
+         this.label1.Size = new System.Drawing.Size(270, 13);
+         this.label1.TabIndex = 4;
+         this.label1.Text = "double-click a found package to add it to the manifest...";
+         // 
          // PackageSearchForm
          // 
          this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
          this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
          this.ClientSize = new System.Drawing.Size(561, 355);
+         this.Controls.Add(this.label1);
          this.Controls.Add(this.cmdFind);
          this.Controls.Add(this.cmdClose);
          this.Controls.Add(this.txtText);
          this.Controls.Add(this.gridResult);
          this.FormBorderStyle = System.Windows.Forms.FormBorderStyle.SizableToolWindow;
          this.Name = "PackageSearchForm";
-         this.Text = "Search Package";
+         this.Text = "Search package";
          ((System.ComponentModel.ISupportInitialize)(this.gridResult)).EndInit();
          this.ResumeLayout(false);
          this.PerformLayout();
@@ -146,5 +160,6 @@
       private System.Windows.Forms.DataGridViewTextBoxColumn PackageId;
       private System.Windows.Forms.DataGridViewTextBoxColumn Version;
       private System.Windows.Forms.DataGridViewTextBoxColumn Platform;
+      private System.Windows.Forms.Label label1;
    }
 }

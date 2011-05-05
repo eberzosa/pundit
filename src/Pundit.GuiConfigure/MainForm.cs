@@ -26,7 +26,7 @@ namespace Pundit.WinForms.App
 
       private DevPackage TryReadManifest()
       {
-         string path = Path.Combine(Environment.CurrentDirectory, Package.DefaultPackageFileName);
+         string path = Path.Combine(Environment.CurrentDirectory, Package.DefaultManifestFileName);
 
          if(File.Exists(path))
          {

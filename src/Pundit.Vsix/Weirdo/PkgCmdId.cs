@@ -17,5 +17,6 @@ namespace Pundit.Vsix
 	   public const int cmdidAddPackages = 0x2007;
 	   public const int cmdidGlobalSettings = 0x2008;
 	   public const int cmdidResolveDependencies = 0x2009;
+	   public const int cmdidDependencies = 0x200A;
 	}
 }

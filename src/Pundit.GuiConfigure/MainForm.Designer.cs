@@ -36,20 +36,21 @@
          this.ucPackageDependencies = new Pundit.WinForms.Core.PackageDependencies();
          this.label1 = new System.Windows.Forms.Label();
          this.cmdPublishing = new System.Windows.Forms.Button();
+         this.cmdResolve = new System.Windows.Forms.Button();
          this.SuspendLayout();
          // 
          // statusStrip1
          // 
-         this.statusStrip1.Location = new System.Drawing.Point(0, 304);
+         this.statusStrip1.Location = new System.Drawing.Point(0, 308);
          this.statusStrip1.Name = "statusStrip1";
-         this.statusStrip1.Size = new System.Drawing.Size(460, 22);
+         this.statusStrip1.Size = new System.Drawing.Size(546, 22);
          this.statusStrip1.TabIndex = 7;
          this.statusStrip1.Text = "statusStrip1";
          // 
          // cmdSave
          // 
          this.cmdSave.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Right)));
-         this.cmdSave.Location = new System.Drawing.Point(289, 278);
+         this.cmdSave.Location = new System.Drawing.Point(375, 282);
          this.cmdSave.Name = "cmdSave";
          this.cmdSave.Size = new System.Drawing.Size(75, 23);
          this.cmdSave.TabIndex = 23;
@@ -61,7 +62,7 @@
          // 
          this.cmdCancel.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Right)));
          this.cmdCancel.DialogResult = System.Windows.Forms.DialogResult.Cancel;
-         this.cmdCancel.Location = new System.Drawing.Point(370, 278);
+         this.cmdCancel.Location = new System.Drawing.Point(456, 282);
          this.cmdCancel.Name = "cmdCancel";
          this.cmdCancel.Size = new System.Drawing.Size(75, 23);
          this.cmdCancel.TabIndex = 24;
@@ -72,7 +73,7 @@
          // cmdMetadata
          // 
          this.cmdMetadata.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Left)));
-         this.cmdMetadata.Location = new System.Drawing.Point(12, 278);
+         this.cmdMetadata.Location = new System.Drawing.Point(12, 282);
          this.cmdMetadata.Name = "cmdMetadata";
          this.cmdMetadata.Size = new System.Drawing.Size(75, 23);
          this.cmdMetadata.TabIndex = 26;
@@ -88,7 +89,7 @@
          this.ucPackageDependencies.Dependencies = ((System.Collections.Generic.IEnumerable<Pundit.Core.Model.PackageDependency>)(resources.GetObject("ucPackageDependencies.Dependencies")));
          this.ucPackageDependencies.Location = new System.Drawing.Point(12, 30);
          this.ucPackageDependencies.Name = "ucPackageDependencies";
-         this.ucPackageDependencies.Size = new System.Drawing.Size(448, 242);
+         this.ucPackageDependencies.Size = new System.Drawing.Size(534, 246);
          this.ucPackageDependencies.TabIndex = 25;
          // 
          // label1
@@ -103,7 +104,7 @@
          // cmdPublishing
          // 
          this.cmdPublishing.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Left)));
-         this.cmdPublishing.Location = new System.Drawing.Point(93, 278);
+         this.cmdPublishing.Location = new System.Drawing.Point(93, 282);
          this.cmdPublishing.Name = "cmdPublishing";
          this.cmdPublishing.Size = new System.Drawing.Size(75, 23);
          this.cmdPublishing.TabIndex = 28;
@@ -111,11 +112,22 @@
          this.cmdPublishing.UseVisualStyleBackColor = true;
          this.cmdPublishing.Click += new System.EventHandler(this.cmdPublishing_Click);
          // 
+         // cmdResolve
+         // 
+         this.cmdResolve.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Left)));
+         this.cmdResolve.Location = new System.Drawing.Point(174, 282);
+         this.cmdResolve.Name = "cmdResolve";
+         this.cmdResolve.Size = new System.Drawing.Size(75, 23);
+         this.cmdResolve.TabIndex = 29;
+         this.cmdResolve.Text = "&Resolve...";
+         this.cmdResolve.UseVisualStyleBackColor = true;
+         // 
          // MainForm
          // 
          this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
          this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
-         this.ClientSize = new System.Drawing.Size(460, 326);
+         this.ClientSize = new System.Drawing.Size(546, 330);
+         this.Controls.Add(this.cmdResolve);
          this.Controls.Add(this.cmdPublishing);
          this.Controls.Add(this.label1);
          this.Controls.Add(this.cmdMetadata);
@@ -139,6 +151,7 @@
       private System.Windows.Forms.Button cmdMetadata;
       private System.Windows.Forms.Label label1;
       private System.Windows.Forms.Button cmdPublishing;
+      private System.Windows.Forms.Button cmdResolve;
    }
 }
 
