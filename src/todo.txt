@@ -36,10 +36,16 @@ just ignore all XML files
 + ResolveCommand was using LocalRepository which lost log4net logging, must use new events now to display the same level of info
 + VSIX: "Package Dependencies" dialog.
 = VSIX: dependency resolution (refresh)
-  = simple resolution dialog
+  + simple resolution dialog
+  + display conflicts or resolution success
+  - if there are changes, display what is upgraded
+  - download packages to local repository
+  - install missing packages
   - try to use active build configuration (debug/release);
   - show version changes;
   - in case of conflicts redirect to "Package Dependencies" dialog;
+- FORMS: show actual installed version in addition to version pattern in 
+  package dependencies window
 - CORE: support platform compatibility i.e. if manifest declares platform net40, use it as a default one
 after noarch, then try to use net35, net30 and net20
 - CORE: do not reinstall the whole folder if a dependency changed, update only the dependency;
