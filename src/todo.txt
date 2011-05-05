@@ -35,11 +35,14 @@ just ignore all XML files
   of logging; this will allow to adopt them both to console and UI
 + ResolveCommand was using LocalRepository which lost log4net logging, must use new events now to display the same level of info
 + VSIX: "Package Dependencies" dialog.
-- VSIX: dependency resolution (refresh), try to use active build configuration (debug/release);
-  show version changes; in case of conflicts redirect to "Package Dependencies" dialog
-- support platform compatibility i.e. if manifest declares platform net40, use it as a default one
+= VSIX: dependency resolution (refresh)
+  = simple resolution dialog
+  - try to use active build configuration (debug/release);
+  - show version changes;
+  - in case of conflicts redirect to "Package Dependencies" dialog;
+- CORE: support platform compatibility i.e. if manifest declares platform net40, use it as a default one
 after noarch, then try to use net35, net30 and net20
-- do not reinstall the whole folder if a dependency changed, update only the dependency;
+- CORE: do not reinstall the whole folder if a dependency changed, update only the dependency;
   apparently the whole lib folder content shouldn't be deleted when resolve fails
 - CORE: because of VS "add reference" dialog needs an assembly, there should be "entry point" assembly
   used for that, if a form of recommendation. User may even choose different assembly

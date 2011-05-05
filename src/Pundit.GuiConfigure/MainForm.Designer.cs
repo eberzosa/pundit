@@ -86,7 +86,6 @@
          this.ucPackageDependencies.Anchor = ((System.Windows.Forms.AnchorStyles)((((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Bottom) 
             | System.Windows.Forms.AnchorStyles.Left) 
             | System.Windows.Forms.AnchorStyles.Right)));
-         this.ucPackageDependencies.Dependencies = ((System.Collections.Generic.IEnumerable<Pundit.Core.Model.PackageDependency>)(resources.GetObject("ucPackageDependencies.Dependencies")));
          this.ucPackageDependencies.Location = new System.Drawing.Point(12, 30);
          this.ucPackageDependencies.Name = "ucPackageDependencies";
          this.ucPackageDependencies.Size = new System.Drawing.Size(534, 246);
@@ -121,6 +120,7 @@
          this.cmdResolve.TabIndex = 29;
          this.cmdResolve.Text = "&Resolve...";
          this.cmdResolve.UseVisualStyleBackColor = true;
+         this.cmdResolve.Click += new System.EventHandler(this.cmdResolve_Click);
          // 
          // MainForm
          // 

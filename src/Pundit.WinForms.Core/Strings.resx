@@ -117,16 +117,25 @@
   <resheader name="writer">
     <value>System.Resources.ResXResourceWriter, System.Windows.Forms, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
   </resheader>
-  <metadata name="StatusImage.UserAddedColumn" type="System.Boolean, mscorlib, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089">
-    <value>True</value>
-  </metadata>
-  <metadata name="PackageId.UserAddedColumn" type="System.Boolean, mscorlib, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089">
-    <value>True</value>
-  </metadata>
-  <metadata name="Version.UserAddedColumn" type="System.Boolean, mscorlib, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089">
-    <value>True</value>
-  </metadata>
-  <metadata name="Status.UserAddedColumn" type="System.Boolean, mscorlib, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089">
-    <value>True</value>
-  </metadata>
+  <data name="Resolve_MessageConflicts" xml:space="preserve">
+    <value>Resolution failed with conflicts!</value>
+  </data>
+  <data name="Resolve_ReadingManifest" xml:space="preserve">
+    <value>reading manifest...</value>
+  </data>
+  <data name="Resolve_ReadingRepositories" xml:space="preserve">
+    <value>reading repositories...</value>
+  </data>
+  <data name="Resolve_Resolving" xml:space="preserve">
+    <value>hating MAPI...</value>
+  </data>
+  <data name="Resolve_Success" xml:space="preserve">
+    <value>all done</value>
+  </data>
+  <data name="Resolve_Terminated" xml:space="preserve">
+    <value>cancelled by user!</value>
+  </data>
+  <data name="Resolve_Terminating" xml:space="preserve">
+    <value>terminating resolution...</value>
+  </data>
 </root>

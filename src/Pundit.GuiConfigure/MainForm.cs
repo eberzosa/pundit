@@ -71,5 +71,12 @@ namespace Pundit.WinForms.App
             _manifest.Files = new List<SourceFiles>(form.Files);
          }
       }
+
+      private void cmdResolve_Click(object sender, EventArgs e)
+      {
+         var form = new PackageResolveProcessForm(_manifestPath);
+
+         form.ShowDialog();
+      }
    }
 }
