@@ -55,20 +55,32 @@ namespace Pundit.Console.Commands
          }
       }
 
-      private void PrintSuccess(VersionResolutionTable tbl)
+      private void PrintDiff(IEnumerable<PackageKeyDiff> diffs, ConsoleColor diffColor, DiffType diffType, string diffWord)
       {
-         GlamTerm.WriteLine();
+         bool isMod = diffType == DiffType.Mod;
 
-         foreach(var pck in tbl.GetPackages())
+         foreach(PackageKeyDiff d in diffs.Where(pd => pd.DiffType == diffType))
          {
-            GlamTerm.Write(ConsoleColor.White, pck.PackageId);
-            GlamTerm.Write(" ");
-            GlamTerm.Write(ConsoleColor.Yellow, pck.Platform);
-            GlamTerm.Write(" --> ");
-            GlamTerm.WriteLine(ConsoleColor.Green, pck.Version.ToString());
-         }
+            GlamTerm.Write(diffColor, diffWord + " ");
+            GlamTerm.Write("{0} v{1} ({2})", d.PackageId,
+               isMod ? d.OldPackageKey.Version : d.Version, d.Platform);
 
-         //GlamTerm.WriteLine();
+            if(isMod)
+            {
+               GlamTerm.Write(" to v");
+               GlamTerm.Write(ConsoleColor.Green, d.Version.ToString());
+            }
+
+            GlamTerm.WriteLine();
+         }
+      }
+
+      private void PrintSuccess(IEnumerable<PackageKeyDiff> diffs)
+      {
+         PrintDiff(diffs, ConsoleColor.Yellow, DiffType.Add, "added");
+         PrintDiff(diffs, ConsoleColor.Green, DiffType.Mod, "changed");
+         PrintDiff(diffs, GlamTerm.ForeNormalColor, DiffType.NoChange, "no change for");
+         PrintDiff(diffs, ConsoleColor.Red, DiffType.Del, "deleted");
       }
 
       public override void Execute()
@@ -119,10 +131,6 @@ namespace Pundit.Console.Commands
 
             throw new ApplicationException("could not resolve manifest because of conflicts");
          }
-         else
-         {
-            PrintSuccess(resolutionResult.Item1);
-         }
 
          //ensure that all packages exist in local repository
          LocalRepository.PackageDownloadToLocalRepositoryStarted += LocalRepository_PackageDownloadToLocalRepositoryStarted;
@@ -131,29 +139,38 @@ namespace Pundit.Console.Commands
             repositories.Skip(1));
 
          //install all packages
-         var installer = new PackageInstaller(projectRoot,
+         using(PackageInstaller installer = new PackageInstaller(projectRoot,
             resolutionResult.Item1,
-            repositories.First());
-         installer.BeginInstallPackage += installer_BeginInstallPackage;
-         installer.FinishInstallPackage += installer_FinishInstallPackage;
-
-         bool changed = installer.InstallAll(configuration, force);
-
-         if(!changed)
+            repositories.First()))
          {
-            GlamTerm.WriteLine();
-            GlamTerm.WriteLine(ConsoleColor.Green, "no changes");
+            installer.BeginInstallPackage += installer_BeginInstallPackage;
+            installer.FinishInstallPackage += installer_FinishInstallPackage;
+
+            if (force)
+            {
+               GlamTerm.WriteLine("reinstalling all packages");
+
+               installer.Reinstall(configuration);
+            }
+            else
+            {
+               IEnumerable<PackageKeyDiff> diff = installer.GetDiffWithCurrent(resolutionResult.Item1.GetPackages());
+
+               PrintSuccess(diff);
+
+               installer.Upgrade(configuration, diff);
+            }
          }
       }
 
-      void installer_FinishInstallPackage(object sender, Core.Model.EventArguments.PackageKeyEventArgs e)
-      {
-         GlamTerm.Write("installing {0}...", e.PackageKey.PackageId);
-      }
-
-      void installer_BeginInstallPackage(object sender, Core.Model.EventArguments.PackageKeyEventArgs e)
+      void installer_FinishInstallPackage(object sender, Core.Model.EventArguments.PackageKeyDiffEventArgs e)
       {
          GlamTerm.WriteBool(e.Succeeded);
+      }
+
+      void installer_BeginInstallPackage(object sender, Core.Model.EventArguments.PackageKeyDiffEventArgs e)
+      {
+         GlamTerm.Write("installing {0} v{1}...", e.PackageKeyDiff.PackageId, e.PackageKeyDiff.Version);
       }
 
       void LocalRepository_PackageDownloadToLocalRepositoryFinished(object sender, Core.Model.EventArguments.PackageKeyEventArgs e)

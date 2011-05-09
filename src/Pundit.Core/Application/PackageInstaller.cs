@@ -2,107 +2,26 @@
 using System.Collections.Generic;
 using System.IO;
 using System.Linq;
-using System.Xml.Serialization;
 using Pundit.Core.Model;
 using Pundit.Core.Model.EventArguments;
 
 namespace Pundit.Core.Application
 {
-   public class InstalledPackagesIndex
-   {
-      private const string CacheFileName = ".pundit-install-index";
-      private readonly Dictionary<PackageKey, bool> _installed = new Dictionary<PackageKey, bool>();
-
-      [XmlArray("installed")]
-      [XmlArrayItem("package")]
-      public PackageKey[] InstalledPackages
-      {
-         get { return _installed.Keys.ToArray(); }
-         set
-         {
-            _installed.Clear();
-
-            foreach (PackageKey key in value)
-               _installed[key] = true;
-         }
-      }
-
-      [XmlAttribute("configuration")]
-      public BuildConfiguration Configuration { get; set; }
-
-      [XmlIgnore]
-      public int TotalPackagesCount
-      {
-         get { return _installed.Count; }
-      }
-
-      public bool IsInstalled(PackageKey pck)
-      {
-         return _installed.ContainsKey(pck);
-      }
-
-      public void Install(PackageKey pck)
-      {
-         _installed[pck] = true;
-      }
-
-      public void Uninstall(PackageKey pck)
-      {
-         if (_installed.ContainsKey(pck))
-            _installed.Remove(pck);
-      }
-
-      public static InstalledPackagesIndex ReadFromFolder(string folder)
-      {
-         var xml = new XmlSerializer(typeof(InstalledPackagesIndex));
-         string fullPath = Path.Combine(folder, CacheFileName);
-
-         if (File.Exists(fullPath))
-         {
-            using (Stream s = File.OpenRead(fullPath))
-            {
-               InstalledPackagesIndex r = (InstalledPackagesIndex) xml.Deserialize(s);
-
-               s.Close();
-
-               return r;
-            }
-         }
-
-         return new InstalledPackagesIndex();
-      }
-
-      public void WriteToFolder(string folder)
-      {
-         var xml = new XmlSerializer(typeof(InstalledPackagesIndex));
-         string fullPath = Path.Combine(folder, CacheFileName);
-
-         if(File.Exists(fullPath)) File.Delete(fullPath);
-
-         using (Stream s = File.Create(fullPath))
-         {
-            xml.Serialize(s, this);
-         }
-
-         var fi = new FileInfo(fullPath);
-         fi.Attributes |= FileAttributes.Hidden;
-      }
-   }
-
-   public class PackageInstaller
+   public class PackageInstaller : IDisposable
    {
       private readonly string _rootDirectory;
       private readonly VersionResolutionTable _versionTable;
       private readonly IRepository _localRepository;
       private InstalledPackagesIndex _index;
+      private bool _indexCommitted;
 
       private readonly string _libFolderPath;
       private readonly string _includeFolderPath;
       private readonly string _toolsFolderPath;
       private readonly string _otherFolderPath;
 
-      public event EventHandler<PackageKeyEventArgs> BeginInstallPackage;
-      public event EventHandler<PackageKeyEventArgs> FinishInstallPackage;
+      public event EventHandler<PackageKeyDiffEventArgs> BeginInstallPackage;
+      public event EventHandler<PackageKeyDiffEventArgs> FinishInstallPackage;
 
       public PackageInstaller(string rootDirectory, VersionResolutionTable versionTable,
          IRepository localRepository)
@@ -119,6 +38,54 @@ namespace Pundit.Core.Application
          _includeFolderPath = Path.Combine(rootDirectory, "include");
          _toolsFolderPath = Path.Combine(rootDirectory, "tools");
          _otherFolderPath = Path.Combine(rootDirectory, "other");
+
+         _index = InstalledPackagesIndex.ReadFromFolder(_rootDirectory);
+      }
+
+      /// <summary>
+      /// Given the resolution result as an input compares it to the current state of the solution.
+      /// </summary>
+      /// <param name="resolutionResult">Resolution result</param>
+      /// <returns>Differences between the current state and the resolution result</returns>
+      public IEnumerable<PackageKeyDiff> GetDiffWithCurrent(IEnumerable<PackageKey> resolutionResult)
+      {
+         if (resolutionResult == null) throw new ArgumentNullException("resolutionResult");
+
+         var diff = new List<PackageKeyDiff>();
+
+         bool indexEmpty = _index == null || _index.InstalledPackages == null || _index.InstalledPackages.Length == 0;
+
+         if(indexEmpty)
+         {
+            diff.AddRange(resolutionResult.Select(rr => new PackageKeyDiff(DiffType.Add, rr)));
+         }
+         else
+         {
+            var added = from rr in resolutionResult
+                        where _index.InstalledPackages.FirstOrDefault(ip => ip.LooseEquals(rr)) == null
+                        select new PackageKeyDiff(DiffType.Add, rr);
+
+            diff.AddRange(added);
+
+            var deleted = from ip in _index.InstalledPackages
+                          where resolutionResult.FirstOrDefault(rr => rr.LooseEquals(ip)) == null
+                          select new PackageKeyDiff(DiffType.Del, ip);
+
+            diff.AddRange(deleted);
+
+            var other = from rr in resolutionResult
+                        let ip = _index.InstalledPackages.FirstOrDefault(ip => ip.LooseEquals(rr))
+                        let noChange = ip != null && rr.Equals(ip)
+                        where ip != null
+                        select new PackageKeyDiff(
+                           noChange ? DiffType.NoChange : DiffType.Mod,
+                           rr,
+                           noChange ? null : ip);
+
+            diff.AddRange(other);
+         }
+
+         return diff;
       }
 
       private void CleanupFolder(string fullPath)
@@ -165,16 +132,16 @@ namespace Pundit.Core.Application
          _index = new InstalledPackagesIndex {Configuration = configuration};
       }
 
-      private void Install(PackageKey pck, BuildConfiguration configuration)
+      private void Install(PackageKeyDiff pck, BuildConfiguration configuration)
       {
-         if(!_index.IsInstalled(pck))
-         {
+         //if(!_index.IsInstalled(pck))
+         //{
             using (Stream s = _localRepository.Download(pck))
             {
                using (PackageReader reader = new PackageReader(s))
                {
                   if(BeginInstallPackage != null)
-                     BeginInstallPackage(this, new PackageKeyEventArgs(pck, true));
+                     BeginInstallPackage(this, new PackageKeyDiffEventArgs(pck, true));
 
                   reader.InstallTo(_rootDirectory, configuration);
                }
@@ -183,36 +150,59 @@ namespace Pundit.Core.Application
             _index.Install(pck);
 
             if(FinishInstallPackage != null)
-               FinishInstallPackage(this, new PackageKeyEventArgs(pck, true));
-         }
+               FinishInstallPackage(this, new PackageKeyDiffEventArgs(pck, true));
+         //}
       }
 
       ///<summary>
-      /// Installs the package
+      ///Forcibly reinstalls all the packages
       ///</summary>
       ///<param name="configuration"></param>
-      ///<param name="forceReset"></param>
-      public bool InstallAll(BuildConfiguration configuration, bool forceReset = false)
+      public void Reinstall(BuildConfiguration configuration)
       {
-         _index = InstalledPackagesIndex.ReadFromFolder(_rootDirectory);
          IEnumerable<PackageKey> currentDependencies = _versionTable.GetPackages();
 
-         if (forceReset || DependenciesChanged(currentDependencies, configuration))
+         ResetFiles(configuration);
+
+         foreach (PackageKey pck in currentDependencies)
          {
-            ResetFiles(configuration);
+            Install(new PackageKeyDiff(DiffType.Add, pck), configuration);
+         }
 
-            foreach (PackageKey pck in currentDependencies)
-            {
-               Install(pck, configuration);
-            }
+         _indexCommitted = true;
+      }
 
-            _index.WriteToFolder(_rootDirectory);
+      /// <summary>
+      /// Upgrades the current configuration
+      /// </summary>
+      /// <param name="configuration"></param>
+      /// <param name="diffs"></param>
+      public void Upgrade(BuildConfiguration configuration, IEnumerable<PackageKeyDiff> diffs)
+      {
+         bool hasDeletes = diffs.FirstOrDefault(d => d.DiffType == DiffType.Del) != null;
 
-            return true;
+         if(hasDeletes)
+         {
+            Reinstall(configuration);
          }
          else
          {
-            return false;
+            var installs = diffs.Where(d => (d.DiffType == DiffType.Add || d.DiffType == DiffType.Mod));
+
+            foreach(PackageKeyDiff diff in installs)
+            {
+               Install(diff, configuration);
+            }
+         }
+
+         _indexCommitted = true;
+      }
+
+      public void Dispose()
+      {
+         if(_index != null && _indexCommitted)
+         {
+            _index.WriteToFolder(_rootDirectory);
          }
       }
    }

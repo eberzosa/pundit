@@ -71,6 +71,12 @@ namespace Pundit.Core.Model
          return false;
       }
 
+      public bool LooseEquals(PackageKey key)
+      {
+         return this.PackageId == key.PackageId &&
+                this.Platform == key.Platform;
+      }
+
       public override int GetHashCode()
       {
          return PackageId.GetHashCode()*Version.GetHashCode()*Platform.GetHashCode();

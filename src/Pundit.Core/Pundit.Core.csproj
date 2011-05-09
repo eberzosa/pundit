@@ -53,6 +53,7 @@
     <Compile Include="3rdparty\DirectoryScanner.cs" />
     <Compile Include="3rdparty\Options.cs" />
     <Compile Include="Application\DependencyResolution.cs" />
+    <Compile Include="Application\InstalledPackagesIndex.cs" />
     <Compile Include="Application\PackageInstaller.cs" />
     <Compile Include="Application\PackageReader.cs" />
     <Compile Include="Application\PackageStreamer.cs" />
@@ -63,6 +64,7 @@
     <Compile Include="Model\DependencyNode.cs" />
     <Compile Include="Model\DevPackage.cs" />
     <Compile Include="Model\Enums.cs" />
+    <Compile Include="Model\EventArguments\PackageKeyDiffEventArgs.cs" />
     <Compile Include="Model\EventArguments\PackageFileEventArgs.cs" />
     <Compile Include="Model\EventArguments\PackageKeyEventArgs.cs" />
     <Compile Include="Model\EventArguments\ResolvedFileEventArgs.cs" />
@@ -72,6 +74,7 @@
     <Compile Include="Model\IRepository.cs" />
     <Compile Include="Model\Package.cs" />
     <Compile Include="Model\PackageKey.cs" />
+    <Compile Include="Model\PackageKeyDiff.cs" />
     <Compile Include="Model\RegisteredRepositories.cs" />
     <Compile Include="Model\SourceFiles.cs" />
     <Compile Include="Model\UnresolvedPackage.cs" />

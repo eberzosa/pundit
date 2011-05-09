@@ -29,27 +29,26 @@
       private void InitializeComponent()
       {
          this.components = new System.ComponentModel.Container();
-         System.ComponentModel.ComponentResourceManager resources = new System.ComponentModel.ComponentResourceManager(typeof(GlobalSettingsForm));
          this.label1 = new System.Windows.Forms.Label();
          this.txtLocalRepoPath = new System.Windows.Forms.TextBox();
          this.label2 = new System.Windows.Forms.Label();
          this.txtUsedSpace = new System.Windows.Forms.TextBox();
          this.groupBox1 = new System.Windows.Forms.GroupBox();
+         this.pnlRepoInfo = new System.Windows.Forms.Panel();
+         this.cbRepoPublish = new System.Windows.Forms.CheckBox();
+         this.txtRepoUri = new System.Windows.Forms.TextBox();
+         this.txtRepoName = new System.Windows.Forms.TextBox();
+         this.label4 = new System.Windows.Forms.Label();
+         this.label3 = new System.Windows.Forms.Label();
          this.cmdRepoDelete = new System.Windows.Forms.Button();
+         this.cmdRepoDown = new System.Windows.Forms.Button();
+         this.cmdRepoUp = new System.Windows.Forms.Button();
+         this.cmdAddRepo = new System.Windows.Forms.Button();
          this.lstRepos = new System.Windows.Forms.ListBox();
          this.cmdOk = new System.Windows.Forms.Button();
          this.cmdCancel = new System.Windows.Forms.Button();
          this.cmdNavigateToLocalRepoFolder = new System.Windows.Forms.Button();
          this.toolTip1 = new System.Windows.Forms.ToolTip(this.components);
-         this.cmdRepoDown = new System.Windows.Forms.Button();
-         this.cmdRepoUp = new System.Windows.Forms.Button();
-         this.cmdAddRepo = new System.Windows.Forms.Button();
-         this.pnlRepoInfo = new System.Windows.Forms.Panel();
-         this.label3 = new System.Windows.Forms.Label();
-         this.label4 = new System.Windows.Forms.Label();
-         this.txtRepoName = new System.Windows.Forms.TextBox();
-         this.txtRepoUri = new System.Windows.Forms.TextBox();
-         this.cbRepoPublish = new System.Windows.Forms.CheckBox();
          this.groupBox1.SuspendLayout();
          this.pnlRepoInfo.SuspendLayout();
          this.SuspendLayout();
@@ -110,10 +109,68 @@
          this.groupBox1.TabStop = false;
          this.groupBox1.Text = "Additional repositories";
          // 
+         // pnlRepoInfo
+         // 
+         this.pnlRepoInfo.Anchor = ((System.Windows.Forms.AnchorStyles)(((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Left) 
+            | System.Windows.Forms.AnchorStyles.Right)));
+         this.pnlRepoInfo.Controls.Add(this.cbRepoPublish);
+         this.pnlRepoInfo.Controls.Add(this.txtRepoUri);
+         this.pnlRepoInfo.Controls.Add(this.txtRepoName);
+         this.pnlRepoInfo.Controls.Add(this.label4);
+         this.pnlRepoInfo.Controls.Add(this.label3);
+         this.pnlRepoInfo.Location = new System.Drawing.Point(163, 19);
+         this.pnlRepoInfo.Name = "pnlRepoInfo";
+         this.pnlRepoInfo.Size = new System.Drawing.Size(366, 174);
+         this.pnlRepoInfo.TabIndex = 5;
+         // 
+         // cbRepoPublish
+         // 
+         this.cbRepoPublish.AutoSize = true;
+         this.cbRepoPublish.Location = new System.Drawing.Point(62, 60);
+         this.cbRepoPublish.Name = "cbRepoPublish";
+         this.cbRepoPublish.Size = new System.Drawing.Size(138, 17);
+         this.cbRepoPublish.TabIndex = 4;
+         this.cbRepoPublish.Text = "publish to this repository";
+         this.cbRepoPublish.UseVisualStyleBackColor = true;
+         // 
+         // txtRepoUri
+         // 
+         this.txtRepoUri.Anchor = ((System.Windows.Forms.AnchorStyles)(((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Left) 
+            | System.Windows.Forms.AnchorStyles.Right)));
+         this.txtRepoUri.Location = new System.Drawing.Point(62, 34);
+         this.txtRepoUri.Name = "txtRepoUri";
+         this.txtRepoUri.Size = new System.Drawing.Size(301, 20);
+         this.txtRepoUri.TabIndex = 3;
+         // 
+         // txtRepoName
+         // 
+         this.txtRepoName.Location = new System.Drawing.Point(62, 8);
+         this.txtRepoName.Name = "txtRepoName";
+         this.txtRepoName.Size = new System.Drawing.Size(146, 20);
+         this.txtRepoName.TabIndex = 2;
+         // 
+         // label4
+         // 
+         this.label4.AutoSize = true;
+         this.label4.Location = new System.Drawing.Point(27, 37);
+         this.label4.Name = "label4";
+         this.label4.Size = new System.Drawing.Size(29, 13);
+         this.label4.TabIndex = 1;
+         this.label4.Text = "URI:";
+         // 
+         // label3
+         // 
+         this.label3.AutoSize = true;
+         this.label3.Location = new System.Drawing.Point(18, 11);
+         this.label3.Name = "label3";
+         this.label3.Size = new System.Drawing.Size(38, 13);
+         this.label3.TabIndex = 0;
+         this.label3.Text = "Name:";
+         // 
          // cmdRepoDelete
          // 
          this.cmdRepoDelete.Enabled = false;
-         this.cmdRepoDelete.Image = ((System.Drawing.Image)(resources.GetObject("cmdRepoDelete.Image")));
+         this.cmdRepoDelete.Image = global::Pundit.WinForms.Core.Images.delete;
          this.cmdRepoDelete.Location = new System.Drawing.Point(134, 110);
          this.cmdRepoDelete.Name = "cmdRepoDelete";
          this.cmdRepoDelete.Size = new System.Drawing.Size(23, 23);
@@ -121,6 +178,41 @@
          this.toolTip1.SetToolTip(this.cmdRepoDelete, "delete selected repository");
          this.cmdRepoDelete.UseVisualStyleBackColor = true;
          this.cmdRepoDelete.Click += new System.EventHandler(this.cmdRepoDelete_Click);
+         // 
+         // cmdRepoDown
+         // 
+         this.cmdRepoDown.Enabled = false;
+         this.cmdRepoDown.Image = global::Pundit.WinForms.Core.Images.arrow_down;
+         this.cmdRepoDown.Location = new System.Drawing.Point(134, 80);
+         this.cmdRepoDown.Name = "cmdRepoDown";
+         this.cmdRepoDown.Size = new System.Drawing.Size(23, 23);
+         this.cmdRepoDown.TabIndex = 3;
+         this.toolTip1.SetToolTip(this.cmdRepoDown, "change priority moving down");
+         this.cmdRepoDown.UseVisualStyleBackColor = true;
+         this.cmdRepoDown.Click += new System.EventHandler(this.cmdRepoDown_Click);
+         // 
+         // cmdRepoUp
+         // 
+         this.cmdRepoUp.Enabled = false;
+         this.cmdRepoUp.Image = global::Pundit.WinForms.Core.Images.arrow_up;
+         this.cmdRepoUp.Location = new System.Drawing.Point(134, 50);
+         this.cmdRepoUp.Name = "cmdRepoUp";
+         this.cmdRepoUp.Size = new System.Drawing.Size(23, 23);
+         this.cmdRepoUp.TabIndex = 2;
+         this.toolTip1.SetToolTip(this.cmdRepoUp, "change priority moving up");
+         this.cmdRepoUp.UseVisualStyleBackColor = true;
+         this.cmdRepoUp.Click += new System.EventHandler(this.cmdRepoUp_Click);
+         // 
+         // cmdAddRepo
+         // 
+         this.cmdAddRepo.Image = global::Pundit.WinForms.Core.Images.add;
+         this.cmdAddRepo.Location = new System.Drawing.Point(134, 20);
+         this.cmdAddRepo.Name = "cmdAddRepo";
+         this.cmdAddRepo.Size = new System.Drawing.Size(23, 23);
+         this.cmdAddRepo.TabIndex = 1;
+         this.toolTip1.SetToolTip(this.cmdAddRepo, "add repository");
+         this.cmdAddRepo.UseVisualStyleBackColor = true;
+         this.cmdAddRepo.Click += new System.EventHandler(this.cmdAddRepo_Click);
          // 
          // lstRepos
          // 
@@ -169,100 +261,7 @@
          this.cmdNavigateToLocalRepoFolder.UseVisualStyleBackColor = true;
          this.cmdNavigateToLocalRepoFolder.Click += new System.EventHandler(this.cmdNavigateToLocalRepoFolder_Click);
          // 
-         // cmdRepoDown
-         // 
-         this.cmdRepoDown.Enabled = false;
-         this.cmdRepoDown.Image = global::Pundit.WinForms.Core.Properties.Resources.arrow_down;
-         this.cmdRepoDown.Location = new System.Drawing.Point(134, 80);
-         this.cmdRepoDown.Name = "cmdRepoDown";
-         this.cmdRepoDown.Size = new System.Drawing.Size(23, 23);
-         this.cmdRepoDown.TabIndex = 3;
-         this.toolTip1.SetToolTip(this.cmdRepoDown, "change priority moving down");
-         this.cmdRepoDown.UseVisualStyleBackColor = true;
-         this.cmdRepoDown.Click += new System.EventHandler(this.cmdRepoDown_Click);
-         // 
-         // cmdRepoUp
-         // 
-         this.cmdRepoUp.Enabled = false;
-         this.cmdRepoUp.Image = ((System.Drawing.Image)(resources.GetObject("cmdRepoUp.Image")));
-         this.cmdRepoUp.Location = new System.Drawing.Point(134, 50);
-         this.cmdRepoUp.Name = "cmdRepoUp";
-         this.cmdRepoUp.Size = new System.Drawing.Size(23, 23);
-         this.cmdRepoUp.TabIndex = 2;
-         this.toolTip1.SetToolTip(this.cmdRepoUp, "change priority moving up");
-         this.cmdRepoUp.UseVisualStyleBackColor = true;
-         this.cmdRepoUp.Click += new System.EventHandler(this.cmdRepoUp_Click);
-         // 
-         // cmdAddRepo
-         // 
-         this.cmdAddRepo.Image = ((System.Drawing.Image)(resources.GetObject("cmdAddRepo.Image")));
-         this.cmdAddRepo.Location = new System.Drawing.Point(134, 20);
-         this.cmdAddRepo.Name = "cmdAddRepo";
-         this.cmdAddRepo.Size = new System.Drawing.Size(23, 23);
-         this.cmdAddRepo.TabIndex = 1;
-         this.toolTip1.SetToolTip(this.cmdAddRepo, "add repository");
-         this.cmdAddRepo.UseVisualStyleBackColor = true;
-         this.cmdAddRepo.Click += new System.EventHandler(this.cmdAddRepo_Click);
-         // 
-         // pnlRepoInfo
-         // 
-         this.pnlRepoInfo.Anchor = ((System.Windows.Forms.AnchorStyles)(((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Left) 
-            | System.Windows.Forms.AnchorStyles.Right)));
-         this.pnlRepoInfo.Controls.Add(this.cbRepoPublish);
-         this.pnlRepoInfo.Controls.Add(this.txtRepoUri);
-         this.pnlRepoInfo.Controls.Add(this.txtRepoName);
-         this.pnlRepoInfo.Controls.Add(this.label4);
-         this.pnlRepoInfo.Controls.Add(this.label3);
-         this.pnlRepoInfo.Location = new System.Drawing.Point(163, 19);
-         this.pnlRepoInfo.Name = "pnlRepoInfo";
-         this.pnlRepoInfo.Size = new System.Drawing.Size(366, 174);
-         this.pnlRepoInfo.TabIndex = 5;
-         // 
-         // label3
-         // 
-         this.label3.AutoSize = true;
-         this.label3.Location = new System.Drawing.Point(18, 11);
-         this.label3.Name = "label3";
-         this.label3.Size = new System.Drawing.Size(38, 13);
-         this.label3.TabIndex = 0;
-         this.label3.Text = "Name:";
-         // 
-         // label4
-         // 
-         this.label4.AutoSize = true;
-         this.label4.Location = new System.Drawing.Point(27, 37);
-         this.label4.Name = "label4";
-         this.label4.Size = new System.Drawing.Size(29, 13);
-         this.label4.TabIndex = 1;
-         this.label4.Text = "URI:";
-         // 
-         // txtRepoName
-         // 
-         this.txtRepoName.Location = new System.Drawing.Point(62, 8);
-         this.txtRepoName.Name = "txtRepoName";
-         this.txtRepoName.Size = new System.Drawing.Size(146, 20);
-         this.txtRepoName.TabIndex = 2;
-         // 
-         // txtRepoUri
-         // 
-         this.txtRepoUri.Anchor = ((System.Windows.Forms.AnchorStyles)(((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Left) 
-            | System.Windows.Forms.AnchorStyles.Right)));
-         this.txtRepoUri.Location = new System.Drawing.Point(62, 34);
-         this.txtRepoUri.Name = "txtRepoUri";
-         this.txtRepoUri.Size = new System.Drawing.Size(301, 20);
-         this.txtRepoUri.TabIndex = 3;
-         // 
-         // cbRepoPublish
-         // 
-         this.cbRepoPublish.AutoSize = true;
-         this.cbRepoPublish.Location = new System.Drawing.Point(62, 60);
-         this.cbRepoPublish.Name = "cbRepoPublish";
-         this.cbRepoPublish.Size = new System.Drawing.Size(138, 17);
-         this.cbRepoPublish.TabIndex = 4;
-         this.cbRepoPublish.Text = "publish to this repository";
-         this.cbRepoPublish.UseVisualStyleBackColor = true;
-         // 
-         // GlobalOptionsForm
+         // GlobalSettingsForm
          // 
          this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
          this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
@@ -276,7 +275,7 @@
          this.Controls.Add(this.txtLocalRepoPath);
          this.Controls.Add(this.label1);
          this.FormBorderStyle = System.Windows.Forms.FormBorderStyle.SizableToolWindow;
-         this.Name = "GlobalOptionsForm";
+         this.Name = "GlobalSettingsForm";
          this.Text = "Pundit Global Settings";
          this.groupBox1.ResumeLayout(false);
          this.pnlRepoInfo.ResumeLayout(false);

@@ -57,4 +57,15 @@ namespace Pundit.Core.Model
       [XmlEnum("unknown")]
       Unknown
    }
+
+   public enum DiffType
+   {
+      NoChange,
+
+      Add,
+
+      Mod,
+
+      Del
+   }
 }
