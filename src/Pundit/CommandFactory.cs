@@ -33,6 +33,9 @@ namespace Pundit.Console
             case "search":
                cmd = new SearchCommand(parameters);
                break;
+            case "utils":
+               cmd = new UtilsCommand(parameters);
+               break;
             default:
                cmd = null;
                break;

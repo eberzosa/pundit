@@ -3,12 +3,29 @@ using System.Collections.Generic;
 using System.IO;
 using System.Linq;
 using System.Text;
+using NAnt.Core;
 
 namespace Pundit.Core.Utils
 {
    //todo: make internal
    public static class PathUtils
    {
+      public static readonly List<string> DefaultExcludesList = new List<string>
+                                                                {
+                                                                   "**/CVS",
+                                                                   "**/CVS/**",
+                                                                   "**/.svn",
+                                                                   "**/.svn/**",
+                                                                   "**/_svn",
+                                                                   "**/_svn/**",
+                                                                   "**/.cvsignore",
+                                                                   "**/SCCS",
+                                                                   "**/SCCS/**",
+                                                                   "**/vssver.scc",
+                                                                   "**/vssver2.scc",
+                                                                   "**/_vti_cnf/**"
+                                                                };
+
       public static string GetUnixPath(string path)
       {
          while (path.StartsWith("" + Path.DirectorySeparatorChar)) path = path.Substring(1);
@@ -61,11 +78,37 @@ namespace Pundit.Core.Utils
 
          foreach (string part in parts)
          {
+
             currentPath = Path.Combine(currentPath, part);
 
             if (!Directory.Exists(currentPath))
                Directory.CreateDirectory(currentPath);
          }
+      }
+
+      private static string[] ParsePatternArray(string array)
+      {
+         return string.IsNullOrEmpty(array)
+                   ? new string[0]
+                   : array.Split(new[] { ';' }, StringSplitOptions.RemoveEmptyEntries);
+      }
+
+
+      public static IEnumerable<FileInfo> SearchFiles(string baseDirectory, string includePattern, string excludePattern)
+      {
+         var scanner = new DirectoryScanner(false);
+         scanner.BaseDirectory = new DirectoryInfo(baseDirectory);
+         scanner.Excludes.AddRange(DefaultExcludesList.ToArray());
+
+         if (!string.IsNullOrEmpty(excludePattern)) scanner.Excludes.AddRange(ParsePatternArray(excludePattern));
+         if (!string.IsNullOrEmpty(includePattern)) scanner.Includes.AddRange(ParsePatternArray(includePattern));
+
+         scanner.Scan();
+
+         var files = new string[scanner.FileNames.Count];
+         scanner.FileNames.CopyTo(files, 0);
+
+         return files.Select(f => new FileInfo(f));
       }
    }
 }
