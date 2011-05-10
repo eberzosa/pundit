@@ -18,7 +18,7 @@ namespace Pundit.WinForms.Core
    public partial class PackageResolveProcessForm : Form
    {
       private Thread _backgroundWorker;
-      private string _manifestPath;
+      private readonly string _manifestPath;
       private Exception _resolutionError;
 
       public PackageResolveProcessForm()
@@ -79,7 +79,28 @@ namespace Pundit.WinForms.Core
                           {
                              Image img = statusImage ?? Images.picture_empty;
 
-                             gridPackages.Rows.Add(new object[] {img, packageId, version, status});
+                             DataGridViewRow row = null;
+
+                             foreach(DataGridViewRow irow in gridPackages.Rows)
+                             {
+                                if(irow.Cells[1].Value.ToString() == packageId)
+                                {
+                                   row = irow;
+                                   break;
+                                }
+                             }
+
+                             if (row != null)
+                             {
+                                row.Cells[0].Value = img;
+                                row.Cells[1].Value = packageId;
+                                row.Cells[2].Value = version;
+                                row.Cells[3].Value = status;
+                             }
+                             else
+                             {
+                                gridPackages.Rows.Add(new object[] {img, packageId, version, status});
+                             }
                           };
 
          if(InvokeRequired)
@@ -112,6 +133,8 @@ namespace Pundit.WinForms.Core
 
             DevPackage manifest;
 
+            //read manifest
+
             using (Stream s = File.OpenRead(_manifestPath))
             {
                manifest = DevPackage.FromStream(s);
@@ -124,6 +147,8 @@ namespace Pundit.WinForms.Core
             IEnumerable<IRepository> repositories = names.Select(n =>
                                 RepositoryFactory.CreateFromUri(
                                    LocalRepository.GetRepositoryUriFromName(n)));
+
+            //resolve
 
             SetStatusLine(Strings.Resolve_Resolving);
 
@@ -140,6 +165,31 @@ namespace Pundit.WinForms.Core
                DisplaySuccess(resolutionResult.Item1);
                SetStatusImage(true);
             }
+
+            //download missing packages
+
+            SetStatusLine(Strings.Resolve_Downloading);
+
+            LocalRepository.PackageDownloadToLocalRepositoryStarted += LocalRepository_PackageDownloadToLocalRepositoryStarted;
+            LocalRepository.PackageDownloadToLocalRepositoryFinished += LocalRepository_PackageDownloadToLocalRepositoryFinished;
+            LocalRepository.DownloadLocally(resolutionResult.Item1.GetPackages(), repositories.Skip(1));
+
+            //install packages
+
+            using (PackageInstaller installer = new PackageInstaller(
+               new FileInfo(_manifestPath).Directory.FullName,
+               resolutionResult.Item1,
+               repositories.First()))
+            {
+               installer.BeginInstallPackage += new EventHandler<Pundit.Core.Model.EventArguments.PackageKeyDiffEventArgs>(installer_BeginInstallPackage);
+               installer.FinishInstallPackage += new EventHandler<Pundit.Core.Model.EventArguments.PackageKeyDiffEventArgs>(installer_FinishInstallPackage);
+
+               IEnumerable<PackageKeyDiff> diff = installer.GetDiffWithCurrent(resolutionResult.Item1.GetPackages());
+
+               installer.Upgrade(BuildConfiguration.Release, diff);
+            }
+
+            //report success
 
             SetStatusLine(Strings.Resolve_Success);
          }
@@ -161,6 +211,26 @@ namespace Pundit.WinForms.Core
          {
             Alert.Error(Strings.Resolve_MessageConflicts + Environment.NewLine + _resolutionError.Message);
          }
+      }
+
+      void installer_FinishInstallPackage(object sender, Pundit.Core.Model.EventArguments.PackageKeyDiffEventArgs e)
+      {
+         SetPackageStatus(e.PackageKeyDiff.PackageId, e.PackageKeyDiff.Version.ToString(), "installed", Images.flag_green);
+      }
+
+      void installer_BeginInstallPackage(object sender, Pundit.Core.Model.EventArguments.PackageKeyDiffEventArgs e)
+      {
+         SetPackageStatus(e.PackageKeyDiff.PackageId, e.PackageKeyDiff.Version.ToString(), "installing", Images.disk);
+      }
+
+      void LocalRepository_PackageDownloadToLocalRepositoryFinished(object sender, Pundit.Core.Model.EventArguments.PackageKeyEventArgs e)
+      {
+         SetPackageStatus(e.PackageKey.PackageId, e.PackageKey.Version.ToString(), "downloaded", Images.flag_green);
+      }
+
+      void LocalRepository_PackageDownloadToLocalRepositoryStarted(object sender, Pundit.Core.Model.EventArguments.PackageKeyEventArgs e)
+      {
+         SetPackageStatus(e.PackageKey.PackageId, e.PackageKey.Version.ToString(), "downloading", Images.arrow_refresh_small);
       }
 
       private void cmdCancel_Click(object sender, EventArgs e)

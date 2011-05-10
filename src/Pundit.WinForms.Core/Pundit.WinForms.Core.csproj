@@ -166,6 +166,8 @@
   </ItemGroup>
   <ItemGroup>
     <Content Include="app.ico" />
+    <None Include="Resources\arrow_refresh.png" />
+    <None Include="Resources\arrow_refresh_small.png" />
     <None Include="Resources\arrow_down.png" />
     <None Include="Resources\arrow_up.png" />
     <None Include="Resources\delete.png" />

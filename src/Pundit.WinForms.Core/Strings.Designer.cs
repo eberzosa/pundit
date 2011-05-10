@@ -61,6 +61,15 @@ namespace Pundit.WinForms.Core {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to downloading missing packages....
+        /// </summary>
+        internal static string Resolve_Downloading {
+            get {
+                return ResourceManager.GetString("Resolve_Downloading", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized string similar to Resolution failed with conflicts!.
         /// </summary>
         internal static string Resolve_MessageConflicts {
