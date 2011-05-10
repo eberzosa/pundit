@@ -78,7 +78,7 @@ namespace Pundit.Console.Commands
             text = text.Remove(cap.Index, cap.Length);
             text = text.Insert(cap.Index, newValue);
 
-            //File.WriteAllText(fileName, text);
+            File.WriteAllText(fileName, text);
 
          }
 
