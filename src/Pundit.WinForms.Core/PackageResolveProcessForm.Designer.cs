@@ -94,7 +94,6 @@
          this.gridPackages.RowHeadersVisible = false;
          this.gridPackages.Size = new System.Drawing.Size(549, 254);
          this.gridPackages.TabIndex = 4;
-         this.gridPackages.CellContentClick += new System.Windows.Forms.DataGridViewCellEventHandler(this.gridPackages_CellContentClick);
          // 
          // imgProgress
          // 

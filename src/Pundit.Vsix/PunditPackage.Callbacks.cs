@@ -30,7 +30,11 @@ namespace Pundit.Vsix
          DirectoryInfo sd = SolutionDirectory;
 
          if (sd != null)
-            MessageBox.Show(sd.FullName);
+         {
+            var form = new PackageResolveProcessForm(ManifestPath);
+
+            form.ShowDialog();
+         }
       }
 
       [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Globalization", "CA1303:DoNotPassLiteralsAsLocalizedParameters", MessageId = "Microsoft.Samples.VisualStudio.MenuCommands.PunditPackage.OutputCommandString(System.String)")]

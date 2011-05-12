@@ -170,8 +170,8 @@ namespace Pundit.WinForms.Core
 
             SetStatusLine(Strings.Resolve_Downloading);
 
-            LocalRepository.PackageDownloadToLocalRepositoryStarted += LocalRepository_PackageDownloadToLocalRepositoryStarted;
-            LocalRepository.PackageDownloadToLocalRepositoryFinished += LocalRepository_PackageDownloadToLocalRepositoryFinished;
+            LocalRepository.PackageDownloadToLocalRepositoryStarted += LocalRepositoryPackageDownloadToLocalRepositoryStarted;
+            LocalRepository.PackageDownloadToLocalRepositoryFinished += LocalRepositoryPackageDownloadToLocalRepositoryFinished;
             LocalRepository.DownloadLocally(resolutionResult.Item1.GetPackages(), repositories.Skip(1));
 
             //install packages
@@ -181,8 +181,8 @@ namespace Pundit.WinForms.Core
                resolutionResult.Item1,
                repositories.First()))
             {
-               installer.BeginInstallPackage += new EventHandler<Pundit.Core.Model.EventArguments.PackageKeyDiffEventArgs>(installer_BeginInstallPackage);
-               installer.FinishInstallPackage += new EventHandler<Pundit.Core.Model.EventArguments.PackageKeyDiffEventArgs>(installer_FinishInstallPackage);
+               installer.BeginInstallPackage += new EventHandler<Pundit.Core.Model.EventArguments.PackageKeyDiffEventArgs>(InstallerBeginInstallPackage);
+               installer.FinishInstallPackage += new EventHandler<Pundit.Core.Model.EventArguments.PackageKeyDiffEventArgs>(InstallerFinishInstallPackage);
 
                IEnumerable<PackageKeyDiff> diff = installer.GetDiffWithCurrent(resolutionResult.Item1.GetPackages());
 
@@ -213,22 +213,22 @@ namespace Pundit.WinForms.Core
          }
       }
 
-      void installer_FinishInstallPackage(object sender, Pundit.Core.Model.EventArguments.PackageKeyDiffEventArgs e)
+      void InstallerFinishInstallPackage(object sender, Pundit.Core.Model.EventArguments.PackageKeyDiffEventArgs e)
       {
          SetPackageStatus(e.PackageKeyDiff.PackageId, e.PackageKeyDiff.Version.ToString(), "installed", Images.flag_green);
       }
 
-      void installer_BeginInstallPackage(object sender, Pundit.Core.Model.EventArguments.PackageKeyDiffEventArgs e)
+      void InstallerBeginInstallPackage(object sender, Pundit.Core.Model.EventArguments.PackageKeyDiffEventArgs e)
       {
          SetPackageStatus(e.PackageKeyDiff.PackageId, e.PackageKeyDiff.Version.ToString(), "installing", Images.disk);
       }
 
-      void LocalRepository_PackageDownloadToLocalRepositoryFinished(object sender, Pundit.Core.Model.EventArguments.PackageKeyEventArgs e)
+      void LocalRepositoryPackageDownloadToLocalRepositoryFinished(object sender, Pundit.Core.Model.EventArguments.PackageKeyEventArgs e)
       {
          SetPackageStatus(e.PackageKey.PackageId, e.PackageKey.Version.ToString(), "downloaded", Images.flag_green);
       }
 
-      void LocalRepository_PackageDownloadToLocalRepositoryStarted(object sender, Pundit.Core.Model.EventArguments.PackageKeyEventArgs e)
+      void LocalRepositoryPackageDownloadToLocalRepositoryStarted(object sender, Pundit.Core.Model.EventArguments.PackageKeyEventArgs e)
       {
          SetPackageStatus(e.PackageKey.PackageId, e.PackageKey.Version.ToString(), "downloading", Images.arrow_refresh_small);
       }
@@ -250,11 +250,6 @@ namespace Pundit.WinForms.Core
          }
 
          Close();
-      }
-
-      private void gridPackages_CellContentClick(object sender, DataGridViewCellEventArgs e)
-      {
-
       }
    }
 }
