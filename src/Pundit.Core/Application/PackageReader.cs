@@ -74,8 +74,8 @@ namespace Pundit.Core.Application
          if(InstallingResolvedFile != null)
             InstallingResolvedFile(this, new ResolvedFileEventArgs(packageId, kind, BuildConfiguration.Any, fullName));
 
-         string fullPath = Path.Combine(root, fullName);
-         string fullDirPath = new FileInfo(fullName).Directory.FullName;
+         string fullPath = PathUtils.FixPathSeparators(Path.Combine(root, fullName));
+         string fullDirPath = new FileInfo(fullPath).Directory.FullName;
 
          PathUtils.EnsureDirectoryExists(fullDirPath);
          if(File.Exists(fullPath)) File.Delete(fullPath);

@@ -110,5 +110,10 @@ namespace Pundit.Core.Utils
 
          return files.Select(f => new FileInfo(f));
       }
+
+      public static string FixPathSeparators(string s)
+      {
+         return s == null ? null : s.Replace('/', Path.DirectorySeparatorChar);
+      }
    }
 }

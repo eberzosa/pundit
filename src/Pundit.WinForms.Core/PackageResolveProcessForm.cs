@@ -209,7 +209,11 @@ namespace Pundit.WinForms.Core
 
          if(_resolutionError != null)
          {
+#if DEBUG
+            Alert.Error(Strings.Resolve_MessageConflicts + Environment.NewLine + _resolutionError.Message + _resolutionError.StackTrace);
+#else
             Alert.Error(Strings.Resolve_MessageConflicts + Environment.NewLine + _resolutionError.Message);
+#endif
          }
       }
 
