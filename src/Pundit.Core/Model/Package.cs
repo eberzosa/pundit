@@ -17,7 +17,7 @@ namespace Pundit.Core.Model
       public const string DefaultManifestFileName = "pundit.xml"; //package definition
       public const string PackedExtension = ".pundit";
 
-      private static Regex _packageStringRgx = new Regex("^[0-9a-zA-Z\\.]+$");
+      private static Regex _packageStringRgx = new Regex("^[0-9a-zA-Z\\._]+$");
       private const string PackageStringDescr = "allowed characters: letters (A-Z, a-z), numbers, and dot sign (.)";
 
       private List<PackageDependency> _dependencies = new List<PackageDependency>();
