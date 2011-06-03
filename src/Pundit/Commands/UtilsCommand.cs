@@ -42,12 +42,26 @@ namespace Pundit.Console.Commands
          string searchPatternExclude = null;
          string assemblyVersion = null;
          string assemblyFileVersion = null;
+         string assemblyCompany = null;
+         string assemblyProduct = null;
+         string assemblyCopyright = null;
+         string assemblyDescription = null;
+         string assemblyTitle = null;
+         string assemblyTrademark = null;
+         string assemblyCulture = null;
 
          new OptionSet()
             .Add("i:|include:", i => searchPatternInclude = i)
             .Add("e:|exclude:", e => searchPatternExclude = e)
             .Add("av:|assembly-version:", av => assemblyVersion = av)
             .Add("fv:|file-version:", fv => assemblyFileVersion = fv)
+            .Add("assembly-company:", ac => assemblyCompany = ac)
+            .Add("assembly-product:", ap => assemblyProduct = ap)
+            .Add("assembly-copyright:", ac => assemblyCopyright = ac)
+            .Add("assembly-description:", ad => assemblyDescription = ad)
+            .Add("assembly-title:", at => assemblyTitle = at)
+            .Add("assembly-trademark:", at => assemblyTrademark = at)
+            .Add("assembly-culture:", ac => assemblyCulture = ac)
             .Parse(GetCommandLine());
 
          if (string.IsNullOrEmpty(searchPatternInclude)) searchPatternInclude = "**/AssemblyInfo.cs";
@@ -55,15 +69,30 @@ namespace Pundit.Console.Commands
          if(string.IsNullOrEmpty(assemblyVersion) && string.IsNullOrEmpty(assemblyFileVersion))
             throw new ArgumentException("nothing to update");
 
+         Dictionary<string, string> extraTags = new Dictionary<string, string>();
+         if (!string.IsNullOrEmpty(assemblyCompany)) extraTags["AssemblyCompany"] = assemblyCompany;
+         if (!string.IsNullOrEmpty(assemblyProduct)) extraTags["AssemblyProduct"] = assemblyProduct;
+         if (!string.IsNullOrEmpty(assemblyCopyright)) extraTags["AssemblyCopyright"] = assemblyCopyright;
+         if (!string.IsNullOrEmpty(assemblyDescription)) extraTags["AssemblyDescription"] = assemblyDescription;
+         if (!string.IsNullOrEmpty(assemblyTitle)) extraTags["AssemblyTitle"] = assemblyTitle;
+         if (!string.IsNullOrEmpty(assemblyTrademark)) extraTags["AssemblyTrademark"] = assemblyTrademark;
+         if (!string.IsNullOrEmpty(assemblyCulture)) extraTags["AssemblyCulture"] = assemblyCulture;
+
          AssemblyInfoUtil(searchPatternInclude, searchPatternExclude,
             assemblyVersion == null ? null : new Version(assemblyVersion),
-            assemblyFileVersion == null ? null : new Version(assemblyFileVersion));
+            assemblyFileVersion == null ? null : new Version(assemblyFileVersion),
+            extraTags);
 
       }
 
-      private bool UpdateVersion(string fileName, string versionAttributeName, Version versionValue)
+      private static bool UpdateAssemblyInfoTag(string fileName, string tagName, string tagValue)
       {
-         Regex rgx = new Regex(versionAttributeName + "\\(\"(.*)\"\\)");
+         /*GlamTerm.Write("Updating ");
+         GlamTerm.Write(ConsoleColor.Green, tagName);
+         GlamTerm.Write(" to ");
+         GlamTerm.Write(ConsoleColor.Yellow, tagValue);*/
+
+         Regex rgx = new Regex(tagName + "\\(\"(.*)\"\\)");
 
          string text = File.ReadAllText(fileName);
 
@@ -71,7 +100,7 @@ namespace Pundit.Console.Commands
 
          for (int i = matches.Count - 1; i >= 0; i-- )
          {
-            string newValue = versionAttributeName + "(\"" + versionValue + "\")";
+            string newValue = tagName + "(\"" + tagValue + "\")";
 
             Capture cap = matches[i].Captures[0];
 
@@ -82,10 +111,17 @@ namespace Pundit.Console.Commands
 
          }
 
+         /*if(matches.Count > 0)
+            GlamTerm.WriteOk();
+         else
+            GlamTerm.WriteFail();*/
+
          return matches.Count > 0;
       }
 
-      private void AssemblyInfoUtil(string searchPatternInclude, string searchPatternExclude, Version assemblyVersion, Version assemblyFileVersion)
+      private static void AssemblyInfoUtil(string searchPatternInclude, string searchPatternExclude,
+         Version assemblyVersion, Version assemblyFileVersion,
+         Dictionary<string, string> extraTags)
       {
          GlamTerm.Write("searching ");
          GlamTerm.Write(ConsoleColor.Green, searchPatternInclude);
@@ -104,10 +140,18 @@ namespace Pundit.Console.Commands
             GlamTerm.Write(file.FullName);
 
             if (assemblyVersion != null)
-               UpdateVersion(file.FullName, "AssemblyVersion", assemblyVersion);
+               UpdateAssemblyInfoTag(file.FullName, "AssemblyVersion", assemblyVersion.ToString());
 
             if (assemblyFileVersion != null)
-               UpdateVersion(file.FullName, "AssemblyFileVersion", assemblyFileVersion);
+               UpdateAssemblyInfoTag(file.FullName, "AssemblyFileVersion", assemblyFileVersion.ToString());
+
+            if (extraTags != null && extraTags.Count > 0)
+            {
+               foreach (var tag in extraTags)
+               {
+                  UpdateAssemblyInfoTag(file.FullName, tag.Key, tag.Value);
+               }
+            }
 
             GlamTerm.WriteOk();
          }
