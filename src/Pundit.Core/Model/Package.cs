@@ -87,7 +87,7 @@ namespace Pundit.Core.Model
          if(includeDevTime)
             _dependencies = new List<PackageDependency>(copy._dependencies);
          else
-            _dependencies = new List<PackageDependency>(copy._dependencies.Where(pd => !pd.DevTimeOnly));
+            _dependencies = new List<PackageDependency>(copy._dependencies.Where(pd => pd.Scope == DependencyScope.Normal));
 
          PackageId = copy.PackageId;
          Platform = copy.Platform;
@@ -195,6 +195,16 @@ namespace Pundit.Core.Model
       public object Clone()
       {
          return new Package(this);
+      }
+
+      public PackageDependency GetPackageDependency(PackageKey key)
+      {
+         if(Dependencies != null)
+         {
+            return Dependencies.Where(d => d.PackageId == key.PackageId && d.Platform == key.Platform).FirstOrDefault();
+         }
+
+         return null;
       }
    }
 }

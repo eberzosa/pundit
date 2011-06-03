@@ -141,6 +141,7 @@ namespace Pundit.Console.Commands
          //install all packages
          using(PackageInstaller installer = new PackageInstaller(projectRoot,
             resolutionResult.Item1,
+            devPackage,
             repositories.First()))
          {
             installer.BeginInstallPackage += installer_BeginInstallPackage;

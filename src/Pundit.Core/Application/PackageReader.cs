@@ -86,7 +86,7 @@ namespace Pundit.Core.Application
          }
       }
 
-      private void InstallLibrary(string packageId, string root, string name, BuildConfiguration targetConfig)
+      private void InstallLibrary(string packageId, string root, string name, BuildConfiguration targetConfig, string subfolderName)
       {
          name = name.Substring(name.IndexOf("/") + 1);
         
@@ -108,8 +108,14 @@ namespace Pundit.Core.Application
 
             string targetPath = Path.Combine(root, "lib");
             if (!Directory.Exists(targetPath)) Directory.CreateDirectory(targetPath);
-            targetPath = Path.Combine(targetPath, name);
 
+            if(!string.IsNullOrEmpty(subfolderName))
+            {
+               targetPath = Path.Combine(targetPath, subfolderName);
+               if (!Directory.Exists(targetPath)) Directory.CreateDirectory(targetPath);
+            }
+
+            targetPath = Path.Combine(targetPath, name);
             if(File.Exists(targetPath)) File.Delete(targetPath);
 
             try
@@ -142,8 +148,9 @@ namespace Pundit.Core.Application
       /// they will be silently overwritten.
       /// </summary>
       /// <param name="rootFolder">Solution's root folder</param>
+      /// <param name="originalDependency"></param>
       /// <param name="configuration">Desired configuration name</param>
-      public void InstallTo(string rootFolder, BuildConfiguration configuration)
+      public void InstallTo(string rootFolder, PackageDependency originalDependency, BuildConfiguration configuration)
       {
          Package pkg = ReadManifest();
 
@@ -157,7 +164,10 @@ namespace Pundit.Core.Application
                switch(kind)
                {
                   case PackageFileKind.Binary:
-                     InstallLibrary(pkg.PackageId, rootFolder, entry.Name, configuration);
+                     InstallLibrary(pkg.PackageId, rootFolder, entry.Name, configuration,
+                                    (originalDependency != null && originalDependency.CreatePlatformFolder)
+                                       ? originalDependency.Platform
+                                       : null);
                      break;
                   case PackageFileKind.Include:
                   case PackageFileKind.Tools:

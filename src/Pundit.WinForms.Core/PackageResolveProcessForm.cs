@@ -179,6 +179,7 @@ namespace Pundit.WinForms.Core
             using (PackageInstaller installer = new PackageInstaller(
                new FileInfo(_manifestPath).Directory.FullName,
                resolutionResult.Item1,
+               manifest,
                repositories.First()))
             {
                installer.BeginInstallPackage += new EventHandler<Pundit.Core.Model.EventArguments.PackageKeyDiffEventArgs>(InstallerBeginInstallPackage);

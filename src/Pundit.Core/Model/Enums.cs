@@ -58,6 +58,18 @@ namespace Pundit.Core.Model
       Unknown
    }
 
+   public enum DependencyScope
+   {
+      [XmlEnum("normal")]
+      Normal,
+
+      [XmlEnum("test")]
+      Test,
+
+      [XmlEnum("build")]
+      Build
+   }
+
    public enum DiffType
    {
       NoChange,

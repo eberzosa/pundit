@@ -4,6 +4,9 @@ using System.Xml.Serialization;
 
 namespace Pundit.Core.Model
 {
+   ///<summary>
+   /// Package dependency
+   ///</summary>
    [XmlRoot("package")]
    [Serializable]
    public class PackageDependency
@@ -54,9 +57,39 @@ namespace Pundit.Core.Model
       /// 
       /// ... (think carefully)
       /// 
+      /// THIS ATTRIBUTE IS DEPRECATED, USE SCOPE PROPERTY INSTEAD
+      /// 
       /// </summary>
       [XmlAttribute("devtime")]
       [DefaultValue(false)]
-      public bool DevTimeOnly { get; set; }
+      public bool DevTimeOnly
+      {
+         get { return Scope != DependencyScope.Normal; }
+         set
+         {
+            if(value)
+            {
+               if (Scope == DependencyScope.Normal)
+                  Scope = DependencyScope.Build;
+            }
+            else
+            {
+               if (Scope != DependencyScope.Normal)
+                  Scope = DependencyScope.Normal;
+            }
+         }
+      }
+
+      [XmlAttribute("scope")]
+      [DefaultValue(DependencyScope.Normal)]
+      public DependencyScope Scope { get; set; }
+
+      ///<summary>
+      /// Applicable only when dependency is installed into local project. When true, a sub folder
+      /// under LIB will be created so binaries are unpacked under LIB\Platform\*
+      ///</summary>
+      [XmlAttribute("createPlatformFolder")]
+      [DefaultValue(false)]
+      public bool CreatePlatformFolder { get; set; }
    }
 }

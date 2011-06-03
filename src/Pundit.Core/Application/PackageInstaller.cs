@@ -11,6 +11,7 @@ namespace Pundit.Core.Application
    {
       private readonly string _rootDirectory;
       private readonly VersionResolutionTable _versionTable;
+      private readonly DevPackage _devManifest;
       private readonly IRepository _localRepository;
       private InstalledPackagesIndex _index;
       private bool _indexCommitted;
@@ -24,14 +25,17 @@ namespace Pundit.Core.Application
       public event EventHandler<PackageKeyDiffEventArgs> FinishInstallPackage;
 
       public PackageInstaller(string rootDirectory, VersionResolutionTable versionTable,
+         DevPackage devManifest,
          IRepository localRepository)
       {
          if (rootDirectory == null) throw new ArgumentNullException("rootDirectory");
          if (versionTable == null) throw new ArgumentNullException("versionTable");
+         if (devManifest == null) throw new ArgumentNullException("devManifest");
          if (localRepository == null) throw new ArgumentNullException("localRepository");
 
          _rootDirectory = rootDirectory;
          _versionTable = versionTable;
+         _devManifest = devManifest;
          _localRepository = localRepository;
 
          _libFolderPath = Path.Combine(rootDirectory, "lib");
@@ -132,7 +136,7 @@ namespace Pundit.Core.Application
          _index = new InstalledPackagesIndex {Configuration = configuration};
       }
 
-      private void Install(PackageKeyDiff pck, BuildConfiguration configuration)
+      private void Install(PackageKeyDiff pck, PackageDependency originalDependency, BuildConfiguration configuration)
       {
          //if(!_index.IsInstalled(pck))
          //{
@@ -143,7 +147,7 @@ namespace Pundit.Core.Application
                   if(BeginInstallPackage != null)
                      BeginInstallPackage(this, new PackageKeyDiffEventArgs(pck, true));
 
-                  reader.InstallTo(_rootDirectory, configuration);
+                  reader.InstallTo(_rootDirectory, originalDependency, configuration);
                }
             }
 
@@ -166,7 +170,7 @@ namespace Pundit.Core.Application
 
          foreach (PackageKey pck in currentDependencies)
          {
-            Install(new PackageKeyDiff(DiffType.Add, pck), configuration);
+            Install(new PackageKeyDiff(DiffType.Add, pck), _devManifest.GetPackageDependency(pck), configuration);
          }
 
          _indexCommitted = true;
@@ -191,7 +195,7 @@ namespace Pundit.Core.Application
 
             foreach(PackageKeyDiff diff in installs)
             {
-               Install(diff, configuration);
+               Install(diff, _devManifest.GetPackageDependency(diff), configuration);
             }
          }
 
