@@ -49,6 +49,7 @@
          this.cmdCancel = new System.Windows.Forms.Button();
          this.cmdNavigateToLocalRepoFolder = new System.Windows.Forms.Button();
          this.toolTip1 = new System.Windows.Forms.ToolTip(this.components);
+         this.cmdClearCache = new System.Windows.Forms.Button();
          this.groupBox1.SuspendLayout();
          this.pnlRepoInfo.SuspendLayout();
          this.SuspendLayout();
@@ -64,38 +65,38 @@
          // 
          // txtLocalRepoPath
          // 
-         this.txtLocalRepoPath.Anchor = ((System.Windows.Forms.AnchorStyles)(((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Left) 
-            | System.Windows.Forms.AnchorStyles.Right)));
+         this.txtLocalRepoPath.Anchor = ((System.Windows.Forms.AnchorStyles)(((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Left)
+                     | System.Windows.Forms.AnchorStyles.Right)));
          this.txtLocalRepoPath.Location = new System.Drawing.Point(118, 4);
          this.txtLocalRepoPath.Name = "txtLocalRepoPath";
          this.txtLocalRepoPath.ReadOnly = true;
-         this.txtLocalRepoPath.Size = new System.Drawing.Size(389, 20);
+         this.txtLocalRepoPath.Size = new System.Drawing.Size(392, 20);
          this.txtLocalRepoPath.TabIndex = 1;
          // 
          // label2
          // 
          this.label2.AutoSize = true;
-         this.label2.Location = new System.Drawing.Point(45, 33);
+         this.label2.Location = new System.Drawing.Point(24, 33);
          this.label2.Name = "label2";
-         this.label2.Size = new System.Drawing.Size(67, 13);
+         this.label2.Size = new System.Drawing.Size(88, 13);
          this.label2.TabIndex = 2;
-         this.label2.Text = "Used space:";
+         this.label2.Text = "Occupied space:";
          // 
          // txtUsedSpace
          // 
-         this.txtUsedSpace.Anchor = ((System.Windows.Forms.AnchorStyles)(((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Left) 
-            | System.Windows.Forms.AnchorStyles.Right)));
+         this.txtUsedSpace.Anchor = ((System.Windows.Forms.AnchorStyles)(((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Left)
+                     | System.Windows.Forms.AnchorStyles.Right)));
          this.txtUsedSpace.Location = new System.Drawing.Point(118, 30);
          this.txtUsedSpace.Name = "txtUsedSpace";
          this.txtUsedSpace.ReadOnly = true;
-         this.txtUsedSpace.Size = new System.Drawing.Size(281, 20);
+         this.txtUsedSpace.Size = new System.Drawing.Size(284, 20);
          this.txtUsedSpace.TabIndex = 3;
          // 
          // groupBox1
          // 
-         this.groupBox1.Anchor = ((System.Windows.Forms.AnchorStyles)((((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Bottom) 
-            | System.Windows.Forms.AnchorStyles.Left) 
-            | System.Windows.Forms.AnchorStyles.Right)));
+         this.groupBox1.Anchor = ((System.Windows.Forms.AnchorStyles)((((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Bottom)
+                     | System.Windows.Forms.AnchorStyles.Left)
+                     | System.Windows.Forms.AnchorStyles.Right)));
          this.groupBox1.Controls.Add(this.pnlRepoInfo);
          this.groupBox1.Controls.Add(this.cmdRepoDelete);
          this.groupBox1.Controls.Add(this.cmdRepoDown);
@@ -104,15 +105,15 @@
          this.groupBox1.Controls.Add(this.lstRepos);
          this.groupBox1.Location = new System.Drawing.Point(7, 57);
          this.groupBox1.Name = "groupBox1";
-         this.groupBox1.Size = new System.Drawing.Size(537, 201);
+         this.groupBox1.Size = new System.Drawing.Size(540, 210);
          this.groupBox1.TabIndex = 4;
          this.groupBox1.TabStop = false;
          this.groupBox1.Text = "Additional repositories";
          // 
          // pnlRepoInfo
          // 
-         this.pnlRepoInfo.Anchor = ((System.Windows.Forms.AnchorStyles)(((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Left) 
-            | System.Windows.Forms.AnchorStyles.Right)));
+         this.pnlRepoInfo.Anchor = ((System.Windows.Forms.AnchorStyles)(((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Left)
+                     | System.Windows.Forms.AnchorStyles.Right)));
          this.pnlRepoInfo.Controls.Add(this.cbRepoPublish);
          this.pnlRepoInfo.Controls.Add(this.txtRepoUri);
          this.pnlRepoInfo.Controls.Add(this.txtRepoName);
@@ -120,7 +121,7 @@
          this.pnlRepoInfo.Controls.Add(this.label3);
          this.pnlRepoInfo.Location = new System.Drawing.Point(163, 19);
          this.pnlRepoInfo.Name = "pnlRepoInfo";
-         this.pnlRepoInfo.Size = new System.Drawing.Size(366, 174);
+         this.pnlRepoInfo.Size = new System.Drawing.Size(369, 174);
          this.pnlRepoInfo.TabIndex = 5;
          // 
          // cbRepoPublish
@@ -135,11 +136,11 @@
          // 
          // txtRepoUri
          // 
-         this.txtRepoUri.Anchor = ((System.Windows.Forms.AnchorStyles)(((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Left) 
-            | System.Windows.Forms.AnchorStyles.Right)));
+         this.txtRepoUri.Anchor = ((System.Windows.Forms.AnchorStyles)(((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Left)
+                     | System.Windows.Forms.AnchorStyles.Right)));
          this.txtRepoUri.Location = new System.Drawing.Point(62, 34);
          this.txtRepoUri.Name = "txtRepoUri";
-         this.txtRepoUri.Size = new System.Drawing.Size(301, 20);
+         this.txtRepoUri.Size = new System.Drawing.Size(304, 20);
          this.txtRepoUri.TabIndex = 3;
          // 
          // txtRepoName
@@ -216,8 +217,8 @@
          // 
          // lstRepos
          // 
-         this.lstRepos.Anchor = ((System.Windows.Forms.AnchorStyles)(((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Bottom) 
-            | System.Windows.Forms.AnchorStyles.Left)));
+         this.lstRepos.Anchor = ((System.Windows.Forms.AnchorStyles)(((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Bottom)
+                     | System.Windows.Forms.AnchorStyles.Left)));
          this.lstRepos.FormattingEnabled = true;
          this.lstRepos.Location = new System.Drawing.Point(7, 20);
          this.lstRepos.Name = "lstRepos";
@@ -229,7 +230,7 @@
          // 
          this.cmdOk.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Right)));
          this.cmdOk.DialogResult = System.Windows.Forms.DialogResult.OK;
-         this.cmdOk.Location = new System.Drawing.Point(387, 264);
+         this.cmdOk.Location = new System.Drawing.Point(390, 273);
          this.cmdOk.Name = "cmdOk";
          this.cmdOk.Size = new System.Drawing.Size(75, 23);
          this.cmdOk.TabIndex = 5;
@@ -241,7 +242,7 @@
          // 
          this.cmdCancel.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Right)));
          this.cmdCancel.DialogResult = System.Windows.Forms.DialogResult.Cancel;
-         this.cmdCancel.Location = new System.Drawing.Point(468, 264);
+         this.cmdCancel.Location = new System.Drawing.Point(471, 273);
          this.cmdCancel.Name = "cmdCancel";
          this.cmdCancel.Size = new System.Drawing.Size(75, 23);
          this.cmdCancel.TabIndex = 6;
@@ -252,7 +253,7 @@
          // cmdNavigateToLocalRepoFolder
          // 
          this.cmdNavigateToLocalRepoFolder.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Right)));
-         this.cmdNavigateToLocalRepoFolder.Location = new System.Drawing.Point(512, 2);
+         this.cmdNavigateToLocalRepoFolder.Location = new System.Drawing.Point(515, 2);
          this.cmdNavigateToLocalRepoFolder.Name = "cmdNavigateToLocalRepoFolder";
          this.cmdNavigateToLocalRepoFolder.Size = new System.Drawing.Size(31, 23);
          this.cmdNavigateToLocalRepoFolder.TabIndex = 7;
@@ -261,11 +262,23 @@
          this.cmdNavigateToLocalRepoFolder.UseVisualStyleBackColor = true;
          this.cmdNavigateToLocalRepoFolder.Click += new System.EventHandler(this.cmdNavigateToLocalRepoFolder_Click);
          // 
+         // cmdClearCache
+         // 
+         this.cmdClearCache.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Right)));
+         this.cmdClearCache.Location = new System.Drawing.Point(408, 28);
+         this.cmdClearCache.Name = "cmdClearCache";
+         this.cmdClearCache.Size = new System.Drawing.Size(75, 23);
+         this.cmdClearCache.TabIndex = 8;
+         this.cmdClearCache.Text = "clear cache";
+         this.cmdClearCache.UseVisualStyleBackColor = true;
+         this.cmdClearCache.Click += new System.EventHandler(this.cmdClearCache_Click);
+         // 
          // GlobalSettingsForm
          // 
          this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
          this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
-         this.ClientSize = new System.Drawing.Size(548, 299);
+         this.ClientSize = new System.Drawing.Size(551, 308);
+         this.Controls.Add(this.cmdClearCache);
          this.Controls.Add(this.cmdNavigateToLocalRepoFolder);
          this.Controls.Add(this.cmdCancel);
          this.Controls.Add(this.cmdOk);
@@ -307,5 +320,6 @@
       private System.Windows.Forms.TextBox txtRepoName;
       private System.Windows.Forms.Label label4;
       private System.Windows.Forms.Label label3;
+      private System.Windows.Forms.Button cmdClearCache;
    }
 }

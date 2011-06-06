@@ -22,8 +22,7 @@ namespace Pundit.WinForms.Core
       {
          InitializeComponent();
 
-         txtLocalRepoPath.Text = LocalRepository.GlobalRootPath;
-         txtUsedSpace.Text = PathUtils.FileSizeToString(LocalRepository.OccupiedSpace);
+         UpdateOccupiedSpace();
 
          _rr = new BindingList<RegisteredRepository>(new List<RegisteredRepository>(
             LocalRepository.Registered.RepositoriesArray
@@ -33,6 +32,12 @@ namespace Pundit.WinForms.Core
          txtRepoName.DataBindings.Add("Text", _rr, "Name");
          txtRepoUri.DataBindings.Add("Text", _rr, "Uri");
          cbRepoPublish.DataBindings.Add("Checked", _rr, "UseForPublishing");
+      }
+
+      private void UpdateOccupiedSpace()
+      {
+         txtLocalRepoPath.Text = LocalRepository.GlobalRootPath;
+         txtUsedSpace.Text = PathUtils.FileSizeToString(LocalRepository.OccupiedSpace);
       }
 
       private void cmdCancel_Click(object sender, EventArgs e)
@@ -118,6 +123,20 @@ namespace Pundit.WinForms.Core
          lstRepos.SelectedIndex = idx + 1;
 
          UpdateButtons();
+      }
+
+      private void cmdClearCache_Click(object sender, EventArgs e)
+      {
+         foreach(string file in Directory.GetFiles(LocalRepository.GlobalRootFilePath))
+         {
+            try
+            {
+               File.Delete(file);
+            }
+            catch
+            {
+            }
+         }
       }
    }
 }
