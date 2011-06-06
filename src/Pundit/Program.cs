@@ -3,13 +3,14 @@ using System.Reflection;
 using Pundit.Console.Commands;
 using Pundit.Core;
 using Pundit.Core.Model;
+using Pundit.Core.Utils;
 
 namespace Pundit.Console
 {
    static class Program
    {
       private static readonly string ExeName = Assembly.GetExecutingAssembly().GetName().Name;
-      private static readonly Version CoreVersion = typeof (IRepository).Assembly.GetName().Version;
+      private static readonly Version CoreVersion = PackageUtils.GetProductVersion(typeof (IRepository).Assembly);
 
       static int Main(string[] args)
       {

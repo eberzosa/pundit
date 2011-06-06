@@ -1,7 +1,9 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Diagnostics;
 using System.IO;
 using System.Linq;
+using System.Reflection;
 using System.Text;
 using System.Text.RegularExpressions;
 using Pundit.Core.Model;
@@ -96,6 +98,13 @@ namespace Pundit.Core.Utils
             .Equals(
                TrimPlatformName(platform2),
                StringComparison.CurrentCultureIgnoreCase);
+      }
+
+      public static Version GetProductVersion(Assembly asm)
+      {
+         FileVersionInfo fvi = FileVersionInfo.GetVersionInfo(asm.Location);
+         string version = fvi.ProductVersion;
+         return new Version(version);
       }
    }
 }

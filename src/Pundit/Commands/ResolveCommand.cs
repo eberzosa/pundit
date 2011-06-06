@@ -171,7 +171,7 @@ namespace Pundit.Console.Commands
 
       void installer_BeginInstallPackage(object sender, Core.Model.EventArguments.PackageKeyDiffEventArgs e)
       {
-         GlamTerm.Write("installing {0} v{1}...", e.PackageKeyDiff.PackageId, e.PackageKeyDiff.Version);
+         GlamTerm.Write("installing {0} v{1} ({2})...", e.PackageKeyDiff.PackageId, e.PackageKeyDiff.Version, e.PackageKeyDiff.Platform);
       }
 
       void LocalRepository_PackageDownloadToLocalRepositoryFinished(object sender, Core.Model.EventArguments.PackageKeyEventArgs e)
