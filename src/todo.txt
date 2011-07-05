@@ -40,7 +40,8 @@ just ignore all XML files
 + CORE: do not reinstall the whole folder if a dependency changed, update only the dependency;
   apparently the whole lib folder content shouldn't be deleted when resolve fails
 + VSIX: dependency resolution ("resolve" command analog)
-- FORMS: add options for "createPlatformFolder" and "scope"
++ CONSOLE: "pack" is "broken", it won't display the packaging progress
++ FORMS: add options for "createPlatformFolder" and "scope"
 - CORE: support platform compatibility i.e. if manifest declares platform net40, use it as a default one
 after noarch, then try to use net35, net30 and net20
 - CONSOLE: important! Autoupdate. Check for updates once a week (save state in the local folder). Display
@@ -55,4 +56,3 @@ after noarch, then try to use net35, net30 and net20
   references can't, they MUST reference exact package version (not including package build version)
   or package version + pattern of package build version. For example, if package version is 1.2 and
   package build version is 1.2.45.889, then published version can be 1.2 or 1.2.45 or 1.2.45.889.
-= CONSOLE: "pack" is "broken", it won't display the packaging progress

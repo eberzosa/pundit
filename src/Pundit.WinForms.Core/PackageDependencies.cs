@@ -24,6 +24,9 @@ namespace Pundit.WinForms.Core
          gridDependencies.AutoGenerateColumns = false;
          gridDependencies.DataSource = _dependencies;
          gridDependencies.ReadOnly = false;
+
+         DataGridViewComboBoxColumn column = (DataGridViewComboBoxColumn) gridDependencies.Columns["Scope"];
+         column.DataSource = Enum.GetValues(typeof(DependencyScope));
       }
 
       public PackageDependencies(IEnumerable<PackageDependency> dependencies) : this()

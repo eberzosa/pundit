@@ -30,30 +30,31 @@
       {
          System.ComponentModel.ComponentResourceManager resources = new System.ComponentModel.ComponentResourceManager(typeof(PackageDependencies));
          this.gridDependencies = new System.Windows.Forms.DataGridView();
+         this.cmdAdd = new System.Windows.Forms.Button();
+         this.cmdRemove = new System.Windows.Forms.Button();
          this.Column1 = new System.Windows.Forms.DataGridViewTextBoxColumn();
          this.Version = new System.Windows.Forms.DataGridViewTextBoxColumn();
          this.Platform = new System.Windows.Forms.DataGridViewTextBoxColumn();
-         this.DevTime = new System.Windows.Forms.DataGridViewCheckBoxColumn();
-         this.cmdAdd = new System.Windows.Forms.Button();
-         this.cmdRemove = new System.Windows.Forms.Button();
+         this.Scope = new System.Windows.Forms.DataGridViewComboBoxColumn();
+         this.PlatformFolder = new System.Windows.Forms.DataGridViewCheckBoxColumn();
          ((System.ComponentModel.ISupportInitialize)(this.gridDependencies)).BeginInit();
          this.SuspendLayout();
          // 
          // gridDependencies
          // 
          this.gridDependencies.AllowUserToAddRows = false;
-         this.gridDependencies.Anchor = ((System.Windows.Forms.AnchorStyles)((((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Bottom) 
-            | System.Windows.Forms.AnchorStyles.Left) 
-            | System.Windows.Forms.AnchorStyles.Right)));
+         this.gridDependencies.Anchor = ((System.Windows.Forms.AnchorStyles)((((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Bottom)
+                     | System.Windows.Forms.AnchorStyles.Left)
+                     | System.Windows.Forms.AnchorStyles.Right)));
          this.gridDependencies.BackgroundColor = System.Drawing.SystemColors.ControlLight;
          this.gridDependencies.BorderStyle = System.Windows.Forms.BorderStyle.Fixed3D;
-         this.gridDependencies.ColumnHeadersBorderStyle = System.Windows.Forms.DataGridViewHeaderBorderStyle.None;
          this.gridDependencies.ColumnHeadersHeightSizeMode = System.Windows.Forms.DataGridViewColumnHeadersHeightSizeMode.AutoSize;
          this.gridDependencies.Columns.AddRange(new System.Windows.Forms.DataGridViewColumn[] {
             this.Column1,
             this.Version,
             this.Platform,
-            this.DevTime});
+            this.Scope,
+            this.PlatformFolder});
          this.gridDependencies.Location = new System.Drawing.Point(0, 0);
          this.gridDependencies.Margin = new System.Windows.Forms.Padding(0);
          this.gridDependencies.MultiSelect = false;
@@ -64,38 +65,6 @@
          this.gridDependencies.Size = new System.Drawing.Size(530, 207);
          this.gridDependencies.TabIndex = 28;
          this.gridDependencies.SelectionChanged += new System.EventHandler(this.gridDependencies_SelectionChanged);
-         // 
-         // Column1
-         // 
-         this.Column1.AutoSizeMode = System.Windows.Forms.DataGridViewAutoSizeColumnMode.Fill;
-         this.Column1.DataPropertyName = "PackageId";
-         this.Column1.HeaderText = "packageId";
-         this.Column1.Name = "Column1";
-         // 
-         // Version
-         // 
-         this.Version.AutoSizeMode = System.Windows.Forms.DataGridViewAutoSizeColumnMode.DisplayedCells;
-         this.Version.DataPropertyName = "VersionPattern";
-         this.Version.HeaderText = "version";
-         this.Version.Name = "Version";
-         this.Version.Width = 70;
-         // 
-         // Platform
-         // 
-         this.Platform.AutoSizeMode = System.Windows.Forms.DataGridViewAutoSizeColumnMode.DisplayedCells;
-         this.Platform.DataPropertyName = "Platform";
-         this.Platform.HeaderText = "platform";
-         this.Platform.Name = "Platform";
-         this.Platform.ReadOnly = true;
-         this.Platform.Width = 73;
-         // 
-         // DevTime
-         // 
-         this.DevTime.AutoSizeMode = System.Windows.Forms.DataGridViewAutoSizeColumnMode.DisplayedCells;
-         this.DevTime.DataPropertyName = "DevTimeOnly";
-         this.DevTime.HeaderText = "private";
-         this.DevTime.Name = "DevTime";
-         this.DevTime.Width = 49;
          // 
          // cmdAdd
          // 
@@ -120,6 +89,46 @@
          this.cmdRemove.UseVisualStyleBackColor = true;
          this.cmdRemove.Click += new System.EventHandler(this.cmdRemove_Click);
          // 
+         // Column1
+         // 
+         this.Column1.AutoSizeMode = System.Windows.Forms.DataGridViewAutoSizeColumnMode.Fill;
+         this.Column1.DataPropertyName = "PackageId";
+         this.Column1.HeaderText = "Package ID";
+         this.Column1.Name = "Column1";
+         // 
+         // Version
+         // 
+         this.Version.AutoSizeMode = System.Windows.Forms.DataGridViewAutoSizeColumnMode.DisplayedCells;
+         this.Version.DataPropertyName = "VersionPattern";
+         this.Version.HeaderText = "Version";
+         this.Version.Name = "Version";
+         this.Version.Width = 65;
+         // 
+         // Platform
+         // 
+         this.Platform.AutoSizeMode = System.Windows.Forms.DataGridViewAutoSizeColumnMode.DisplayedCells;
+         this.Platform.DataPropertyName = "Platform";
+         this.Platform.HeaderText = "Platform";
+         this.Platform.Name = "Platform";
+         this.Platform.ReadOnly = true;
+         this.Platform.Width = 68;
+         // 
+         // Scope
+         // 
+         this.Scope.AutoSizeMode = System.Windows.Forms.DataGridViewAutoSizeColumnMode.DisplayedCells;
+         this.Scope.DataPropertyName = "Scope";
+         this.Scope.HeaderText = "Scope";
+         this.Scope.MinimumWidth = 100;
+         this.Scope.Name = "Scope";
+         // 
+         // PlatformFolder
+         // 
+         this.PlatformFolder.AutoSizeMode = System.Windows.Forms.DataGridViewAutoSizeColumnMode.DisplayedCells;
+         this.PlatformFolder.DataPropertyName = "CreatePlatformFolder";
+         this.PlatformFolder.HeaderText = "Platform Subfolder";
+         this.PlatformFolder.Name = "PlatformFolder";
+         this.PlatformFolder.Width = 97;
+         // 
          // PackageDependencies
          // 
          this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
@@ -142,6 +151,7 @@
       private System.Windows.Forms.DataGridViewTextBoxColumn Column1;
       private System.Windows.Forms.DataGridViewTextBoxColumn Version;
       private System.Windows.Forms.DataGridViewTextBoxColumn Platform;
-      private System.Windows.Forms.DataGridViewCheckBoxColumn DevTime;
+      private System.Windows.Forms.DataGridViewComboBoxColumn Scope;
+      private System.Windows.Forms.DataGridViewCheckBoxColumn PlatformFolder;
    }
 }

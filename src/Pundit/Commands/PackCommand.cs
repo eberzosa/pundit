@@ -10,8 +10,6 @@ namespace Pundit.Console.Commands
 {
    class PackCommand : BaseCommand
    {
-      private string _packagePath;
-
       public PackCommand(string[] parameters) : base(parameters)
       {
       }
@@ -98,6 +96,8 @@ namespace Pundit.Console.Commands
          {
             using (var pw = new PackageWriter(solutionRoot, devPack, writeStream))
             {
+               pw.BeginPackingFile += pw_BeginPackingFile;
+               pw.EndPackingFile += pw_EndPackingFile;
                bytesWritten = pw.WriteAll();
             }
          }
@@ -108,6 +108,18 @@ namespace Pundit.Console.Commands
             PathUtils.FileSizeToString(bytesWritten),
             PathUtils.FileSizeToString(packageSize),
             packageSize * 100 / bytesWritten));
+      }
+
+      void pw_EndPackingFile(object sender, Core.Model.EventArguments.PackageFileEventArgs e)
+      {
+         GlamTerm.WriteOk();
+      }
+
+      void pw_BeginPackingFile(object sender, Core.Model.EventArguments.PackageFileEventArgs e)
+      {
+         GlamTerm.Write("packing ");
+         GlamTerm.Write(ConsoleColor.Green, e.FileName);
+         GlamTerm.Write("... ");
       }
    }
 }
