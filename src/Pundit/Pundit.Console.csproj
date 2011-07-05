@@ -56,6 +56,7 @@
     <Compile Include="Commands\ResolveCommand.cs" />
     <Compile Include="Commands\SearchCommand.cs" />
     <Compile Include="Commands\TemplateCommand.cs" />
+    <Compile Include="Commands\UpdateCommand.cs" />
     <Compile Include="Commands\UtilsCommand.cs" />
     <Compile Include="Program.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
