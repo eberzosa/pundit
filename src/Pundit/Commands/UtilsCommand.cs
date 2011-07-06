@@ -31,8 +31,83 @@ namespace Pundit.Console.Commands
             case "asminfo":
                AssemblyInfoUtil();
                break;
+            case "regex":
+               RegexUtil();
+               break;
             default:
                throw new ArgumentException("unknown util name: " + utilName);
+         }
+      }
+
+      private void RegexUtil()
+      {
+         string searchPatternInclude = null;
+         string searchPatternExclude = null;
+         string searchRegex = null;
+         string replaceText = null;
+
+         new OptionSet()
+            .Add("i:|include:", i => searchPatternInclude = i)
+            .Add("e:|exclude:", e => searchPatternExclude = e)
+            .Add("s:|search:", s => searchRegex = s)
+            .Add("r:|replace:", r => replaceText = r)
+            .Parse(GetCommandLine());
+
+         if (searchRegex == null || replaceText == null)
+            throw new ArgumentException("search regex or replace text is not set");
+
+         GlamTerm.Write("search regex: [");
+         GlamTerm.Write(ConsoleColor.Green, searchRegex);
+         GlamTerm.WriteLine("]");
+
+         GlamTerm.Write("replace text: [");
+         GlamTerm.Write(ConsoleColor.Yellow, replaceText);
+         GlamTerm.WriteLine("]");
+
+         RegexUtil(searchPatternInclude, searchPatternExclude, searchRegex, replaceText);
+      }
+
+      private void RegexUtil(string searchPatternInclude, string searchPatternExclude, string searchRegex, string replaceRegex)
+      {
+         GlamTerm.Write("searching files...");
+
+         List<FileInfo> files = new List<FileInfo>(PathUtils.SearchFiles(Environment.CurrentDirectory, searchPatternInclude,
+                                                    searchPatternExclude));
+
+         GlamTerm.Write(" " + files.Count + " found");
+         GlamTerm.WriteOk();
+
+         foreach(FileInfo fi in files)
+         {
+            GlamTerm.Write("processing ");
+            GlamTerm.Write(ConsoleColor.Green, fi.Name);
+            GlamTerm.Write("...");
+
+            RegexUtil(fi.FullName, searchRegex, replaceRegex);
+
+            GlamTerm.WriteOk();
+         }
+      }
+
+      private void RegexUtil(string filePath, string searchRegex, string replaceText)
+      {
+         Regex rgx = new Regex(searchRegex);
+
+         string text = File.ReadAllText(filePath);
+
+         MatchCollection matches = rgx.Matches(text);
+
+         for (int i = matches.Count - 1; i >= 0; i--)
+         {
+            string newValue = replaceText;
+
+            Capture cap = matches[i].Captures[0];
+
+            text = text.Remove(cap.Index, cap.Length);
+            text = text.Insert(cap.Index, newValue);
+
+            File.WriteAllText(filePath, text);
+            //GlamTerm.WriteLine(text);
          }
       }
 

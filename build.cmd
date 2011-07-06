@@ -1,12 +1,15 @@
-SET FVER=1.0.0.16
+SET FVER=1.0.0.19
 SET VER=1.0.0.0
 
 pundit utils -u:asminfo -fv:%FVER% -av:%VER%
+pundit utils -u:asminfo -i:**/Pundit.Vsix/**/AssemblyInfo.cs -fv:%FVER% -av:%FVER%
+pundit utils -u:regex -i:**/*.vsixmanifest "-s:<Version>.*</Version>" -r:"<Version>%FVER%</Version>"
 
 msbuild src/Pundit.sln /p:Configuration=Release
 msbuild src/Vsix.sln /p:Configuration=Release
+del /f/s/q *.zip
 del /f/s/q *.rar
 
-rar a -ep -x*vshost* pundit-%FVER%.rar bin\core\*.dll bin\core\*.exe
+winrar a -afzip -ep -x*vshost* pundit-%FVER%.zip bin\core\*.dll bin\core\*.exe
 
-rar a -ep pundit-vsix-%FVER%.rar src\Pundit.Vsix\bin\Release\*.vsix
+winrar a -afzip -ep pundit-vsix-%FVER%.zip src\Pundit.Vsix\bin\Release\*.vsix
