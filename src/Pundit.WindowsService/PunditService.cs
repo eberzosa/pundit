@@ -23,5 +23,10 @@ namespace Pundit.WindowsService
       protected override void OnStop()
       {
       }
+
+      private void StartService()
+      {
+         
+      }
    }
 }
