@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using System.IO;
 using System.ServiceModel;
+using System.ServiceModel.Web;
 
 namespace Pundit.Core.Model
 {
@@ -18,6 +19,7 @@ namespace Pundit.Core.Model
       /// </summary>
       /// <param name="packageStream">Package stream</param>
       [OperationContract]
+      [WebInvoke(UriTemplate = "/publish")]
       void Publish(Stream packageStream);
 
       /// <summary>
@@ -27,20 +29,25 @@ namespace Pundit.Core.Model
       /// <returns>Package stream</returns>
       [OperationContract]
       [FaultContract(typeof(FileNotFoundException))]
+      [WebGet(UriTemplate = "/download")]
       Stream Download(PackageKey key);
 
       [OperationContract]
       [FaultContract(typeof(FileNotFoundException))]
+      [WebGet(UriTemplate = "/versions")]
       Version[] GetVersions(UnresolvedPackage package, VersionPattern pattern);
 
       [OperationContract]
       [FaultContract(typeof(FileNotFoundException))]
+      [WebGet(UriTemplate = "/manifest")]
       Package GetManifest(PackageKey key);
 
       [OperationContract]
+      [WebGet(UriTemplate = "/packagesexist")]
       bool[] PackagesExist(PackageKey[] packages);
 
       [OperationContract]
+      [WebGet(UriTemplate = "/search?s={substring}")]
       PackageKey[] Search(string substring);
    }
 }

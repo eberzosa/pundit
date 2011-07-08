@@ -1,14 +1,19 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Runtime.Serialization;
 using System.Text;
 using Pundit.Core.Utils;
 
 namespace Pundit.Core.Model
 {
+   [DataContract]
    public class UnresolvedPackage
    {
+      [DataMember]
       public string PackageId { get; set; }
+
+      [DataMember]
       public string Platform { get; set; }
 
       public UnresolvedPackage(string packageId, string platform)
