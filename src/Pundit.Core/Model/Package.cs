@@ -18,7 +18,7 @@ namespace Pundit.Core.Model
       public const string PackedExtension = ".pundit";
 
       private static Regex _packageStringRgx = new Regex("^[0-9a-zA-Z\\._]+$");
-      private static Regex _packageVersionRgx = new Regex("^[0-9\\*]+(\\.[0-9\\*]+){1,3}$");
+      private static Regex _packageVersionRgx = new Regex("^[0-9\\*]+(\\.[0-9\\*]+){3}$");
       private const string PackageStringDescr = "allowed characters: letters (A-Z, a-z), numbers, underscore (_) and dot sign (.)";
 
       private List<PackageDependency> _dependencies = new List<PackageDependency>();
