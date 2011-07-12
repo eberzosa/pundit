@@ -1,5 +1,5 @@
-SET FVER=1.0.0.20
-SET VER=1.0.0.0
+SET FVER=1.0.0.21
+SET VER=1.0.0.21
 
 pundit utils -u:asminfo -fv:%FVER% -av:%VER%
 pundit utils -u:asminfo -i:**/Pundit.Vsix/**/AssemblyInfo.cs -fv:%FVER% -av:%FVER%
