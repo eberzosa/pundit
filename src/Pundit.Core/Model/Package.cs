@@ -18,6 +18,7 @@ namespace Pundit.Core.Model
       public const string PackedExtension = ".pundit";
 
       private static Regex _packageStringRgx = new Regex("^[0-9a-zA-Z\\._]+$");
+      private static Regex _packageVersionRgx = new Regex("^[0-9\\*]+(\\.[0-9\\*]+){1,3}$");
       private const string PackageStringDescr = "allowed characters: letters (A-Z, a-z), numbers, underscore (_) and dot sign (.)";
 
       private List<PackageDependency> _dependencies = new List<PackageDependency>();
@@ -158,6 +159,11 @@ namespace Pundit.Core.Model
          return _packageStringRgx.IsMatch(s);
       }
 
+      private bool IsValidPackageVersion(string s)
+      {
+         return _packageVersionRgx.IsMatch(s);
+      }
+
       /// <summary>
       /// Validates the package. In case of invalid package throws <see cref="InvalidPackageException"/>
       /// </summary>
@@ -176,6 +182,9 @@ namespace Pundit.Core.Model
 
          if(Version == null)
             ex.AddError("Version", "version is required");
+
+         if(Version != null && !IsValidPackageVersion(Version.ToString()))
+            ex.AddError("Version", "version format is invalid, expected Major.Minor.Build.Revision");
 
          if (ex.HasErrors)
             throw ex;

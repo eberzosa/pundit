@@ -1,4 +1,5 @@
-﻿using System.Collections.Generic;
+﻿using System;
+using System.Collections.Generic;
 using System.IO;
 using System.Xml.Serialization;
 using System.Linq;
@@ -27,6 +28,7 @@ namespace Pundit.Core.Model
       }
    }
 
+   //todo: rename to sth like "settings" or whatever
    [XmlRoot("repositories")]
    public class RegisteredRepositories
    {
@@ -34,6 +36,22 @@ namespace Pundit.Core.Model
 
       private Dictionary<string, RegisteredRepository> _repos = new Dictionary<string, RegisteredRepository>();
       private List<RegisteredRepository> _reposList = new List<RegisteredRepository>();
+
+      [XmlIgnore]
+      public DateTime? LastAutoUpdateTime { get; set; }
+
+      [XmlAttribute("lastAutoUpdateTimeTicks")]
+      public long LastAutoUpdateTimeSerialized
+      {
+         get { return LastAutoUpdateTime == null ? 0 : LastAutoUpdateTime.Value.Ticks; }
+         set
+         {
+            if (value == 0)
+               LastAutoUpdateTime = null;
+            else
+               new DateTime(value);
+         }
+      }
 
       [XmlArray("list")]
       [XmlArrayItem("repository")]

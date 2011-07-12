@@ -20,7 +20,6 @@ namespace Pundit.Core
       private static readonly string LocalRepoRoot;     //path to local repository root (not the file folder)
       private static readonly string LocalRepoFileRoot; //path for file repository
       private static readonly RegisteredRepositories Repos;
-      //private static readonly ILog Log = LogManager.GetLogger(typeof (LocalRepository));
 
       /// <summary>
       /// Occurs when a package is started downloading to the local repository
