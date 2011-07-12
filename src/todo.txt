@@ -10,7 +10,7 @@ low priority:
 
 1.1.0
 - optimize dependency resolution to use less calls to IRepository, better batching
-- repository server
+= repository server
 - check that all dependencies are valid when publishing
 - support platform compatibility i.e. if manifest declares platform net40, use it as a default one
 after noarch, then try to use net35, net30 and net20
@@ -42,9 +42,7 @@ just ignore all XML files
 + VSIX: dependency resolution ("resolve" command analog)
 + CONSOLE: "pack" is "broken", it won't display the packaging progress
 + FORMS: add options for "createPlatformFolder" and "scope"
-- CORE: support platform compatibility i.e. if manifest declares platform net40, use it as a default one
-after noarch, then try to use net35, net30 and net20
-- CONSOLE: important! Autoupdate. Check for updates once a week (save state in the local folder). Display
+= CONSOLE: important! Autoupdate. Check for updates once a week (save state in the local folder). Display
   red flashing message in the console that there is a new version.
 - CORE: should differentiate between package version and package build version
 - CORE: AssemblyVersion and AssemblyFileVersion have a very special meaning to .NET CLR.

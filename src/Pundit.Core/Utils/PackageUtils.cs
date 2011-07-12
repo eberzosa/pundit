@@ -69,7 +69,7 @@ namespace Pundit.Core.Utils
          Match mtch = _packageNameRgx.Match(fileName);
 
          if(!mtch.Success)
-            throw new ArgumentException("Invalid package name", "fileName");
+            throw new ArgumentException("Invalid package name (" + fileName + ")", "fileName");
 
          string packageId = mtch.Groups[1].Value;
          var v = new Version(

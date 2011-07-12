@@ -1,6 +1,6 @@
 Package name must strictly follow the rules inspired by RPM:
 
-<package_id>-<version>-<build>.<architecture>.ngem
+<package_id>-<version>-<build>.<architecture>.pundit
 
 Obviously there are limitation in the form of the subset of the characters allowed to use in the package_id and platform part of the name due to the limitations of the filesystem file names.
 
