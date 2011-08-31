@@ -103,23 +103,25 @@ namespace Pundit.Core.Application
          {
             name = name.Substring(name.IndexOf("/") + 1);
 
-            if(InstallingResolvedFile != null)
+            if (InstallingResolvedFile != null)
                InstallingResolvedFile(this, new ResolvedFileEventArgs(packageId, PackageFileKind.Binary, config, name));
 
             string targetPath = Path.Combine(root, "lib");
             if (!Directory.Exists(targetPath)) Directory.CreateDirectory(targetPath);
 
-            if(!string.IsNullOrEmpty(subfolderName))
+            if (!string.IsNullOrEmpty(subfolderName))
             {
                targetPath = Path.Combine(targetPath, subfolderName);
                if (!Directory.Exists(targetPath)) Directory.CreateDirectory(targetPath);
             }
 
             targetPath = Path.Combine(targetPath, name);
-            if(File.Exists(targetPath)) File.Delete(targetPath);
 
             try
             {
+
+               if (File.Exists(targetPath)) File.Delete(targetPath);
+
                using (Stream ts = File.Create(targetPath))
                {
                   _zipStream.CopyTo(ts);
@@ -129,7 +131,6 @@ namespace Pundit.Core.Application
             {
                if(Exceptional.IsVsDocFile(targetPath))
                {
-                  //if(_log.IsWarnEnabled) _log.Warn("  ! couldn't overwrite documentation file, however it can be safely ignored");
                }
                else
                {

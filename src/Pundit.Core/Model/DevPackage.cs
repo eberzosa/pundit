@@ -17,6 +17,7 @@ namespace Pundit.Core.Model
 
       [XmlArray("files")]
       [XmlArrayItem("file")]
+      [Obsolete("")]
       public List<SourceFiles> Files
       {
          get { return _files; }

@@ -28,7 +28,6 @@ namespace Pundit.Core.Model
       }
    }
 
-   //todo: rename to sth like "settings" or whatever
    [XmlRoot("repositories")]
    public class RegisteredRepositories
    {
@@ -37,7 +36,7 @@ namespace Pundit.Core.Model
       private Dictionary<string, RegisteredRepository> _repos = new Dictionary<string, RegisteredRepository>();
       private List<RegisteredRepository> _reposList = new List<RegisteredRepository>();
 
-      [XmlIgnore]
+      /*[XmlIgnore]
       public DateTime? LastAutoUpdateTime { get; set; }
 
       [XmlAttribute("lastAutoUpdateTimeTicks")]
@@ -51,7 +50,7 @@ namespace Pundit.Core.Model
             else
                new DateTime(value);
          }
-      }
+      }*/
 
       [XmlArray("list")]
       [XmlArrayItem("repository")]
