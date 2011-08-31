@@ -56,3 +56,4 @@ just ignore all XML files
   package build version is 1.2.45.889, then published version can be 1.2 or 1.2.45 or 1.2.45.889.
  - VSIX: conflict causes VS to crash
  - VSIX: display where the conflict is exacly
+ - FORMS, CONSOLE: package viewer (dependencies)
