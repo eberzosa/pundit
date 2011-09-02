@@ -14,9 +14,20 @@ namespace Pundit.Core.Utils
 
          if(File.Exists(fullPath))
          {
-            using(var rdr = new StreamReader(File.OpenRead(fullPath)))
+            Stream fs = null;
+
+            try
             {
-               while(s.Length < 1000)
+               fs = File.OpenRead(fullPath);
+            }
+            catch(Exception)
+            {
+               return fullPath != null && fullPath.EndsWith(".xml", StringComparison.InvariantCultureIgnoreCase);
+            }
+
+            using (var rdr = new StreamReader(fs))
+            {
+               while (s.Length < 1000)
                {
                   s += rdr.ReadLine();
                }
