@@ -46,6 +46,9 @@ namespace Pundit.Core.Application
 
       public long WriteAll(bool includeDevTime = false)
       {
+         if(_packageInfo.Files == null || _packageInfo.Files.Count == 0)
+            throw new InvalidPackageException("manifest has no input files");
+
          WriteManifest(includeDevTime);
 
          _bytesWritten += _zipStream.Length;

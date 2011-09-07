@@ -14,6 +14,11 @@ namespace Pundit.Core.Model
          
       }
 
+      public InvalidPackageException(string message) : base(message)
+      {
+         
+      }
+
       public List<KeyValuePair<string, string>> ErrorMessages
       {
          get { return _listOfErrorMessages; }
