@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Diagnostics;
 using System.Linq;
 using System.Text;
 using Pundit.Core;
@@ -22,7 +23,7 @@ namespace Pundit.Console.Commands
 
          try
          {
-            latest = AutoUpdate.CheckUpdates().First();
+            latest = AutoUpdate.CheckUpdates();
          }
          catch(Exception ex)
          {
@@ -38,7 +39,31 @@ namespace Pundit.Console.Commands
 
             if(latest.Version > current)
             {
-               GlamTerm.Write(ConsoleColor.Red, "You have an update!");
+               GlamTerm.WriteLine(ConsoleColor.Red, "You have an update!");
+
+               GlamTerm.Write("downloading update... ");
+
+               string exePath = null;
+
+               try
+               {
+                  exePath = AutoUpdate.Download(latest, Environment.CurrentDirectory);
+
+                  GlamTerm.WriteOk();
+               }
+               catch(Exception ex)
+               {
+                  GlamTerm.WriteFail();
+
+                  GlamTerm.WriteLine("update failed: " + ex.Message);
+               }
+
+               if(exePath != null)
+               {
+                  GlamTerm.Write("updating myself...");
+
+                  Process.Start("pundit-update.exe");
+               }
             }
             else
             {

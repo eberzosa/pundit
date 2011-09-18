@@ -23,54 +23,27 @@ namespace Pundit.Core
       private const string BeginToken = "version begin";
       private const string EndToken = "version end";
 
-      public static Product[] CheckUpdates()
+      public static Product CheckUpdates()
       {
-         List<Product> products = new List<Product>();
+         WebClient wc = new WebClient();
+         string latest = wc.DownloadString("http://dl.dropbox.com/u/228208/pundit/latest.txt");
 
-         string txt;
-         
-         HttpWebRequest rq =
-            (HttpWebRequest) WebRequest.Create("http://pundit.codeplex.com/wikipage?title=Latest%20Version");
+         return new Product
+                   {
+                      DownloadUri = "http://dl.dropbox.com/u/228208/pundit/latest.exe",
+                      Name = "Console Tools",
+                      Version = new Version(latest)
+                   };
+      }
 
-         HttpWebResponse rs = (HttpWebResponse) rq.GetResponse();
+      public static string Download(Product p, string targetFolder)
+      {
+         string path = Path.Combine(targetFolder, "upgrade.exe");
 
-         using(StreamReader rdr = new StreamReader(rs.GetResponseStream()))
-         {
-            txt = rdr.ReadToEnd();
-         }
+         WebClient wc = new WebClient();
+         wc.DownloadFile(p.DownloadUri, path);
 
-         int ib = txt.IndexOf(BeginToken);
-         int ie = txt.IndexOf(EndToken, ib);
-
-         string vchunk = txt.Substring(ib + BeginToken.Length, ie - ib - BeginToken.Length).Trim()
-            .Replace("<br />", Environment.NewLine).Trim();
-
-         using(StringReader rdr = new StringReader(vchunk))
-         {
-            string line;
-
-            while((line = rdr.ReadLine()) != null)
-            {
-               if(!string.IsNullOrEmpty(line))
-               {
-                  int idx = line.IndexOf(':');
-                  int idx2 = line.IndexOf(',', idx);
-
-                  string name = line.Substring(0, idx);
-                  Version v = new Version(line.Substring(idx + 1, idx2 - idx - 1).Trim());
-                  string url = line.Substring(idx2 + 1).Trim();
-
-                  products.Add(new Product
-                                  {
-                                     Name = name,
-                                     Version = v,
-                                     DownloadUri = url
-                                  });
-               }
-            }
-         }
-         
-         return products.ToArray();
+         return path;
       }
    }
 }
