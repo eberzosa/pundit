@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Diagnostics;
+using System.IO;
 using System.Linq;
 using System.Text;
 using Pundit.Core;
@@ -41,13 +42,13 @@ namespace Pundit.Console.Commands
             {
                GlamTerm.WriteLine(ConsoleColor.Red, "You have an update!");
 
-               GlamTerm.Write("downloading update... ");
+               GlamTerm.Write("downloading update to " + PathUtils.ExeFolder + "... ");
 
                string exePath = null;
 
                try
                {
-                  exePath = AutoUpdate.Download(latest, Environment.CurrentDirectory);
+                  exePath = AutoUpdate.Download(latest, PathUtils.ExeFolder);
 
                   GlamTerm.WriteOk();
                }
@@ -55,14 +56,14 @@ namespace Pundit.Console.Commands
                {
                   GlamTerm.WriteFail();
 
-                  GlamTerm.WriteLine("update failed: " + ex.Message);
+                  GlamTerm.WriteLine("update failed: " + ex.Message + ex.StackTrace);
                }
 
                if(exePath != null)
                {
                   GlamTerm.Write("updating myself...");
 
-                  Process.Start("pundit-update.exe");
+                  Process.Start(Path.Combine(PathUtils.ExeFolder, "pundit-updater.exe"));
                }
             }
             else

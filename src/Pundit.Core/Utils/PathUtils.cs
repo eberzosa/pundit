@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using System.IO;
 using System.Linq;
+using System.Reflection;
 using System.Text;
 using NAnt.Core;
 
@@ -115,5 +116,18 @@ namespace Pundit.Core.Utils
       {
          return s == null ? null : s.Replace('/', Path.DirectorySeparatorChar);
       }
+
+      public static string ExeFolder
+      {
+         get
+         {
+            Assembly asm = Assembly.GetExecutingAssembly();
+
+            return (asm == null || asm.Location == null ? null : Path.GetDirectoryName(asm.Location))
+               ?? Environment.CurrentDirectory
+               ?? AppDomain.CurrentDomain.BaseDirectory;
+         }
+      }
+
    }
 }

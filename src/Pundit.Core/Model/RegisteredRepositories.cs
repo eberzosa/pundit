@@ -36,21 +36,11 @@ namespace Pundit.Core.Model
       private Dictionary<string, RegisteredRepository> _repos = new Dictionary<string, RegisteredRepository>();
       private List<RegisteredRepository> _reposList = new List<RegisteredRepository>();
 
-      /*[XmlIgnore]
-      public DateTime? LastAutoUpdateTime { get; set; }
+      [XmlAttribute("auto-update")]
+      public bool AllowAutoUpdate { get; set; }
 
-      [XmlAttribute("lastAutoUpdateTimeTicks")]
-      public long LastAutoUpdateTimeSerialized
-      {
-         get { return LastAutoUpdateTime == null ? 0 : LastAutoUpdateTime.Value.Ticks; }
-         set
-         {
-            if (value == 0)
-               LastAutoUpdateTime = null;
-            else
-               new DateTime(value);
-         }
-      }*/
+      [XmlAttribute("last-updated")]
+      public long LastUpdated { get; set; }
 
       [XmlArray("list")]
       [XmlArrayItem("repository")]

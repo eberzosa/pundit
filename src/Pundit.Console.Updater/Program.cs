@@ -1,7 +1,9 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Diagnostics;
+using System.IO;
 using System.Linq;
+using System.Reflection;
 using System.Text;
 using System.Threading;
 
@@ -17,7 +19,12 @@ namespace Pundit.Console.Updater
 
          try
          {
-            p = Process.Start("upgrade.exe", "/S");
+            ProcessStartInfo psi = new ProcessStartInfo("upgrade.exe", "/S")
+                                      {
+                                         WorkingDirectory = ExeFolder
+                                      };
+
+            p = Process.Start(psi);
 
             p.WaitForExit();
 
@@ -32,5 +39,18 @@ namespace Pundit.Console.Updater
 
          return 0;
       }
+      
+      public static string ExeFolder
+      {
+         get
+         {
+            Assembly asm = Assembly.GetExecutingAssembly();
+
+            return (asm == null || asm.Location == null ? null : Path.GetDirectoryName(asm.Location))
+               ?? Environment.CurrentDirectory
+               ?? AppDomain.CurrentDomain.BaseDirectory;
+         }
+      }
+
    }
 }

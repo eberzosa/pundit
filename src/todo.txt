@@ -57,3 +57,5 @@ just ignore all XML files
  - VSIX: conflict causes VS to crash
  - VSIX: display where the conflict is exacly
  - FORMS, CONSOLE: package viewer (dependencies)
+ - publish to local repository
+ - get last build version for a package (for building a local copy) when publishing
