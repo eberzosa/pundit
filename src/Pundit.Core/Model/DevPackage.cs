@@ -60,5 +60,10 @@ namespace Pundit.Core.Model
          if (ex.HasErrors)
             throw ex;
       }
+
+      public override object Clone()
+      {
+         //todo
+      }
    }
 }

@@ -59,3 +59,5 @@ just ignore all XML files
  - FORMS, CONSOLE: package viewer (dependencies)
  - publish to local repository
  - get last build version for a package (for building a local copy) when publishing
+ - CORE: add SRC folder as default search path for pundit.xml. Root takes priority, then SRC. The problem
+   is that most VS plugins won't pickup SVN updates in root folder so manifest is never updated.

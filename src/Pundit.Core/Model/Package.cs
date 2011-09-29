@@ -201,7 +201,7 @@ namespace Pundit.Core.Model
          }
       }
 
-      public object Clone()
+      public virtual object Clone()
       {
          return new Package(this);
       }
