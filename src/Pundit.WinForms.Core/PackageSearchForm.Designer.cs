@@ -44,9 +44,9 @@
          // 
          this.gridResult.AllowUserToAddRows = false;
          this.gridResult.AllowUserToDeleteRows = false;
-         this.gridResult.Anchor = ((System.Windows.Forms.AnchorStyles)((((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Bottom) 
-            | System.Windows.Forms.AnchorStyles.Left) 
-            | System.Windows.Forms.AnchorStyles.Right)));
+         this.gridResult.Anchor = ((System.Windows.Forms.AnchorStyles)((((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Bottom)
+                     | System.Windows.Forms.AnchorStyles.Left)
+                     | System.Windows.Forms.AnchorStyles.Right)));
          this.gridResult.BackgroundColor = System.Drawing.SystemColors.ControlLight;
          this.gridResult.BorderStyle = System.Windows.Forms.BorderStyle.Fixed3D;
          this.gridResult.ColumnHeadersBorderStyle = System.Windows.Forms.DataGridViewHeaderBorderStyle.None;
@@ -61,7 +61,7 @@
          this.gridResult.RowHeadersVisible = false;
          this.gridResult.ScrollBars = System.Windows.Forms.ScrollBars.Vertical;
          this.gridResult.SelectionMode = System.Windows.Forms.DataGridViewSelectionMode.FullRowSelect;
-         this.gridResult.Size = new System.Drawing.Size(546, 290);
+         this.gridResult.Size = new System.Drawing.Size(545, 289);
          this.gridResult.TabIndex = 0;
          this.gridResult.DoubleClick += new System.EventHandler(this.gridResult_DoubleClick);
          // 
@@ -93,18 +93,18 @@
          // 
          // txtText
          // 
-         this.txtText.Anchor = ((System.Windows.Forms.AnchorStyles)(((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Left) 
-            | System.Windows.Forms.AnchorStyles.Right)));
+         this.txtText.Anchor = ((System.Windows.Forms.AnchorStyles)(((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Left)
+                     | System.Windows.Forms.AnchorStyles.Right)));
          this.txtText.Location = new System.Drawing.Point(3, 3);
          this.txtText.Name = "txtText";
-         this.txtText.Size = new System.Drawing.Size(521, 20);
+         this.txtText.Size = new System.Drawing.Size(520, 20);
          this.txtText.TabIndex = 1;
          this.txtText.KeyUp += new System.Windows.Forms.KeyEventHandler(this.txtText_KeyUp);
          // 
          // cmdClose
          // 
          this.cmdClose.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Right)));
-         this.cmdClose.Location = new System.Drawing.Point(474, 325);
+         this.cmdClose.Location = new System.Drawing.Point(473, 324);
          this.cmdClose.Name = "cmdClose";
          this.cmdClose.Size = new System.Drawing.Size(75, 23);
          this.cmdClose.TabIndex = 2;
@@ -116,7 +116,7 @@
          // 
          this.cmdFind.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Right)));
          this.cmdFind.Image = ((System.Drawing.Image)(resources.GetObject("cmdFind.Image")));
-         this.cmdFind.Location = new System.Drawing.Point(530, 2);
+         this.cmdFind.Location = new System.Drawing.Point(529, 2);
          this.cmdFind.Name = "cmdFind";
          this.cmdFind.Size = new System.Drawing.Size(23, 23);
          this.cmdFind.TabIndex = 3;
@@ -125,6 +125,7 @@
          // 
          // label1
          // 
+         this.label1.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Left)));
          this.label1.AutoSize = true;
          this.label1.Location = new System.Drawing.Point(0, 330);
          this.label1.Name = "label1";
@@ -136,7 +137,7 @@
          // 
          this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
          this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
-         this.ClientSize = new System.Drawing.Size(561, 355);
+         this.ClientSize = new System.Drawing.Size(560, 354);
          this.Controls.Add(this.label1);
          this.Controls.Add(this.cmdFind);
          this.Controls.Add(this.cmdClose);

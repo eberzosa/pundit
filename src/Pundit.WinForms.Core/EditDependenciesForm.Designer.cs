@@ -42,14 +42,14 @@
          this.ucD.Dependencies = ((System.Collections.Generic.IEnumerable<Pundit.Core.Model.PackageDependency>)(resources.GetObject("ucD.Dependencies")));
          this.ucD.Location = new System.Drawing.Point(2, 3);
          this.ucD.Name = "ucD";
-         this.ucD.Size = new System.Drawing.Size(785, 269);
+         this.ucD.Size = new System.Drawing.Size(786, 262);
          this.ucD.TabIndex = 0;
          // 
          // cmdOk
          // 
          this.cmdOk.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Right)));
          this.cmdOk.DialogResult = System.Windows.Forms.DialogResult.OK;
-         this.cmdOk.Location = new System.Drawing.Point(618, 278);
+         this.cmdOk.Location = new System.Drawing.Point(619, 271);
          this.cmdOk.Name = "cmdOk";
          this.cmdOk.Size = new System.Drawing.Size(75, 23);
          this.cmdOk.TabIndex = 1;
@@ -61,7 +61,7 @@
          // 
          this.cmdCancel.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Right)));
          this.cmdCancel.DialogResult = System.Windows.Forms.DialogResult.Cancel;
-         this.cmdCancel.Location = new System.Drawing.Point(699, 278);
+         this.cmdCancel.Location = new System.Drawing.Point(700, 271);
          this.cmdCancel.Name = "cmdCancel";
          this.cmdCancel.Size = new System.Drawing.Size(75, 23);
          this.cmdCancel.TabIndex = 2;
@@ -73,7 +73,7 @@
          // 
          this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
          this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
-         this.ClientSize = new System.Drawing.Size(786, 318);
+         this.ClientSize = new System.Drawing.Size(787, 311);
          this.Controls.Add(this.cmdCancel);
          this.Controls.Add(this.cmdOk);
          this.Controls.Add(this.ucD);

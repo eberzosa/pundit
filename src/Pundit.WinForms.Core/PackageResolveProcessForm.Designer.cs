@@ -32,11 +32,11 @@
          this.cmdOk = new System.Windows.Forms.Button();
          this.cmdCancel = new System.Windows.Forms.Button();
          this.gridPackages = new System.Windows.Forms.DataGridView();
-         this.imgProgress = new System.Windows.Forms.PictureBox();
          this.StatusImage = new System.Windows.Forms.DataGridViewImageColumn();
          this.PackageId = new System.Windows.Forms.DataGridViewTextBoxColumn();
          this.Version = new System.Windows.Forms.DataGridViewTextBoxColumn();
          this.Status = new System.Windows.Forms.DataGridViewTextBoxColumn();
+         this.imgProgress = new System.Windows.Forms.PictureBox();
          ((System.ComponentModel.ISupportInitialize)(this.gridPackages)).BeginInit();
          ((System.ComponentModel.ISupportInitialize)(this.imgProgress)).BeginInit();
          this.SuspendLayout();
@@ -56,7 +56,7 @@
          this.cmdOk.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Right)));
          this.cmdOk.DialogResult = System.Windows.Forms.DialogResult.OK;
          this.cmdOk.Enabled = false;
-         this.cmdOk.Location = new System.Drawing.Point(405, 309);
+         this.cmdOk.Location = new System.Drawing.Point(435, 297);
          this.cmdOk.Name = "cmdOk";
          this.cmdOk.Size = new System.Drawing.Size(75, 23);
          this.cmdOk.TabIndex = 2;
@@ -67,7 +67,7 @@
          // 
          this.cmdCancel.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Right)));
          this.cmdCancel.DialogResult = System.Windows.Forms.DialogResult.Cancel;
-         this.cmdCancel.Location = new System.Drawing.Point(486, 309);
+         this.cmdCancel.Location = new System.Drawing.Point(516, 297);
          this.cmdCancel.Name = "cmdCancel";
          this.cmdCancel.Size = new System.Drawing.Size(75, 23);
          this.cmdCancel.TabIndex = 3;
@@ -78,9 +78,9 @@
          // gridPackages
          // 
          this.gridPackages.AllowUserToAddRows = false;
-         this.gridPackages.Anchor = ((System.Windows.Forms.AnchorStyles)((((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Bottom) 
-            | System.Windows.Forms.AnchorStyles.Left) 
-            | System.Windows.Forms.AnchorStyles.Right)));
+         this.gridPackages.Anchor = ((System.Windows.Forms.AnchorStyles)((((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Bottom)
+                     | System.Windows.Forms.AnchorStyles.Left)
+                     | System.Windows.Forms.AnchorStyles.Right)));
          this.gridPackages.BackgroundColor = System.Drawing.SystemColors.Control;
          this.gridPackages.ColumnHeadersHeightSizeMode = System.Windows.Forms.DataGridViewColumnHeadersHeightSizeMode.AutoSize;
          this.gridPackages.Columns.AddRange(new System.Windows.Forms.DataGridViewColumn[] {
@@ -92,18 +92,8 @@
          this.gridPackages.Name = "gridPackages";
          this.gridPackages.ReadOnly = true;
          this.gridPackages.RowHeadersVisible = false;
-         this.gridPackages.Size = new System.Drawing.Size(549, 254);
+         this.gridPackages.Size = new System.Drawing.Size(579, 242);
          this.gridPackages.TabIndex = 4;
-         // 
-         // imgProgress
-         // 
-         this.imgProgress.Image = global::Pundit.WinForms.Core.Images.ajax_loader;
-         this.imgProgress.Location = new System.Drawing.Point(12, 12);
-         this.imgProgress.Name = "imgProgress";
-         this.imgProgress.Size = new System.Drawing.Size(31, 31);
-         this.imgProgress.SizeMode = System.Windows.Forms.PictureBoxSizeMode.AutoSize;
-         this.imgProgress.TabIndex = 0;
-         this.imgProgress.TabStop = false;
          // 
          // StatusImage
          // 
@@ -111,7 +101,7 @@
          this.StatusImage.HeaderText = "";
          this.StatusImage.Name = "StatusImage";
          this.StatusImage.ReadOnly = true;
-         this.StatusImage.Width = 7;
+         this.StatusImage.Width = 5;
          // 
          // PackageId
          // 
@@ -126,7 +116,7 @@
          this.Version.HeaderText = "Version";
          this.Version.Name = "Version";
          this.Version.ReadOnly = true;
-         this.Version.Width = 71;
+         this.Version.Width = 65;
          // 
          // Status
          // 
@@ -134,13 +124,23 @@
          this.Status.HeaderText = "Status";
          this.Status.Name = "Status";
          this.Status.ReadOnly = true;
-         this.Status.Width = 66;
+         this.Status.Width = 60;
+         // 
+         // imgProgress
+         // 
+         this.imgProgress.Image = global::Pundit.WinForms.Core.Images.ajax_loader;
+         this.imgProgress.Location = new System.Drawing.Point(12, 12);
+         this.imgProgress.Name = "imgProgress";
+         this.imgProgress.Size = new System.Drawing.Size(31, 31);
+         this.imgProgress.SizeMode = System.Windows.Forms.PictureBoxSizeMode.AutoSize;
+         this.imgProgress.TabIndex = 0;
+         this.imgProgress.TabStop = false;
          // 
          // PackageResolveProcessForm
          // 
          this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
          this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
-         this.ClientSize = new System.Drawing.Size(573, 344);
+         this.ClientSize = new System.Drawing.Size(603, 332);
          this.Controls.Add(this.gridPackages);
          this.Controls.Add(this.cmdCancel);
          this.Controls.Add(this.cmdOk);

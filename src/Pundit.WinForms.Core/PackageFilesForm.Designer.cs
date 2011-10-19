@@ -37,7 +37,7 @@
          // 
          this.cmdOk.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Right)));
          this.cmdOk.DialogResult = System.Windows.Forms.DialogResult.OK;
-         this.cmdOk.Location = new System.Drawing.Point(341, 267);
+         this.cmdOk.Location = new System.Drawing.Point(360, 251);
          this.cmdOk.Name = "cmdOk";
          this.cmdOk.Size = new System.Drawing.Size(75, 23);
          this.cmdOk.TabIndex = 1;
@@ -49,7 +49,7 @@
          // 
          this.cmdCancel.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Right)));
          this.cmdCancel.DialogResult = System.Windows.Forms.DialogResult.Cancel;
-         this.cmdCancel.Location = new System.Drawing.Point(422, 267);
+         this.cmdCancel.Location = new System.Drawing.Point(441, 251);
          this.cmdCancel.Name = "cmdCancel";
          this.cmdCancel.Size = new System.Drawing.Size(75, 23);
          this.cmdCancel.TabIndex = 2;
@@ -59,19 +59,20 @@
          // 
          // ucFiles
          // 
-         this.ucFiles.Anchor = ((System.Windows.Forms.AnchorStyles)((((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Bottom) 
-            | System.Windows.Forms.AnchorStyles.Left) 
-            | System.Windows.Forms.AnchorStyles.Right)));
+         this.ucFiles.Anchor = ((System.Windows.Forms.AnchorStyles)((((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Bottom)
+                     | System.Windows.Forms.AnchorStyles.Left)
+                     | System.Windows.Forms.AnchorStyles.Right)));
+         this.ucFiles.Files = null;
          this.ucFiles.Location = new System.Drawing.Point(-1, 2);
          this.ucFiles.Name = "ucFiles";
-         this.ucFiles.Size = new System.Drawing.Size(508, 259);
+         this.ucFiles.Size = new System.Drawing.Size(527, 243);
          this.ucFiles.TabIndex = 0;
          // 
          // PackageFilesForm
          // 
          this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
          this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
-         this.ClientSize = new System.Drawing.Size(509, 302);
+         this.ClientSize = new System.Drawing.Size(528, 286);
          this.Controls.Add(this.cmdCancel);
          this.Controls.Add(this.cmdOk);
          this.Controls.Add(this.ucFiles);

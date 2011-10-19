@@ -30,7 +30,6 @@ after noarch, then try to use net35, net30 and net20
   references can't, they MUST reference exact package version (not including package build version)
   or package version + pattern of package build version. For example, if package version is 1.2 and
   package build version is 1.2.45.889, then published version can be 1.2 or 1.2.45 or 1.2.45.889.
-- VSIX: conflict causes VS to crash
 - VSIX: display where the conflict is exacly
 - FORMS, CONSOLE: package viewer (dependencies)
 - publish to local repository
@@ -42,6 +41,8 @@ after noarch, then try to use net35, net30 and net20
 + allow to disable repository without deleting it
 + "info" command printing out registered repositories
 + pundit resolve had new -p parameter
+= VSIX: conflict causes VS to crash
+- VSIX: check for dependencies in background and notify the user
 
 1.0.0.x
 + support devtime packages
