@@ -63,7 +63,7 @@ namespace Pundit.Core.Model
 
       public override object Clone()
       {
-         //todo
+         throw new NotImplementedException();
       }
    }
 }

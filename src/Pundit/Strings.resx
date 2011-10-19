@@ -134,7 +134,14 @@ Commands:
   publish - publish package to a repository(ies)
   template - create an empty (and invalid) manifest
   resolve - resolve dependencies and refresh project packages specifiend in the manifest
-  search - search for packages in repositories</value>
+  search - search for packages in repositories
+  info - prints out information about registered repositories
+  update - checks for updates and if there is a new version performs the actual update</value>
+  </data>
+  <data name="Help_info" xml:space="preserve">
+    <value>syntax: {0} info
+
+Prints out information about registered repositories</value>
   </data>
   <data name="Help_pack" xml:space="preserve">
     <value>syntax: {0} pack [-m:&lt;manifest location&gt;] [-o:&lt;target folder&gt;] [-v:&lt;version override&gt;]
@@ -193,5 +200,8 @@ examples:
     <value>syntax: {0} template
 
 Has no extra parameters. Creates template manifest file with fake data.</value>
+  </data>
+  <data name="Help_update" xml:space="preserve">
+    <value>syntax: {0} update</value>
   </data>
 </root>

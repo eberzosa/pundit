@@ -50,6 +50,7 @@
          this.cmdNavigateToLocalRepoFolder = new System.Windows.Forms.Button();
          this.toolTip1 = new System.Windows.Forms.ToolTip(this.components);
          this.cmdClearCache = new System.Windows.Forms.Button();
+         this.cbIsEnabled = new System.Windows.Forms.CheckBox();
          this.groupBox1.SuspendLayout();
          this.pnlRepoInfo.SuspendLayout();
          this.SuspendLayout();
@@ -114,6 +115,7 @@
          // 
          this.pnlRepoInfo.Anchor = ((System.Windows.Forms.AnchorStyles)(((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Left)
                      | System.Windows.Forms.AnchorStyles.Right)));
+         this.pnlRepoInfo.Controls.Add(this.cbIsEnabled);
          this.pnlRepoInfo.Controls.Add(this.cbRepoPublish);
          this.pnlRepoInfo.Controls.Add(this.txtRepoUri);
          this.pnlRepoInfo.Controls.Add(this.txtRepoName);
@@ -273,6 +275,16 @@
          this.cmdClearCache.UseVisualStyleBackColor = true;
          this.cmdClearCache.Click += new System.EventHandler(this.cmdClearCache_Click);
          // 
+         // cbIsEnabled
+         // 
+         this.cbIsEnabled.AutoSize = true;
+         this.cbIsEnabled.Location = new System.Drawing.Point(62, 84);
+         this.cbIsEnabled.Name = "cbIsEnabled";
+         this.cbIsEnabled.Size = new System.Drawing.Size(64, 17);
+         this.cbIsEnabled.TabIndex = 5;
+         this.cbIsEnabled.Text = "enabled";
+         this.cbIsEnabled.UseVisualStyleBackColor = true;
+         // 
          // GlobalSettingsForm
          // 
          this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
@@ -321,5 +333,6 @@
       private System.Windows.Forms.Label label4;
       private System.Windows.Forms.Label label3;
       private System.Windows.Forms.Button cmdClearCache;
+      private System.Windows.Forms.CheckBox cbIsEnabled;
    }
 }

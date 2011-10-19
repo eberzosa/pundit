@@ -39,6 +39,9 @@ namespace Pundit.Console
             case "update":
                cmd = new UpdateCommand(parameters);
                break;
+            case "info":
+               cmd = new InfoCommand(parameters);
+               break;
             default:
                cmd = null;
                break;

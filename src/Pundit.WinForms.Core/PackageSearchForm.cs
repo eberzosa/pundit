@@ -25,7 +25,7 @@ namespace Pundit.WinForms.Core
 
          var names = new List<string>();
          names.Add("local");
-         names.AddRange(LocalRepository.Registered.Names);
+         names.AddRange(LocalRepository.Registered.ActiveNames);
 
          foreach(string repoName in names)
          {

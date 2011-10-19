@@ -142,9 +142,9 @@ namespace Pundit.Core
             reposToTake--;
          }
 
-         for(int i = 0; i < Math.Min(reposToTake, Registered.TotalCount); i++)
+         for(int i = 0; i < Math.Min(reposToTake, Registered.ActiveNames.Length); i++)
          {
-            names.Add(Registered[i]);
+            names.Add(Registered.ActiveNames[i]);
          }
 
          return names;

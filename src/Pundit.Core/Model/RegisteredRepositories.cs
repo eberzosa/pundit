@@ -22,9 +22,25 @@ namespace Pundit.Core.Model
       [XmlAttribute("publish")]
       public bool UseForPublishing { get; set; }
 
+      /// <summary>
+      /// If repository is disabled resolution process shouldn't take it into account
+      /// </summary>
+      [XmlAttribute("enabled")]
+      public bool IsEnabled { get; set; }
+
+      public RegisteredRepository()
+      {
+         IsEnabled = true;
+      }
+
+      public RegisteredRepository(string name) : this()
+      {
+         this.Name = name;
+      }
+
       public override string ToString()
       {
-         return Name;
+         return Name + (IsEnabled ? "" : " (disabled)");
       }
    }
 
@@ -67,7 +83,10 @@ namespace Pundit.Core.Model
       {
          var xs = new XmlSerializer(typeof(RegisteredRepositories));
 
-         return xs.Deserialize(File.OpenRead(filePath)) as RegisteredRepositories;
+         using (Stream s = File.OpenRead(filePath))
+         {
+            return xs.Deserialize(s) as RegisteredRepositories;
+         }
       }
 
       public void SaveTo(Stream s)
@@ -78,18 +97,18 @@ namespace Pundit.Core.Model
       }
 
       /// <summary>
-      /// All names
+      /// Active repositories
       /// </summary>
       [XmlIgnore]
-      public string[] Names
+      public string[] ActiveNames
       {
-         get { return _repos.Keys.ToArray(); }
+         get { return _repos.Where(r => r.Value.IsEnabled).Select(r => r.Key).ToArray(); }
       }
 
       [XmlIgnore]
       public string[] PublishingNames
       {
-         get { return _repos.Where(r => r.Value.UseForPublishing).Select(r => r.Key).ToArray(); }
+         get { return _repos.Where(r => r.Value.UseForPublishing && r.Value.IsEnabled).Select(r => r.Key).ToArray(); }
       }
 
       public bool ContainsRepository(string name)
@@ -98,21 +117,15 @@ namespace Pundit.Core.Model
       }
 
       [XmlIgnore]
+      public IEnumerable<RegisteredRepository> All
+      {
+         get { return new List<RegisteredRepository>(_repos.Values); }
+      }
+
+      [XmlIgnore]
       public string this[string name]
       {
          get { return _repos[name].Uri; }
-      }
-
-      [XmlIgnore]
-      public string this[int index]
-      {
-         get { return _reposList[index].Name; }
-      }
-
-      [XmlIgnore]
-      public int TotalCount
-      {
-         get { return _reposList.Count; }
       }
    }
 }

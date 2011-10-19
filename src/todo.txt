@@ -17,8 +17,32 @@ after noarch, then try to use net35, net30 and net20
 - CORE: would be nice to have a special case for .NET assemblies, when the whole package is a single
   .NET assembly. Autopackage dll, pdb, xml, get versions and other info.
 
+1.0.0.23
+= CONSOLE: important! Autoupdate. Check for updates once a week (save state in the local folder). Display
+  red flashing message in the console that there is a new version.
+- CORE: should differentiate between package version and package build version
+- CORE: AssemblyVersion and AssemblyFileVersion have a very special meaning to .NET CLR.
+  If there is any .NET assembly in the package's LIB folder, pundit should force package version
+  to the .NET assembly version.
+  If there is more than one .NET assembly in the package's LIB folder, and their AssemblyVersion
+  don't match, pundit shouldn't build such a package at all.
+  As a consequence dev time references can contain any possible version pattern, however published
+  references can't, they MUST reference exact package version (not including package build version)
+  or package version + pattern of package build version. For example, if package version is 1.2 and
+  package build version is 1.2.45.889, then published version can be 1.2 or 1.2.45 or 1.2.45.889.
+- VSIX: conflict causes VS to crash
+- VSIX: display where the conflict is exacly
+- FORMS, CONSOLE: package viewer (dependencies)
+- publish to local repository
+- get last build version for a package (for building a local copy) when publishing
+- CORE: add SRC folder as default search path for pundit.xml. Root takes priority, then SRC. The problem
+  is that most VS plugins won't pickup SVN updates in root folder so manifest is never updated.
 
-1.0.0
+1.0.0.22
++ allow to disable repository without deleting it
++ "info" command printing out registered repositories
+
+1.0.0.x
 + support devtime packages
 + repository search command
 + don't delete lib, other, include, tools folders when re-setting folders
@@ -42,22 +66,3 @@ just ignore all XML files
 + VSIX: dependency resolution ("resolve" command analog)
 + CONSOLE: "pack" is "broken", it won't display the packaging progress
 + FORMS: add options for "createPlatformFolder" and "scope"
-= CONSOLE: important! Autoupdate. Check for updates once a week (save state in the local folder). Display
-  red flashing message in the console that there is a new version.
-- CORE: should differentiate between package version and package build version
-- CORE: AssemblyVersion and AssemblyFileVersion have a very special meaning to .NET CLR.
-  If there is any .NET assembly in the package's LIB folder, pundit should force package version
-  to the .NET assembly version.
-  If there is more than one .NET assembly in the package's LIB folder, and their AssemblyVersion
-  don't match, pundit shouldn't build such a package at all.
-  As a consequence dev time references can contain any possible version pattern, however published
-  references can't, they MUST reference exact package version (not including package build version)
-  or package version + pattern of package build version. For example, if package version is 1.2 and
-  package build version is 1.2.45.889, then published version can be 1.2 or 1.2.45 or 1.2.45.889.
- - VSIX: conflict causes VS to crash
- - VSIX: display where the conflict is exacly
- - FORMS, CONSOLE: package viewer (dependencies)
- - publish to local repository
- - get last build version for a package (for building a local copy) when publishing
- - CORE: add SRC folder as default search path for pundit.xml. Root takes priority, then SRC. The problem
-   is that most VS plugins won't pickup SVN updates in root folder so manifest is never updated.

@@ -32,6 +32,7 @@ namespace Pundit.WinForms.Core
          txtRepoName.DataBindings.Add("Text", _rr, "Name");
          txtRepoUri.DataBindings.Add("Text", _rr, "Uri");
          cbRepoPublish.DataBindings.Add("Checked", _rr, "UseForPublishing");
+         cbIsEnabled.DataBindings.Add("Checked", _rr, "IsEnabled");
       }
 
       private void UpdateOccupiedSpace()
@@ -69,8 +70,7 @@ namespace Pundit.WinForms.Core
 
       private void cmdAddRepo_Click(object sender, EventArgs e)
       {
-         RegisteredRepository rr = new RegisteredRepository();
-         rr.Name = "new repository";
+         var rr = new RegisteredRepository("new repository");
          _rr.Add(rr);
          lstRepos.SelectedIndex = lstRepos.Items.Count - 1;
       }
