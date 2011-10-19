@@ -41,6 +41,7 @@ after noarch, then try to use net35, net30 and net20
 1.0.0.22
 + allow to disable repository without deleting it
 + "info" command printing out registered repositories
++ pundit resolve had new -p parameter
 
 1.0.0.x
 + support devtime packages

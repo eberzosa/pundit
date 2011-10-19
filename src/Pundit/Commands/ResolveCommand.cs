@@ -15,19 +15,22 @@ namespace Pundit.Console.Commands
       {
       }
 
-      private void ResolveParameters(out int depthIndex, out BuildConfiguration configuration, out bool force)
+      private void ResolveParameters(out int depthIndex, out BuildConfiguration configuration, out bool force, out bool ping)
       {
          depthIndex = GetDepth();
          configuration = BuildConfiguration.Release;
          string sconfiguration = null;
          bool force1 = false;
+         bool ping1 = false;
 
          new OptionSet()
             .Add("c:|configuration:", c => sconfiguration = c)
             .Add("f|force", f => force1 = f != null)
+            .Add("p|ping", p => ping1 = p != null)
             .Parse(GetCommandLine());
 
          force = force1;
+         ping = ping1;
 
          if (sconfiguration != null)
          {
@@ -90,8 +93,9 @@ namespace Pundit.Console.Commands
          string projectRoot = new FileInfo(manifestPath).Directory.FullName;
          int depth;
          bool force;
+         bool ping;
          BuildConfiguration configuration;
-         ResolveParameters(out depth, out configuration, out force);
+         ResolveParameters(out depth, out configuration, out force, out ping);
 
          GlamTerm.Write(ConsoleColor.White, "manifest:\t");
          GlamTerm.WriteLine(manifestPath);
@@ -108,7 +112,15 @@ namespace Pundit.Console.Commands
             GlamTerm.WriteLine(ConsoleColor.Red, "yes");
          else
             GlamTerm.WriteLine("no");
+
+         GlamTerm.Write("ping only:\t");
+         if(ping)
+            GlamTerm.WriteLine(ConsoleColor.Green, "yes");
+         else
+            GlamTerm.WriteLine("no");
+
          GlamTerm.WriteLine();
+
 
          GlamTerm.Write("reading manifest...\t\t");
          DevPackage devPackage = DevPackage.FromStream(File.OpenRead(manifestPath));
@@ -125,6 +137,8 @@ namespace Pundit.Console.Commands
 
          GlamTerm.WriteBool(!resolutionResult.Item1.HasConflicts);
 
+         if (ping) return;
+
          if(resolutionResult.Item1.HasConflicts)
          {
             PrintConflicts(dr, resolutionResult.Item1, resolutionResult.Item2);
@@ -135,8 +149,7 @@ namespace Pundit.Console.Commands
          //ensure that all packages exist in local repository
          LocalRepository.PackageDownloadToLocalRepositoryStarted += LocalRepository_PackageDownloadToLocalRepositoryStarted;
          LocalRepository.PackageDownloadToLocalRepositoryFinished += LocalRepository_PackageDownloadToLocalRepositoryFinished;
-         LocalRepository.DownloadLocally(resolutionResult.Item1.GetPackages(),
-            repositories.Skip(1));
+         LocalRepository.DownloadLocally(resolutionResult.Item1.GetPackages(), repositories.Skip(1));
 
          //install all packages
          using(PackageInstaller installer = new PackageInstaller(projectRoot,
