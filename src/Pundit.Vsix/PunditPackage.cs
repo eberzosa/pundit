@@ -119,7 +119,16 @@ namespace Pundit.Vsix
 				dynamicVisibilityCommand2.Visible = false;
 				mcs.AddCommand(dynamicVisibilityCommand2);
 			}
+
+         StartBackgroundActivity();
 		}
+
+      protected override void Dispose(bool disposing)
+      {
+         StopBackgroundActivity();
+
+         base.Dispose(disposing);
+      }
 
 		#region Commands Actions
 		/// <summary>
