@@ -17,7 +17,7 @@ after noarch, then try to use net35, net30 and net20
 - CORE: would be nice to have a special case for .NET assemblies, when the whole package is a single
   .NET assembly. Autopackage dll, pdb, xml, get versions and other info.
 
-1.0.0.23
+1.0.0.25
 = CONSOLE: important! Autoupdate. Check for updates once a week (save state in the local folder). Display
   red flashing message in the console that there is a new version.
 - CORE: should differentiate between package version and package build version
@@ -37,12 +37,12 @@ after noarch, then try to use net35, net30 and net20
 - CORE: add SRC folder as default search path for pundit.xml. Root takes priority, then SRC. The problem
   is that most VS plugins won't pickup SVN updates in root folder so manifest is never updated.
 
-1.0.0.22
+1.0.0.24
 + allow to disable repository without deleting it
 + "info" command printing out registered repositories
 + pundit resolve had new -p parameter
 = VSIX: conflict causes VS to crash
-- VSIX: check for dependencies in background and notify the user
+= VSIX: check for dependencies in background and notify the user
 
 1.0.0.x
 + support devtime packages

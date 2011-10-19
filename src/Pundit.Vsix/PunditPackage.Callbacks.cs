@@ -5,7 +5,9 @@ using System.Linq;
 using System.Text;
 using System.Windows.Forms;
 using Microsoft.VisualStudio.Shell;
+using Microsoft.VisualStudio.Shell.Interop;
 using Pundit.Core.Model;
+using Pundit.Vsix.Forms;
 using Pundit.WinForms.Core;
 using Package = Microsoft.VisualStudio.Shell.Package;
 
@@ -39,23 +41,16 @@ namespace Pundit.Vsix
       }
 
       [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Globalization", "CA1303:DoNotPassLiteralsAsLocalizedParameters", MessageId = "Microsoft.Samples.VisualStudio.MenuCommands.PunditPackage.OutputCommandString(System.String)")]
-      private void ManageDependenciesCommandCallback(object caller, EventArgs args)
+      private void ShowPunditConsoleCallback(object caller, EventArgs args)
       {
-         if(IsInValidState)
+         //just show the tool window
+         ToolWindowPane window = this.FindToolWindow(typeof(ConsoleVsToolWindow), 0, true);
+         if ((null == window) || (null == window.Frame))
          {
-            DevPackage pkg = InstantManifest;
-
-            var form = new EditDependenciesForm(pkg.Dependencies);
-
-            if(DialogResult.OK == form.ShowDialog())
-            {
-               pkg.Dependencies = new List<PackageDependency>(form.Dependencies);
-
-               pkg.WriteTo(ManifestPath);
-
-               Alert.MessageManifestSaved(ManifestPath);
-            }
+            throw new NotSupportedException(Strings.CantCreateToolWindow);
          }
+         IVsWindowFrame windowFrame = (IVsWindowFrame)window.Frame;
+         Microsoft.VisualStudio.ErrorHandler.ThrowOnFailure(windowFrame.Show());
       }
    }
 }

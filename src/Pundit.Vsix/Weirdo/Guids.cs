@@ -16,5 +16,7 @@ namespace Pundit.Vsix.Weirdo
 
 		[System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Performance", "CA1823:AvoidUnusedPrivateFields")]
 		public static readonly Guid guidGenericCmdBmp = new Guid("{0A4C51BD-3239-4370-8869-16E0AE8C0A46}");
+
+      public static readonly Guid GuidToolWindow = new Guid("{D8F68431-0AE8-4742-AE23-F6B62A17B1B3}");
 	}
 }

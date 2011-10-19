@@ -92,9 +92,10 @@ Section "!Core" SCCORE
   File ${LICENSE_FILE}
   
   ${EnvVarUpdate} $0 "PATH" "A" "HKLM" "$INSTDIR" ; Append
-  
+
+  RMDir /r /REBOOTOK "$SMPROGRAMS\${PRODUCT_DIR_NAME}"
   CreateDirectory "$SMPROGRAMS\${PRODUCT_DIR_NAME}"
-  createShortCut "$SMPROGRAMS\${PRODUCT_DIR_NAME}\Global Settings.lnk" "$INSTDIR\pundit-gui.exe" "--global" "$INSTDIR\pundit-gui.exe"
+  ;createShortCut "$SMPROGRAMS\${PRODUCT_DIR_NAME}\Global Settings.lnk" "$INSTDIR\pundit-gui.exe" "--global" "$INSTDIR\pundit-gui.exe"
   createShortCut "$SMPROGRAMS\${PRODUCT_DIR_NAME}\License Agreement.lnk" "$INSTDIR\License.rtf"
   createShortCut "$SMPROGRAMS\${PRODUCT_DIR_NAME}\Documentation.lnk" "http://pundit.codeplex.com"
   createShortCut "$SMPROGRAMS\${PRODUCT_DIR_NAME}\Uninstall.lnk" "$INSTDIR\uninstall.exe"

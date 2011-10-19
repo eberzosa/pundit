@@ -4,6 +4,7 @@ using System.Linq;
 using System.Text;
 using Pundit.Core;
 using Pundit.Core.Model;
+using Pundit.Core.Utils;
 
 namespace Pundit.Console.Commands
 {
@@ -16,7 +17,14 @@ namespace Pundit.Console.Commands
 
       public override void Execute()
       {
-         GlamTerm.WriteLine("repositories ({0}):", LocalRepository.Registered.All.Count());
+         GlamTerm.WriteLine("local repository");
+         GlamTerm.Write("location:       ");
+         GlamTerm.WriteLine(LocalRepository.GlobalRootPath);
+         GlamTerm.Write("occupied space: ");
+         GlamTerm.WriteLine(PathUtils.FileSizeToString(LocalRepository.OccupiedSpace));
+
+         GlamTerm.WriteLine();
+         GlamTerm.Write("configured repositories ({0}):", LocalRepository.Registered.All.Count());
          foreach(RegisteredRepository rr in LocalRepository.Registered.All)
          {
             GlamTerm.WriteLine();

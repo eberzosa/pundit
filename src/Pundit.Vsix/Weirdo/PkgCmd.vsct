@@ -1,383 +1,124 @@
 <?xml version="1.0" encoding="utf-8"?>
 <CommandTable xmlns="http://schemas.microsoft.com/VisualStudio/2005-10-18/CommandTable" xmlns:xs="http://www.w3.org/2001/XMLSchema">
-  <!-- 
-  This is the file that defines the actual layout and type of the commands.
-  It is divided in different sections (e.g. command definition, command
-  placement, ...), with each defining a specific set of properties.
-  See the comment before each section or the VSCT schema for more details 
-  about how to use it.
-  -->
+   <Extern href="stdidcmd.h" />
+   <Extern href="vsshlids.h"/>
+   <Extern href="msobtnid.h"/>
 
-  <!--
-  The VSCT compiler (the tool that translates this file into the binary format
-  that VisualStudio will consume) has the ability to import external files with
-  definition of constants that can be used inside the definition of your command.
-  The way to include these files is to add an "Extern" tag to your VSCT file and
-  specify the name of the file to reference inside the href attribute.
-  Using this ability of the compiler here, we include some files defining some
-  of the constants that we will use inside the file.
-  -->
+   <Commands package="guidPunditPkg">
+      <Menus>
+         <Menu guid="guidPunditCmdSet" id="PunditToolbar" priority="0x100" type="Toolbar">
+            <Parent guid="guidPunditCmdSet" id="PunditToolbar" />
+            <Strings>
+               <ButtonText>Pundit</ButtonText>
+            </Strings>
+         </Menu>
+      </Menus>
 
-  <!--This is the file that defines the IDs for all the commands exposed by VisualStudio.-->
-  <Extern href="stdidcmd.h" />
+      <Groups>
+         <Group guid="guidPunditCmdSet" id="PunditToolsMenuGroup" priority="0x600">
+            <Parent guid="guidSHLMainMenu" id="IDM_VS_MENU_TOOLS"/>
+         </Group>
 
-  <!--This header contains the command ids for the menus provided by the shell.-->
-  <Extern href="vsshlids.h"/>
+         <Group guid="guidPunditCmdSet" id="PunditToolbarGroup" priority="0x100">
+            <Parent guid="guidPunditCmdSet" id="PunditToolbar"/>
+         </Group>
 
-  <!--Definition of some VSCT specific constants. In this sample we use it for the IDs
-      inside the guidOfficeIcon group.-->
-  <Extern href="msobtnid.h"/>
+      </Groups>
 
-  <!--
-  The first section of this file is the Commands section. This is where we define
-  the commands, menus and menu groups. This section uses a Guid to identify the
-  package that provides the command defined inside it.
-  Note that the package's GUID is expressed as a symbol that the compiler will
-  translate in an actual GUID at compile time. It is not allow to use an actual
-  GUID for the package attribute.
-  -->
-  <Commands package="guidPunditPkg">
-    <!--
-    Inside this section we have different sub-sections: one for the menus, another
-    for the menu groups, one for the buttons (the actual commands), one for the combos
-    and the last one for the bitmaps used. Each element is identified by a command id that
-    is a unique pair of guid and numeric identifier; the guid part of the identifier is usually
-    called "command set" and is used to group different command inside a logically related
-    group; your package should define its own command set in order to avoid collisions
-    with command ids defined by other packages.
-    In the VSCT syntax you have to specify this unique identifier using two required attributes:
-    the guid attribute for the command set and the id attribute for the numeric part.
-    -->
+      <Buttons>
+         <Button guid="guidPunditCmdSet" id="cmdidAddPackages" priority="0x0100" type="Button">
+            <Parent guid="guidReferenceContext" id="cmdAddReferenceGroup" />
+            <Strings>
+               <CommandName>cmdidAddPackages</CommandName>
+               <ButtonText>Add Pundit Reference...</ButtonText>
+            </Strings>
+         </Button>
 
-    <!-- This is the sub-section that defines the menus and toolbars. -->
-    <Menus>
-      <!--
-      To define a menu element we need an ID, a parent group, a display priority,
-      a menu type, a name and a default text.
-      In this example we define a toolbar, so we set the type attribute to Toolbar; also notice 
-      that we use the menu as parent for itself because this it is not supposed to have any parent.
-      -->
-      <Menu guid="guidPunditCmdSet" id="PunditToolbar" priority="0x100" type="Toolbar">
-        <Parent guid="guidPunditCmdSet" id="PunditToolbar" />
-        <Strings>
-          <!--
-          The String section contains the localizable strings for an element, in this case our
-          menu. In this example we are defining a not localizable set of commands, so we do not
-          specify the "language" attribute for the String tag. It is possible however to specify
-          different String sections inside any element definition, one for each supported language.
-          -->
-          <ButtonText>Pundit</ButtonText>
-        </Strings>
-      </Menu>
-    </Menus>
+         <Button guid="guidPunditCmdSet" id="cmdidResolveDependencies" priority="0x100" type="Button">
+            <Parent guid="guidPunditCmdSet" id="PunditToolbarGroup"/>
+            <Icon guid="guidDatabaseRefresh" id="pngDbRefresh"/>
+            <Strings>
+               <ButtonText>Pundit: Resolve Dependencies</ButtonText>
+            </Strings>
+         </Button>
 
-    <!--
-    In this section we define new menu groups. A menu group is a container for other menus or
-    buttons (commands); from a visual point of view you can see the group as the part of a menu
-    contained between two lines. The parent of a group must be a menu.
-    -->
-    <Groups>
-      <!--
-      To define a menu group we have to specify its ID, the parent menu and its display priority.
-      In this case we use as parent menu the Tools menu of VS; its ID is defined in vsshlids.h.
-      -->
-      <Group guid="guidPunditCmdSet" id="PunditToolsMenuGroup" priority="0x600">
-        <Parent guid="guidSHLMainMenu" id="IDM_VS_MENU_TOOLS"/>
-      </Group>
+         <Button guid="guidPunditCmdSet" id="cmdidGlobalSettings" priority="0x200" type="Button">
+            <Parent guid="guidPunditCmdSet" id="PunditToolsMenuGroup"/>
+            <Icon guid="guidBulletWrench" id="pngWrench"/>
+            <Strings>
+               <ButtonText>Pundit Global Settings...</ButtonText>
+            </Strings>
+         </Button>
 
-      <!--
-      The second group is created inside the main toolbar of VisualStudio. Again, you can find
-      the ID inside vsshlids.h.
-      -->
-      <!--<Group guid="guidPunditCmdSet" id="MyMainToolbarGroup" priority="0x100">
-        <Parent guid="guidSHLMainMenu" id="IDM_VS_TOOL_STANDARD"/>
-      </Group>-->
+         <Button guid="guidPunditCmdSet" id="cmdidPunditConsole" priority="0x100" type="Button">
+            <Parent guid="guidSHLMainMenu" id="IDG_VS_WNDO_OTRWNDWS1"/>
+            <Icon guid="guidLogo" id="pngLogo"/>
+            <Strings>
+               <CommandName>cmdidPunditConsole</CommandName>
+               <ButtonText>Pundit Console</ButtonText>
+            </Strings>
+         </Button>
+      </Buttons>
 
-      <!--
-      Here we create a menu group for the toolbar defined above in the Menus section. We always
-      need a menu group because this is the only possible container for buttons.
-      -->
-      <Group guid="guidPunditCmdSet" id="PunditToolbarGroup" priority="0x100">
-        <Parent guid="guidPunditCmdSet" id="PunditToolbar"/>
-      </Group>
+      <Bitmaps>
+         <Bitmap guid="guidBulletWrench" href="../Graphics/bullet_wrench.png" usedList="pngWrench"/>
+         <Bitmap guid="guidDatabaseRefresh" href="../Graphics/database_refresh.png" usedList="pngDbRefresh"/>
+         <Bitmap guid="guidLogo" href="../Graphics/logo.png" usedList="pngLogo"/>
+      </Bitmaps>
+   </Commands>
 
-      <!--
-      Now create a new group inside the standard editor's context menu. As always the ID of this
-      menu is defined inside vsshlids.h.
-      -->
-      <!--
-      <Group guid="guidPunditCmdSet" id="MyEditorCtxGroup" priority="0x600">
-        <Parent guid="guidSHLMainMenu" id="IDM_VS_CTXT_CODEWIN"/>
-      </Group>
-      -->
-    </Groups>
+   <CommandPlacements>
 
-    <!--
-    This section defines the elements the user can interact with, like a menu command or a button
-    or combo box in a toolbar.
-    -->
-    <Buttons>
-      <Button guid="guidPunditCmdSet" id="cmdidAddPackages" priority="0x0100" type="Button">
-        <Parent guid="guidReferenceContext" id="cmdAddReferenceGroup" />
-        <Strings>
-          <CommandName>cmdidAddPackages</CommandName>
-          <ButtonText>Add Pundit Reference...</ButtonText>
-        </Strings>
-      </Button>
-      
-      <!--
-      An element inside this section is defined by its ID and must specify a parent group, a display
-      priority, an image, a type, some visibility flags (optional) and a default text.
-      -->
-      <!--
-      <Button guid="guidPunditCmdSet" id="cmdidMyCommand" priority="0x100" type="Button">
-        <Parent guid="guidPunditCmdSet" id="PunditToolsMenuGroup"/>
-        <Icon guid="guidGenericCmdBmp" id="bmpArrow"/>
-        <Strings>
-          <ButtonText>C# Command Sample</ButtonText>
-        </Strings>
-      </Button>
-      -->
+      <!--Now we place a previously defined group inside the Solution Explorer's toolbar.-->
+      <CommandPlacement guid="guidPunditCmdSet" id="PunditToolbarGroup" priority="0x600">
+         <Parent guid="guidSHLMainMenu" id="IDM_VS_TOOL_PROJWIN"/>
+      </CommandPlacement>
 
-      <!--
-      Here there is the definition of the commands placed inside the toolbars. Notice that there is
-      no difference between these toolbar button definitions and the menu item definition above.
-      -->
-      <!-- placed inside the main toolbar - only MS would do such a crap, use own toolbar for extension -->
-      <!--<Button guid="guidPunditCmdSet" id="cmdidMyGraph" priority="0x100" type="Button">
-        <Parent guid="guidPunditCmdSet" id="MyMainToolbarGroup"/>
-        <Icon guid="guidOfficeIcon" id="msotcidGraph"/>
-        <Strings>
-          <ButtonText>C# Sample Graph Command</ButtonText>
-        </Strings>
-      </Button>-->
-      <!--
-      <Button guid="guidPunditCmdSet" id="cmdidMyZoom" priority="0x100" type="Button">
-        <Parent guid="guidPunditCmdSet" id="PunditToolbarGroup"/>
-        <Icon guid="guidOfficeIcon" id="msotcidZoom"/>
-        <Strings>
-          <ButtonText>Solution Dependencies</ButtonText>
-        </Strings>
-      </Button>
-      -->
-      <Button guid="guidPunditCmdSet" id="cmdidResolveDependencies" priority="0x100" type="Button">
-        <Parent guid="guidPunditCmdSet" id="PunditToolbarGroup"/>
-        <Icon guid="guidDatabaseRefresh" id="pngDbRefresh"/>
-        <Strings>
-          <ButtonText>Resolve Solution Dependencies</ButtonText>
-        </Strings>
-      </Button>
+      <!-- experimental shit -->
+      <CommandPlacement guid="guidPunditCmdSet" id="cmdidAddPackages" priority="0xF100">
+         <Parent guid="guidSHLMainMenu" id="IDG_VS_CTXT_REFROOT_ADD"/>
+      </CommandPlacement>
+      <CommandPlacement guid="guidPunditCmdSet" id="cmdidAddPackages" priority="0xF100">
+         <Parent guid="guidSHLMainMenu" id="IDG_VS_CTXT_PROJECT_ADD"/>
+      </CommandPlacement>
+      <CommandPlacement guid="guidPunditCmdSet" id="cmdidAddPackages" priority="0xF100">
+         <Parent guid="guidSHLMainMenu" id="IDG_VS_PROJ_OPTIONS"/>
+      </CommandPlacement>
 
-      <Button guid="guidPunditCmdSet" id="cmdidDependencies" priority="0x100" type="Button">
-        <Parent guid="guidPunditCmdSet" id="PunditToolbarGroup"/>
-        <Icon guid="guidBricks" id="pngBricks"/>
-        <Strings>
-          <ButtonText>Manage Solution Dependencies</ButtonText>
-        </Strings>
-      </Button>
+   </CommandPlacements>
 
-      <!--
-      Now we define a menu item with dynamic text. From the VSCT point of view all we have to do is to add a
-      "CommandFlag" section to the button definition and make sure that it contains the "TextChanges" flag; we
-      still have to provide a text and it will be used as default text for the command. The "TextChanges" flag
-      implies that when the package is loaded Visual Studio will ask the package for the text before display
-      the command.
-      -->
-      <!--
-      <Button guid="guidPunditCmdSet" id="cmdidDynamicTxt" priority="0x200" type="Button">
-        <Parent guid="guidPunditCmdSet" id="PunditToolsMenuGroup"/>
-        <Icon guid="guidBulletWrench" id="pngWrench"/>
-        <CommandFlag>TextChanges</CommandFlag>
-        <Strings>
-          <ButtonText>C# Text Changes</ButtonText>
-        </Strings>
-      </Button>
-      -->
+   <Symbols>
+      <GuidSymbol name="guidPunditPkg" value="{3C7C5ABE-82AC-4A37-B077-0FF60E8B1FD3}" />
 
-      <Button guid="guidPunditCmdSet" id="cmdidGlobalSettings" priority="0x200" type="Button">
-        <Parent guid="guidPunditCmdSet" id="PunditToolsMenuGroup"/>
-        <Icon guid="guidBulletWrench" id="pngWrench"/>
-        <Strings>
-          <ButtonText>Pundit Global Settings...</ButtonText>
-        </Strings>
-      </Button>
+      <GuidSymbol name="guidPunditCmdSet" value="{19492BCB-32B3-4EC3-8826-D67CD5526653}">
+         <!--Menus-->
+         <IDSymbol name="PunditToolbar" value="0x101" />
+         <!--Groups-->
+         <IDSymbol name="PunditToolsMenuGroup" value="0x1010" />
+         <IDSymbol name="PunditToolbarGroup" value="0x1011" />
+         <!--Commands-->
+         <IDSymbol name="cmdidAddPackages" value="0x2007"/>
+         <IDSymbol name="cmdidGlobalSettings" value="0x2008"/>
+         <IDSymbol name="cmdidResolveDependencies" value="0x2009"/>
+         <IDSymbol name="cmdidPunditConsole" value="0x200A"/>
+      </GuidSymbol>
 
-      <!--
-      The following two buttons have the the DynamicVisibility flag set inside the CommandFlag section.
-      When this flag is set and the package providing this command is loaded, VisualStudio will ask
-      the package to find out if the command is visible or not; if the package is not loaded, then
-      the command is visible only if you don't specify the DefaultInvisible flag.
-      In this example, when the MenuAndCommands package is not loaded, the first command will be
-      visible and the second invisible; when the package is loaded it will control the visibility.
-      -->
-      <!--
-      <Button guid="guidPunditCmdSet" id="cmdidDynVisibility1" priority="0x300" type="Button">
-        <Parent guid="guidPunditCmdSet" id="PunditToolsMenuGroup"/>
-        <CommandFlag>DynamicVisibility</CommandFlag>
-        <Strings>
-          <ButtonText>C# Dynamic Visibility 1</ButtonText>
-        </Strings>
-      </Button>
-      <Button guid="guidPunditCmdSet" id="cmdidDynVisibility2" priority="0x300" type="Button">
-        <Parent guid="guidPunditCmdSet" id="PunditToolsMenuGroup"/>
-        <CommandFlag>DynamicVisibility</CommandFlag>
-        <CommandFlag>DefaultInvisible</CommandFlag>
-        <Strings>
-          <ButtonText>C# Dynamic Visibility 2</ButtonText>
-        </Strings>
-      </Button>-->
-    </Buttons>
+      <GuidSymbol name="guidBulletWrench" value="{1203AEA0-726C-40B3-8444-165ADA07EB16}">
+         <IDSymbol name="pngWrench" value="1"/>
+      </GuidSymbol>
 
-    <!--
-    The bitmaps section is used to define the bitmaps that are used for the commands.
-    -->
-    <Bitmaps>
-      <!--
-      The Bitmap id is defined in a way that is a little bit different from the others:
-      the definition must provide a GUID (guid attribute) for the bitmap strip, a resource id (resID attribute)
-      of the bitmap strip containing the bitmaps and then the numeric ids of the elements used
-      inside a button definition (usedList attribute). An important aspect of this declaration is that 
-      the element id must be the actual index (1-based) of the bitmap inside the bitmap strip.
-      In this example we have a bitmap strip with resource id 300 and that contains only one
-      element; we want to define as ID for this element guidPunditCmdSet:bmpArrow, so we
-      have to define bmpArrow as 1 and is the delaration of the bitmap:
-      -->
-      <!--<Bitmap guid="guidGenericCmdBmp" href="GenericCmd.bmp" usedList="bmpArrow"/>-->
-      <Bitmap guid="guidBulletWrench" href="../Graphics/bullet_wrench.png" usedList="pngWrench"/>
-      <Bitmap guid="guidDatabaseRefresh" href="../Graphics/database_refresh.png" usedList="pngDbRefresh"/>
-      <Bitmap guid="guidBricks" href="../Graphics/bricks.png" usedList="pngBricks"/>
-    </Bitmaps>
-  </Commands>
+      <GuidSymbol name="guidDatabaseRefresh" value="{382D7CE9-A8E9-440D-A6D9-7D4D24CA6508}">
+         <IDSymbol name="pngDbRefresh" value="1"/>
+      </GuidSymbol>
 
-  
-  <!--
-  Inside this section, we have the ability to place menu groups inside some other menu or
-  menu / commands inside other groups.
-  For instance, it is possible to place one of VisualStudio's menus or commands inside one of our
-  groups or one of our groups inside a menu defined somewhere else.
-  -->
-  <CommandPlacements>
-    <!--Here we place two commands inside the empty menu group we created in the Groups section.-->
-    <!--
-    <CommandPlacement guid="guidPunditCmdSet" id="cmdidMyCommand" priority="0x100">
-      <Parent guid="guidPunditCmdSet" id="MyEditorCtxGroup"/>
-    </CommandPlacement>
-    <CommandPlacement guid="guidPunditCmdSet" id="cmdidMyZoom" priority="0x200">
-      <Parent guid="guidPunditCmdSet" id="MyEditorCtxGroup"/>
-    </CommandPlacement>
-    -->
+      <GuidSymbol name="guidReferenceContext" value="{D309F791-903F-11D0-9EFC-00A0C911004F}">
+         <IDSymbol name="cmdAddReferenceGroup" value="0x450" />
+      </GuidSymbol>
 
-    <!--Now we place a previously defined group inside the Solution Explorer's toolbar.-->
-    <CommandPlacement guid="guidPunditCmdSet" id="PunditToolbarGroup" priority="0x600">
-      <Parent guid="guidSHLMainMenu" id="IDM_VS_TOOL_PROJWIN"/>
-    </CommandPlacement>
+      <GuidSymbol name="guidLogo" value="{3C25F13D-BF43-4BA3-ABAC-4D196B1E87CF}">
+         <IDSymbol name="pngLogo" value="1"/>
+      </GuidSymbol>
 
-    <!-- experimental shit -->
-    <CommandPlacement guid="guidPunditCmdSet" id="cmdidAddPackages" priority="0xF100">
-      <Parent guid="guidSHLMainMenu" id="IDG_VS_CTXT_REFROOT_ADD"/>
-    </CommandPlacement>
-    <CommandPlacement guid="guidPunditCmdSet" id="cmdidAddPackages" priority="0xF100">
-      <Parent guid="guidSHLMainMenu" id="IDG_VS_CTXT_PROJECT_ADD"/>
-    </CommandPlacement>
-    <CommandPlacement guid="guidPunditCmdSet" id="cmdidAddPackages" priority="0xF100">
-      <Parent guid="guidSHLMainMenu" id="IDG_VS_PROJ_OPTIONS"/>
-    </CommandPlacement>
-  </CommandPlacements>
-
-  
-  <!--This section is where you can associate a command with a keyboard shortcut; this association is
-  valid within a specific UI context, that is when the shell is inside a specific mode, e.g. during
-  debugging, editing a file or when the user is using a specific designer.-->
-  <KeyBindings>
-    <!--
-    To define a binding, we have to specify the sequence of keys to press to activate the command (keystate).
-    A key binding can use one or two key and optionally up to two modifiers (Alt, Control or Shift keys); the
-    keys are specified using the key1 and key2 attributes (key2 can be omitted) and the modifiers using the
-    mod1 and mod2 attributes (both optional).
-    The editor attribute is used to specify the UI context that activates the key binding.
-
-    Notice that Visual Studio has a lot of components and commands, so it can be difficult to find a
-    key binding not used by somebody else; if the key bindings are conflicting only one will be used
-    and one problem is that the shell will not inform the user that a conflict was found. The only
-    way to detect the problem is to start Visual Studio under debugger, try to execute any command
-    and look if there is a message in the output window about a duplicated accelerator found.
-    -->
-    
-    <!--
-    In this example we want to use the <Control><1> accelerator for the first command defined in
-    the Buttons section above, so this is its definition:
-    -->
-    <!--
-    <KeyBinding guid="guidPunditCmdSet" id="cmdidMyCommand" editor="guidVSStd97" key1="1" mod1="Control" />
-    -->
-  </KeyBindings>
-
-
-  <!--
-  In this example we have always used descriptive names for the GUIDs and numeric IDs inside the definition
-  of the elements. The VSCT compiler actually enforces the usage of these names instead of hard-coding
-  the numbers in the definitions.
-  We have also seen that the compiler can read some of these constants from the files imported with the
-  "Extern" tag at the beginning of the file. The problem is then how to define the other constants.
-  
-  The "Symbols" section is where this association between descriptive names and actual values happen.
-  -->
-  <Symbols>
-    <!--
-    The definition of symbols in a VSCT file derives from the way the IDs of the elements are defined
-    by the command table. We have seen that the ID is a GUID/Number pair, where the GUID is also called
-    Command Set and it provides the context in which the numeric ID is evaluated.
-    It makes then sense for the VSCT schema to define the GuidSymbl tag as top level element containig
-    the definiton of the numeric IDs.
-    -->
-    
-    <!--The first GUID defined here is the one for the package. It does not contains numeric IDs.-->
-    <GuidSymbol name="guidPunditPkg" value="{3C7C5ABE-82AC-4A37-B077-0FF60E8B1FD3}" />
-    
-    <!--The GUID for the command set is the one that contains the numeric IDs used in this sample
-        with the only exception of the one used for the bitmap.-->
-    <GuidSymbol name="guidPunditCmdSet" value="{19492BCB-32B3-4EC3-8826-D67CD5526653}">
-      <!--Menus-->
-      <IDSymbol name="PunditToolbar" value="0x101" />
-      <!--Groups-->
-      <IDSymbol name="PunditToolsMenuGroup" value="0x1010" />
-      <IDSymbol name="PunditToolbarGroup" value="0x1011" />
-      <IDSymbol name="MyMainToolbarGroup" value="0x1012" />
-      <IDSymbol name="MyEditorCtxGroup" value="0x1013" />
-      <!--Commands-->
-      <IDSymbol name="cmdidMyCommand" value="0x2001" />
-      <IDSymbol name="cmdidMyGraph" value="0x2002" />
-      <IDSymbol name="cmdidMyZoom" value="0x2003" />
-      <IDSymbol name="cmdidDynamicTxt" value="0x2004" />
-      <IDSymbol name="cmdidDynVisibility1" value="0x2005" />
-      <IDSymbol name="cmdidDynVisibility2" value="0x2006" />
-      <IDSymbol name="cmdidAddPackages" value="0x2007"/>
-      <IDSymbol name="cmdidGlobalSettings" value="0x2008"/>
-      <IDSymbol name="cmdidResolveDependencies" value="0x2009"/>
-      <IDSymbol name="cmdidDependencies" value="0x200A"/>
-    </GuidSymbol>
-    
-    <!--Last is the definition of the GUID used for the Bitmap and the ID of its used slots.-->
-    <!--
-    <GuidSymbol name="guidGenericCmdBmp" value="{0A4C51BD-3239-4370-8869-16E0AE8C0A46}">
-      <IDSymbol name="bmpArrow" value="1" />
-    </GuidSymbol>
-    -->
-
-    <GuidSymbol name="guidBulletWrench" value="{1203AEA0-726C-40B3-8444-165ADA07EB16}">
-      <IDSymbol name="pngWrench" value="1"/>
-    </GuidSymbol>
-
-    <GuidSymbol name="guidDatabaseRefresh" value="{382D7CE9-A8E9-440D-A6D9-7D4D24CA6508}">
-      <IDSymbol name="pngDbRefresh" value="1"/>
-    </GuidSymbol>
-
-    <GuidSymbol name="guidBricks" value="{5FD3E81E-E79C-4495-AE23-5FA4212433EF}">
-      <IDSymbol name="pngBricks" value="1"/>
-    </GuidSymbol>
-
-    <GuidSymbol name="guidReferenceContext" value="{D309F791-903F-11D0-9EFC-00A0C911004F}">
-      <IDSymbol name="cmdAddReferenceGroup" value="0x450" />
-    </GuidSymbol>
-  </Symbols>
+      <GuidSymbol name="GuidToolWindow" value="{D8F68431-0AE8-4742-AE23-F6B62A17B1B3}"/>
+   </Symbols>
 </CommandTable>

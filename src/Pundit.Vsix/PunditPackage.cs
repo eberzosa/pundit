@@ -9,6 +9,7 @@ using System.Text;
 using System.Windows.Forms;
 using Microsoft.VisualStudio.Shell;
 using Microsoft.VisualStudio.Shell.Interop;
+using Pundit.Vsix.Forms;
 using Pundit.Vsix.Weirdo;
 using Pundit.WinForms.Core;
 
@@ -24,8 +25,10 @@ namespace Pundit.Vsix
 	[PackageRegistration(UseManagedResourcesOnly = true)]
 	
 	[ProvideMenuResource(1000, 1)]
+   [ProvideAutoLoad(Microsoft.VisualStudio.Shell.Interop.UIContextGuids80.SolutionExists)]
    [Guid("3C7C5ABE-82AC-4A37-B077-0FF60E8B1FD3")]
    [InstalledProductRegistration("#110", "#112", "1.0", IconResourceID = 400)]
+   [ProvideToolWindow(typeof(ConsoleVsToolWindow))]
 	[ComVisible(true)]
 	public partial class PunditPackage : Package
 	{
@@ -46,7 +49,6 @@ namespace Pundit.Vsix
 		/// </summary>
 		public PunditPackage()
 		{
-			Trace.WriteLine(String.Format(CultureInfo.CurrentUICulture, "Entering constructor for: {0}", this.ToString()));
 		}
 
       private void BindHandler(int commandId, EventHandler handler)
@@ -63,8 +65,6 @@ namespace Pundit.Vsix
 		[SecurityPermission(SecurityAction.Demand, Flags=SecurityPermissionFlag.UnmanagedCode)]
 		protected override void Initialize()
 		{
-			// Trace the beginning of this method and call the base implementation.
-			Trace.WriteLine(String.Format(CultureInfo.CurrentUICulture, "Entering Initialize() of: {0}", this.ToString()));
 			base.Initialize();
 
 			// Now get the OleCommandService object provided by the MPF; this object is the one
@@ -87,7 +87,7 @@ namespace Pundit.Vsix
 			   BindHandler(PkgCmdIDList.cmdidAddPackages, AddReferenceCommandCallback);
 			   BindHandler(PkgCmdIDList.cmdidGlobalSettings, GlobalSettingsCommandCallback);
 			   BindHandler(PkgCmdIDList.cmdidResolveDependencies, ResolveDependenciesCommandCallback);
-			   BindHandler(PkgCmdIDList.cmdidDependencies, ManageDependenciesCommandCallback);
+			   BindHandler(PkgCmdIDList.cmdidPunditConsole, ShowPunditConsoleCallback);
 
 				// Create the MenuCommand object for the command placed in the main toolbar.
 				id = new CommandID(GuidsList.guidPunditCmdSet, PkgCmdIDList.cmdidMyGraph);
