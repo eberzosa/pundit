@@ -79,6 +79,15 @@
     <Compile Include="Forms\PunditConsoleContent.xaml.cs">
       <DependentUpon>PunditConsoleContent.xaml</DependentUpon>
     </Compile>
+    <Compile Include="Forms\RepositoriesOptionsPage.cs">
+      <SubType>Component</SubType>
+    </Compile>
+    <Compile Include="Forms\RepositoriesUserControl.cs">
+      <SubType>UserControl</SubType>
+    </Compile>
+    <Compile Include="Forms\RepositoriesUserControl.Designer.cs">
+      <DependentUpon>RepositoriesUserControl.cs</DependentUpon>
+    </Compile>
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="DynamicTextCommand.cs" />
     <Compile Include="PunditPackage.Background.cs" />
@@ -105,6 +114,9 @@
     </VSCTCompile>
   </ItemGroup>
   <ItemGroup>
+    <EmbeddedResource Include="Forms\RepositoriesUserControl.resx">
+      <DependentUpon>RepositoriesUserControl.cs</DependentUpon>
+    </EmbeddedResource>
     <EmbeddedResource Include="Strings.resx">
       <Generator>ResXFileCodeGenerator</Generator>
       <LastGenOutput>Strings.Designer.cs</LastGenOutput>

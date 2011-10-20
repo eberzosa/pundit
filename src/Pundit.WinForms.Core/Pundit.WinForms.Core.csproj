@@ -56,11 +56,11 @@
     <Compile Include="EditDependenciesForm.Designer.cs">
       <DependentUpon>EditDependenciesForm.cs</DependentUpon>
     </Compile>
-    <Compile Include="GlobalSettingsForm.cs">
-      <SubType>Form</SubType>
+    <Compile Include="GlobalSettingsControl.cs">
+      <SubType>UserControl</SubType>
     </Compile>
-    <Compile Include="GlobalSettingsForm.Designer.cs">
-      <DependentUpon>GlobalSettingsForm.cs</DependentUpon>
+    <Compile Include="GlobalSettingsControl.Designer.cs">
+      <DependentUpon>GlobalSettingsControl.cs</DependentUpon>
     </Compile>
     <Compile Include="Images.Designer.cs">
       <AutoGen>True</AutoGen>
@@ -131,8 +131,8 @@
     <EmbeddedResource Include="EditDependenciesForm.resx">
       <DependentUpon>EditDependenciesForm.cs</DependentUpon>
     </EmbeddedResource>
-    <EmbeddedResource Include="GlobalSettingsForm.resx">
-      <DependentUpon>GlobalSettingsForm.cs</DependentUpon>
+    <EmbeddedResource Include="GlobalSettingsControl.resx">
+      <DependentUpon>GlobalSettingsControl.cs</DependentUpon>
     </EmbeddedResource>
     <EmbeddedResource Include="Images.resx">
       <Generator>ResXFileCodeGenerator</Generator>

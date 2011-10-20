@@ -14,11 +14,11 @@ using Pundit.Core.Utils;
 
 namespace Pundit.WinForms.Core
 {
-   public partial class GlobalSettingsForm : Form
+   public partial class GlobalSettingsControl : UserControl
    {
       private BindingList<RegisteredRepository> _rr;
 
-      public GlobalSettingsForm()
+      public GlobalSettingsControl()
       {
          InitializeComponent();
 
@@ -41,11 +41,6 @@ namespace Pundit.WinForms.Core
          txtUsedSpace.Text = PathUtils.FileSizeToString(LocalRepository.OccupiedSpace);
       }
 
-      private void cmdCancel_Click(object sender, EventArgs e)
-      {
-         Close();
-      }
-
       private void SaveRepositories()
       {
          LocalRepository.Registered.RepositoriesArray = _rr.ToArray();
@@ -54,13 +49,6 @@ namespace Pundit.WinForms.Core
          {
             LocalRepository.Registered.SaveTo(s);
          }
-      }
-
-      private void cmdOk_Click(object sender, EventArgs e)
-      {
-         SaveRepositories();
-
-         Close();
       }
 
       private void cmdNavigateToLocalRepoFolder_Click(object sender, EventArgs e)
