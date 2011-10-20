@@ -41,6 +41,11 @@ namespace Pundit.WinForms.Core
          txtUsedSpace.Text = PathUtils.FileSizeToString(LocalRepository.OccupiedSpace);
       }
 
+      public void Save()
+      {
+         SaveRepositories();
+      }
+
       private void SaveRepositories()
       {
          LocalRepository.Registered.RepositoriesArray = _rr.ToArray();

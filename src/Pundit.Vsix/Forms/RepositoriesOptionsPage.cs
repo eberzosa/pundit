@@ -5,6 +5,7 @@ using System.Linq;
 using System.Runtime.InteropServices;
 using System.Text;
 using Microsoft.VisualStudio.Shell;
+using Pundit.WinForms.Core;
 
 namespace Pundit.Vsix.Forms
 {
@@ -16,20 +17,20 @@ namespace Pundit.Vsix.Forms
    [ClassInterface(ClassInterfaceType.AutoDual)]
    class RepositoriesOptionsPage : DialogPage, IServiceProvider
    {
-      private RepositoriesUserControl _userControl;
+      private GlobalSettingsControl _userControl;
 
       object IServiceProvider.GetService(Type serviceType)
       {
          return this.GetService(serviceType);
       }
 
-      private RepositoriesUserControl ContainerControl
+      private GlobalSettingsControl ContainerControl
       {
          get
          {
             if(_userControl == null)
             {
-               _userControl = new RepositoriesUserControl(this);
+               _userControl = new GlobalSettingsControl();
                _userControl.Location = new Point(0, 0);
             }
 
@@ -40,6 +41,13 @@ namespace Pundit.Vsix.Forms
       protected override System.Windows.Forms.IWin32Window Window
       {
          get { return ContainerControl; }
+      }
+
+      protected override void OnApply(DialogPage.PageApplyEventArgs e)
+      {
+         ContainerControl.Save();
+
+         base.OnApply(e);
       }
    }
 }

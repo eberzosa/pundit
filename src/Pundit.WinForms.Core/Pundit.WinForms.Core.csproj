@@ -50,12 +50,6 @@
       <DesignTime>True</DesignTime>
       <DependentUpon>AlertStrings.resx</DependentUpon>
     </Compile>
-    <Compile Include="EditDependenciesForm.cs">
-      <SubType>Form</SubType>
-    </Compile>
-    <Compile Include="EditDependenciesForm.Designer.cs">
-      <DependentUpon>EditDependenciesForm.cs</DependentUpon>
-    </Compile>
     <Compile Include="GlobalSettingsControl.cs">
       <SubType>UserControl</SubType>
     </Compile>
@@ -66,24 +60,6 @@
       <AutoGen>True</AutoGen>
       <DesignTime>True</DesignTime>
       <DependentUpon>Images.resx</DependentUpon>
-    </Compile>
-    <Compile Include="PackageDependencies.cs">
-      <SubType>UserControl</SubType>
-    </Compile>
-    <Compile Include="PackageDependencies.Designer.cs">
-      <DependentUpon>PackageDependencies.cs</DependentUpon>
-    </Compile>
-    <Compile Include="PackageFiles.cs">
-      <SubType>UserControl</SubType>
-    </Compile>
-    <Compile Include="PackageFiles.Designer.cs">
-      <DependentUpon>PackageFiles.cs</DependentUpon>
-    </Compile>
-    <Compile Include="PackageFilesForm.cs">
-      <SubType>Form</SubType>
-    </Compile>
-    <Compile Include="PackageFilesForm.Designer.cs">
-      <DependentUpon>PackageFilesForm.cs</DependentUpon>
     </Compile>
     <Compile Include="PackageResolveProcessForm.cs">
       <SubType>Form</SubType>
@@ -128,24 +104,12 @@
       <Generator>ResXFileCodeGenerator</Generator>
       <LastGenOutput>AlertStrings.Designer.cs</LastGenOutput>
     </EmbeddedResource>
-    <EmbeddedResource Include="EditDependenciesForm.resx">
-      <DependentUpon>EditDependenciesForm.cs</DependentUpon>
-    </EmbeddedResource>
     <EmbeddedResource Include="GlobalSettingsControl.resx">
       <DependentUpon>GlobalSettingsControl.cs</DependentUpon>
     </EmbeddedResource>
     <EmbeddedResource Include="Images.resx">
       <Generator>ResXFileCodeGenerator</Generator>
       <LastGenOutput>Images.Designer.cs</LastGenOutput>
-    </EmbeddedResource>
-    <EmbeddedResource Include="PackageDependencies.resx">
-      <DependentUpon>PackageDependencies.cs</DependentUpon>
-    </EmbeddedResource>
-    <EmbeddedResource Include="PackageFiles.resx">
-      <DependentUpon>PackageFiles.cs</DependentUpon>
-    </EmbeddedResource>
-    <EmbeddedResource Include="PackageFilesForm.resx">
-      <DependentUpon>PackageFilesForm.cs</DependentUpon>
     </EmbeddedResource>
     <EmbeddedResource Include="PackageMetadata.resx">
       <DependentUpon>PackageMetadata.cs</DependentUpon>

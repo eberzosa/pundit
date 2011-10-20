@@ -1,0 +1,9 @@
+AssemblyVersion and AssemblyFileVersion have a very special meaning to .NET CLR.
+  If there is any .NET assembly in the package's LIB folder, pundit should force package version
+  to the .NET assembly version.
+  If there is more than one .NET assembly in the package's LIB folder, and their AssemblyVersion
+  don't match, pundit shouldn't build such a package at all.
+  As a consequence dev time references can contain any possible version pattern, however published
+  references can't, they MUST reference exact package version (not including package build version)
+  or package version + pattern of package build version. For example, if package version is 1.2 and
+  package build version is 1.2.45.889, then published version can be 1.2 or 1.2.45 or 1.2.45.889.
