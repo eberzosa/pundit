@@ -51,6 +51,7 @@ namespace Pundit.Vsix
       private void OnSolutionOpened()
       {
          LastSolutionDirectory = SolutionDirectory;
+         _cmdResolve.Visible = true;
 
          StartBackgroundActivity();
       }
@@ -58,6 +59,7 @@ namespace Pundit.Vsix
       private void OnSolutionClosed()
       {
          LastSolutionDirectory = null;
+         _cmdResolve.Visible = false;
 
          StopBackgroundActivity();
       }

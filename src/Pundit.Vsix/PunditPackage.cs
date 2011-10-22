@@ -29,6 +29,7 @@ namespace Pundit.Vsix
 	{
 	   private OleMenuCommandService _mcs;
 	   private uint _solutionEventsCookie;
+	   private OleMenuCommand _cmdResolve;
 
 		/// <summary>
 		/// Default constructor of the package. This is the constructor that will be used by VS
@@ -42,11 +43,13 @@ namespace Pundit.Vsix
 		{
 		}
 
-      private void BindHandler(int commandId, EventHandler handler)
+      private OleMenuCommand BindHandler(int commandId, EventHandler handler, bool visible = true)
       {
          CommandID id = new CommandID(GuidsList.guidPunditCmdSet, commandId);
          OleMenuCommand command = new OleMenuCommand(handler, id);
+         command.Visible = visible;
          _mcs.AddCommand(command);
+         return command;
       }
 
 		/// <summary>
@@ -66,8 +69,8 @@ namespace Pundit.Vsix
 			if (null != mcs)
 			{
 			   BindHandler(PkgCmdIDList.cmdidAddPackages, AddReferenceCommandCallback);
-			   BindHandler(PkgCmdIDList.cmdidGlobalSettings, GlobalSettingsCommandCallback);
-			   BindHandler(PkgCmdIDList.cmdidResolveDependencies, ResolveDependenciesCommandCallback);
+			   //BindHandler(PkgCmdIDList.cmdidGlobalSettings, GlobalSettingsCommandCallback);
+			   _cmdResolve = BindHandler(PkgCmdIDList.cmdidResolveDependencies, ResolveDependenciesCommandCallback, false);
 			   BindHandler(PkgCmdIDList.cmdidPunditConsole, ShowPunditConsoleCallback);
 			}
 
