@@ -23,10 +23,10 @@ high priority:
 + "info" command printing out registered repositories
 + pundit resolve has new -p parameter
 + extended tools/options with repositories contiguration
++ CORE: abstract output for console commands, copy them to Pundit Console tool window in VSIX
 - add another option tab with VSIX options (checkbox whether to ping in background, refresh, frequency)
 - VSIX: adding/changing repository should validate it before saving
 = VSIX: conflict causes VS to crash - move dependency resolution to console
-= CORE: abstract output for console commands, copy them to Pundit Console tool window in VSIX
 - VSIX: check for dependencies in background and notify the user
 - first simple repository service based on local folder remotely
 

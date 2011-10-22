@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Reflection;
 using System.Text;
 using System.Windows;
 using System.Windows.Controls;
@@ -11,6 +12,9 @@ using System.Windows.Media;
 using System.Windows.Media.Imaging;
 using System.Windows.Navigation;
 using System.Windows.Shapes;
+using Pundit.Core.Application.Console;
+using Pundit.Core.Model;
+using Pundit.Vsix.Application;
 
 namespace Pundit.Vsix.Forms
 {
@@ -19,6 +23,8 @@ namespace Pundit.Vsix.Forms
    /// </summary>
    public partial class PunditConsoleContent : UserControl
    {
+      private IConsoleOutput _console;
+
       public PunditConsoleContent()
       {
          InitializeComponent();
@@ -26,16 +32,32 @@ namespace Pundit.Vsix.Forms
          InitConsole();
       }
 
-      private void WriteLine(string line)
-      {
-         txtConsole.Text += line;
-         txtConsole.Text += Environment.NewLine;
-      }
-
       private void InitConsole()
       {
-         WriteLine(Strings.ConsoleIntro);
-         WriteLine("ready.");
+         _console = new WpfTextBoxConsoleOutput(txtConsole);
+
+         _console.WriteLine(Strings.ConsoleIntro, Assembly.GetExecutingAssembly().GetName().Version);
+      }
+
+      private void CommandKeyUp(object sender, KeyEventArgs e)
+      {
+         if(e.Key == Key.Return)
+         {
+            try
+            {
+               IConsoleCommand cmd = CommandFactory.CreateCommand(_console, txtCommand.Text.Split(' '));
+
+               cmd.Execute();
+            }
+            catch(Exception ex)
+            {
+               _console.WriteLine(ConsoleColor.Red, ex.Message);
+            }
+            finally
+            {
+               txtCommand.Text = string.Empty;
+            }
+         }
       }
       
    }

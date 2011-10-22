@@ -75,6 +75,7 @@
     <Reference Include="WindowsBase" />
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="Application\WpfTextBoxConsoleOutput.cs" />
     <Compile Include="Forms\ConsoleVsToolWindow.cs" />
     <Compile Include="Forms\PunditConsoleContent.xaml.cs">
       <DependentUpon>PunditConsoleContent.xaml</DependentUpon>

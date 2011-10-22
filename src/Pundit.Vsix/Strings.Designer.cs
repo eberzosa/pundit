@@ -70,7 +70,8 @@ namespace Pundit.Vsix {
         }
         
         /// <summary>
-        ///   Looks up a localized string similar to Pundit {0}.
+        ///   Looks up a localized string similar to Pundit {0} ready.
+        ///Type &quot;help&quot; for console commands help pages..
         /// </summary>
         internal static string ConsoleIntro {
             get {

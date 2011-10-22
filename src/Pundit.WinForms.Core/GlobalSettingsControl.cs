@@ -120,14 +120,17 @@ namespace Pundit.WinForms.Core
 
       private void cmdClearCache_Click(object sender, EventArgs e)
       {
-         foreach(string file in Directory.GetFiles(LocalRepository.GlobalRootFilePath))
+         if (DialogResult.Yes == Alert.AskYesNo(Strings.Alert_PurgeCache))
          {
-            try
+            foreach (string file in Directory.GetFiles(LocalRepository.GlobalRootFilePath))
             {
-               File.Delete(file);
-            }
-            catch
-            {
+               try
+               {
+                  File.Delete(file);
+               }
+               catch
+               {
+               }
             }
          }
       }

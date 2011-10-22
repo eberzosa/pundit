@@ -121,7 +121,8 @@
     <value>Visual Studio has no idea why the window cannot be created</value>
   </data>
   <data name="ConsoleIntro" xml:space="preserve">
-    <value>Pundit {0}</value>
+    <value>Pundit {0} ready.
+Type "help" for console commands help pages.</value>
   </data>
   <data name="PunditConsoleWindowTitle" xml:space="preserve">
     <value>Pundit Console</value>

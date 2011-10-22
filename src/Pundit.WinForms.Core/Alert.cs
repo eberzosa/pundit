@@ -21,6 +21,11 @@ namespace Pundit.WinForms.Core
          MessageBox.Show(msg, DefaultAlertTitle, MessageBoxButtons.OK, MessageBoxIcon.Information);
       }
 
+      public static DialogResult AskYesNo(string msg)
+      {
+         return MessageBox.Show(msg, DefaultAlertTitle, MessageBoxButtons.YesNo, MessageBoxIcon.Question);
+      }
+
       public static void Error(string msg)
       {
          MessageBox.Show(msg, DefaultAlertTitle, MessageBoxButtons.OK, MessageBoxIcon.Error);

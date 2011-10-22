@@ -68,10 +68,10 @@
          // 
          this.txtLocalRepoPath.Anchor = ((System.Windows.Forms.AnchorStyles)(((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Left)
                      | System.Windows.Forms.AnchorStyles.Right)));
-         this.txtLocalRepoPath.Location = new System.Drawing.Point(108, 22);
+         this.txtLocalRepoPath.Location = new System.Drawing.Point(61, 22);
          this.txtLocalRepoPath.Name = "txtLocalRepoPath";
          this.txtLocalRepoPath.ReadOnly = true;
-         this.txtLocalRepoPath.Size = new System.Drawing.Size(313, 20);
+         this.txtLocalRepoPath.Size = new System.Drawing.Size(360, 20);
          this.txtLocalRepoPath.TabIndex = 1;
          // 
          // label2
@@ -79,18 +79,18 @@
          this.label2.AutoSize = true;
          this.label2.Location = new System.Drawing.Point(14, 51);
          this.label2.Name = "label2";
-         this.label2.Size = new System.Drawing.Size(88, 13);
+         this.label2.Size = new System.Drawing.Size(41, 13);
          this.label2.TabIndex = 2;
-         this.label2.Text = "Occupied space:";
+         this.label2.Text = "Cache:";
          // 
          // txtUsedSpace
          // 
          this.txtUsedSpace.Anchor = ((System.Windows.Forms.AnchorStyles)(((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Left)
                      | System.Windows.Forms.AnchorStyles.Right)));
-         this.txtUsedSpace.Location = new System.Drawing.Point(108, 48);
+         this.txtUsedSpace.Location = new System.Drawing.Point(61, 48);
          this.txtUsedSpace.Name = "txtUsedSpace";
          this.txtUsedSpace.ReadOnly = true;
-         this.txtUsedSpace.Size = new System.Drawing.Size(205, 20);
+         this.txtUsedSpace.Size = new System.Drawing.Size(252, 20);
          this.txtUsedSpace.TabIndex = 3;
          // 
          // pnlRepoInfo
@@ -237,9 +237,9 @@
          this.cmdClearCache.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Right)));
          this.cmdClearCache.Location = new System.Drawing.Point(319, 46);
          this.cmdClearCache.Name = "cmdClearCache";
-         this.cmdClearCache.Size = new System.Drawing.Size(75, 23);
+         this.cmdClearCache.Size = new System.Drawing.Size(49, 23);
          this.cmdClearCache.TabIndex = 8;
-         this.cmdClearCache.Text = "clear cache";
+         this.cmdClearCache.Text = "purge";
          this.cmdClearCache.UseVisualStyleBackColor = true;
          this.cmdClearCache.Click += new System.EventHandler(this.cmdClearCache_Click);
          // 
