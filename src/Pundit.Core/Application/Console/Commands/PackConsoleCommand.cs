@@ -33,11 +33,11 @@ namespace Pundit.Core.Application.Console.Commands
             if (Path.IsPathRooted(po))
                destinationFolder = po;
             else
-               destinationFolder = Path.Combine(Environment.CurrentDirectory, po);
+               destinationFolder = Path.Combine(currentDirectory, po);
          }
          else
          {
-            destinationFolder = Environment.CurrentDirectory;
+            destinationFolder = currentDirectory;
          }
 
          //resolve override version

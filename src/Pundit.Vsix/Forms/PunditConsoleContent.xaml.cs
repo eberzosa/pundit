@@ -45,7 +45,9 @@ namespace Pundit.Vsix.Forms
          {
             try
             {
-               IConsoleCommand cmd = CommandFactory.CreateCommand(_console, Environment.CurrentDirectory, txtCommand.Text.Split(' '));
+               IConsoleCommand cmd = CommandFactory.CreateCommand(_console,
+                  PunditPackage.LastSolutionDirectory == null ? null : PunditPackage.LastSolutionDirectory.FullName,
+                  txtCommand.Text.Split(' '));
 
                cmd.Execute();
             }

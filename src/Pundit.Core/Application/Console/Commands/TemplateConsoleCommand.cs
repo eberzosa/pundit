@@ -32,7 +32,7 @@ namespace Pundit.Core.Application.Console.Commands
 
          dp.Dependencies.Add(new PackageDependency("log4net", "1.2.10"));
 
-         string path = Path.Combine(Environment.CurrentDirectory, Package.DefaultManifestFileName);
+         string path = Path.Combine(currentDirectory, Package.DefaultManifestFileName);
 
          console.WriteLine("writing package to " + path);
 

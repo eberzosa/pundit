@@ -15,7 +15,6 @@ namespace Pundit.Core.Application.Console.Commands
       protected BaseConsoleCommand(IConsoleOutput console, string currentDirectory, string[] args)
       {
          if (console == null) throw new ArgumentNullException("console");
-         if (currentDirectory == null) throw new ArgumentNullException("currentDirectory");
 
          this.console = console;
          this.currentDirectory = currentDirectory;
@@ -36,11 +35,11 @@ namespace Pundit.Core.Application.Console.Commands
          if (manifestPath != null)
          {
             if (!Path.IsPathRooted(manifestPath))
-               manifestPath = Path.Combine(Environment.CurrentDirectory, PathUtils.GetOSPath(manifestPath));
+               manifestPath = Path.Combine(currentDirectory, PathUtils.GetOSPath(manifestPath));
          }
          else
          {
-            manifestPath = Path.Combine(Environment.CurrentDirectory, Package.DefaultManifestFileName);
+            manifestPath = Path.Combine(currentDirectory, Package.DefaultManifestFileName);
          }
 
          if (!File.Exists(manifestPath))

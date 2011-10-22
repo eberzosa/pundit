@@ -70,7 +70,7 @@ namespace Pundit.Core.Application.Console.Commands
       {
          console.Write("searching files...");
 
-         List<FileInfo> files = new List<FileInfo>(PathUtils.SearchFiles(Environment.CurrentDirectory, searchPatternInclude,
+         List<FileInfo> files = new List<FileInfo>(PathUtils.SearchFiles(currentDirectory, searchPatternInclude,
                                                     searchPatternExclude));
 
          console.Write(" " + files.Count + " found");
