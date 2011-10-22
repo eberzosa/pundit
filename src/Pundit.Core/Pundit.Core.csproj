@@ -54,6 +54,18 @@
   <ItemGroup>
     <Compile Include="3rdparty\DirectoryScanner.cs" />
     <Compile Include="3rdparty\Options.cs" />
+    <Compile Include="Application\Console\CommandFactory.cs" />
+    <Compile Include="Application\Console\Commands\BaseConsoleCommand.cs" />
+    <Compile Include="Application\Console\Commands\HelpConsoleCommand.cs" />
+    <Compile Include="Application\Console\Commands\InfoConsoleCommand.cs" />
+    <Compile Include="Application\Console\Commands\PackConsoleCommand.cs" />
+    <Compile Include="Application\Console\Commands\PublishConsoleCommand.cs" />
+    <Compile Include="Application\Console\Commands\ResolveConsoleCommand.cs" />
+    <Compile Include="Application\Console\Commands\SearchConsoleCommand.cs" />
+    <Compile Include="Application\Console\Commands\TemplateConsoleCommand.cs" />
+    <Compile Include="Application\Console\Commands\UpdateConsoleCommand.cs" />
+    <Compile Include="Application\Console\Commands\UtilsConsoleCommand.cs" />
+    <Compile Include="Application\Console\Strings.Designer.cs" />
     <Compile Include="Application\DependencyResolution.cs" />
     <Compile Include="Application\InstalledPackagesIndex.cs" />
     <Compile Include="Application\PackageInstaller.cs" />
@@ -71,6 +83,8 @@
     <Compile Include="Model\EventArguments\PackageFileEventArgs.cs" />
     <Compile Include="Model\EventArguments\PackageKeyEventArgs.cs" />
     <Compile Include="Model\EventArguments\ResolvedFileEventArgs.cs" />
+    <Compile Include="Model\IConsoleCommand.cs" />
+    <Compile Include="Model\IConsoleOutput.cs" />
     <Compile Include="Model\InvalidPackageException.cs" />
     <Compile Include="Model\ManifestPackage.cs" />
     <Compile Include="Model\PackageDependency.cs" />
@@ -96,7 +110,9 @@
       <SubType>Designer</SubType>
     </None>
   </ItemGroup>
-  <ItemGroup />
+  <ItemGroup>
+    <EmbeddedResource Include="Application\Console\Strings.resx" />
+  </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
   <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 
        Other similar extension points exist, see Microsoft.Common.targets.

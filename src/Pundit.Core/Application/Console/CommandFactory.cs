@@ -1,5 +1,4 @@
 ﻿using System;
-using Pundit.Console.Commands;
 using Pundit.Core.Application.Console.Commands;
 using Pundit.Core.Model;
 

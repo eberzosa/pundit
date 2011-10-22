@@ -1,4 +1,4 @@
-﻿namespace Pundit.Console.Commands
+﻿namespace Pundit.Core.Model
 {
    public interface IConsoleCommand
    {
