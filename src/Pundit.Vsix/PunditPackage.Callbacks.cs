@@ -1,12 +1,7 @@
 ﻿using System;
-using System.Collections.Generic;
 using System.IO;
-using System.Linq;
-using System.Text;
-using System.Windows.Forms;
 using Microsoft.VisualStudio.Shell;
 using Microsoft.VisualStudio.Shell.Interop;
-using Pundit.Core.Model;
 using Pundit.Vsix.Forms;
 using Pundit.WinForms.Core;
 using Package = Microsoft.VisualStudio.Shell.Package;
@@ -51,6 +46,20 @@ namespace Pundit.Vsix
          }
          IVsWindowFrame windowFrame = (IVsWindowFrame)window.Frame;
          Microsoft.VisualStudio.ErrorHandler.ThrowOnFailure(windowFrame.Show());
+      }
+
+      private void OnSolutionOpened()
+      {
+         LastSolutionDirectory = SolutionDirectory;
+
+         StartBackgroundActivity();
+      }
+
+      private void OnSolutionClosed()
+      {
+         LastSolutionDirectory = null;
+
+         StopBackgroundActivity();
       }
    }
 }

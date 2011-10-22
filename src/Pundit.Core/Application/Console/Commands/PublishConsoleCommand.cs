@@ -8,7 +8,8 @@ namespace Pundit.Core.Application.Console.Commands
 {
    class PublishConsoleCommand : BaseConsoleCommand
    {
-      public PublishConsoleCommand(IConsoleOutput console, string[] args) : base(console, args)
+      public PublishConsoleCommand(IConsoleOutput console, string currentDirectory, string[] args)
+         : base(console, currentDirectory, args)
       {}
 
       private void ResolveParameters(out string[] packages, out string[] repositoryName)

@@ -8,7 +8,8 @@ namespace Pundit.Core.Application.Console.Commands
 {
    class PackConsoleCommand : BaseConsoleCommand
    {
-      public PackConsoleCommand(IConsoleOutput console, string[] parameters) : base(console, parameters)
+      public PackConsoleCommand(IConsoleOutput console, string currentDirectory, string[] parameters)
+         : base(console, currentDirectory, parameters)
       {
       }
 

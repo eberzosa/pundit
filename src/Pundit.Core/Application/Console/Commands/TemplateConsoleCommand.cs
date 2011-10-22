@@ -7,7 +7,8 @@ namespace Pundit.Core.Application.Console.Commands
 {
    class TemplateConsoleCommand : BaseConsoleCommand
    {
-      public TemplateConsoleCommand(IConsoleOutput console, string[] args) : base(console, args)
+      public TemplateConsoleCommand(IConsoleOutput console, string currentDirectory, string[] args)
+         : base(console, currentDirectory, args)
       {
       }
 

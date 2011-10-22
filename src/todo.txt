@@ -15,8 +15,7 @@ high priority:
 1.0.0.25
 - improve conflict explanation
 - for local builds figure out how a script can pickup a version from repository to generate a newer next one.
-- add SRC folder as default search path for pundit.xml. Root takes priority, then SRC. The problem
-  is that most VS plugins won't pickup SVN updates in root folder so manifest is never updated.
+- http://pundit.codeplex.com/workitem/13528 (stable/unstable packages)
 
 1.0.0.24
 + allow to disable repository without deleting it
@@ -24,10 +23,12 @@ high priority:
 + pundit resolve has new -p parameter
 + extended tools/options with repositories contiguration
 + CORE: abstract output for console commands, copy them to Pundit Console tool window in VSIX
+= VSIX: conflict causes VS to crash - move dependency resolution to console
 - add another option tab with VSIX options (checkbox whether to ping in background, refresh, frequency)
 - VSIX: adding/changing repository should validate it before saving
-= VSIX: conflict causes VS to crash - move dependency resolution to console
 - VSIX: check for dependencies in background and notify the user
+- add SRC folder as default search path for pundit.xml. Root takes priority, then SRC. The problem
+  is that most VS plugins won't pickup SVN updates in root folder so manifest is never updated.
 - first simple repository service based on local folder remotely
 
 1.0.0.x

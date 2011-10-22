@@ -22,11 +22,13 @@ namespace Pundit.Vsix
    [Guid("3C7C5ABE-82AC-4A37-B077-0FF60E8B1FD3")]
    [InstalledProductRegistration("#110", "#112", "1.0", IconResourceID = 400)]
    [ProvideToolWindow(typeof(ConsoleVsToolWindow))]
-   [ProvideOptionPage(typeof(RepositoriesOptionsPage), "Pundit", "Repositories", 113, 114, true)]
+   [ProvideOptionPage(typeof(VsixOptionsPage), "Pundit", "General", 113, 114, true)]
+   [ProvideOptionPage(typeof(RepositoriesOptionsPage), "Pundit", "Repositories", 113, 115, true)]
 	[ComVisible(true)]
-	public partial class PunditPackage : Package
+	public partial class PunditPackage : Package, IVsSolutionEvents
 	{
 	   private OleMenuCommandService _mcs;
+	   private uint _solutionEventsCookie;
 
 		/// <summary>
 		/// Default constructor of the package. This is the constructor that will be used by VS
@@ -69,8 +71,19 @@ namespace Pundit.Vsix
 			   BindHandler(PkgCmdIDList.cmdidPunditConsole, ShowPunditConsoleCallback);
 			}
 
+         InitializeShell();
+
          StartBackgroundActivity();
 		}
+
+      private void InitializeShell()
+      {
+         IVsSolution2 solution = ServiceProvider.GlobalProvider.GetService(typeof (SVsSolution)) as IVsSolution2;
+         if(solution != null)
+         {
+            solution.AdviseSolutionEvents(this, out _solutionEventsCookie);
+         }
+      }
 
       protected override void Dispose(bool disposing)
       {
@@ -78,5 +91,6 @@ namespace Pundit.Vsix
 
          base.Dispose(disposing);
       }
+
 	}
 }

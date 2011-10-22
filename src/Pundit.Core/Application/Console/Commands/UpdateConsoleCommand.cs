@@ -8,7 +8,8 @@ namespace Pundit.Core.Application.Console.Commands
 {
    class UpdateConsoleCommand : BaseConsoleCommand
    {
-      public UpdateConsoleCommand(IConsoleOutput console, string[] args) : base(console, args)
+      public UpdateConsoleCommand(IConsoleOutput console, string currentDirectory, string[] args)
+         : base(console, currentDirectory, args)
       {
       }
 

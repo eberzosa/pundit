@@ -16,7 +16,7 @@ namespace Pundit.Console
 
          try
          {
-            IConsoleCommand cmd = CommandFactory.CreateCommand(Con, args);
+            IConsoleCommand cmd = CommandFactory.CreateCommand(Con, Environment.CurrentDirectory, args);
 
             cmd.Execute();
          }

@@ -8,7 +8,7 @@ namespace Pundit.Core.Application.Console.Commands
 {
    class HelpConsoleCommand : BaseConsoleCommand
    {
-      public HelpConsoleCommand(IConsoleOutput console, string[] args) : base(console, args)
+      public HelpConsoleCommand(IConsoleOutput console, string currentDirectory,string[] args) : base(console, currentDirectory, args)
       {
       }
 

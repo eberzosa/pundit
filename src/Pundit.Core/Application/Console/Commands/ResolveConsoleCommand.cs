@@ -9,7 +9,8 @@ namespace Pundit.Core.Application.Console.Commands
 {
    class ResolveConsoleCommand : BaseConsoleCommand
    {
-      public ResolveConsoleCommand(IConsoleOutput console, string[] args) : base(console, args)
+      public ResolveConsoleCommand(IConsoleOutput console, string currentDirectory, string[] args)
+         : base(console, currentDirectory, args)
       {
       }
 

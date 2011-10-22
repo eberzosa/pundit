@@ -10,10 +10,15 @@ namespace Pundit.Core.Application.Console.Commands
    {
       private readonly string[] _args;
       protected readonly IConsoleOutput console;
+      protected readonly string currentDirectory;
 
-      protected BaseConsoleCommand(IConsoleOutput console, string[] args)
+      protected BaseConsoleCommand(IConsoleOutput console, string currentDirectory, string[] args)
       {
+         if (console == null) throw new ArgumentNullException("console");
+         if (currentDirectory == null) throw new ArgumentNullException("currentDirectory");
+
          this.console = console;
+         this.currentDirectory = currentDirectory;
          _args = args;
       }
 
