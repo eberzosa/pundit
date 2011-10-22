@@ -51,6 +51,10 @@ namespace Pundit.Vsix.Forms
 
                cmd.Execute();
             }
+            catch(NoCurrentDirectoryException)
+            {
+               _console.WriteLine(ConsoleColor.Red, "this command requires a solution to be opened");
+            }
             catch(Exception ex)
             {
                _console.WriteLine(ConsoleColor.Red, ex.Message);

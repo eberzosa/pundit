@@ -36,7 +36,7 @@ namespace Pundit.Core.Application.Console.Commands
          else
          {
             FileInfo[] packedFiles =
-               new DirectoryInfo(currentDirectory).GetFiles("*" + Package.PackedExtension);
+               new DirectoryInfo(CurrentDirectory).GetFiles("*" + Package.PackedExtension);
 
             if(packedFiles.Length == 0)
                throw new ApplicationException("no packages found for publishing");

@@ -10,20 +10,31 @@ namespace Pundit.Core.Application.Console.Commands
    {
       private readonly string[] _args;
       protected readonly IConsoleOutput console;
-      protected readonly string currentDirectory;
+      private readonly string _currentDirectory;
 
       protected BaseConsoleCommand(IConsoleOutput console, string currentDirectory, string[] args)
       {
          if (console == null) throw new ArgumentNullException("console");
 
          this.console = console;
-         this.currentDirectory = currentDirectory;
+         _currentDirectory = currentDirectory;
          _args = args;
       }
 
       protected string[] GetCommandLine()
       {
          return _args;
+      }
+
+      protected string CurrentDirectory
+      {
+         get
+         {
+            if(string.IsNullOrEmpty(_currentDirectory))
+               throw new NoCurrentDirectoryException("this command requires current directory");
+
+            return _currentDirectory; 
+         }
       }
 
       protected string GetLocalManifest()
@@ -35,11 +46,11 @@ namespace Pundit.Core.Application.Console.Commands
          if (manifestPath != null)
          {
             if (!Path.IsPathRooted(manifestPath))
-               manifestPath = Path.Combine(currentDirectory, PathUtils.GetOSPath(manifestPath));
+               manifestPath = Path.Combine(CurrentDirectory, PathUtils.GetOSPath(manifestPath));
          }
          else
          {
-            manifestPath = Path.Combine(currentDirectory, Package.DefaultManifestFileName);
+            manifestPath = Path.Combine(CurrentDirectory, Package.DefaultManifestFileName);
          }
 
          if (!File.Exists(manifestPath))

@@ -65,6 +65,7 @@
     <Compile Include="Application\Console\Commands\TemplateConsoleCommand.cs" />
     <Compile Include="Application\Console\Commands\UpdateConsoleCommand.cs" />
     <Compile Include="Application\Console\Commands\UtilsConsoleCommand.cs" />
+    <Compile Include="Application\Console\NoCurrentDirectoryException.cs" />
     <Compile Include="Application\Console\Strings.Designer.cs" />
     <Compile Include="Application\DependencyResolution.cs" />
     <Compile Include="Application\InstalledPackagesIndex.cs" />

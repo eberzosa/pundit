@@ -1,0 +1,6 @@
+awesome VSIX samples:
+http://code.msdn.microsoft.com/site/search?f%5B0%5D.Type=Topic&f%5B0%5D.Value=VSX&f%5B1%5D.Type=User&f%5B1%5D.Value=Microsoft%20-%20Visual%20Studio%20Platform%20Team&f%5B1%5D.Text=Microsoft%20-%20Visual%20Studio%20Platform%20Team&f%5B2%5D.Type=VisualStudioVersion&f%5B2%5D.Value=10.0&f%5B2%5D.Text=Visual%20Studio%202010&pageIndex=2
+
+debug VSIX:
+1) program: C:\Program Files (x86)\Microsoft Visual Studio 10.0\Common7\IDE\devenv.exe
+2) arguments: /rootsuffix Exp
