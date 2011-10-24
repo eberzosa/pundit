@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.IO;
 using System.Linq;
 using System.Reflection;
 using System.Text;
@@ -44,12 +45,24 @@ namespace Pundit.Vsix.Forms
          get { return PunditPackage.LastSolutionDirectory == null ? null : PunditPackage.LastSolutionDirectory.FullName; }
       }
 
+      private string LastManifestDirectory
+      {
+         get
+         {
+            string sd = LastSolutionDirectory;
+
+            if (sd == null) return null;
+
+            return new DirectoryInfo(sd).Parent.FullName;
+         }
+      }
+
       private void ExecuteCommand(string[] args)
       {
          try
          {
             IConsoleCommand cmd = CommandFactory.CreateCommand(_console,
-               LastSolutionDirectory,
+               LastManifestDirectory,
                args);
 
             cmd.Execute();

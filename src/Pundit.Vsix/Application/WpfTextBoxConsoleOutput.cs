@@ -61,6 +61,7 @@ namespace Pundit.Vsix.Application
       public void Write(bool result)
       {
          _txt.Text += result ? "OK" : "FAIL!";
+         _txt.Text += Environment.NewLine;
          ScrollToEnd();
       }
    }
