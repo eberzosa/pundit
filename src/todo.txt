@@ -27,6 +27,10 @@ high priority:
 - publishing IRepository via network causes performance issues, should be redesigned with snapshots (like dpkg) and
   in future with changesets to snapshots
 
+1.0.0.25
+= add another option tab with VSIX options (checkbox whether to ping in background, refresh, frequency). Save settings globally.
+= check for dependencies in background and notify the user in the toolbar
+
 1.0.0.24
 + allow to disable repository without deleting it
 + "info" command printing out registered repositories
@@ -35,8 +39,7 @@ high priority:
 + CORE: abstract output for console commands, copy them to Pundit Console tool window in VSIX
 + all console commands should use passed root folder instead of current directory
 + VSIX: conflict causes VS to crash - move dependency resolution to console
-= add another option tab with VSIX options (checkbox whether to ping in background, refresh, frequency). Save settings globally.
-= check for dependencies in background and notify the user in the toolbar
++ "resolve" button should open the pundit console and start the resolution process there, currently it's broken
 
 1.0.0.x
 + support devtime packages

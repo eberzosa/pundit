@@ -39,30 +39,45 @@ namespace Pundit.Vsix.Forms
          _console.WriteLine(Strings.ConsoleIntro, Assembly.GetExecutingAssembly().GetName().Version);
       }
 
+      private string LastSolutionDirectory
+      {
+         get { return PunditPackage.LastSolutionDirectory == null ? null : PunditPackage.LastSolutionDirectory.FullName; }
+      }
+
+      private void ExecuteCommand(string[] args)
+      {
+         try
+         {
+            IConsoleCommand cmd = CommandFactory.CreateCommand(_console,
+               LastSolutionDirectory,
+               args);
+
+            cmd.Execute();
+         }
+         catch (NoCurrentDirectoryException)
+         {
+            _console.WriteLine(ConsoleColor.Red, "this command requires a solution to be opened");
+         }
+         catch (Exception ex)
+         {
+            _console.WriteLine(ConsoleColor.Red, ex.Message);
+         }
+         finally
+         {
+            txtCommand.Text = string.Empty;
+         }         
+      }
+
+      public void ResolveDependencies()
+      {
+         ExecuteCommand(new[] { "resolve" });
+      }
+
       private void CommandKeyUp(object sender, KeyEventArgs e)
       {
          if(e.Key == Key.Return)
          {
-            try
-            {
-               IConsoleCommand cmd = CommandFactory.CreateCommand(_console,
-                  PunditPackage.LastSolutionDirectory == null ? null : PunditPackage.LastSolutionDirectory.FullName,
-                  txtCommand.Text.Split(' '));
-
-               cmd.Execute();
-            }
-            catch(NoCurrentDirectoryException)
-            {
-               _console.WriteLine(ConsoleColor.Red, "this command requires a solution to be opened");
-            }
-            catch(Exception ex)
-            {
-               _console.WriteLine(ConsoleColor.Red, ex.Message);
-            }
-            finally
-            {
-               txtCommand.Text = string.Empty;
-            }
+            ExecuteCommand(txtCommand.Text.Split(' '));
          }
       }
       

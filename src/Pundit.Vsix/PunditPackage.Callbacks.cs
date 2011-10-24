@@ -16,36 +16,30 @@ namespace Pundit.Vsix
          Alert.Message("Good news, 'add referene' menu extended! WOOOOOOOOW IT'S A DOUBLE RAINBOW!!!!!!! DOUBLE RAINBOW ALL THE WAY!!!!");
       }
 
-      [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Globalization", "CA1303:DoNotPassLiteralsAsLocalizedParameters", MessageId = "Microsoft.Samples.VisualStudio.MenuCommands.PunditPackage.OutputCommandString(System.String)")]
-      private void GlobalSettingsCommandCallback(object caller, EventArgs args)
+      private void ShowToolWindow()
       {
-         //new GlobalSettingsForm().ShowDialog();
-      }
-
-      [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Globalization", "CA1303:DoNotPassLiteralsAsLocalizedParameters", MessageId = "Microsoft.Samples.VisualStudio.MenuCommands.PunditPackage.OutputCommandString(System.String)")]
-      private void ResolveDependenciesCommandCallback(object caller, EventArgs args)
-      {
-         DirectoryInfo sd = SolutionDirectory;
-
-         if (sd != null)
-         {
-            var form = new PackageResolveProcessForm(ManifestPath);
-
-            form.ShowDialog();
-         }
-      }
-
-      [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Globalization", "CA1303:DoNotPassLiteralsAsLocalizedParameters", MessageId = "Microsoft.Samples.VisualStudio.MenuCommands.PunditPackage.OutputCommandString(System.String)")]
-      private void ShowPunditConsoleCallback(object caller, EventArgs args)
-      {
-         //just show the tool window
+         //this method will show the window if it's not active or bring it to front if it's collapsed
          ToolWindowPane window = this.FindToolWindow(typeof(ConsoleVsToolWindow), 0, true);
          if ((null == window) || (null == window.Frame))
          {
             throw new NotSupportedException(Strings.CantCreateToolWindow);
          }
          IVsWindowFrame windowFrame = (IVsWindowFrame)window.Frame;
-         Microsoft.VisualStudio.ErrorHandler.ThrowOnFailure(windowFrame.Show());
+         Microsoft.VisualStudio.ErrorHandler.ThrowOnFailure(windowFrame.Show());         
+      }
+
+      [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Globalization", "CA1303:DoNotPassLiteralsAsLocalizedParameters", MessageId = "Microsoft.Samples.VisualStudio.MenuCommands.PunditPackage.OutputCommandString(System.String)")]
+      private void ResolveDependenciesCommandCallback(object caller, EventArgs args)
+      {
+         ShowToolWindow();
+
+         ConsoleVsToolWindow.ResolveDependencies();
+      }
+
+      [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Globalization", "CA1303:DoNotPassLiteralsAsLocalizedParameters", MessageId = "Microsoft.Samples.VisualStudio.MenuCommands.PunditPackage.OutputCommandString(System.String)")]
+      private void ShowPunditConsoleCallback(object caller, EventArgs args)
+      {
+         ShowToolWindow();
       }
 
       private void OnSolutionOpened()
@@ -53,7 +47,7 @@ namespace Pundit.Vsix
          LastSolutionDirectory = SolutionDirectory;
          _cmdResolve.Visible = true;
 
-         StartBackgroundActivity();
+         //StartBackgroundActivity();
       }
 
       private void OnSolutionClosed()
@@ -61,7 +55,7 @@ namespace Pundit.Vsix
          LastSolutionDirectory = null;
          _cmdResolve.Visible = false;
 
-         StopBackgroundActivity();
+         //StopBackgroundActivity();
       }
    }
 }
