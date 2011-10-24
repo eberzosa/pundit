@@ -50,34 +50,16 @@
       <DesignTime>True</DesignTime>
       <DependentUpon>AlertStrings.resx</DependentUpon>
     </Compile>
-    <Compile Include="GlobalSettingsControl.cs">
+    <Compile Include="RepositoriesControl.cs">
       <SubType>UserControl</SubType>
     </Compile>
-    <Compile Include="GlobalSettingsControl.Designer.cs">
-      <DependentUpon>GlobalSettingsControl.cs</DependentUpon>
+    <Compile Include="RepositoriesControl.Designer.cs">
+      <DependentUpon>RepositoriesControl.cs</DependentUpon>
     </Compile>
     <Compile Include="Images.Designer.cs">
       <AutoGen>True</AutoGen>
       <DesignTime>True</DesignTime>
       <DependentUpon>Images.resx</DependentUpon>
-    </Compile>
-    <Compile Include="PackageSearchForm.cs">
-      <SubType>Form</SubType>
-    </Compile>
-    <Compile Include="PackageSearchForm.Designer.cs">
-      <DependentUpon>PackageSearchForm.cs</DependentUpon>
-    </Compile>
-    <Compile Include="PackageMetadata.cs">
-      <SubType>UserControl</SubType>
-    </Compile>
-    <Compile Include="PackageMetadata.Designer.cs">
-      <DependentUpon>PackageMetadata.cs</DependentUpon>
-    </Compile>
-    <Compile Include="PlainTextModalEditForm.cs">
-      <SubType>Form</SubType>
-    </Compile>
-    <Compile Include="PlainTextModalEditForm.Designer.cs">
-      <DependentUpon>PlainTextModalEditForm.cs</DependentUpon>
     </Compile>
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="Strings.Designer.cs">
@@ -98,21 +80,12 @@
       <Generator>ResXFileCodeGenerator</Generator>
       <LastGenOutput>AlertStrings.Designer.cs</LastGenOutput>
     </EmbeddedResource>
-    <EmbeddedResource Include="GlobalSettingsControl.resx">
-      <DependentUpon>GlobalSettingsControl.cs</DependentUpon>
+    <EmbeddedResource Include="RepositoriesControl.resx">
+      <DependentUpon>RepositoriesControl.cs</DependentUpon>
     </EmbeddedResource>
     <EmbeddedResource Include="Images.resx">
       <Generator>ResXFileCodeGenerator</Generator>
       <LastGenOutput>Images.Designer.cs</LastGenOutput>
-    </EmbeddedResource>
-    <EmbeddedResource Include="PackageMetadata.resx">
-      <DependentUpon>PackageMetadata.cs</DependentUpon>
-    </EmbeddedResource>
-    <EmbeddedResource Include="PackageSearchForm.resx">
-      <DependentUpon>PackageSearchForm.cs</DependentUpon>
-    </EmbeddedResource>
-    <EmbeddedResource Include="PlainTextModalEditForm.resx">
-      <DependentUpon>PlainTextModalEditForm.cs</DependentUpon>
     </EmbeddedResource>
     <EmbeddedResource Include="Strings.resx">
       <Generator>ResXFileCodeGenerator</Generator>

@@ -17,20 +17,20 @@ namespace Pundit.Vsix.Forms
    [ClassInterface(ClassInterfaceType.AutoDual)]
    class RepositoriesOptionsPage : DialogPage, IServiceProvider
    {
-      private GlobalSettingsControl _userControl;
+      private RepositoriesControl _userControl;
 
       object IServiceProvider.GetService(Type serviceType)
       {
          return this.GetService(serviceType);
       }
 
-      private GlobalSettingsControl ContainerControl
+      private RepositoriesControl ContainerControl
       {
          get
          {
             if(_userControl == null)
             {
-               _userControl = new GlobalSettingsControl();
+               _userControl = new RepositoriesControl();
                _userControl.Location = new Point(0, 0);
             }
 

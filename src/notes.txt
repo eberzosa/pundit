@@ -4,3 +4,6 @@ http://code.msdn.microsoft.com/site/search?f%5B0%5D.Type=Topic&f%5B0%5D.Value=VS
 debug VSIX:
 1) program: C:\Program Files (x86)\Microsoft Visual Studio 10.0\Common7\IDE\devenv.exe
 2) arguments: /rootsuffix Exp
+
+VSIX ids:
+http://msdn.microsoft.com/en-us/library/cc826118(VS.90).aspx

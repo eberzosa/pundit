@@ -14,11 +14,11 @@ using Pundit.Core.Utils;
 
 namespace Pundit.WinForms.Core
 {
-   public partial class GlobalSettingsControl : UserControl
+   public partial class RepositoriesControl : UserControl
    {
       private BindingList<RegisteredRepository> _rr;
 
-      public GlobalSettingsControl()
+      public RepositoriesControl()
       {
          InitializeComponent();
 

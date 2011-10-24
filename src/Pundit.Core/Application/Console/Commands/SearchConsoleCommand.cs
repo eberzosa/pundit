@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Linq;
+using NDesk.Options;
 using Pundit.Core.Model;
 
 namespace Pundit.Core.Application.Console.Commands
@@ -17,6 +18,9 @@ namespace Pundit.Core.Application.Console.Commands
          int depth = GetDepth();
          string text = GetText();
          var result = new List<KeyValuePair<PackageKey, string>>();
+         bool printXml = false;
+
+         new OptionSet().Add("x|xml", x => printXml = x != null).Parse(GetCommandLine());
 
          var names = LocalRepository.TakeFirstRegisteredNames(depth, true);
 
@@ -41,8 +45,16 @@ namespace Pundit.Core.Application.Console.Commands
          {
             foreach(var r in result)
             {
-               console.WriteLine("id: [{0}], platform: [{1}], version: {2}, repository: [{3}]",
-                  r.Key.PackageId, r.Key.Platform, r.Key.Version, r.Value);
+               if (printXml)
+               {
+                  console.WriteLine("<package id=\"{0}\" version=\"{1}\" platform=\"{2}\"/>",
+                                    r.Key.PackageId, r.Key.Version, r.Key.Platform);
+               }
+               else
+               {
+                  console.WriteLine("id: [{0}], platform: [{1}], version: {2}, repository: [{3}]",
+                                    r.Key.PackageId, r.Key.Platform, r.Key.Version, r.Value);
+               }
             }
          }
       }

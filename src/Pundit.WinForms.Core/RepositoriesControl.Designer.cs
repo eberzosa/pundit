@@ -1,6 +1,6 @@
 ﻿namespace Pundit.WinForms.Core
 {
-   partial class GlobalSettingsControl
+   partial class RepositoriesControl
    {
       /// <summary>
       /// Required designer variable.
