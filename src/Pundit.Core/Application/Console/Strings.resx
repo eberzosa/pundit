@@ -187,11 +187,12 @@ examples:
   <data name="Help_search" xml:space="preserve">
     <value>syntax: {0} search &lt;-t:text&gt; [&lt;-d:depth&gt;]
 
-  &lt;text&gt; is mandatory package name or name part (case insensitive&gt;
+  &lt;text&gt; is mandatory package name or name part (case insensitive). -t parameter name can be ommited so that the first nameless parameter will become a search expression
   &lt;depth&gt; is a repository search depth; by default all the repositories are searched, however this can be overriden; set depth "local" to search only the local repository or to a number which specifies how many repositories specified in the local configuration file to search
 
 examples:
   {0} search -t:log4net
+  {0} search log4net
   {0} search -t:log4net -d:local</value>
   </data>
   <data name="Help_template" xml:space="preserve">

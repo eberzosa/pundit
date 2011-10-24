@@ -1,5 +1,7 @@
 ﻿using System;
+using System.Collections.Generic;
 using System.IO;
+using System.Linq;
 using NDesk.Options;
 using Pundit.Core.Model;
 using Pundit.Core.Utils;
@@ -9,6 +11,7 @@ namespace Pundit.Core.Application.Console.Commands
    abstract class BaseConsoleCommand : IConsoleCommand
    {
       private readonly string[] _args;
+      private string[] _nameless;
       protected readonly IConsoleOutput console;
       private readonly string _currentDirectory;
 
@@ -19,6 +22,20 @@ namespace Pundit.Core.Application.Console.Commands
          this.console = console;
          _currentDirectory = currentDirectory;
          _args = args;
+
+         ParseCommandLine();
+      }
+
+      private void ParseCommandLine()
+      {
+         if(_args != null)
+         {
+            _nameless = _args.Where(s => !s.StartsWith("-")).ToArray();
+         }
+         else
+         {
+            _nameless = new string[0];
+         }
       }
 
       protected string[] GetCommandLine()
@@ -35,6 +52,11 @@ namespace Pundit.Core.Application.Console.Commands
 
             return _currentDirectory; 
          }
+      }
+
+      public string[] NamelessParameters
+      {
+         get { return _nameless; }
       }
 
       protected string GetLocalManifest()
@@ -85,6 +107,9 @@ namespace Pundit.Core.Application.Console.Commands
          string text = null;
 
          new OptionSet().Add("t:|text:|s:|string:", s => text = s).Parse(_args);
+
+         if (text == null && NamelessParameters.Length > 0)
+            text = NamelessParameters[0];
 
          if(text == null)
             throw new ArgumentException("search text not specified");

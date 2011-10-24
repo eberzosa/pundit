@@ -12,24 +12,24 @@ high priority:
 - would be nice to have a special case for .NET assemblies, when the whole package is a single
   .NET assembly. Autopackage dll, pdb, xml, get versions and other info.
 
-1.0.0.26
+1.0.0.27
 - improve conflict explanation
 
-1.0.0.25
+1.0.0.26
 - for local builds figure out how a script can pickup a version from repository to generate a newer next one.
 - http://pundit.codeplex.com/workitem/13528 (stable/unstable packages)
 - "search" command should have a key to give xml-ready result
-- console commands for modifying repository list
-- adding/changing repository should validate it before saving both in VSIX and console tools
-- simplify console commands, for example "pundit search -t:text" looks ugly, should be "pundit search text"
 - add SRC folder as default search path for pundit.xml. Root takes priority, then SRC. The problem
   is that most VS plugins won't pickup SVN updates in root folder so manifest is never updated.
 - publishing IRepository via network causes performance issues, should be redesigned with snapshots (like dpkg) and
   in future with changesets to snapshots
 
 1.0.0.25
++ simplify "search" command, "pundit search -t:text" looks ugly, should be "pundit search text"
 = add another option tab with VSIX options (checkbox whether to ping in background, refresh, frequency). Save settings globally.
 = check for dependencies in background and notify the user in the toolbar
+- console commands for modifying repository list
+- adding/changing repository should validate it before saving both in VSIX and console tools
 
 1.0.0.24
 + allow to disable repository without deleting it
