@@ -7,3 +7,6 @@ debug VSIX:
 
 VSIX ids:
 http://msdn.microsoft.com/en-us/library/cc826118(VS.90).aspx
+
+VS settings:
+http://msdn.microsoft.com/en-us/library/ff460144.aspx

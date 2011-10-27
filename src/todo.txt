@@ -14,8 +14,6 @@ high priority:
 
 1.0.0.x
 - improve conflict explanation
-
-1.0.0.x
 - for local builds figure out how a script can pickup a version from repository to generate a newer next one.
 - http://pundit.codeplex.com/workitem/13528 (stable/unstable packages)
 - add SRC folder as default search path for pundit.xml. Root takes priority, then SRC. The problem
@@ -23,11 +21,13 @@ high priority:
 - publishing IRepository via network causes performance issues, should be redesigned with snapshots (like dpkg) and
   in future with changesets to snapshots
 - hide "resolve" button when solution is not loaded
+- creating new manifests is really annoying
 
 1.0.0.27
 + "search" command now can output result in xml
-= add another option tab with VSIX options (checkbox whether to ping in background, refresh, frequency). Save settings globally.
-= check for dependencies in background and notify the user in the toolbar
+= settings
+- add another option tab with VSIX options (checkbox whether to ping in background, refresh, frequency). Save settings globally.
+- check for dependencies in background and notify the user in the toolbar
 - console commands for modifying repository list
 - adding/changing repository should validate it before saving both in VSIX and console tools
 

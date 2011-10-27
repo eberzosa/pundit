@@ -44,6 +44,12 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="AddReferenceForm.cs">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="AddReferenceForm.Designer.cs">
+      <DependentUpon>AddReferenceForm.cs</DependentUpon>
+    </Compile>
     <Compile Include="Alert.cs" />
     <Compile Include="AlertStrings.Designer.cs">
       <AutoGen>True</AutoGen>
@@ -76,6 +82,9 @@
     </ProjectReference>
   </ItemGroup>
   <ItemGroup>
+    <EmbeddedResource Include="AddReferenceForm.resx">
+      <DependentUpon>AddReferenceForm.cs</DependentUpon>
+    </EmbeddedResource>
     <EmbeddedResource Include="AlertStrings.resx">
       <Generator>ResXFileCodeGenerator</Generator>
       <LastGenOutput>AlertStrings.Designer.cs</LastGenOutput>

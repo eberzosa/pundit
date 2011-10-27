@@ -13,7 +13,8 @@ namespace Pundit.Vsix
       [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Globalization", "CA1303:DoNotPassLiteralsAsLocalizedParameters", MessageId = "Microsoft.Samples.VisualStudio.MenuCommands.PunditPackage.OutputCommandString(System.String)")]
       private void AddReferenceCommandCallback(object caller, EventArgs args)
       {
-         Alert.Message("Good news, 'add referene' menu extended! WOOOOOOOOW IT'S A DOUBLE RAINBOW!!!!!!! DOUBLE RAINBOW ALL THE WAY!!!!");
+         //Alert.Message("Good news, 'add referene' menu extended! WOOOOOOOOW IT'S A DOUBLE RAINBOW!!!!!!! DOUBLE RAINBOW ALL THE WAY!!!!");
+         new AddReferenceForm(ManifestDirectory).ShowDialog();
       }
 
       private void ShowToolWindow()
@@ -31,6 +32,8 @@ namespace Pundit.Vsix
       [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Globalization", "CA1303:DoNotPassLiteralsAsLocalizedParameters", MessageId = "Microsoft.Samples.VisualStudio.MenuCommands.PunditPackage.OutputCommandString(System.String)")]
       private void ResolveDependenciesCommandCallback(object caller, EventArgs args)
       {
+         SaveSetting("LastResolved", DateTime.UtcNow.Ticks.ToString());
+
          ShowToolWindow();
 
          ConsoleVsToolWindow.ResolveDependencies();

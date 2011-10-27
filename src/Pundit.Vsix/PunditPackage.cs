@@ -86,6 +86,7 @@ namespace Pundit.Vsix
          {
             solution.AdviseSolutionEvents(this, out _solutionEventsCookie);
          }
+
       }
 
       protected override void Dispose(bool disposing)
