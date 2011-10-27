@@ -36,10 +36,12 @@ namespace Pundit.Core.Model
       /// Gets the snapshot of repository
       /// </summary>
       /// <param name="changeId"></param>
+      /// <param name="nextChangeId">change id used in next call to get only the package changes. When 0 returned
+      /// all of the local shapshot must be rewritten by the received one</param>
       /// <returns></returns>
       [OperationContract]
       [FaultContract(typeof(FileNotFoundException))]
       [WebGet(UriTemplate = "/snapshot/{changeId}")]
-      PackageSnapshotKey[] GetSnapshot(string changeId);
+      PackageSnapshotKey[] GetSnapshot(string changeId, out long nextChangeId);
    }
 }

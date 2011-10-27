@@ -27,6 +27,7 @@ high priority:
 - check for dependencies in background and notify the user in the toolbar
 - console commands for modifying repository list
 - adding/changing repository should validate it before saving both in VSIX and console tools
+- create IRemoteRepository directory-based implementation not wired to anything yet
 
 1.0.0.27
 + "search" command now can output result in xml
