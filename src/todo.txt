@@ -23,14 +23,16 @@ high priority:
 - hide "resolve" button when solution is not loaded
 - creating new manifests is really annoying
 
-1.0.0.27
-+ "search" command now can output result in xml
-+ Pundit Console bugs
-= settings
-- add another option tab with VSIX options (checkbox whether to ping in background, refresh, frequency). Save settings globally.
+1.0.0.28
 - check for dependencies in background and notify the user in the toolbar
 - console commands for modifying repository list
 - adding/changing repository should validate it before saving both in VSIX and console tools
+
+1.0.0.27
++ "search" command now can output result in xml
++ Pundit Console bugs
++ settings
++ add another option tab with VSIX options (checkbox whether to ping in background, refresh, frequency). Save settings globally.
 
 1.0.0.26
 1.0.0.25
