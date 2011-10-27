@@ -14,6 +14,8 @@ namespace Pundit.Vsix
 {
 	public partial class PunditPackage : Package
 	{
+	   private static WritableSettingsStore settingsStore;
+
       private DirectoryInfo GetPropAsDir(__VSPROPID prop)
       {
          IVsSolution solution = GetService(typeof(SVsSolution)) as IVsSolution;
@@ -137,16 +139,17 @@ namespace Pundit.Vsix
          return userSettingsStore;
       }
 
-      private void SaveSetting(string key, string value)
+      public static void SaveSetting(string key, string value)
       {
-         WritableSettingsStore store = GetWritableSettingsStore(SettingsRoot);
-         store.SetString(SettingsRoot, key, value);
+         settingsStore.SetString(SettingsRoot, key, value);         
       }
 
-      private string ReadSetting(string key)
+      public static string ReadSetting(string key)
       {
-         WritableSettingsStore store = GetWritableSettingsStore(SettingsRoot);
-         return store.GetString(SettingsRoot, key);
+         if(settingsStore.PropertyExists(SettingsRoot, key))
+            return settingsStore.GetString(SettingsRoot, key);
+
+         return null;
       }
 	}
 }

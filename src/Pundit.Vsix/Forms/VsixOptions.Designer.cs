@@ -65,9 +65,24 @@
          // numPingInterval
          // 
          this.numPingInterval.Location = new System.Drawing.Point(46, 3);
+         this.numPingInterval.Maximum = new decimal(new int[] {
+            59,
+            0,
+            0,
+            0});
+         this.numPingInterval.Minimum = new decimal(new int[] {
+            1,
+            0,
+            0,
+            0});
          this.numPingInterval.Name = "numPingInterval";
          this.numPingInterval.Size = new System.Drawing.Size(67, 20);
          this.numPingInterval.TabIndex = 2;
+         this.numPingInterval.Value = new decimal(new int[] {
+            1,
+            0,
+            0,
+            0});
          // 
          // cmbPingMeasure
          // 

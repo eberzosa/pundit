@@ -22,7 +22,7 @@ namespace Pundit.Vsix
    [Guid("3C7C5ABE-82AC-4A37-B077-0FF60E8B1FD3")]
    [InstalledProductRegistration("#110", "#112", "1.0", IconResourceID = 400)]
    [ProvideToolWindow(typeof(ConsoleVsToolWindow))]
-   //[ProvideOptionPage(typeof(VsixOptionsPage), "Pundit", "General", 113, 114, true)]
+   [ProvideOptionPage(typeof(VsixOptionsPage), "Pundit", "General", 113, 114, true)]
    [ProvideOptionPage(typeof(RepositoriesOptionsPage), "Pundit", "Repositories", 113, 115, true)]
 	[ComVisible(true)]
 	public partial class PunditPackage : Package, IVsSolutionEvents
@@ -60,6 +60,7 @@ namespace Pundit.Vsix
 		protected override void Initialize()
 		{
 			base.Initialize();
+		   settingsStore = GetWritableSettingsStore(SettingsRoot);
 
 			// Now get the OleCommandService object provided by the MPF; this object is the one
 			// responsible for handling the collection of commands implemented by the package.

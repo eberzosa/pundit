@@ -25,6 +25,7 @@ high priority:
 
 1.0.0.27
 + "search" command now can output result in xml
++ Pundit Console bugs
 = settings
 - add another option tab with VSIX options (checkbox whether to ping in background, refresh, frequency). Save settings globally.
 - check for dependencies in background and notify the user in the toolbar
