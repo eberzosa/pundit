@@ -77,6 +77,7 @@
     <Compile Include="AutoUpdate.cs" />
     <Compile Include="GlamTerm.cs" />
     <Compile Include="LocalRepository.cs" />
+    <Compile Include="Model\IRemoteRepository.cs" />
     <Compile Include="Model\DependencyNode.cs" />
     <Compile Include="Model\DevPackage.cs" />
     <Compile Include="Model\Enums.cs" />
@@ -93,7 +94,9 @@
     <Compile Include="Model\Package.cs" />
     <Compile Include="Model\PackageKey.cs" />
     <Compile Include="Model\PackageKeyDiff.cs" />
+    <Compile Include="Model\PackageSnapshotKey.cs" />
     <Compile Include="Model\RegisteredRepositories.cs" />
+    <Compile Include="Model\RepositorySnapshot.cs" />
     <Compile Include="Model\SourceFiles.cs" />
     <Compile Include="Model\UnresolvedPackage.cs" />
     <Compile Include="Model\VersionPattern.cs" />

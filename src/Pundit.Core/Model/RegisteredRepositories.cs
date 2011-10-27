@@ -28,6 +28,18 @@ namespace Pundit.Core.Model
       [XmlAttribute("enabled")]
       public bool IsEnabled { get; set; }
 
+      /// <summary>
+      /// Period, in ticks, after which repository manager should refresh the snapshot
+      /// </summary>
+      [XmlAttribute("refresh")]
+      public string RefreshPeriodTicks { get; set; }
+
+      /// <summary>
+      /// Time, in ticks, of the last snapshot generation or udpate
+      /// </summary>
+      [XmlAttribute("last-checked")]
+      public long LastCheckedTicks { get; set; }
+
       public RegisteredRepository()
       {
          IsEnabled = true;

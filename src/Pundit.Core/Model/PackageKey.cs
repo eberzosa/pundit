@@ -39,7 +39,6 @@ namespace Pundit.Core.Model
 
       //[XmlAttribute("version")]
       [XmlIgnore]
-      [DataMember]
       public Version Version
       {
          get { return _version; }
