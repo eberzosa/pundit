@@ -42,6 +42,9 @@
     </Reference>
     <Reference Include="System" />
     <Reference Include="System.Core" />
+    <Reference Include="System.Data.SQLite">
+      <HintPath>..\..\lib\System.Data.SQLite.dll</HintPath>
+    </Reference>
     <Reference Include="System.Runtime.Serialization" />
     <Reference Include="System.ServiceModel" />
     <Reference Include="System.ServiceModel.Web" />
@@ -76,6 +79,7 @@
     <Compile Include="Application\Repository\FileRepository.cs" />
     <Compile Include="Application\Repository\RemoteFileRepository.cs" />
     <Compile Include="Application\Repository\SnapshotRepository.cs" />
+    <Compile Include="Application\Repository\SqliteRepository.cs" />
     <Compile Include="AutoUpdate.cs" />
     <Compile Include="GlamTerm.cs" />
     <Compile Include="LocalRepository.cs" />
@@ -112,6 +116,7 @@
     <Compile Include="Utils\PathUtils.cs" />
   </ItemGroup>
   <ItemGroup>
+    <EmbeddedResource Include="Application\Repository\pundit.db" />
     <None Include="manifest.xsd">
       <SubType>Designer</SubType>
     </None>
@@ -120,6 +125,9 @@
     <EmbeddedResource Include="Application\Console\Strings.resx" />
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
+  <PropertyGroup>
+    <PreBuildEvent>copy /Y ..\..\..\..\db\pundit.db ..\..\Application\Repository\pundit.db</PreBuildEvent>
+  </PropertyGroup>
   <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 
        Other similar extension points exist, see Microsoft.Common.targets.
   <Target Name="BeforeBuild">

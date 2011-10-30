@@ -42,6 +42,6 @@ namespace Pundit.Core.Model
       [OperationContract]
       [FaultContract(typeof(FileNotFoundException))]
       [WebGet(UriTemplate = "/snapshot/{changeId}")]
-      PackageSnapshotKey[] GetSnapshot(string changeId, out long nextChangeId);
+      PackageSnapshotKey[] GetSnapshot(string changeId, out string nextChangeId);
    }
 }

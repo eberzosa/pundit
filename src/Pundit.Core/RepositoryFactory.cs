@@ -11,7 +11,8 @@ namespace Pundit.Core
    {
       public static IRepository CreateFromUri(string uri)
       {
-
+         if(uri.StartsWith(SqliteRepository.UriPrefix))
+            return new SqliteRepository(uri);
 
          return new FileRepository(uri);
       }

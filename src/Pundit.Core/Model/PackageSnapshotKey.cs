@@ -14,5 +14,16 @@ namespace Pundit.Core.Model
 
       [XmlElement("key")]
       public PackageKey Key { get; set; }
+
+      public PackageSnapshotKey()
+      {
+         
+      }
+
+      public PackageSnapshotKey(PackageKey key)
+      {
+         Diff = DiffType.Add;
+         Key = key;
+      }
    }
 }

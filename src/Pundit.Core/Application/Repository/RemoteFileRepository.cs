@@ -4,10 +4,14 @@ using System.IO;
 using System.Linq;
 using System.Text;
 using Pundit.Core.Model;
+using Pundit.Core.Utils;
 
 namespace Pundit.Core.Application.Repository
 {
-   class RemoteFileRepository : IRemoteRepository
+   /// <summary>
+   /// IN PROGRESS, DO NOT USE!!!
+   /// </summary>
+   public class RemoteFileRepository : IRemoteRepository
    {
       private readonly string _rootPath;
 
@@ -22,19 +26,62 @@ namespace Pundit.Core.Application.Repository
 
       public void Publish(Stream packageStream)
       {
-         throw new NotImplementedException();
+         //download file
+         string tempFile = Path.Combine(_rootPath, "download-" + Guid.NewGuid());
+
+         using (Stream ts = File.Create(tempFile))
+         {
+            packageStream.CopyTo(ts);
+         }
+
+         //get manifest
+         Package manifest;
+         using (Stream ts = File.OpenRead(tempFile))
+         {
+            using (var pr = new PackageReader(ts))
+            {
+               manifest = pr.ReadManifest();
+            }
+         }
+
+         //remove all related builds
+         foreach (string rb in PackageUtils.SearchAllRelatedBuilds(_rootPath, manifest))
+         {
+            File.Delete(rb);
+         }
+
+         //write to disk
+         string targetFileName = PackageUtils.GetFileName(manifest);
+         string targetPath = Path.Combine(_rootPath, targetFileName);
+         if (File.Exists(targetPath)) File.Delete(targetPath);
+         File.Move(tempFile, targetPath);
       }
 
       public Stream Download(PackageKey key)
       {
-         throw new NotImplementedException();
+         string fullPath = Path.Combine(_rootPath, PackageUtils.GetFileName(key));
+
+         if (!File.Exists(fullPath))
+            throw new FileNotFoundException("package not found");
+
+         return File.OpenRead(fullPath);
       }
 
-      public PackageSnapshotKey[] GetSnapshot(string changeId, out long nextChangeId)
+      public PackageSnapshotKey[] GetSnapshot(string changeId, out string nextChangeId)
       {
-         nextChangeId = 0;
+         List<PackageSnapshotKey> r = new List<PackageSnapshotKey>();
+         nextChangeId = null;
 
-         throw new NotImplementedException();
+         var rootDir = new DirectoryInfo(_rootPath);
+
+         foreach(FileInfo f in rootDir.GetFiles("*" + Package.PackedExtension))
+         {
+            PackageKey key = PackageUtils.GetPackageKeyFromFileName(f.Name);
+
+            r.Add(new PackageSnapshotKey(key));
+         }
+
+         return r.ToArray();
       }
    }
 }

@@ -1,33 +1,34 @@
 not scheduled:
 high priority:
 
-1.2.0
+1.1.0.1
 - refactor RepositoryStreamer to use compression methods different from ZIP (for example 7z)
-
-1.1.0
-- optimize dependency resolution to use less calls to IRepository, better batching
-- check that all dependencies are valid when publishing
-- support platform compatibility i.e. if manifest declares platform net40, use it as a default one
-  after noarch, then try to use net35, net30 and net20
 - would be nice to have a special case for .NET assemblies, when the whole package is a single
   .NET assembly. Autopackage dll, pdb, xml, get versions and other info.
-
-1.0.0.x
-- improve conflict explanation
 - for local builds figure out how a script can pickup a version from repository to generate a newer next one.
 - http://pundit.codeplex.com/workitem/13528 (stable/unstable packages)
+- creating new manifests is really annoying
+
+1.1.0.0
+CORE:
+- create sqlite-based local repository
+  - all the cached binaries must reside in the local sqlite db file
+  - repository cache (local or remote one) must be in the local db
+  - redesign IRepository to work with the local db
+  - home folder now needs only single pundit.db file so all configuration files and subfolders can be removed
+- possibly use ILRepack to have single-file pundit.exe
+- IRemoteRepository synchronisation
+- improve conflict explanation
 - add SRC folder as default search path for pundit.xml. Root takes priority, then SRC. The problem
   is that most VS plugins won't pickup SVN updates in root folder so manifest is never updated.
 - publishing IRepository via network causes performance issues, should be redesigned with snapshots (like dpkg) and
   in future with changesets to snapshots
-- hide "resolve" button when solution is not loaded
-- creating new manifests is really annoying
+- console commands for modifying repository list; adding/changing repository should validate it before saving both in VSIX and console tools
 
-1.0.0.28
+VSIX:
 - check for dependencies in background and notify the user in the toolbar
-- console commands for modifying repository list
-- adding/changing repository should validate it before saving both in VSIX and console tools
-- create IRemoteRepository directory-based implementation not wired to anything yet
+
+----------------------------------------------------------------------------------------------------------------------------
 
 1.0.0.27
 + "search" command now can output result in xml
