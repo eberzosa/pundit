@@ -43,6 +43,9 @@ namespace Pundit.Core.Application.Console
             case "info":
                cmd = new InfoConsoleCommand(console, currentDirectory, parameters);
                break;
+            case "repo":
+               cmd = new RepoConsoleCommand(console, currentDirectory, parameters);
+               break;
             case "help":
                cmd = new HelpConsoleCommand(console, currentDirectory, parameters);
                break;

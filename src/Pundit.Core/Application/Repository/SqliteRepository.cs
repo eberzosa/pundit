@@ -14,6 +14,8 @@ namespace Pundit.Core.Application.Repository
 {
    public class SqliteRepository : IRepository, IDisposable
    {
+      private const string SelectId = ";select last_insert_rowid()";
+
       public const string UriPrefix = "sqlite://";
       private string _absolutePath;
       private string _absoluteDir;
@@ -55,50 +57,137 @@ namespace Pundit.Core.Application.Repository
          }
       }
 
+      private void WriteBinaryStream(string filePath, Package manifest)
+      {
+         //write to db
+         using (SQLiteCommand cmd = Connection.CreateCommand())
+         {
+            cmd.CommandText =
+               "insert into [PackageBinary] (PackageId, Version, Platform, Data) values ((?), (?), (?), (?))";
+
+            SQLiteParameter packageId = new SQLiteParameter(DbType.String);
+            SQLiteParameter version = new SQLiteParameter(DbType.String);
+            SQLiteParameter platform = new SQLiteParameter(DbType.String);
+            SQLiteParameter bin = new SQLiteParameter(DbType.Binary);
+            packageId.Value = manifest.PackageId;
+            version.Value = manifest.VersionString;
+            platform.Value = manifest.Platform;
+            byte[] binBytes = File.ReadAllBytes(filePath);
+            bin.Value = binBytes;
+
+            cmd.Parameters.Add(packageId);
+            cmd.Parameters.Add(version);
+            cmd.Parameters.Add(platform);
+            cmd.Parameters.Add(bin);
+
+            cmd.ExecuteNonQuery();
+         }
+      }
+
+      private long GetLocalRepositoryId()
+      {
+         long id = -1;
+         using(SQLiteCommand cmd = Connection.CreateCommand())
+         {
+            cmd.CommandText = "select RepositoryId from Repository where Tag='local'";
+            object objid = cmd.ExecuteScalar();
+            if (objid != null) id = (long) objid;
+         }
+
+         if(id == -1)
+         {
+            using(SQLiteCommand cmd = Connection.CreateCommand())
+            {
+               cmd.CommandText = "insert into Repository (Tag) values('local')" + SelectId;
+               object objid = cmd.ExecuteScalar();
+               id = (long) objid;
+            }
+         }
+
+         return id;
+      }
+
+      private long WriteManifest(Package manifest)
+      {
+         long manifestId;
+
+         using(SQLiteCommand cmd = Connection.CreateCommand())
+         {
+            cmd.CommandText = "insert into PackageManifest " +
+                              "(RepositoryId, PackageId, Version, Platform, HomeUrl, Author, Description, ReleaseNotes, License) " +
+                              "values ((?), (?), (?), (?), (?), (?), (?), (?), (?))" + SelectId;
+            SQLiteParameter repoId = new SQLiteParameter(DbType.Int32, (object)GetLocalRepositoryId());
+            SQLiteParameter packageId = new SQLiteParameter(DbType.String, (object)manifest.PackageId);
+            SQLiteParameter version = new SQLiteParameter(DbType.String, (object)manifest.VersionString);
+            SQLiteParameter platform = new SQLiteParameter(DbType.String, (object)manifest.Platform);
+            SQLiteParameter homeUrl = new SQLiteParameter(DbType.String, (object)manifest.ProjectUrl);
+            SQLiteParameter author = new SQLiteParameter(DbType.String, manifest.Author);
+            SQLiteParameter description = new SQLiteParameter(DbType.String, manifest.Description);
+            SQLiteParameter releaseNotes = new SQLiteParameter(DbType.String, manifest.ReleaseNotes);
+            SQLiteParameter license = new SQLiteParameter(DbType.String, manifest.License);
+
+            cmd.Parameters.Add(repoId);
+            cmd.Parameters.Add(packageId);
+            cmd.Parameters.Add(version);
+            cmd.Parameters.Add(platform);
+            cmd.Parameters.Add(homeUrl);
+            cmd.Parameters.Add(author);
+            cmd.Parameters.Add(description);
+            cmd.Parameters.Add(releaseNotes);
+            cmd.Parameters.Add(license);
+
+            manifestId = (long) cmd.ExecuteScalar();
+         }
+
+         foreach(PackageDependency dependency in manifest.Dependencies)
+         {
+            using(SQLiteCommand cmd = Connection.CreateCommand())
+            {
+               cmd.CommandText =
+                  "insert into PackageDependency (PackageManifestId, PackageId, VersionPattern, Platform, Scope, CreatePlatformFolder) " +
+                  "values ((?), (?), (?), (?), (?), (?))";
+               cmd
+                  .Add(manifestId)
+                  .Add(dependency.PackageId)
+                  .Add(dependency.VersionPattern)
+                  .Add(dependency.Platform)
+                  .Add((long) dependency.Scope)
+                  .Add(dependency.CreatePlatformFolder);
+               cmd.ExecuteNonQuery();
+            }
+         }
+
+         return manifestId;
+      }
+
       public void Publish(Stream packageStream)
       {
          string tempFile = Path.Combine(_absoluteDir, "download-" + Guid.NewGuid());
 
          try
          {
-            //download file
-            using (Stream ts = File.Create(tempFile))
+            using (SQLiteTransaction tran = Connection.BeginTransaction())
             {
-               packageStream.CopyTo(ts);
-            }
-
-            //get manifest
-            Package manifest;
-            using (Stream ts = File.OpenRead(tempFile))
-            {
-               using (var pr = new PackageReader(ts))
+               //download file
+               using (Stream ts = File.Create(tempFile))
                {
-                  manifest = pr.ReadManifest();
+                  packageStream.CopyTo(ts);
                }
-            }
 
-            //write to db
-            using (SQLiteCommand cmd = Connection.CreateCommand())
-            {
-               cmd.CommandText =
-                  "insert into [PackageBinary] (PackageId, Version, Platform, Data) values ((?), (?), (?), (?))";
+               //get manifest
+               Package manifest;
+               using (Stream ts = File.OpenRead(tempFile))
+               {
+                  using (var pr = new PackageReader(ts))
+                  {
+                     manifest = pr.ReadManifest();
+                  }
+               }
 
-               SQLiteParameter packageId = new SQLiteParameter(DbType.String);
-               SQLiteParameter version = new SQLiteParameter(DbType.String);
-               SQLiteParameter platform = new SQLiteParameter(DbType.String);
-               SQLiteParameter bin = new SQLiteParameter(DbType.Binary);
-               packageId.Value = manifest.PackageId;
-               version.Value = manifest.VersionString;
-               platform.Value = manifest.Platform;
-               byte[] binBytes = File.ReadAllBytes(tempFile);
-               bin.Value = binBytes;
+               WriteBinaryStream(tempFile, manifest);
+               WriteManifest(manifest);
 
-               cmd.Parameters.Add(packageId);
-               cmd.Parameters.Add(version);
-               cmd.Parameters.Add(platform);
-               cmd.Parameters.Add(bin);
-
-               cmd.ExecuteNonQuery();
+               tran.Commit();
             }
          }
          finally
@@ -138,7 +227,26 @@ namespace Pundit.Core.Application.Repository
 
       public Version[] GetVersions(UnresolvedPackage package, VersionPattern pattern)
       {
-         throw new NotImplementedException();
+         List<Version> r = new List<Version>();
+
+         using(SQLiteCommand cmd = Connection.CreateCommand())
+         {
+            cmd.CommandText = "select distinct Version where PackageId=(?) and Platform=(?)";
+            cmd.Parameters.Add(new SQLiteParameter(DbType.String, (object) package.PackageId));
+            cmd.Parameters.Add(new SQLiteParameter(DbType.String, (object) package.Platform));
+
+            using(SQLiteDataReader reader = cmd.ExecuteReader())
+            {
+               while(reader.Read())
+               {
+                  Version v = new Version((string) reader["Version"]);
+
+                  if(pattern.Matches(v)) r.Add(v);
+               }
+            }
+         }
+
+         return r.ToArray();
       }
 
       public Package GetManifest(PackageKey key)

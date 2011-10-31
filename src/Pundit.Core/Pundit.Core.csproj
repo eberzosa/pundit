@@ -63,6 +63,7 @@
     <Compile Include="Application\Console\Commands\InfoConsoleCommand.cs" />
     <Compile Include="Application\Console\Commands\PackConsoleCommand.cs" />
     <Compile Include="Application\Console\Commands\PublishConsoleCommand.cs" />
+    <Compile Include="Application\Console\Commands\RepoConsoleCommand.cs" />
     <Compile Include="Application\Console\Commands\ResolveConsoleCommand.cs" />
     <Compile Include="Application\Console\Commands\SearchConsoleCommand.cs" />
     <Compile Include="Application\Console\Commands\TemplateConsoleCommand.cs" />
@@ -79,6 +80,7 @@
     <Compile Include="Application\Repository\FileRepository.cs" />
     <Compile Include="Application\Repository\RemoteFileRepository.cs" />
     <Compile Include="Application\Repository\SnapshotRepository.cs" />
+    <Compile Include="Application\Repository\SqliteExtensions.cs" />
     <Compile Include="Application\Repository\SqliteRepository.cs" />
     <Compile Include="AutoUpdate.cs" />
     <Compile Include="GlamTerm.cs" />

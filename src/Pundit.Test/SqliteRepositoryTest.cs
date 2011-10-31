@@ -35,7 +35,7 @@ namespace Pundit.Test
 
       [Test]
       public void PublishTest()
-      {
+      {  
          string path = Path.Combine(AppDomain.CurrentDomain.BaseDirectory, "Data");
          path = Path.Combine(path, "stateless-2.3.1-1-net35.pundit");
 
@@ -47,6 +47,12 @@ namespace Pundit.Test
          Stream ps = _repo.Download(new PackageKey("stateless", new Version("2.3.1.1"), "net35"));
          
          Assert.AreEqual(ps.Length, new FileInfo(path).Length);
+      }
+
+      [Test]
+      public void GetVersionsTest()
+      {
+         
       }
    }
 }
