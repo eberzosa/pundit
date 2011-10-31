@@ -116,25 +116,17 @@ namespace Pundit.Core.Application.Repository
             cmd.CommandText = "insert into PackageManifest " +
                               "(RepositoryId, PackageId, Version, Platform, HomeUrl, Author, Description, ReleaseNotes, License) " +
                               "values ((?), (?), (?), (?), (?), (?), (?), (?), (?))" + SelectId;
-            SQLiteParameter repoId = new SQLiteParameter(DbType.Int32, (object)GetLocalRepositoryId());
-            SQLiteParameter packageId = new SQLiteParameter(DbType.String, (object)manifest.PackageId);
-            SQLiteParameter version = new SQLiteParameter(DbType.String, (object)manifest.VersionString);
-            SQLiteParameter platform = new SQLiteParameter(DbType.String, (object)manifest.Platform);
-            SQLiteParameter homeUrl = new SQLiteParameter(DbType.String, (object)manifest.ProjectUrl);
-            SQLiteParameter author = new SQLiteParameter(DbType.String, manifest.Author);
-            SQLiteParameter description = new SQLiteParameter(DbType.String, manifest.Description);
-            SQLiteParameter releaseNotes = new SQLiteParameter(DbType.String, manifest.ReleaseNotes);
-            SQLiteParameter license = new SQLiteParameter(DbType.String, manifest.License);
 
-            cmd.Parameters.Add(repoId);
-            cmd.Parameters.Add(packageId);
-            cmd.Parameters.Add(version);
-            cmd.Parameters.Add(platform);
-            cmd.Parameters.Add(homeUrl);
-            cmd.Parameters.Add(author);
-            cmd.Parameters.Add(description);
-            cmd.Parameters.Add(releaseNotes);
-            cmd.Parameters.Add(license);
+            cmd
+               .Add(GetLocalRepositoryId())
+               .Add(manifest.PackageId)
+               .Add(manifest.VersionString)
+               .Add(manifest.Platform)
+               .Add(manifest.ProjectUrl)
+               .Add(manifest.Author)
+               .Add(manifest.Description)
+               .Add(manifest.ReleaseNotes)
+               .Add(manifest.ReleaseNotes);
 
             manifestId = (long) cmd.ExecuteScalar();
          }
@@ -210,9 +202,10 @@ namespace Pundit.Core.Application.Repository
          using(SQLiteCommand cmd = Connection.CreateCommand())
          {
             cmd.CommandText = "select Data from PackageBinary where PackageId=(?) and Version=(?) and Platform=(?)";
-            cmd.Parameters.Add(new SQLiteParameter(DbType.String, (object) key.PackageId));
-            cmd.Parameters.Add(new SQLiteParameter(DbType.String, (object) key.VersionString));
-            cmd.Parameters.Add(new SQLiteParameter(DbType.String, (object) key.Platform));
+            cmd
+               .Add(key.PackageId)
+               .Add(key.VersionString)
+               .Add(key.Platform);
 
             using(SQLiteDataReader reader = cmd.ExecuteReader())
             {
@@ -232,8 +225,7 @@ namespace Pundit.Core.Application.Repository
          using(SQLiteCommand cmd = Connection.CreateCommand())
          {
             cmd.CommandText = "select distinct Version where PackageId=(?) and Platform=(?)";
-            cmd.Parameters.Add(new SQLiteParameter(DbType.String, (object) package.PackageId));
-            cmd.Parameters.Add(new SQLiteParameter(DbType.String, (object) package.Platform));
+            cmd.Add(package.PackageId).Add(package.Platform);
 
             using(SQLiteDataReader reader = cmd.ExecuteReader())
             {
