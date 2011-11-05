@@ -29,28 +29,38 @@ namespace Pundit.Core.Application.Repository
 
       private long WriteBinaryStream(string filePath, Package manifest)
       {
+         //check if binary already exists
+         long binaryId;
+
+         do
+         {
+            binaryId = _sql.ExecuteScalar<long>("PackageBinary", "PackageBinaryId",
+                                                new[] {"PackageId=(?)", "Version=(?)", "Platform=(?)"},
+                                                manifest.PackageId, manifest.VersionString, manifest.Platform);
+
+            if (binaryId != 0) _sql.DeleteRecord("PackageBinary", binaryId);
+         } while (binaryId != 0);
+         
+
          var bin = new SQLiteParameter(DbType.Binary);
          byte[] binBytes = File.ReadAllBytes(filePath);
          bin.Value = binBytes;
 
          return _sql.Insert("PackageBinary",
-                            new[] {"PackageId", "Version", "Platform", "Data"},
-                            new object[] {manifest.PackageId, manifest.VersionString, manifest.Platform, bin});
+                            new[] {"PackageId", "Version", "Platform", "Data", "Size"},
+                            new object[] {manifest.PackageId, manifest.VersionString, manifest.Platform, bin, (long)binBytes.Length});
       }
 
       private long GetLocalRepositoryId()
       {
-         long id = -1;
-         using(IDbCommand cmd = _sql.CreateCommand())
-         {
-            cmd.CommandText = "select RepositoryId from Repository where Tag='local'";
-            object objid = cmd.ExecuteScalar();
-            if (objid != null) id = (long) objid;
-         }
+         long id = _sql.ExecuteScalar<long>("Repository", "RepositoryId", new[] {"Tag=(?)"},
+                                            LocalConfiguration.LocalRepositoryTag);
 
-         if(id == -1)
+         if (id == 0)
          {
-            id = _sql.Insert("Repository", new[] {"Tag"}, new[] {LocalRepoName});
+            id = _sql.Insert("Repository", new[] {"Tag", "Uri"},
+                             LocalConfiguration.LocalRepositoryTag,
+                             LocalConfiguration.LocalRepositoryUri);
          }
 
          return id;

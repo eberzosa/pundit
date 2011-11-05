@@ -15,47 +15,30 @@ namespace Pundit.Core.Application.Console.Commands
 
       public override void Execute()
       {
-         int depth = GetDepth();
-         string text = GetText();
-         var result = new List<KeyValuePair<PackageKey, string>>();
-         bool printXml = false;
+         string text = GetParameter("t|text", 0);
+         bool inXml = GetBoolParameter(false, "x|xml");
 
-         new OptionSet().Add("x|xml", x => printXml = x != null).Parse(GetCommandLine());
-
-         var names = LocalRepository.TakeFirstRegisteredNames(depth, true);
-
-         //search
-         foreach(string repoName in names)
+         console.WriteLine("searching '{0}'...", text);
+         bool found = false;
+         foreach(PackageKey key in LocalConfiguration.RepositoryManager.SearchPackages(text))
          {
-            console.WriteLine("searching [{0}]...", repoName);
-
-            IRepository repo = RepositoryFactory.CreateFromUri(LocalRepository.GetRepositoryUriFromName(repoName));
-
-            result.AddRange(repo.Search(text)
-               .Select(pk => new KeyValuePair<PackageKey, string>(pk, repoName)));
-
+            found = true;
+            if (inXml)
+            {
+               console.WriteLine("<package id=\"{0}\" version=\"{1}\" platform=\"{2}\"/>",
+                                 key.PackageId, key.Version, key.Platform);
+            }
+            else
+            {
+               console.WriteLine("id: [{0}], platform: [{1}], version: {2}",
+                                 key.PackageId, key.Platform, key.Version);
+            }
          }
 
          //display results
-         if(result.Count == 0)
+         if(!found)
          {
             console.WriteLine(ConsoleColor.Red, "nothing found");
-         }
-         else
-         {
-            foreach(var r in result)
-            {
-               if (printXml)
-               {
-                  console.WriteLine("<package id=\"{0}\" version=\"{1}\" platform=\"{2}\"/>",
-                                    r.Key.PackageId, r.Key.Version, r.Key.Platform);
-               }
-               else
-               {
-                  console.WriteLine("id: [{0}], platform: [{1}], version: {2}, repository: [{3}]",
-                                    r.Key.PackageId, r.Key.Platform, r.Key.Version, r.Value);
-               }
-            }
          }
       }
    }

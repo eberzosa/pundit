@@ -18,35 +18,25 @@ namespace Pundit.Core.Application.Console.Commands
       {
          depthIndex = GetDepth();
          configuration = BuildConfiguration.Release;
-         string sconfiguration = null;
-         bool force1 = false;
-         bool ping1 = false;
+         force = GetBoolParameter(false, "f|force");
+         ping = GetBoolParameter(false, "p|ping");
 
-         new OptionSet()
-            .Add("c:|configuration:", c => sconfiguration = c)
-            .Add("f|force", f => force1 = f != null)
-            .Add("p|ping", p => ping1 = p != null)
-            .Parse(GetCommandLine());
-
-         force = force1;
-         ping = ping1;
-
-         if (sconfiguration != null)
+         string sconfig = GetParameter("c:|configuration:");
+         if (sconfig != null)
          {
-            if (sconfiguration == "any")
+            if (sconfig == "any")
                configuration = BuildConfiguration.Any;
-            else if (sconfiguration == "debug")
+            else if (sconfig == "debug")
                configuration = BuildConfiguration.Debug;
          }
       }
 
-      private IEnumerable<IRepository> GetRepositories(int depth)
+      private IEnumerable<Repo> GetRepositories(int depth)
       {
-         var names = LocalRepository.TakeFirstRegisteredNames(depth, true);
-
-         return names.Select(n =>
-                             RepositoryFactory.CreateFromUri(
-                                LocalRepository.GetRepositoryUriFromName(n)));
+         return LocalConfiguration.RepositoryManager.ActiveRepositories
+            //.Where(r => r.Tag != LocalConfiguration.LocalRepositoryTag)
+            .OrderBy(r => r.Priority)
+            .Take(depth);
       }
 
       private void PrintConflicts(DependencyResolution dr, VersionResolutionTable tbl, DependencyNode rootNode)
@@ -126,12 +116,13 @@ namespace Pundit.Core.Application.Console.Commands
          console.Write(true);
 
          //get the repository list
-         IEnumerable<IRepository> repositories = GetRepositories(depth);
+         IEnumerable<Repo> repositories = GetRepositories(depth);
 
          //resolve dependencies
          console.Write("resolving...\t\t\t");
 
-         var dr = new DependencyResolution(devPackage, repositories.ToArray());
+         var instances = new List<IRepository>(repositories.Select(RepositoryFactory.Create));
+         var dr = new DependencyResolution(devPackage, instances.ToArray());
          var resolutionResult = dr.Resolve();
 
          console.Write(!resolutionResult.Item1.HasConflicts);
@@ -146,15 +137,14 @@ namespace Pundit.Core.Application.Console.Commands
          }
 
          //ensure that all packages exist in local repository
-         LocalRepository.PackageDownloadToLocalRepositoryStarted += LocalRepository_PackageDownloadToLocalRepositoryStarted;
-         LocalRepository.PackageDownloadToLocalRepositoryFinished += LocalRepository_PackageDownloadToLocalRepositoryFinished;
-         LocalRepository.DownloadLocally(resolutionResult.Item1.GetPackages(), repositories.Skip(1));
+         LocalConfiguration.PackageDownloadToLocalRepository += LocalRepository_PackageDownloadToLocalRepository;
+         LocalConfiguration.DownloadLocally(resolutionResult.Item1.GetPackages(), instances.Skip(1));
 
          //install all packages
          using(PackageInstaller installer = new PackageInstaller(projectRoot,
             resolutionResult.Item1,
             devPackage,
-            repositories.First()))
+            instances.First()))
          {
             installer.BeginInstallPackage += installer_BeginInstallPackage;
             installer.FinishInstallPackage += installer_FinishInstallPackage;
@@ -186,14 +176,9 @@ namespace Pundit.Core.Application.Console.Commands
          console.Write("installing {0} v{1} ({2})...", e.PackageKeyDiff.PackageId, e.PackageKeyDiff.Version, e.PackageKeyDiff.Platform);
       }
 
-      void LocalRepository_PackageDownloadToLocalRepositoryFinished(object sender, Core.Model.EventArguments.PackageKeyEventArgs e)
+      void LocalRepository_PackageDownloadToLocalRepository(object sender, Core.Model.EventArguments.PackageDownloadEventArgs e)
       {
-         console.Write(e.Succeeded);
-      }
-
-      void LocalRepository_PackageDownloadToLocalRepositoryStarted(object sender, Core.Model.EventArguments.PackageKeyEventArgs e)
-      {
-         console.Write("downloading {0}...", e.PackageKey.PackageId);
+         console.Write("download: {0}, b: {1}, total: {2}, now: {3}", e.PackageKey.PackageId, e.Succeeded, e.TotalSize, e.DownloadedSize);
       }
    }
 }

@@ -25,6 +25,11 @@ namespace Pundit.Core.Application.Sqlite
             throw new DirectoryNotFoundException("target folder not found (" + _absoluteDir + ")");
       }
 
+      public string DataSource
+      {
+         get { return _absolutePath; }
+      }
+
       private string GetConnectionString()
       {
          if (!File.Exists(_absolutePath))
@@ -49,6 +54,8 @@ namespace Pundit.Core.Application.Sqlite
             {
                _conn = new SQLiteConnection(GetConnectionString());
                _conn.Open();
+
+               new FileInfo(_absolutePath).Attributes |= (FileAttributes.System | FileAttributes.Hidden);
             }
 
             return _conn;
@@ -70,7 +77,7 @@ namespace Pundit.Core.Application.Sqlite
          else throw new ArgumentException("type " + value.GetType() + " not supported");
       }
 
-      public long Insert(string tableName, string[] columns, object[] values)
+      public long Insert(string tableName, string[] columns, params object[] values)
       {
          if (tableName == null) throw new ArgumentNullException("tableName");
          if (columns == null || columns.Length == 0)
@@ -200,7 +207,18 @@ namespace Pundit.Core.Application.Sqlite
 
             object r = cmd.ExecuteScalar();
 
-            return r == null ? default(T) : (T) r;
+            if (r == null || r is DBNull) return default(T);
+            if (!(r is T)) throw new InvalidCastException("cannot cast " + r.GetType() + " to " + typeof (T));
+            return (T) r;
+         }
+      }
+
+      public void DeleteRecord(string tableName, long rowId)
+      {
+         using(IDbCommand cmd = CreateCommand())
+         {
+            cmd.CommandText = "delete from " + tableName + " where " + tableName + "Id=" + rowId;
+            cmd.ExecuteNonQuery();
          }
       }
 

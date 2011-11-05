@@ -1,7 +1,6 @@
 ﻿using System;
 using System.IO;
 using System.Linq;
-using NDesk.Options;
 using Pundit.Core.Model;
 
 namespace Pundit.Core.Application.Console.Commands
@@ -12,26 +11,20 @@ namespace Pundit.Core.Application.Console.Commands
          : base(console, currentDirectory, args)
       {}
 
-      private void ResolveParameters(out string[] packages, out string[] repositoryName)
+      private void ResolveParameters(out string[] packages, out Repo[] repos)
       {
-         string pi = null;
-         string ri = null;
+         string packageName = GetParameter("p:|package:", 0);
+         string repoName = GetParameter("r:|repository:");
 
-         OptionSet oset = new OptionSet()
-            .Add("p:|package:", i => pi = i)
-            .Add("r:|repository:", r => ri = r);
-
-         oset.Parse(GetCommandLine());
-
-         //get package)))
-         if(pi != null)
+         //get package
+         if(packageName != null)
          {
-            pi = Path.GetFullPath(pi);
+            packageName = Path.GetFullPath(packageName);
 
-            if(!File.Exists(pi))
-               throw new ArgumentException("package [" + pi + "] does not exist");
+            if(!File.Exists(packageName))
+               throw new ArgumentException("package [" + packageName + "] does not exist");
 
-            packages = new[] { pi };
+            packages = new[] { packageName };
          }
          else
          {
@@ -45,46 +38,39 @@ namespace Pundit.Core.Application.Console.Commands
          }
 
          //get repo uri
-         if(ri == null)
+         if(repoName == null)
          {
-            repositoryName = LocalRepository.Registered.PublishingNames;
+            repos = LocalConfiguration.RepositoryManager.PublishingRepositories.ToArray();
          }
          else
          {
-            repositoryName = new[] {ri};
+            Repo r = LocalConfiguration.RepositoryManager.GetRepositoryByTag(repoName);
+            if(r == null) throw new FileNotFoundException("repository " + repoName + " does not exist");
+            if(!r.UseForPublishing) throw new ApplicationException("repository does not support publishing");
+            repos = new[] {r};
          }
       }
 
       public override void Execute()
       {
          string[] packages;
-         string[] repoNames;
+         Repo[] repos;
 
-         ResolveParameters(out packages, out repoNames);
+         ResolveParameters(out packages, out repos);
 
-         foreach (string rn in repoNames)
-         {
-            if (!LocalRepository.IsValidRepositoryName(rn))
-               throw new ArgumentException("repository [" + rn + "] does not exist");
-         }
+         console.WriteLine("Publishing package to {0} repository(ies)", repos.Length);
 
-         console.WriteLine("Publishing package to {0} repository(ies)", repoNames.Length);
-
-         foreach (string rn in repoNames)
+         foreach (Repo repo in repos)
          {
             foreach (string packagePath in packages)
             {
-               console.WriteLine(string.Format("publishing package {0} to repository [{1}]", packagePath, rn));
+               console.WriteLine(string.Format("publishing package {0} to repository [{1}]", packagePath, repo.Tag));
 
-               string uri = LocalRepository.GetRepositoryUriFromName(rn);
-
-               console.WriteLine(string.Format("repository URI: {0}", uri));
-
-               IRepository repo = RepositoryFactory.CreateFromUri(uri);
+               IRepository ir = RepositoryFactory.Create(repo);
 
                using (Stream package = File.OpenRead(packagePath))
                {
-                  repo.Publish(package);
+                  ir.Publish(package);
                }
 
                console.WriteLine("published");

@@ -13,7 +13,7 @@ namespace Pundit.WinForms.Core
 
       static Alert()
       {
-         DefaultAlertTitle = "Pundit v" + typeof (LocalRepository).Assembly.GetName().Version;
+         DefaultAlertTitle = "Pundit v" + typeof (LocalConfiguration).Assembly.GetName().Version;
       }
 
       public static void Message(string msg)

@@ -23,6 +23,8 @@ CORE:
 - bug: "pundit resolve" doesn't notify about operation completion
 - progress bars in repository downloads
 - protect from manual package modifications injecting signature
+- add local data file location to "repo list"
+- print help article on console command error
 
 VSIX:
 - check for dependencies in background and notify the user in the toolbar

@@ -12,6 +12,14 @@ namespace Pundit.Core
       private const string SqliteRepoPrefix = "sqlite://";
       private const string DirRepoPrefix = "dir://";
 
+      public static IRepository Create(Repo r)
+      {
+         if (r.Tag == LocalConfiguration.LocalRepositoryTag)
+            return LocalConfiguration.RepositoryManager.LocalRepository;
+
+         return CreateFromUri(r.Uri);
+      }
+
       public static IRepository CreateFromUri(string uri)
       {
          if (uri == null) throw new ArgumentNullException("uri");

@@ -54,9 +54,31 @@ namespace Pundit.Core.Application.Console.Commands
          }
       }
 
-      public string[] NamelessParameters
+      protected string[] NamelessParameters
       {
          get { return _nameless; }
+      }
+
+      protected string GetParameter(string spec, int namelessIndex = -1)
+      {
+         string v = null;
+
+         if (spec != null)
+            new OptionSet().Add(spec, vi => v = vi).Parse(GetCommandLine());
+
+         if (v == null && namelessIndex != -1 && namelessIndex < _nameless.Length)
+            v = _nameless[namelessIndex];
+
+         return v;
+      }
+
+      protected bool GetBoolParameter(bool defaultValue, string spec, int namelessIndex = -1)
+      {
+         string v = GetParameter(spec, namelessIndex);
+
+         bool bv;
+         if (!bool.TryParse(v, out bv)) bv = defaultValue;
+         return bv;
       }
 
       protected string GetLocalManifest()

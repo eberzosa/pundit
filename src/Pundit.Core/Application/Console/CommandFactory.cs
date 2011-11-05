@@ -48,9 +48,6 @@ namespace Pundit.Core.Application.Console
             case "utils":
                cmd = new UtilsConsoleCommand(console, currentDirectory, parameters);
                break;
-            case "info":
-               cmd = new InfoConsoleCommand(console, currentDirectory, parameters);
-               break;
             case "repo":
                cmd = new RepoConsoleCommand(console, currentDirectory, parameters);
                break;

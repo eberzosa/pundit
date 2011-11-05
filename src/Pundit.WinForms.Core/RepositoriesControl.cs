@@ -25,7 +25,7 @@ namespace Pundit.WinForms.Core
          UpdateOccupiedSpace();
 
          _rr = new BindingList<RegisteredRepository>(new List<RegisteredRepository>(
-            LocalRepository.Registered.RepositoriesArray
+            LocalConfiguration.Registered.RepositoriesArray
             ));
          lstRepos.DataSource = _rr;
          lstRepos.DisplayMember = "Name";
@@ -37,8 +37,8 @@ namespace Pundit.WinForms.Core
 
       private void UpdateOccupiedSpace()
       {
-         txtLocalRepoPath.Text = LocalRepository.GlobalRootPath;
-         txtUsedSpace.Text = PathUtils.FileSizeToString(LocalRepository.OccupiedSpace);
+         txtLocalRepoPath.Text = LocalConfiguration.GlobalRootPath;
+         txtUsedSpace.Text = PathUtils.FileSizeToString(LocalConfiguration.OccupiedSpace);
       }
 
       public void Save()
@@ -48,11 +48,11 @@ namespace Pundit.WinForms.Core
 
       private void SaveRepositories()
       {
-         LocalRepository.Registered.RepositoriesArray = _rr.ToArray();
+         LocalConfiguration.Registered.RepositoriesArray = _rr.ToArray();
 
-         using(Stream s = File.Create(LocalRepository.GlobalSettingsFilePath))
+         using(Stream s = File.Create(LocalConfiguration.GlobalSettingsFilePath))
          {
-            LocalRepository.Registered.SaveTo(s);
+            LocalConfiguration.Registered.SaveTo(s);
          }
       }
 
@@ -122,7 +122,7 @@ namespace Pundit.WinForms.Core
       {
          if (DialogResult.Yes == Alert.AskYesNo(Strings.Alert_PurgeCache))
          {
-            foreach (string file in Directory.GetFiles(LocalRepository.GlobalRootFilePath))
+            foreach (string file in Directory.GetFiles(LocalConfiguration.GlobalRootFilePath))
             {
                try
                {

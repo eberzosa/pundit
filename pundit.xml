@@ -98,7 +98,7 @@ NO WARRANTY
     <package id="NUnit.Framework" version="2.5" platform="net20" devtime="true" scope="build" />
     <package id="ILMerge" version="2.10" platform="net20" devtime="true" scope="build" />
     <package id="sharpziplib" version="0.86" platform="net20" />
-    <package id="SQLite" version="1.0" platform="net20" />
+    <package id="SQLite" version="1.0" platform="net40.x32" />
   </dependencies>
   <files>
     <file kind="bin" include="Pundit*.xml" flatten="false" basedir="src/Pundit.Core/bin/Debug" includeemptydirs="true" configuration="any" />
