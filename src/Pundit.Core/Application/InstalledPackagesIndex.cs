@@ -7,11 +7,17 @@ using Pundit.Core.Model;
 
 namespace Pundit.Core.Application
 {
+   /// <summary>
+   /// 
+   /// </summary>
    public class InstalledPackagesIndex
    {
       private const string CacheFileName = ".pundit-install-index";
       private readonly Dictionary<PackageKey, bool> _installed = new Dictionary<PackageKey, bool>();
 
+      /// <summary>
+      /// 
+      /// </summary>
       [XmlArray("installed")]
       [XmlArrayItem("package")]
       public PackageKey[] InstalledPackages
@@ -26,20 +32,35 @@ namespace Pundit.Core.Application
          }
       }
 
+      /// <summary>
+      /// 
+      /// </summary>
       [XmlAttribute("configuration")]
       public BuildConfiguration Configuration { get; set; }
 
+      /// <summary>
+      /// 
+      /// </summary>
       [XmlIgnore]
       public int TotalPackagesCount
       {
          get { return _installed.Count; }
       }
 
+      /// <summary>
+      /// 
+      /// </summary>
+      /// <param name="pck"></param>
+      /// <returns></returns>
       public bool IsInstalled(PackageKey pck)
       {
          return _installed.ContainsKey(pck);
       }
 
+      /// <summary>
+      /// 
+      /// </summary>
+      /// <param name="pck"></param>
       public void Install(PackageKey pck)
       {
          PackageKey installedPackage = _installed.Keys.FirstOrDefault(k => k.LooseEquals(pck));
@@ -54,12 +75,21 @@ namespace Pundit.Core.Application
          _installed[pck1] = true;
       }
 
+      /// <summary>
+      /// 
+      /// </summary>
+      /// <param name="pck"></param>
       public void Uninstall(PackageKey pck)
       {
          if (_installed.ContainsKey(pck))
             _installed.Remove(pck);
       }
 
+      /// <summary>
+      /// 
+      /// </summary>
+      /// <param name="folder"></param>
+      /// <returns></returns>
       public static InstalledPackagesIndex ReadFromFolder(string folder)
       {
          var xml = new XmlSerializer(typeof(InstalledPackagesIndex));
@@ -91,6 +121,10 @@ namespace Pundit.Core.Application
          return new InstalledPackagesIndex();
       }
 
+      /// <summary>
+      /// 
+      /// </summary>
+      /// <param name="folder"></param>
       public void WriteToFolder(string folder)
       {
          var xml = new XmlSerializer(typeof(InstalledPackagesIndex));

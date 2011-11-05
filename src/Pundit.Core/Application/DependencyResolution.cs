@@ -7,11 +7,19 @@ using Pundit.Core.Model;
 
 namespace Pundit.Core.Application
 {
+   /// <summary>
+   /// 
+   /// </summary>
    public class DependencyResolution
    {
       private readonly IRepository[] _activeRepositories;
       private readonly DependencyNode _root;
 
+      /// <summary>
+      /// 
+      /// </summary>
+      /// <param name="rootManifest"></param>
+      /// <param name="activeRepositories"></param>
       public DependencyResolution(Package rootManifest, IRepository[] activeRepositories)
       {
          _activeRepositories = activeRepositories;

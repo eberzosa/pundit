@@ -13,7 +13,7 @@ using Pundit.Core.Utils;
 
 namespace Pundit.Core.Application.Repository
 {
-   public class SqliteRepository : IRepository, IDisposable
+   class SqliteRepository : IRepository, IDisposable
    {
       private const string LocalRepoName = "local";
       private const string TempFilePrefix = "pundit-download-part-";

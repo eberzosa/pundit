@@ -10,7 +10,7 @@ namespace Pundit.Core.Application.Repository
    /// <summary>
    /// Snapshot-based repository
    /// </summary>
-   public class SnapshotRepository : IRepository
+   class SnapshotRepository : IRepository
    {
       public SnapshotRepository(string snapshotPath)
       {

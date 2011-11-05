@@ -7,7 +7,7 @@ namespace Pundit.Core.Application.Console
    /// <summary>
    /// 
    /// </summary>
-   public class CommandFactory
+   public static class CommandFactory
    {
       /// <summary>
       /// 

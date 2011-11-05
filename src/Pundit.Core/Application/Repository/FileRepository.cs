@@ -8,7 +8,7 @@ using Pundit.Core.Utils;
 
 namespace Pundit.Core.Application.Repository
 {
-   public class FileRepository : IRepository
+   class FileRepository : IRepository
    {
       private readonly string _rootPath;
 

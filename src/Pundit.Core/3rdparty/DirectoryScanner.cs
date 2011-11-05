@@ -96,7 +96,7 @@ namespace NAnt.Core {
     ///     </code>
     /// </example>
     [Serializable()]
-    public class DirectoryScanner : ICloneable {
+    class DirectoryScanner : ICloneable {
         #region Private Instance Fields
 
         // set to current directory in Scan if user doesn't specify something first.
