@@ -7,6 +7,7 @@ using System.Reflection;
 using System.Resources;
 using System.Text;
 using System.Data.SQLite;
+using Pundit.Core.Application.Sqlite;
 using Pundit.Core.Model;
 using Pundit.Core.Utils;
 
@@ -14,80 +15,33 @@ namespace Pundit.Core.Application.Repository
 {
    public class SqliteRepository : IRepository, IDisposable
    {
-      private const string SelectId = ";select last_insert_rowid()";
+      private const string LocalRepoName = "local";
+      private const string TempFilePrefix = "pundit-download-part-";
 
-      public const string UriPrefix = "sqlite://";
-      private string _absolutePath;
-      private string _absoluteDir;
-      private SQLiteConnection _conn;
+      private readonly SqliteHelper _sql;
+      private long _repoId;
 
-      public SqliteRepository(string repoPath)
+      public SqliteRepository(string dbPath)
       {
-         _absolutePath = repoPath.Substring(UriPrefix.Length);
-         _absoluteDir = new FileInfo(_absolutePath).Directory.FullName;
+         _sql = new SqliteHelper(dbPath);
+         _repoId = GetLocalRepositoryId();
       }
 
-      private string GetConnectionString()
+      private long WriteBinaryStream(string filePath, Package manifest)
       {
-         if(!File.Exists(_absolutePath))
-         {
-            using(Stream s = Assembly.GetExecutingAssembly().GetManifestResourceStream(typeof(SqliteRepository).Namespace + ".pundit.db"))
-            {
-               using(Stream tgt = File.Create(_absolutePath))
-               {
-                  s.CopyTo(tgt);
-               }
-            }
-         }
+         var bin = new SQLiteParameter(DbType.Binary);
+         byte[] binBytes = File.ReadAllBytes(filePath);
+         bin.Value = binBytes;
 
-         return "Data Source=" + _absolutePath;
-      }
-
-      private SQLiteConnection Connection
-      {
-         get
-         {
-            if(_conn == null)
-            {
-               _conn = new SQLiteConnection(GetConnectionString());
-               _conn.Open();
-            }
-
-            return _conn;
-         }
-      }
-
-      private void WriteBinaryStream(string filePath, Package manifest)
-      {
-         //write to db
-         using (SQLiteCommand cmd = Connection.CreateCommand())
-         {
-            cmd.CommandText =
-               "insert into [PackageBinary] (PackageId, Version, Platform, Data) values ((?), (?), (?), (?))";
-
-            SQLiteParameter packageId = new SQLiteParameter(DbType.String);
-            SQLiteParameter version = new SQLiteParameter(DbType.String);
-            SQLiteParameter platform = new SQLiteParameter(DbType.String);
-            SQLiteParameter bin = new SQLiteParameter(DbType.Binary);
-            packageId.Value = manifest.PackageId;
-            version.Value = manifest.VersionString;
-            platform.Value = manifest.Platform;
-            byte[] binBytes = File.ReadAllBytes(filePath);
-            bin.Value = binBytes;
-
-            cmd.Parameters.Add(packageId);
-            cmd.Parameters.Add(version);
-            cmd.Parameters.Add(platform);
-            cmd.Parameters.Add(bin);
-
-            cmd.ExecuteNonQuery();
-         }
+         return _sql.Insert("PackageBinary",
+                            new[] {"PackageId", "Version", "Platform", "Data"},
+                            new object[] {manifest.PackageId, manifest.VersionString, manifest.Platform, bin});
       }
 
       private long GetLocalRepositoryId()
       {
          long id = -1;
-         using(SQLiteCommand cmd = Connection.CreateCommand())
+         using(IDbCommand cmd = _sql.CreateCommand())
          {
             cmd.CommandText = "select RepositoryId from Repository where Tag='local'";
             object objid = cmd.ExecuteScalar();
@@ -96,12 +50,7 @@ namespace Pundit.Core.Application.Repository
 
          if(id == -1)
          {
-            using(SQLiteCommand cmd = Connection.CreateCommand())
-            {
-               cmd.CommandText = "insert into Repository (Tag) values('local')" + SelectId;
-               object objid = cmd.ExecuteScalar();
-               id = (long) objid;
-            }
+            id = _sql.Insert("Repository", new[] {"Tag"}, new[] {LocalRepoName});
          }
 
          return id;
@@ -109,44 +58,32 @@ namespace Pundit.Core.Application.Repository
 
       private long WriteManifest(Package manifest)
       {
-         long manifestId;
-
-         using(SQLiteCommand cmd = Connection.CreateCommand())
-         {
-            cmd.CommandText = "insert into PackageManifest " +
-                              "(RepositoryId, PackageId, Version, Platform, HomeUrl, Author, Description, ReleaseNotes, License) " +
-                              "values ((?), (?), (?), (?), (?), (?), (?), (?), (?))" + SelectId;
-
-            cmd
-               .Add(GetLocalRepositoryId())
-               .Add(manifest.PackageId)
-               .Add(manifest.VersionString)
-               .Add(manifest.Platform)
-               .Add(manifest.ProjectUrl)
-               .Add(manifest.Author)
-               .Add(manifest.Description)
-               .Add(manifest.ReleaseNotes)
-               .Add(manifest.ReleaseNotes);
-
-            manifestId = (long) cmd.ExecuteScalar();
-         }
+         long manifestId = _sql.Insert("PackageManifest",
+                                       new[]
+                                          {
+                                             "RepositoryId", "PackageId", "Version", "Platform", "HomeUrl", "Author",
+                                             "Description", "ReleaseNotes", "License"
+                                          },
+                                       new object[]
+                                          {
+                                             _repoId, manifest.PackageId, manifest.VersionString,
+                                             manifest.Platform, manifest.ProjectUrl, manifest.Author,
+                                             manifest.Description, manifest.ReleaseNotes, manifest.License
+                                          });
 
          foreach(PackageDependency dependency in manifest.Dependencies)
          {
-            using(SQLiteCommand cmd = Connection.CreateCommand())
-            {
-               cmd.CommandText =
-                  "insert into PackageDependency (PackageManifestId, PackageId, VersionPattern, Platform, Scope, CreatePlatformFolder) " +
-                  "values ((?), (?), (?), (?), (?), (?))";
-               cmd
-                  .Add(manifestId)
-                  .Add(dependency.PackageId)
-                  .Add(dependency.VersionPattern)
-                  .Add(dependency.Platform)
-                  .Add((long) dependency.Scope)
-                  .Add(dependency.CreatePlatformFolder);
-               cmd.ExecuteNonQuery();
-            }
+            long depId = _sql.Insert("PackageDependency",
+                                     new[]
+                                        {
+                                           "PackageManifestId", "PackageId", "VersionPattern", "Platform", "Scope",
+                                           "CreatePlatformFolder"
+                                        },
+                                     new object[]
+                                        {
+                                           manifestId, dependency.PackageId, dependency.VersionPattern,
+                                           dependency.Platform, (long) dependency.Scope
+                                        });
          }
 
          return manifestId;
@@ -154,11 +91,11 @@ namespace Pundit.Core.Application.Repository
 
       public void Publish(Stream packageStream)
       {
-         string tempFile = Path.Combine(_absoluteDir, "download-" + Guid.NewGuid());
+         string tempFile = Path.Combine(Path.GetTempPath(), TempFilePrefix + Guid.NewGuid());
 
          try
          {
-            using (SQLiteTransaction tran = Connection.BeginTransaction())
+            using (IDbTransaction tran = _sql.BeginTransaction())
             {
                //download file
                using (Stream ts = File.Create(tempFile))
@@ -199,7 +136,7 @@ namespace Pundit.Core.Application.Repository
 
       public Stream Download(PackageKey key)
       {
-         using(SQLiteCommand cmd = Connection.CreateCommand())
+         using(IDbCommand cmd = _sql.CreateCommand())
          {
             cmd.CommandText = "select Data from PackageBinary where PackageId=(?) and Version=(?) and Platform=(?)";
             cmd
@@ -207,7 +144,7 @@ namespace Pundit.Core.Application.Repository
                .Add(key.VersionString)
                .Add(key.Platform);
 
-            using(SQLiteDataReader reader = cmd.ExecuteReader())
+            using(IDataReader reader = cmd.ExecuteReader())
             {
                if (!reader.Read()) throw new FileNotFoundException("package not found");
 
@@ -220,49 +157,121 @@ namespace Pundit.Core.Application.Repository
 
       public Version[] GetVersions(UnresolvedPackage package, VersionPattern pattern)
       {
-         List<Version> r = new List<Version>();
+         var r = new HashSet<Version>();
 
-         using(SQLiteCommand cmd = Connection.CreateCommand())
+         using (IDataReader reader = _sql.ExecuteReader("PackageManifest",
+            new[] { "Version" },
+            new[] { "PackageId=(?)", "Platform=(?)", "RepositoryId=(?)" },
+            new object[] { package.PackageId, package.Platform, _repoId }))
          {
-            cmd.CommandText = "select distinct Version where PackageId=(?) and Platform=(?)";
-            cmd.Add(package.PackageId).Add(package.Platform);
-
-            using(SQLiteDataReader reader = cmd.ExecuteReader())
+            while (reader.Read())
             {
-               while(reader.Read())
-               {
-                  Version v = new Version((string) reader["Version"]);
+               var v = new Version(reader.AsString("Version"));
 
-                  if(pattern.Matches(v)) r.Add(v);
-               }
+               if (pattern.Matches(v)) r.Add(v);
             }
          }
 
          return r.ToArray();
       }
 
+      private Package ReadPackage(IDataReader reader, out long dbId)
+      {
+         dbId = reader.AsLong("PackageManifestId");
+
+         return new Package(reader.AsString("PackageId"), new Version(reader.AsString("Version")))
+                   {
+                      Platform = reader.AsString("Platform"),
+                      ProjectUrl = reader.AsString("HomeUrl"),
+                      Author = reader.AsString("Author"),
+                      Description = reader.AsString("Description"),
+                      ReleaseNotes = reader.AsString("ReleaseNotes"),
+                      License = reader.AsString("License")
+                   };
+      }
+
+      private PackageDependency ReadDependency(IDataReader reader)
+      {
+         return new PackageDependency(reader.AsString("PackageId"), reader.AsString("VersionPattern"))
+                   {
+                      Platform = reader.AsString("Platform"),
+                      Scope = (DependencyScope)reader.AsLong("Scope"),
+                      CreatePlatformFolder = reader.AsBool("CreatePlatformFolder")
+                   };
+      }
+
       public Package GetManifest(PackageKey key)
       {
-         throw new NotImplementedException();
+         long dbId;
+         Package root;
+
+         using(IDataReader reader = _sql.ExecuteReader("PackageManifest", null,
+            new[] { "RepositoryId=(?)", "PackageId=(?)", "Version=(?)", "Platform=(?)" },
+            new object[] {_repoId, key.PackageId, key.Version.ToString(), key.Platform}))
+         {
+            if (reader.Read())
+            {
+               root = ReadPackage(reader, out dbId);
+            }
+            else
+            {
+               throw new FileNotFoundException("package " + key + " not found");
+            }
+         }
+
+         using(IDataReader reader = _sql.ExecuteReader("PackageDependency", null,
+            new[] {"PackageManifestId=(?)"}, new object[] {dbId}))
+         {
+            while(reader.Read())
+            {
+               root.Dependencies.Add(ReadDependency(reader));
+            }
+         }
+
+         return root;
       }
 
       public bool[] PackagesExist(PackageKey[] packages)
       {
-         throw new NotImplementedException();
+         if (packages == null) return null;
+
+         bool[] r = new bool[packages.Length];
+
+         for (int i = 0; i < packages.Length; i++ )
+         {
+            long id = _sql.ExecuteScalar<long>("PackageManifest", "PackageManifestId",
+                                               new[] {"RepositoryId=(?)", "PackageId=(?)", "Version=(?)", "Platform=(?)"},
+                                               _repoId, packages[i].PackageId, packages[i].Version.ToString(),
+                                               packages[i].Platform);
+
+            r[i] = id != 0;
+         }
+
+         return r;
       }
 
       public PackageKey[] Search(string substring)
       {
-         throw new NotImplementedException();
+         var r = new HashSet<PackageKey>();
+
+         using(IDataReader reader = _sql.ExecuteReader("PackageManifest", null,
+            new[] { "RepositoryId=(?)", "PackageId like (?)"}, _repoId,
+            "%" + substring + "%"))
+         {
+            while(reader.Read())
+            {
+               r.Add(new PackageKey(reader.AsString("PackageId"),
+                                    new Version(reader.AsString("Version")),
+                                    reader.AsString("Platform")));
+            }
+         }
+
+         return r.ToArray();
       }
 
       public void Dispose()
       {
-         if(_conn != null)
-         {
-            _conn.Dispose();
-            _conn = null;
-         }
+         _sql.Dispose();
       }
    }
 }
