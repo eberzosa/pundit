@@ -34,5 +34,7 @@ namespace Pundit.Core.Model
       void Unregister(long repoId);
 
       void Update(Repo repo);
+
+      void RunScheduledSnapshotUpdates();
    }
 }

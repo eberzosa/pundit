@@ -28,6 +28,8 @@ namespace Pundit.Core.Application.Console.Commands
             AddRepository();
          else if(action == "caps")
             UpdateCaps();
+         else if(action == "update")
+            Update();
          else throw new ArgumentException("unknown action " + action);
       }
 
@@ -117,6 +119,13 @@ namespace Pundit.Core.Application.Console.Commands
          int hours = GetIntParameter("refresh:");
          string publish = GetParameter("publish:");
 
+      }
+
+      private void Update()
+      {
+         console.WriteLine("running scheduled update...");
+         LocalConfiguration.RepositoryManager.RunScheduledSnapshotUpdates();
+         console.WriteLine("done.");
       }
    }
 }

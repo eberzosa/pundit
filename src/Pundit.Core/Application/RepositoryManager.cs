@@ -122,5 +122,18 @@ namespace Pundit.Core.Application
       {
          throw new NotImplementedException();
       }
+
+      public void RunScheduledSnapshotUpdates()
+      {
+         foreach(Repo repo in ActiveRepositories)
+         {
+            if(DateTime.Now - repo.LastRefreshed > TimeSpan.FromHours(repo.RefreshIntervalInHours))
+            {
+               IRemoteRepository remote = RemoteRepositoryFactory.Create(repo);
+
+               //todo:
+            }
+         }
+      }
    }
 }
