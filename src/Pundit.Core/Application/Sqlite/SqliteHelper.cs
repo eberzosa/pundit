@@ -4,6 +4,7 @@ using System.Data.SQLite;
 using System.IO;
 using System.Reflection;
 using System.Text;
+using Pundit.Core.Model;
 
 namespace Pundit.Core.Application.Sqlite
 {
@@ -24,6 +25,8 @@ namespace Pundit.Core.Application.Sqlite
          if (!Directory.Exists(_absoluteDir))
             throw new DirectoryNotFoundException("target folder not found (" + _absoluteDir + ")");
       }
+
+      #region [ Common ]
 
       public string DataSource
       {
@@ -221,6 +224,45 @@ namespace Pundit.Core.Application.Sqlite
             cmd.ExecuteNonQuery();
          }
       }
+
+      #endregion
+
+      #region [ Product Related ]
+
+      public long WriteManifest(long repoId, Package manifest)
+      {
+         long manifestId = Insert("PackageManifest",
+                                  new[]
+                                     {
+                                        "RepositoryId", "PackageId", "Version", "Platform", "HomeUrl", "Author",
+                                        "Description", "ReleaseNotes", "License"
+                                     },
+                                  new object[]
+                                     {
+                                        repoId, manifest.PackageId, manifest.VersionString,
+                                        manifest.Platform, manifest.ProjectUrl, manifest.Author,
+                                        manifest.Description, manifest.ReleaseNotes, manifest.License
+                                     });
+
+         foreach (PackageDependency dependency in manifest.Dependencies)
+         {
+            long depId = Insert("PackageDependency",
+                                new[]
+                                   {
+                                      "PackageManifestId", "PackageId", "VersionPattern", "Platform", "Scope",
+                                      "CreatePlatformFolder"
+                                   },
+                                new object[]
+                                   {
+                                      manifestId, dependency.PackageId, dependency.VersionPattern,
+                                      dependency.Platform, (long) dependency.Scope, dependency.CreatePlatformFolder
+                                   });
+         }
+
+         return manifestId;
+      }
+
+      #endregion
 
       public void Dispose()
       {

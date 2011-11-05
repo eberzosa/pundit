@@ -34,7 +34,7 @@ namespace Pundit.Core.Application
 
       private void Initialize()
       {
-         //_localRepo = new SqliteRepository(_sql.DataSource);
+         _localRepo = new SqliteLocalRepository(_sql.DataSource);
       }
 
       private Repo ReadRepository(IDataReader reader)
@@ -63,7 +63,10 @@ namespace Pundit.Core.Application
             {
                while (reader.Read())
                {
-                  r.Add(ReadRepository(reader));
+                  if (reader.AsString("Tag") != LocalConfiguration.LocalRepositoryTag)
+                  {
+                     r.Add(ReadRepository(reader));
+                  }
                }
             }
             return r;
@@ -72,7 +75,7 @@ namespace Pundit.Core.Application
 
       public IEnumerable<Repo> ActiveRepositories
       {
-         get { return AllRepositories.Where(r => r.IsEnabled && r.Tag != LocalConfiguration.LocalRepositoryTag); }
+         get { return AllRepositories.Where(r => r.IsEnabled); }
       }
 
       public IEnumerable<Repo> PublishingRepositories
@@ -105,7 +108,17 @@ namespace Pundit.Core.Application
          throw new NotImplementedException();
       }
 
-      public IEnumerable<PackageKey> SearchPackages(string substring)
+      public void Register(Repo newRepo)
+      {
+         throw new NotImplementedException();
+      }
+
+      public void Unregister(long repoId)
+      {
+         throw new NotImplementedException();
+      }
+
+      public void Update(Repo repo)
       {
          throw new NotImplementedException();
       }

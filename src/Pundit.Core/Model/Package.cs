@@ -16,10 +16,13 @@ namespace Pundit.Core.Model
    {
       public const string DefaultManifestFileName = "pundit.xml"; //package definition
       public const string PackedExtension = ".pundit";
+      public const string NoArchPlatformName = "noarch";
 
       private static Regex _packageStringRgx = new Regex("^[0-9a-zA-Z\\._]+$");
       private static Regex _packageVersionRgx = new Regex("^[0-9\\*]+(\\.[0-9\\*]+){3}$");
       private const string PackageStringDescr = "allowed characters: letters (A-Z, a-z), numbers, underscore (_) and dot sign (.)";
+
+      private string _platform;
 
       private List<PackageDependency> _dependencies = new List<PackageDependency>();
 
@@ -31,8 +34,15 @@ namespace Pundit.Core.Model
       [XmlElement("packageId")]
       public string PackageId { get; set; }
 
+      /// <summary>
+      /// Package platform
+      /// </summary>
       [XmlElement("platform")]
-      public string Platform { get; set; }
+      public string Platform
+      {
+         get { return _platform; }
+         set { _platform = string.IsNullOrEmpty(value) ? NoArchPlatformName : value; }
+      }
 
       [XmlElement("project-url")]
       public string ProjectUrl { get; set; }
@@ -73,6 +83,7 @@ namespace Pundit.Core.Model
       public Package()
       {
          CoreVersion = Assembly.GetExecutingAssembly().GetName().Version.ToString();
+         Platform = Platform;
       }
 
       /// <summary>

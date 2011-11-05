@@ -27,11 +27,11 @@ namespace Pundit.Core.Model
       Package GetManifest(PackageKey key);
 
       /// <summary>
-      /// Determines if the packages exist in local snapshot
+      /// Determines if the binaries are downloaded into the local cache
       /// </summary>
       /// <param name="packages"></param>
       /// <returns></returns>
-      ICollection<bool> PackagesExist(IEnumerable<PackageKey> packages);
+      ICollection<bool> BinariesExists(IEnumerable<PackageKey> packages);
 
       /// <summary>
       /// Performs search in the repository

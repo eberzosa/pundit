@@ -12,18 +12,18 @@ namespace Pundit.Core.Model
       [XmlAttribute("diff")]
       public DiffType Diff { get; set; }
 
-      [XmlElement("key")]
-      public PackageKey Key { get; set; }
+      [XmlElement("manifest")]
+      public Package Manifest { get; set; }
 
       public PackageSnapshotKey()
       {
          
       }
 
-      public PackageSnapshotKey(PackageKey key)
+      public PackageSnapshotKey(Package manifest)
       {
          Diff = DiffType.Add;
-         Key = key;
+         Manifest = manifest;
       }
    }
 }

@@ -43,7 +43,7 @@ namespace Pundit.Test.Mocks
          return _manifests[key];
       }
 
-      public ICollection<bool> PackagesExist(IEnumerable<PackageKey> packages)
+      public ICollection<bool> BinariesExists(IEnumerable<PackageKey> packages)
       {
          throw new NotImplementedException();
       }

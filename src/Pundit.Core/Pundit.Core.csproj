@@ -76,6 +76,7 @@
     <Compile Include="Application\PackageStreamer.cs" />
     <Compile Include="Application\PackageWriter.cs" />
     <Compile Include="Application\RepositoryManager.cs" />
+    <Compile Include="Application\Repository\HttpRestRemoteRepository.cs" />
     <Compile Include="Application\Repository\RemoteFolderRepository.cs" />
     <Compile Include="Application\Sqlite\SqliteExtensions.cs" />
     <Compile Include="Application\Repository\SqliteLocalRepository.cs" />
@@ -106,7 +107,7 @@
     <Compile Include="Model\VersionPattern.cs" />
     <Compile Include="Model\VersionResolutionTable.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
-    <Compile Include="RepositoryFactory.cs" />
+    <Compile Include="RemoteRepositoryFactory.cs" />
     <Compile Include="Utils\Exceptional.cs" />
     <Compile Include="Utils\FileSet.cs" />
     <Compile Include="Utils\FileSizeFormatProvider.cs" />

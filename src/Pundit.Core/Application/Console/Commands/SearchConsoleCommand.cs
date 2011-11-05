@@ -20,7 +20,7 @@ namespace Pundit.Core.Application.Console.Commands
 
          console.WriteLine("searching '{0}'...", text);
          bool found = false;
-         foreach(PackageKey key in LocalConfiguration.RepositoryManager.SearchPackages(text))
+         foreach(PackageKey key in LocalConfiguration.RepositoryManager.LocalRepository.Search(text))
          {
             found = true;
             if (inXml)

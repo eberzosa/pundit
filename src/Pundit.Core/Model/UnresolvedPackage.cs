@@ -10,18 +10,24 @@ namespace Pundit.Core.Model
    [DataContract]
    public class UnresolvedPackage
    {
+      private string _platform;
+
       [DataMember]
       public string PackageId { get; set; }
 
       [DataMember]
-      public string Platform { get; set; }
+      public string Platform
+      {
+         get { return _platform; }
+         set { _platform = string.IsNullOrEmpty(value) ? Package.NoArchPlatformName : value; }
+      }
 
       public UnresolvedPackage(string packageId, string platform)
       {
          if (packageId == null) throw new ArgumentNullException("packageId");
 
          PackageId = packageId;
-         Platform = PackageUtils.TrimPlatformName(platform);
+         Platform = platform;
       }
 
       public override bool Equals(object obj)
@@ -30,8 +36,7 @@ namespace Pundit.Core.Model
          {
             UnresolvedPackage that = (UnresolvedPackage) obj;
 
-            return that.PackageId == this.PackageId &&
-                   PackageUtils.ArePlatformsEqual(this.Platform, that.Platform);
+            return that.PackageId == this.PackageId && this.Platform == that.Platform;
          }
 
          return false;

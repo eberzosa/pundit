@@ -17,16 +17,16 @@ namespace Pundit.Core.Model
 
       public PackageKey()
       {
-         
+         Platform = Platform;
       }
 
-      public PackageKey(string packageId, Version version, string platform)
+      public PackageKey(string packageId, Version version, string platform) : this()
       {
          if (packageId == null) throw new ArgumentNullException("packageId");
 
          PackageId = packageId;
          Version = version;
-         Platform = PackageUtils.TrimPlatformName(platform);
+         Platform = platform;
       }
 
       [XmlAttribute("id")]
@@ -58,7 +58,7 @@ namespace Pundit.Core.Model
       public string Platform
       {
          get { return _platform; }
-         set { _platform = value; }
+         set { _platform = string.IsNullOrEmpty(value) ? Package.NoArchPlatformName : value; }
       }
 
       public override bool Equals(object obj)

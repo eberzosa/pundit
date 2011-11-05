@@ -13,7 +13,6 @@ namespace Pundit.Core.Model
       IEnumerable<Repo> PublishingRepositories { get; }
       Repo GetRepositoryByTag(string tag);
       Repo GetRepositoryById(long id);
-      IEnumerable<PackageKey> SearchPackages(string substring);
 
       /// <summary>
       /// Returns the size occupied by local data in total in bytes. It's never shrinkable to zero.
@@ -29,5 +28,11 @@ namespace Pundit.Core.Model
       /// Deletes all binaries from the local cache
       /// </summary>
       void ZapBinarySpace();
+
+      void Register(Repo newRepo);
+
+      void Unregister(long repoId);
+
+      void Update(Repo repo);
    }
 }

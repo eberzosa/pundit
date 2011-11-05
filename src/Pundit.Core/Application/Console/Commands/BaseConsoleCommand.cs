@@ -81,6 +81,14 @@ namespace Pundit.Core.Application.Console.Commands
          return v != null;
       }
 
+      protected int GetIntParameter(string spec, int namelessIndex = -1)
+      {
+         string v = GetParameter(spec, namelessIndex);
+         int vi;
+         if (!int.TryParse(v, out vi)) vi = 0;
+         return vi;
+      }
+
       protected string GetLocalManifest()
       {
          string manifestPath = null;

@@ -26,10 +26,8 @@ namespace Pundit.Core.Application.Console.Commands
             DeleteRepository();
          else if(action == "add")
             AddRepository();
-         else if(action == "enable")
-            EnableRepository(true);
-         else if(action == "disable")
-            EnableRepository(false);
+         else if(action == "caps")
+            UpdateCaps();
          else throw new ArgumentException("unknown action " + action);
       }
 
@@ -83,17 +81,42 @@ namespace Pundit.Core.Application.Console.Commands
 
       private void DeleteRepository()
       {
-         
+         string tag = GetParameter("tag:", 1);
+         if (string.IsNullOrEmpty(tag)) throw new ApplicationException("repository tag required");
+
+         Repo r = LocalConfiguration.RepositoryManager.GetRepositoryByTag(tag);
+         if(r == null) throw new ApplicationException("repository not found");
+
+         LocalConfiguration.RepositoryManager.Unregister(r.Id);
+         console.WriteLine("repository deleted");
       }
 
       private void AddRepository()
       {
-         
+         string tag = GetParameter("tag:", 1);
+         string uri = GetParameter("uri:", 2);
+         int hours = GetIntParameter("refresh:", 3);
+
+         if(string.IsNullOrEmpty(tag)) throw new ApplicationException("repository tag required");
+         if(string.IsNullOrEmpty(uri)) throw new ApplicationException("repository uri required");
+         if(hours < 1) throw new ApplicationException("positive number of hours required");
+
+         console.WriteLine("adding repository '{0}' from {1}, refresh interval: {2} hour(s)...",
+            tag, uri, hours);
       }
 
-      private void EnableRepository(bool enable)
+      private void UpdateCaps()
       {
-         
+         string tag = GetParameter("tag:", 1);
+         if (string.IsNullOrEmpty(tag)) throw new ApplicationException("repository tag required");
+
+         Repo r = LocalConfiguration.RepositoryManager.GetRepositoryByTag(tag);
+         if (r == null) throw new ApplicationException("repository not found");
+
+         string enabled = GetParameter("enabled:");
+         int hours = GetIntParameter("refresh:");
+         string publish = GetParameter("publish:");
+
       }
    }
 }

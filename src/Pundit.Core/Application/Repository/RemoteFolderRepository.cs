@@ -1,13 +1,18 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.IO;
-using System.Linq;
-using System.Text;
 using Pundit.Core.Model;
 using Pundit.Core.Utils;
 
 namespace Pundit.Core.Application.Repository
 {
+   /// <summary>
+   /// Extremely slow and ineffective directory-based remote repository.
+   /// AVOID WHENEVER POSSIBLE!!!
+   /// Does not support deltas.
+   /// Will list all files in the remote folder and download each of them to unpack manifest.
+   /// Still exist only for compatibility with ancient versions.
+   /// </summary>
    class RemoteFolderRepository : IRemoteRepository
    {
       private readonly string _rootPath;
@@ -19,6 +24,24 @@ namespace Pundit.Core.Application.Repository
             throw new ArgumentException("root directory [" + rootPath + "] does not exist", "rootPath");
 
          _rootPath = rootPath;
+      }
+
+      private static string GetBuildsSearchFilePattern(Package pkg)
+      {
+         pkg.Validate();
+
+         return String.Format(PackageUtils.PackageFileNamePattern,
+                              pkg.PackageId,
+                              pkg.Version.Major, pkg.Version.Minor, pkg.Version.Build,
+                              "*",
+                              String.IsNullOrEmpty(pkg.Platform) ? "noarch" : pkg.Platform,
+                              Package.PackedExtension);
+      }
+
+
+      private static string[] SearchAllRelatedBuilds(string sourceDirectory, Package pkg)
+      {
+         return Directory.GetFiles(sourceDirectory, GetBuildsSearchFilePattern(pkg));
       }
 
       public void Publish(Stream packageStream)
@@ -42,7 +65,7 @@ namespace Pundit.Core.Application.Repository
          }
 
          //remove all related builds
-         foreach(string rb in PackageUtils.SearchAllRelatedBuilds(_rootPath, manifest))
+         foreach(string rb in SearchAllRelatedBuilds(_rootPath, manifest))
          {
             File.Delete(rb);
          }
@@ -66,7 +89,22 @@ namespace Pundit.Core.Application.Repository
 
       public PackageSnapshotKey[] GetSnapshot(string changeId, out string nextChangeId)
       {
-         throw new NotImplementedException();
+         if(changeId != null) throw new NotSupportedException("deltas not supported, start from null");
+         List<PackageSnapshotKey> r = new List<PackageSnapshotKey>();
+
+         foreach(string path in Directory.GetFiles(_rootPath, "*" + Package.PackedExtension))
+         {
+            using(Stream s = File.OpenRead(path))
+            {
+               using (PackageReader rdr = new PackageReader(s))
+               {
+                  r.Add(new PackageSnapshotKey(rdr.ReadManifest()));
+               }
+            }
+         }
+
+         nextChangeId = null;
+         return r.ToArray();
       }
    }
 }

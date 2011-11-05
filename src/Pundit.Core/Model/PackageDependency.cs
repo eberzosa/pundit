@@ -11,12 +11,14 @@ namespace Pundit.Core.Model
    [Serializable]
    public class PackageDependency
    {
+      private string _plaftorm;
+
       public PackageDependency()
       {
-         
+         Platform = Platform;
       }
 
-      public PackageDependency(string packageId, string versionPattern)
+      public PackageDependency(string packageId, string versionPattern) : this()
       {
          if (packageId == null) throw new ArgumentNullException("packageId");
          if (versionPattern == null) throw new ArgumentNullException("versionPattern");
@@ -36,7 +38,11 @@ namespace Pundit.Core.Model
       /// guess is performed
       /// </summary>
       [XmlAttribute("platform")]
-      public string Platform { get; set; }
+      public string Platform
+      {
+         get { return _plaftorm; }
+         set { _plaftorm = string.IsNullOrEmpty(value) ? Package.NoArchPlatformName : value; }
+      }
 
       /// <summary>
       /// Set to true if the dependency must exist at dev time only.

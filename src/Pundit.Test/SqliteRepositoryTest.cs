@@ -103,7 +103,7 @@ namespace Pundit.Test
       {
          PublishSome();
 
-         ICollection<bool> r = _repo.PackagesExist(new[]
+         ICollection<bool> r = _repo.BinariesExists(new[]
                                            {
                                               new PackageKey("stateless", new Version("2.3.1.1"), "net35"),
                                               new PackageKey("stateless", new Version("2.3.1.2"), "net35"),
