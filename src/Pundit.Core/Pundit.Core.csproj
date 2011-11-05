@@ -67,7 +67,6 @@
     <Compile Include="Application\Console\Commands\ResolveConsoleCommand.cs" />
     <Compile Include="Application\Console\Commands\SearchConsoleCommand.cs" />
     <Compile Include="Application\Console\Commands\TemplateConsoleCommand.cs" />
-    <Compile Include="Application\Console\Commands\UpdateConsoleCommand.cs" />
     <Compile Include="Application\Console\Commands\UtilsConsoleCommand.cs" />
     <Compile Include="Application\Console\NoCurrentDirectoryException.cs" />
     <Compile Include="Application\Console\Strings.Designer.cs" />
@@ -82,8 +81,6 @@
     <Compile Include="Application\Sqlite\SqliteExtensions.cs" />
     <Compile Include="Application\Repository\SqliteRepository.cs" />
     <Compile Include="Application\Sqlite\SqliteHelper.cs" />
-    <Compile Include="AutoUpdate.cs" />
-    <Compile Include="GlamTerm.cs" />
     <Compile Include="LocalRepository.cs" />
     <Compile Include="Model\IRemoteRepository.cs" />
     <Compile Include="Model\DependencyNode.cs" />

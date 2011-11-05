@@ -7,7 +7,7 @@ using Pundit.Core.Model;
 
 namespace Pundit.Core
 {
-   public static class RepositoryFactory
+   static class RepositoryFactory
    {
       private const string SqliteRepoPrefix = "sqlite://";
       private const string DirRepoPrefix = "dir://";
