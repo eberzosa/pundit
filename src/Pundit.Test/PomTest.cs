@@ -10,7 +10,7 @@ namespace Pundit.Test
       [Test]
       public void PackageSerializationTest()
       {
-         Package g = new Package() {PackageId = "commonlib", Version = new Version("1.2.3.4")};
+         Package g = new Package {PackageId = "commonlib", Version = new Version("1.2.3.4")};
 
          g.Dependencies.Add(new PackageDependency() {PackageId = "log4net", VersionPattern = "1.2.*"});
 
