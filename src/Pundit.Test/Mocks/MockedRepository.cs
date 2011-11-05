@@ -7,7 +7,7 @@ using Pundit.Core.Model;
 
 namespace Pundit.Test.Mocks
 {
-   public class MockedRepository : IRepository
+   public class MockedRepository : ILocalRepository
    {
       private Dictionary<string, Version[]> _versions = new Dictionary<string, Version[]>();
       private Dictionary<PackageKey, Package> _manifests = new Dictionary<PackageKey, Package>();
@@ -24,17 +24,7 @@ namespace Pundit.Test.Mocks
 
       #region [Interface]
 
-      public void Publish(Stream packageStream)
-      {
-         throw new NotImplementedException();
-      }
-
-      public Stream Download(PackageKey key)
-      {
-         throw new NotImplementedException();
-      }
-
-      public Version[] GetVersions(UnresolvedPackage package, VersionPattern pattern)
+      public ICollection<Version> GetVersions(UnresolvedPackage package, VersionPattern pattern)
       {
          Version[] all = _versions[package.PackageId];
          List<Version> matching = new List<Version>();
@@ -53,12 +43,22 @@ namespace Pundit.Test.Mocks
          return _manifests[key];
       }
 
-      public bool[] PackagesExist(PackageKey[] packages)
+      public ICollection<bool> PackagesExist(IEnumerable<PackageKey> packages)
       {
          throw new NotImplementedException();
       }
 
-      public PackageKey[] Search(string substring)
+      public ICollection<PackageKey> Search(string substring)
+      {
+         throw new NotImplementedException();
+      }
+
+      public void Put(Stream packageStream)
+      {
+         throw new NotImplementedException();
+      }
+
+      public Stream Get(PackageKey binaryKey)
       {
          throw new NotImplementedException();
       }

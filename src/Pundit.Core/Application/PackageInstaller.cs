@@ -12,7 +12,7 @@ namespace Pundit.Core.Application
       private readonly string _rootDirectory;
       private readonly VersionResolutionTable _versionTable;
       private readonly DevPackage _devManifest;
-      private readonly IRepository _localRepository;
+      private readonly ILocalRepository _localRepository;
       private InstalledPackagesIndex _index;
       private bool _indexCommitted;
 
@@ -26,7 +26,7 @@ namespace Pundit.Core.Application
 
       public PackageInstaller(string rootDirectory, VersionResolutionTable versionTable,
          DevPackage devManifest,
-         IRepository localRepository)
+         ILocalRepository localRepository)
       {
          if (rootDirectory == null) throw new ArgumentNullException("rootDirectory");
          if (versionTable == null) throw new ArgumentNullException("versionTable");
@@ -140,7 +140,7 @@ namespace Pundit.Core.Application
       {
          //if(!_index.IsInstalled(pck))
          //{
-            using (Stream s = _localRepository.Download(pck))
+            using (Stream s = _localRepository.Get(pck))
             {
                using (PackageReader reader = new PackageReader(s))
                {

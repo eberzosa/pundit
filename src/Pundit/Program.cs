@@ -1,4 +1,5 @@
 ﻿using System;
+using Pundit.Core;
 using Pundit.Core.Application.Console;
 using Pundit.Core.Model;
 using Pundit.Core.Utils;
@@ -7,7 +8,7 @@ namespace Pundit.Console
 {
    static class Program
    {
-      private static readonly Version CoreVersion = PackageUtils.GetProductVersion(typeof (IRepository).Assembly);
+      private static readonly Version CoreVersion = PackageUtils.GetProductVersion(typeof (LocalConfiguration).Assembly);
       private static readonly IConsoleOutput Con = new GlamTerm();
 
       static int Main(string[] args)

@@ -15,7 +15,7 @@ namespace Pundit.Core.Application.Console.Commands
 
       public override void Execute()
       {
-         string text = GetParameter("t|text", 0);
+         string text = GetParameter("t:|text:", 0);
          bool inXml = GetBoolParameter(false, "x|xml");
 
          console.WriteLine("searching '{0}'...", text);

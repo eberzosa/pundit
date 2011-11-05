@@ -14,7 +14,7 @@ namespace Pundit.Core.Application
    class RepositoryManager : IRepositoryManager
    {
       private readonly SqliteHelper _sql;
-      private IRepository _localRepo;
+      private ILocalRepository _localRepo;
 
       public RepositoryManager(SqliteHelper sql)
       {
@@ -34,7 +34,7 @@ namespace Pundit.Core.Application
 
       private void Initialize()
       {
-         _localRepo = new SqliteRepository(_sql.DataSource);
+         //_localRepo = new SqliteRepository(_sql.DataSource);
       }
 
       private Repo ReadRepository(IDataReader reader)
@@ -49,7 +49,7 @@ namespace Pundit.Core.Application
          };
       }
 
-      public IRepository LocalRepository
+      public ILocalRepository LocalRepository
       {
          get { return _localRepo; }
       }
@@ -72,7 +72,7 @@ namespace Pundit.Core.Application
 
       public IEnumerable<Repo> ActiveRepositories
       {
-         get { return AllRepositories.Where(r => r.IsEnabled); }
+         get { return AllRepositories.Where(r => r.IsEnabled && r.Tag != LocalConfiguration.LocalRepositoryTag); }
       }
 
       public IEnumerable<Repo> PublishingRepositories

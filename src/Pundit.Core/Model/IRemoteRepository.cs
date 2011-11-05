@@ -7,7 +7,7 @@ using System.ServiceModel.Web;
 namespace Pundit.Core.Model
 {
    /// <summary>
-   /// Repository contract
+   /// Remote repository wire contract
    /// </summary>
    [ServiceContract]
    public interface IRemoteRepository

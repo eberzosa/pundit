@@ -121,8 +121,7 @@ namespace Pundit.Core.Application.Console.Commands
          //resolve dependencies
          console.Write("resolving...\t\t\t");
 
-         var instances = new List<IRepository>(repositories.Select(RepositoryFactory.Create));
-         var dr = new DependencyResolution(devPackage, instances.ToArray());
+         var dr = new DependencyResolution(devPackage, LocalConfiguration.RepositoryManager.LocalRepository);
          var resolutionResult = dr.Resolve();
 
          console.Write(!resolutionResult.Item1.HasConflicts);
@@ -138,13 +137,13 @@ namespace Pundit.Core.Application.Console.Commands
 
          //ensure that all packages exist in local repository
          LocalConfiguration.PackageDownloadToLocalRepository += LocalRepository_PackageDownloadToLocalRepository;
-         LocalConfiguration.DownloadLocally(resolutionResult.Item1.GetPackages(), instances.Skip(1));
+         LocalConfiguration.DownloadLocally(resolutionResult.Item1.GetPackages());
 
          //install all packages
          using(PackageInstaller installer = new PackageInstaller(projectRoot,
             resolutionResult.Item1,
             devPackage,
-            instances.First()))
+            LocalConfiguration.RepositoryManager.LocalRepository))
          {
             installer.BeginInstallPackage += installer_BeginInstallPackage;
             installer.FinishInstallPackage += installer_FinishInstallPackage;

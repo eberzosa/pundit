@@ -12,7 +12,7 @@ namespace Pundit.Test
    [TestFixture]
    public class ResolutionsTest
    {
-      private IRepository _repo;
+      private ILocalRepository _repo;
 
       [SetUp]
       public void SetUp()
@@ -57,7 +57,7 @@ namespace Pundit.Test
          Package pkg = new Package("Self.Library", new Version(1, 2, 0, 0));
          pkg.Dependencies.Add(new PackageDependency("log4net", "1.2"));
 
-         DependencyResolution dr = new DependencyResolution(pkg, new[] { _repo });
+         DependencyResolution dr = new DependencyResolution(pkg, _repo );
          DependencyNode node = dr.Resolve().Item2;
 
          Assert.IsNotNull(node);
@@ -86,7 +86,7 @@ namespace Pundit.Test
          pkg.Dependencies.Add(new PackageDependency("Company.Logging", "3.0"));
          pkg.Dependencies.Add(new PackageDependency("log4net", "1.2.10"));
 
-         DependencyResolution dr = new DependencyResolution(pkg, new[] { _repo });
+         DependencyResolution dr = new DependencyResolution(pkg, _repo);
          DependencyNode result = dr.Resolve().Item2;
 
          Assert.AreEqual(2, result.Children.Count());
@@ -118,7 +118,7 @@ namespace Pundit.Test
          pkg.Dependencies.Add(new PackageDependency("Company.Logging", "3.0"));
          pkg.Dependencies.Add(new PackageDependency("log4net", "1.2.8"));
 
-         var dr = new DependencyResolution(pkg, new[] { _repo });
+         var dr = new DependencyResolution(pkg, _repo );
          var result = dr.Resolve();
          VersionResolutionTable table = result.Item1;
          IEnumerable<PackageKey> packages = table.GetPackages();
@@ -150,7 +150,7 @@ namespace Pundit.Test
          pkg.Dependencies.Add(new PackageDependency("Company.Logging", "3.0"));
          pkg.Dependencies.Add(new PackageDependency("log4net", "1.1"));
 
-         var dr = new DependencyResolution(pkg, new[] { _repo });
+         var dr = new DependencyResolution(pkg, _repo );
          var result = dr.Resolve();
          VersionResolutionTable table = result.Item1;
 

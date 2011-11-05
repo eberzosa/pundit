@@ -12,6 +12,7 @@ namespace Pundit.Core.Application.Console.Commands
    {
       private readonly string[] _args;
       private string[] _nameless;
+      private string[] _named;
       protected readonly IConsoleOutput console;
       private readonly string _currentDirectory;
 
@@ -31,10 +32,12 @@ namespace Pundit.Core.Application.Console.Commands
          if(_args != null)
          {
             _nameless = _args.Where(s => !s.StartsWith("-")).ToArray();
+            _named = _args.Where(s => s.StartsWith("-")).ToArray();
          }
          else
          {
             _nameless = new string[0];
+            _named = new string[0];
          }
       }
 
@@ -64,7 +67,7 @@ namespace Pundit.Core.Application.Console.Commands
          string v = null;
 
          if (spec != null)
-            new OptionSet().Add(spec, vi => v = vi).Parse(GetCommandLine());
+            new OptionSet().Add(spec, vi => v = vi).Parse(_named);
 
          if (v == null && namelessIndex != -1 && namelessIndex < _nameless.Length)
             v = _nameless[namelessIndex];
@@ -75,10 +78,7 @@ namespace Pundit.Core.Application.Console.Commands
       protected bool GetBoolParameter(bool defaultValue, string spec, int namelessIndex = -1)
       {
          string v = GetParameter(spec, namelessIndex);
-
-         bool bv;
-         if (!bool.TryParse(v, out bv)) bv = defaultValue;
-         return bv;
+         return v != null;
       }
 
       protected string GetLocalManifest()

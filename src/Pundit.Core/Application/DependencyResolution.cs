@@ -12,18 +12,17 @@ namespace Pundit.Core.Application
    /// </summary>
    public class DependencyResolution
    {
-      private readonly IRepository[] _activeRepositories;
+      private readonly ILocalRepository _repo;
       private readonly DependencyNode _root;
 
       /// <summary>
       /// 
       /// </summary>
       /// <param name="rootManifest"></param>
-      /// <param name="activeRepositories"></param>
-      public DependencyResolution(Package rootManifest, IRepository[] activeRepositories)
+      /// <param name="localRepository"></param>
+      public DependencyResolution(Package rootManifest, ILocalRepository localRepository)
       {
-         _activeRepositories = activeRepositories;
-
+         _repo = localRepository;
          _root = new DependencyNode(null, rootManifest.PackageId, rootManifest.Platform,
                                     new VersionPattern(rootManifest.Version.ToString()));
          _root.MarkAsRoot(rootManifest);
@@ -79,20 +78,17 @@ namespace Pundit.Core.Application
       {
          //if(_log.IsDebugEnabled) _log.Debug("resolving " + node.Path);
 
-         if(!node.HasVersions)
+         if (!node.HasVersions)
          {
             var versions = new HashSet<Version>();
 
-            foreach(IRepository repo in _activeRepositories)
-            {
-               Version[] vs = repo.GetVersions(node.UnresolvedPackage, node.VersionPattern);
+            ICollection<Version> vs = _repo.GetVersions(node.UnresolvedPackage, node.VersionPattern);
 
-               if(vs != null)
+            if (vs != null)
+            {
+               foreach (Version v in vs)
                {
-                  foreach(Version v in vs)
-                  {
-                     versions.Add(v);
-                  }
+                  versions.Add(v);
                }
             }
 
@@ -118,18 +114,13 @@ namespace Pundit.Core.Application
          {
             Package manifest = null;
 
-            foreach(var repo in _activeRepositories)
+            try
             {
-               try
-               {
-                  manifest = repo.GetManifest(node.ActiveVersionKey);
-               }
-               catch(FileNotFoundException)
-               {
+               manifest = _repo.GetManifest(node.ActiveVersionKey);
+            }
+            catch(FileNotFoundException)
+            {
                   
-               }
-
-               if (manifest != null) break;
             }
 
             if(manifest == null)

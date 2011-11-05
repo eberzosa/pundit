@@ -7,7 +7,7 @@ namespace Pundit.Core.Model
 {
    public interface IRepositoryManager
    {
-      IRepository LocalRepository { get; }
+      ILocalRepository LocalRepository { get; }
       IEnumerable<Repo> AllRepositories { get; }
       IEnumerable<Repo> ActiveRepositories { get; }
       IEnumerable<Repo> PublishingRepositories { get; }

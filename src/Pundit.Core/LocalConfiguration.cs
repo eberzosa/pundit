@@ -73,13 +73,12 @@ namespace Pundit.Core
       /// Downloads specified packages to the local repository
       /// </summary>
       /// <param name="packages"></param>
-      /// <param name="activeRepositories"></param>
-      public static void DownloadLocally(IEnumerable<PackageKey> packages, IEnumerable<IRepository> activeRepositories)
+      public static void DownloadLocally(IEnumerable<PackageKey> packages)
       {
-         IRepository localRepo = _mgr.LocalRepository;
+         /*ILocalRepository localRepo = _mgr.LocalRepository;
 
          PackageKey[] packagesArray = packages.ToArray();
-         bool[] existance = localRepo.PackagesExist(packagesArray);
+         ICollection<bool> existance = localRepo.PackagesExist(packagesArray);
 
          for(int i = 0; i < packagesArray.Length; i++)
          {
@@ -119,7 +118,7 @@ namespace Pundit.Core
                if (PackageDownloadToLocalRepository != null)
                   PackageDownloadToLocalRepository(null, new PackageDownloadEventArgs(pck, downloaded, 1, 1));
             }
-         }
+         }*/
       }
    }
 }

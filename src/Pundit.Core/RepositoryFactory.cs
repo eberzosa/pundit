@@ -12,11 +12,8 @@ namespace Pundit.Core
       private const string SqliteRepoPrefix = "sqlite://";
       private const string DirRepoPrefix = "dir://";
 
-      public static IRepository Create(Repo r)
+      /*public static IRepository Create(Repo r)
       {
-         if (r.Tag == LocalConfiguration.LocalRepositoryTag)
-            return LocalConfiguration.RepositoryManager.LocalRepository;
-
          return CreateFromUri(r.Uri);
       }
 
@@ -24,13 +21,13 @@ namespace Pundit.Core
       {
          if (uri == null) throw new ArgumentNullException("uri");
 
-         if(uri.StartsWith(SqliteRepoPrefix))
-            return new SqliteRepository(uri.Substring(SqliteRepoPrefix.Length));
+         //if(uri.StartsWith(SqliteRepoPrefix))
+         //   return new SqliteRepository(uri.Substring(SqliteRepoPrefix.Length));
 
-         if(uri.StartsWith(DirRepoPrefix))
-            return new FileRepository(uri);
+         //if(uri.StartsWith(DirRepoPrefix))
+         //   return new RemoteFolderRepository(uri);
 
          throw new ArgumentException("unknown repository type: " + uri);
-      }
+      }*/
    }
 }

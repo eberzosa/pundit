@@ -16,7 +16,7 @@ namespace Pundit.Test
    public class SqliteRepositoryTest
    {
       private string _localFile;
-      private SqliteRepository _repo;
+      private SqliteLocalRepository _repo;
       private string _dataPath;
 
       [SetUp]
@@ -25,7 +25,7 @@ namespace Pundit.Test
          _localFile = Path.GetTempFileName();
          File.Delete(_localFile);
 
-         _repo = (SqliteRepository)RepositoryFactory.CreateFromUri("sqlite://" + _localFile);
+         _repo = new SqliteLocalRepository(_localFile);
          _dataPath = Path.Combine(AppDomain.CurrentDomain.BaseDirectory, "Data");
       }
 
@@ -42,7 +42,7 @@ namespace Pundit.Test
 
          using (Stream s = File.OpenRead(path))
          {
-            _repo.Publish(s);
+            _repo.Put(s);
          }
       }
 
@@ -53,10 +53,10 @@ namespace Pundit.Test
 
          using (Stream s = File.OpenRead(path))
          {
-            _repo.Publish(s);
+            _repo.Put(s);
          }
 
-         Stream ps = _repo.Download(new PackageKey("stateless", new Version("2.3.1.1"), "net35"));
+         Stream ps = _repo.Get(new PackageKey("stateless", new Version("2.3.1.1"), "net35"));
          
          Assert.AreEqual(ps.Length, new FileInfo(path).Length);
       }
@@ -67,16 +67,16 @@ namespace Pundit.Test
          string path = Path.Combine(_dataPath, "stateless-2.3.1-1-net35.pundit");
          using (Stream s = File.OpenRead(path))
          {
-            _repo.Publish(s);
+            _repo.Put(s);
          }
 
-         Version[] v1 = _repo.GetVersions(new UnresolvedPackage("stateless", "net35"), new VersionPattern("2.3"));
-         Version[] v2 = _repo.GetVersions(new UnresolvedPackage("stateless", ""), new VersionPattern("2.3"));
-         Version[] v3 = _repo.GetVersions(new UnresolvedPackage("stateless", ""), new VersionPattern("2.3.2"));
+         var v1 = _repo.GetVersions(new UnresolvedPackage("stateless", "net35"), new VersionPattern("2.3"));
+         var v2 = _repo.GetVersions(new UnresolvedPackage("stateless", ""), new VersionPattern("2.3"));
+         var v3 = _repo.GetVersions(new UnresolvedPackage("stateless", ""), new VersionPattern("2.3.2"));
 
-         Assert.AreEqual(1, v1.Length);
-         Assert.AreEqual(0, v2.Length);
-         Assert.AreEqual(0, v3.Length);
+         Assert.AreEqual(1, v1.Count);
+         Assert.AreEqual(0, v2.Count);
+         Assert.AreEqual(0, v3.Count);
       }
 
       [Test]
@@ -90,7 +90,7 @@ namespace Pundit.Test
          }
          using (Stream s = File.OpenRead(path))
          {
-            _repo.Publish(s);
+            _repo.Put(s);
          }
 
          Package p2 = _repo.GetManifest(p.Key);
@@ -103,15 +103,15 @@ namespace Pundit.Test
       {
          PublishSome();
 
-         bool[] r = _repo.PackagesExist(new[]
+         ICollection<bool> r = _repo.PackagesExist(new[]
                                            {
                                               new PackageKey("stateless", new Version("2.3.1.1"), "net35"),
                                               new PackageKey("stateless", new Version("2.3.1.2"), "net35"),
                                            });
 
-         Assert.AreEqual(2, r.Length);
-         Assert.IsTrue(r[0]);
-         Assert.IsFalse(r[1]);
+         Assert.AreEqual(2, r.Count);
+         Assert.IsTrue(r.First());
+         Assert.IsFalse(r.ElementAt(1));
       }
 
       [Test]
@@ -119,9 +119,9 @@ namespace Pundit.Test
       {
          PublishSome();
 
-         PackageKey[] r = _repo.Search("stat");
+         ICollection<PackageKey> r = _repo.Search("stat");
 
-         Assert.AreEqual(1, r.Length);
+         Assert.AreEqual(1, r.Count);
       }
    }
 }

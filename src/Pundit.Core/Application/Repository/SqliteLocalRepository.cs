@@ -13,7 +13,7 @@ using Pundit.Core.Utils;
 
 namespace Pundit.Core.Application.Repository
 {
-   class SqliteRepository : IRepository, IDisposable
+   class SqliteLocalRepository : ILocalRepository, IDisposable
    {
       private const string LocalRepoName = "local";
       private const string TempFilePrefix = "pundit-download-part-";
@@ -21,7 +21,7 @@ namespace Pundit.Core.Application.Repository
       private readonly SqliteHelper _sql;
       private long _repoId;
 
-      public SqliteRepository(string dbPath)
+      public SqliteLocalRepository(string dbPath)
       {
          _sql = new SqliteHelper(dbPath);
          _repoId = GetLocalRepositoryId();
@@ -99,7 +99,7 @@ namespace Pundit.Core.Application.Repository
          return manifestId;
       }
 
-      public void Publish(Stream packageStream)
+      public void Put(Stream packageStream)
       {
          string tempFile = Path.Combine(Path.GetTempPath(), TempFilePrefix + Guid.NewGuid());
 
@@ -144,7 +144,7 @@ namespace Pundit.Core.Application.Repository
          }
       }
 
-      public Stream Download(PackageKey key)
+      public Stream Get(PackageKey key)
       {
          using(IDbCommand cmd = _sql.CreateCommand())
          {
@@ -165,7 +165,7 @@ namespace Pundit.Core.Application.Repository
          }
       }
 
-      public Version[] GetVersions(UnresolvedPackage package, VersionPattern pattern)
+      public ICollection<Version> GetVersions(UnresolvedPackage package, VersionPattern pattern)
       {
          var r = new HashSet<Version>();
 
@@ -241,26 +241,26 @@ namespace Pundit.Core.Application.Repository
          return root;
       }
 
-      public bool[] PackagesExist(PackageKey[] packages)
+      public ICollection<bool> PackagesExist(IEnumerable<PackageKey> packages)
       {
          if (packages == null) return null;
 
-         bool[] r = new bool[packages.Length];
+         var r = new List<bool>();
 
-         for (int i = 0; i < packages.Length; i++ )
+         foreach(PackageKey key in packages)
          {
             long id = _sql.ExecuteScalar<long>("PackageManifest", "PackageManifestId",
                                                new[] {"RepositoryId=(?)", "PackageId=(?)", "Version=(?)", "Platform=(?)"},
-                                               _repoId, packages[i].PackageId, packages[i].Version.ToString(),
-                                               packages[i].Platform);
+                                               _repoId, key.PackageId, key.Version.ToString(),
+                                               key.Platform);
 
-            r[i] = id != 0;
+            r.Add(id != 0);
          }
 
          return r;
       }
 
-      public PackageKey[] Search(string substring)
+      public ICollection<PackageKey> Search(string substring)
       {
          var r = new HashSet<PackageKey>();
 
@@ -276,7 +276,7 @@ namespace Pundit.Core.Application.Repository
             }
          }
 
-         return r.ToArray();
+         return r;
       }
 
       public void Dispose()
