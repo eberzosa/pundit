@@ -4,8 +4,19 @@ using Pundit.Core.Model;
 
 namespace Pundit.Core.Application.Console
 {
+   /// <summary>
+   /// 
+   /// </summary>
    public class CommandFactory
    {
+      /// <summary>
+      /// 
+      /// </summary>
+      /// <param name="console"></param>
+      /// <param name="currentDirectory"></param>
+      /// <param name="cmdline"></param>
+      /// <returns></returns>
+      /// <exception cref="ArgumentException"></exception>
       public static IConsoleCommand CreateCommand(IConsoleOutput console, string currentDirectory, string[] cmdline)
       {
          if(cmdline == null || cmdline.Length == 0)

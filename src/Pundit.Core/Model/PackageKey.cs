@@ -9,7 +9,7 @@ namespace Pundit.Core.Model
    /// Unique identifier for a package
    /// </summary>
    [DataContract]
-   public class PackageKey : ICloneable
+   public class PackageKey : IEquatable<PackageKey>, ICloneable
    {
       private string _packageId;
       private Version _version;
@@ -63,16 +63,10 @@ namespace Pundit.Core.Model
 
       public override bool Equals(object obj)
       {
-         if(obj is PackageKey)
-         {
-            var that = (PackageKey) obj;
-
-            return this.PackageId == that.PackageId &&
-                   this.Platform == that.Platform &&
-                   this.Version == that.Version;
-         }
-
-         return false;
+         if (ReferenceEquals(obj, null)) return false;
+         if (ReferenceEquals(obj, this)) return true;
+         if (obj.GetType() != GetType()) return false;
+         return Equals((PackageKey) obj);
       }
 
       public bool LooseEquals(PackageKey key)
@@ -89,6 +83,15 @@ namespace Pundit.Core.Model
       public object Clone()
       {
          return new PackageKey(PackageId, Version, Platform);
+      }
+
+      public bool Equals(PackageKey that)
+      {
+         if (ReferenceEquals(that, null)) return false;
+
+         return this.PackageId == that.PackageId &&
+                this.Platform == that.Platform &&
+                this.Version == that.Version;
       }
 
       public override string ToString()

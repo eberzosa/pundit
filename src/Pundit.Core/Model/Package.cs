@@ -100,9 +100,15 @@ namespace Pundit.Core.Model
          License = copy.License;
       }
 
+      public PackageKey Key
+      {
+         get { return new PackageKey(PackageId, Version, Platform); }
+      }
+
       public Package(string packageId, Version version)
       {
          if (packageId == null) throw new ArgumentNullException("packageId");
+         if (version == null) throw new ArgumentNullException("version");
 
          PackageId = packageId;
          VersionString = version.ToString();

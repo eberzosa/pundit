@@ -5,16 +5,25 @@ using System.Text;
 
 namespace Pundit.Core.Model
 {
+   /// <summary>
+   /// 
+   /// </summary>
    public class VersionResolutionTable
    {
       private readonly Dictionary<UnresolvedPackage, HashSet<Version>> _resolution =
          new Dictionary<UnresolvedPackage, HashSet<Version>>();
 
+      /// <summary>
+      /// 
+      /// </summary>
       public VersionResolutionTable()
       {
          
       }
 
+      /// <summary>
+      /// 
+      /// </summary>
       public int ConflictCount
       {
          get
@@ -25,11 +34,19 @@ namespace Pundit.Core.Model
          }
       }
 
+      /// <summary>
+      /// 
+      /// </summary>
       public bool HasConflicts
       {
          get { return ConflictCount > 0; }
       }
 
+      /// <summary>
+      /// 
+      /// </summary>
+      /// <param name="package"></param>
+      /// <returns></returns>
       public Version GetActiveVersion(UnresolvedPackage package)
       {
          if(_resolution.ContainsKey(package) && _resolution[package] != null &&
@@ -45,6 +62,10 @@ namespace Pundit.Core.Model
          return null;
       }
 
+      /// <summary>
+      /// 
+      /// </summary>
+      /// <returns></returns>
       public IEnumerable<PackageKey> GetPackages()
       {
          return from package in _resolution.Keys
@@ -53,6 +74,10 @@ namespace Pundit.Core.Model
                 select new PackageKey(package.PackageId, v, package.Platform);
       }
 
+      /// <summary>
+      /// 
+      /// </summary>
+      /// <returns></returns>
       public IEnumerable<UnresolvedPackage> GetConflictedPackages()
       {
          return _resolution

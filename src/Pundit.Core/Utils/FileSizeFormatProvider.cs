@@ -5,6 +5,9 @@ using System.Text;
 
 namespace Pundit.Core.Utils
 {
+   /// <summary>
+   /// 
+   /// </summary>
    public class FileSizeFormatProvider : IFormatProvider, ICustomFormatter
    {
       public object GetFormat(Type formatType)

@@ -9,12 +9,20 @@ namespace Pundit.Core
 {
    public static class RepositoryFactory
    {
+      private const string SqliteRepoPrefix = "sqlite://";
+      private const string DirRepoPrefix = "dir://";
+
       public static IRepository CreateFromUri(string uri)
       {
-         if(uri.StartsWith(SqliteRepository.UriPrefix))
-            return new SqliteRepository(uri);
+         if (uri == null) throw new ArgumentNullException("uri");
 
-         return new FileRepository(uri);
+         if(uri.StartsWith(SqliteRepoPrefix))
+            return new SqliteRepository(uri.Substring(SqliteRepoPrefix.Length));
+
+         if(uri.StartsWith(DirRepoPrefix))
+            return new FileRepository(uri);
+
+         throw new ArgumentException("unknown repository type: " + uri);
       }
    }
 }
