@@ -95,6 +95,7 @@
     <Compile Include="Model\IConsoleOutput.cs" />
     <Compile Include="Model\InvalidPackageException.cs" />
     <Compile Include="Model\IRepositoryManager.cs" />
+    <Compile Include="Model\LocalStats.cs" />
     <Compile Include="Model\ManifestPackage.cs" />
     <Compile Include="Model\PackageDependency.cs" />
     <Compile Include="Model\Package.cs" />

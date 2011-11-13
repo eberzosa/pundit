@@ -30,11 +30,22 @@ namespace Pundit.Core.Application.Console.Commands
             UpdateCaps();
          else if(action == "update")
             Update();
+         else if(action == "purgelocal")
+            PurgeLocalRepository();
          else throw new ArgumentException("unknown action " + action);
+      }
+
+      private void PurgeLocalRepository()
+      {
+         console.WriteLine("purging local repository data...");
+         LocalConfiguration.RepositoryManager.ZapCache();
+         console.WriteLine(ConsoleColor.Green, "complete");
       }
 
       private void ListRepositories()
       {
+         LocalStats stats = LocalConfiguration.RepositoryManager.Stats;
+
          console.WriteLine("local repository");
          console.Write("env:".PadRight(20));
          console.Write(Environment.GetEnvironmentVariable(LocalConfiguration.LocalRepositoryRootVar) ?? "<not set>");
@@ -44,9 +55,11 @@ namespace Pundit.Core.Application.Console.Commands
          console.Write("location:".PadRight(20));
          console.WriteLine(LocalConfiguration.DbLocation);
          console.Write("occupied space:".PadRight(20));
-         console.WriteLine(PathUtils.FileSizeToString(LocalConfiguration.RepositoryManager.OccupiedSpace));
+         console.WriteLine(PathUtils.FileSizeToString(stats.OccupiedSpaceTotal));
          console.Write("binary cache:".PadRight(20));
-         console.WriteLine(PathUtils.FileSizeToString(LocalConfiguration.RepositoryManager.OccupiedBinarySpace));
+         console.WriteLine(PathUtils.FileSizeToString(stats.OccupiedSpaceBinaries));
+         console.Write("manifests:".PadRight(20));
+         console.WriteLine(stats.TotalManifestsCount.ToString());
 
          console.WriteLine("");
          console.Write("configured repositories ({0}):", LocalConfiguration.RepositoryManager.AllRepositories.Count());
@@ -76,7 +89,7 @@ namespace Pundit.Core.Application.Console.Commands
             console.WriteLine(rr.LastRefreshed == DateTime.MinValue ? "never" : rr.LastRefreshed.ToString());
 
             console.Write("delta:".PadRight(20));
-            console.WriteLine(rr.LastChangeId.ToString());
+            console.WriteLine(rr.LastChangeId ?? "<null>");
          }
 
       }
@@ -86,11 +99,21 @@ namespace Pundit.Core.Application.Console.Commands
          string tag = GetParameter("tag:", 1);
          if (string.IsNullOrEmpty(tag)) throw new ApplicationException("repository tag required");
 
-         Repo r = LocalConfiguration.RepositoryManager.GetRepositoryByTag(tag);
-         if(r == null) throw new ApplicationException("repository not found");
+         console.Write("deleting repository...");
 
-         LocalConfiguration.RepositoryManager.Unregister(r.Id);
-         console.WriteLine("repository deleted");
+         try
+         {
+            Repo r = LocalConfiguration.RepositoryManager.GetRepositoryByTag(tag);
+            if (r == null) throw new ApplicationException("repository not found");
+
+            LocalConfiguration.RepositoryManager.Unregister(r.Id);
+            console.Write(true);
+         }
+         catch
+         {
+            console.Write(false);
+            throw;
+         }
       }
 
       private void AddRepository()
@@ -102,9 +125,63 @@ namespace Pundit.Core.Application.Console.Commands
          if(string.IsNullOrEmpty(tag)) throw new ApplicationException("repository tag required");
          if(string.IsNullOrEmpty(uri)) throw new ApplicationException("repository uri required");
          if(hours < 1) throw new ApplicationException("positive number of hours required");
+         if(LocalConfiguration.RepositoryManager.AllRepositories.Any(r => r.Tag == tag))
+            throw new ApplicationException("repository '" + tag + "' already registered");
 
          console.WriteLine("adding repository '{0}' from {1}, refresh interval: {2} hour(s)...",
             tag, uri, hours);
+
+         IRemoteRepository repository = RemoteRepositoryFactory.Create(uri);
+
+         console.Write("fetching first snapshot...");
+         string nextChangeId;
+         var snapshot = repository.GetSnapshot(null, out nextChangeId);
+
+         if(snapshot != null && snapshot.Length > 0)
+         {
+            console.Write(true);
+            long repoId = 0;
+
+            try
+            {
+               Repo newRepo;
+               try
+               {
+                  console.Write("registering repository...");
+                  Repo newRepo1 = new Repo(tag, uri);
+                  newRepo1.RefreshIntervalInHours = hours;
+                  newRepo1.LastRefreshed = DateTime.Now;
+                  newRepo1.LastChangeId = nextChangeId;
+                  newRepo1.IsEnabled = true;
+                  newRepo1.UseForPublishing = false;
+                  newRepo = LocalConfiguration.RepositoryManager.Register(newRepo1);
+                  repoId = newRepo.Id;
+                  console.Write(true);
+               }
+               catch
+               {
+                  console.Write(false);
+                  throw;
+               }
+
+               console.Write("persisting {0} snapshot entries...", snapshot.Length);
+               LocalConfiguration.RepositoryManager.PlaySnapshot(newRepo, snapshot);
+               console.Write(true);
+               console.WriteLine(ConsoleColor.Green, "repository added");
+            }
+            catch(Exception ex)
+            {
+               console.WriteLine(ConsoleColor.Red, "failed to register repository: " + ex.ToString());
+
+               if(repoId != 0)
+                  LocalConfiguration.RepositoryManager.Unregister(repoId);
+            }
+         }
+         else
+         {
+            console.Write(false);
+            console.WriteLine(ConsoleColor.Red, "cannot add empty repository");
+         }
       }
 
       private void UpdateCaps()
@@ -119,13 +196,19 @@ namespace Pundit.Core.Application.Console.Commands
          int hours = GetIntParameter("refresh:");
          string publish = GetParameter("publish:");
 
+         bool isEnabled;
+         if (bool.TryParse(enabled, out isEnabled)) r.IsEnabled = isEnabled;
+         if (hours > 0) r.RefreshIntervalInHours = hours;
+         bool useForPublishing;
+         if (bool.TryParse(publish, out useForPublishing)) r.UseForPublishing = useForPublishing;
+
+         console.Write("updating repository...");
+         LocalConfiguration.RepositoryManager.Update(r);
+         console.Write(true);
       }
 
       private void Update()
       {
-         console.WriteLine("running scheduled update...");
-         LocalConfiguration.RepositoryManager.RunScheduledSnapshotUpdates();
-         console.WriteLine("done.");
       }
    }
 }

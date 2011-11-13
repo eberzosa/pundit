@@ -118,6 +118,6 @@
     <value>System.Resources.ResXResourceWriter, System.Windows.Forms, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
   </resheader>
   <data name="Banner" xml:space="preserve">
-    <value>pundit v{0} - http://pundit.codeplex.com</value>
+    <value>pundit v{0} (Bloody Duck) - http://pundit.codeplex.com</value>
   </data>
 </root>

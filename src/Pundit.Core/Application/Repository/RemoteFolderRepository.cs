@@ -90,13 +90,13 @@ namespace Pundit.Core.Application.Repository
       public PackageSnapshotKey[] GetSnapshot(string changeId, out string nextChangeId)
       {
          if(changeId != null) throw new NotSupportedException("deltas not supported, start from null");
-         List<PackageSnapshotKey> r = new List<PackageSnapshotKey>();
+         var r = new List<PackageSnapshotKey>();
 
          foreach(string path in Directory.GetFiles(_rootPath, "*" + Package.PackedExtension))
          {
             using(Stream s = File.OpenRead(path))
             {
-               using (PackageReader rdr = new PackageReader(s))
+               using (var rdr = new PackageReader(s))
                {
                   r.Add(new PackageSnapshotKey(rdr.ReadManifest()));
                }

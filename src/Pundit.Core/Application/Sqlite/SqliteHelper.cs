@@ -58,6 +58,12 @@ namespace Pundit.Core.Application.Sqlite
                _conn = new SQLiteConnection(GetConnectionString());
                _conn.Open();
 
+               using(IDbCommand cmd = _conn.CreateCommand())
+               {
+                  cmd.CommandText = "PRAGMA foreign_keys = ON;";
+                  cmd.ExecuteNonQuery();
+               }
+
                new FileInfo(_absolutePath).Attributes |= (FileAttributes.System | FileAttributes.Hidden);
             }
 
@@ -73,10 +79,12 @@ namespace Pundit.Core.Application.Sqlite
             cmd.Parameters.Add(new SQLiteParameter(DbType.Int32, value));
          else if (value is bool)
             cmd.Parameters.Add(new SQLiteParameter(DbType.Boolean, value));
+         else if (value is DateTime)
+            cmd.Parameters.Add(new SQLiteParameter(DbType.DateTime, value));
          else if (value == null)
             cmd.Parameters.Add(new SQLiteParameter());
          else if (value is SQLiteParameter)
-            cmd.Parameters.Add((SQLiteParameter) value);
+            cmd.Parameters.Add((SQLiteParameter)value);
          else throw new ArgumentException("type " + value.GetType() + " not supported");
       }
 

@@ -2,41 +2,36 @@
 using System.Collections.Generic;
 using System.IO;
 using System.Linq;
-using NDesk.Options;
 using Pundit.Core.Model;
+using Pundit.Core.Model.EventArguments;
 
 namespace Pundit.Core.Application.Console.Commands
 {
    class ResolveConsoleCommand : BaseConsoleCommand
    {
+      private BuildConfiguration _buildConfiguration;
+      private bool _forceResolve;
+      private bool _pingOnly;
+
       public ResolveConsoleCommand(IConsoleOutput console, string currentDirectory, string[] args)
          : base(console, currentDirectory, args)
       {
       }
 
-      private void ResolveParameters(out int depthIndex, out BuildConfiguration configuration, out bool force, out bool ping)
+      private void Initialize()
       {
-         depthIndex = GetDepth();
-         configuration = BuildConfiguration.Release;
-         force = GetBoolParameter(false, "f|force");
-         ping = GetBoolParameter(false, "p|ping");
+         _buildConfiguration = BuildConfiguration.Release;
+         _forceResolve = GetBoolParameter(false, "f|force");
+         _pingOnly = GetBoolParameter(false, "p|ping");
 
          string sconfig = GetParameter("c:|configuration:");
          if (sconfig != null)
          {
             if (sconfig == "any")
-               configuration = BuildConfiguration.Any;
+               _buildConfiguration = BuildConfiguration.Any;
             else if (sconfig == "debug")
-               configuration = BuildConfiguration.Debug;
+               _buildConfiguration = BuildConfiguration.Debug;
          }
-      }
-
-      private IEnumerable<Repo> GetRepositories(int depth)
-      {
-         return LocalConfiguration.RepositoryManager.ActiveRepositories
-            //.Where(r => r.Tag != LocalConfiguration.LocalRepositoryTag)
-            .OrderBy(r => r.Priority)
-            .Take(depth);
       }
 
       private void PrintConflicts(DependencyResolution dr, VersionResolutionTable tbl, DependencyNode rootNode)
@@ -77,33 +72,27 @@ namespace Pundit.Core.Application.Console.Commands
 
       public override void Execute()
       {
+         Initialize();
+
          //parse command and read manifest
          string manifestPath = GetLocalManifest();
          string projectRoot = new FileInfo(manifestPath).Directory.FullName;
-         int depth;
-         bool force;
-         bool ping;
-         BuildConfiguration configuration;
-         ResolveParameters(out depth, out configuration, out force, out ping);
 
          console.Write(ConsoleColor.White, "manifest:\t");
          console.WriteLine(manifestPath);
 
-         console.Write(ConsoleColor.White, "depth:\t\t");
-         console.WriteLine(depth == int.MaxValue ? "max" : depth.ToString());
-
          console.Write(ConsoleColor.White, "configuration:\t");
-         console.WriteLine(configuration == BuildConfiguration.Debug ? ConsoleColor.Yellow : ConsoleColor.Green,
-                            configuration.ToString().ToLower());
+         console.WriteLine(_buildConfiguration == BuildConfiguration.Debug ? ConsoleColor.Yellow : ConsoleColor.Green,
+                            _buildConfiguration.ToString().ToLower());
 
          console.Write("force:\t\t");
-         if(force)
+         if(_forceResolve)
             console.WriteLine(ConsoleColor.Red, "yes");
          else
             console.WriteLine("no");
 
          console.Write("ping only:\t");
-         if(ping)
+         if(_pingOnly)
             console.WriteLine(ConsoleColor.Green, "yes");
          else
             console.WriteLine("no");
@@ -115,9 +104,6 @@ namespace Pundit.Core.Application.Console.Commands
          DevPackage devPackage = DevPackage.FromStream(File.OpenRead(manifestPath));
          console.Write(true);
 
-         //get the repository list
-         IEnumerable<Repo> repositories = GetRepositories(depth);
-
          //resolve dependencies
          console.Write("resolving...\t\t\t");
 
@@ -126,7 +112,7 @@ namespace Pundit.Core.Application.Console.Commands
 
          console.Write(!resolutionResult.Item1.HasConflicts);
 
-         if (ping) return;
+         if (_pingOnly) return;
 
          if(resolutionResult.Item1.HasConflicts)
          {
@@ -148,11 +134,11 @@ namespace Pundit.Core.Application.Console.Commands
             installer.BeginInstallPackage += installer_BeginInstallPackage;
             installer.FinishInstallPackage += installer_FinishInstallPackage;
 
-            if (force)
+            if (_forceResolve)
             {
                console.WriteLine("reinstalling all packages");
 
-               installer.Reinstall(configuration);
+               installer.Reinstall(_buildConfiguration);
             }
             else
             {
@@ -160,22 +146,22 @@ namespace Pundit.Core.Application.Console.Commands
 
                PrintSuccess(diff);
 
-               installer.Upgrade(configuration, diff);
+               installer.Upgrade(_buildConfiguration, diff);
             }
          }
       }
 
-      void installer_FinishInstallPackage(object sender, Core.Model.EventArguments.PackageKeyDiffEventArgs e)
+      void installer_FinishInstallPackage(object sender, PackageKeyDiffEventArgs e)
       {
          console.Write(e.Succeeded);
       }
 
-      void installer_BeginInstallPackage(object sender, Core.Model.EventArguments.PackageKeyDiffEventArgs e)
+      void installer_BeginInstallPackage(object sender, PackageKeyDiffEventArgs e)
       {
          console.Write("installing {0} v{1} ({2})...", e.PackageKeyDiff.PackageId, e.PackageKeyDiff.Version, e.PackageKeyDiff.Platform);
       }
 
-      void LocalRepository_PackageDownloadToLocalRepository(object sender, Core.Model.EventArguments.PackageDownloadEventArgs e)
+      void LocalRepository_PackageDownloadToLocalRepository(object sender, Model.EventArguments.PackageDownloadEventArgs e)
       {
          console.Write("download: {0}, b: {1}, total: {2}, now: {3}", e.PackageKey.PackageId, e.Succeeded, e.TotalSize, e.DownloadedSize);
       }

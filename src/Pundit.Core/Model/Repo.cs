@@ -19,15 +19,19 @@ namespace Pundit.Core.Model
       /// <param name="uri"></param>
       /// <exception cref="ArgumentNullException"></exception>
       /// <exception cref="ArgumentException"></exception>
-      public Repo(long id, string tag, string uri)
+      public Repo(string tag, string uri)
       {
          if (tag == null) throw new ArgumentNullException("tag");
          if (uri == null) throw new ArgumentNullException("uri");
-         if(id <= 0) throw new ArgumentException("invalid id: " + id, "id");
 
-         _id = id;
          _tag = tag;
          _uri = uri;
+      }
+
+      public Repo(long id, string tag, string uri) : this(tag, uri)
+      {
+         if(id <= 0) throw new ArgumentException("Invalid id: " + id);
+         _id = id;
       }
 
       /// <summary>
@@ -67,7 +71,7 @@ namespace Pundit.Core.Model
       /// <summary>
       /// 
       /// </summary>
-      public long LastChangeId { get; set; }
+      public string LastChangeId { get; set; }
 
       /// <summary>
       /// 

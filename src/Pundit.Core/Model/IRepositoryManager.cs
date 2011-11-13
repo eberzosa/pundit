@@ -5,36 +5,36 @@ using System.Text;
 
 namespace Pundit.Core.Model
 {
+   /// <summary>
+   /// Sets of methods to work with local configuration
+   /// </summary>
    public interface IRepositoryManager
    {
       ILocalRepository LocalRepository { get; }
+
       IEnumerable<Repo> AllRepositories { get; }
+
       IEnumerable<Repo> ActiveRepositories { get; }
+
       IEnumerable<Repo> PublishingRepositories { get; }
+
       Repo GetRepositoryByTag(string tag);
+
       Repo GetRepositoryById(long id);
 
-      /// <summary>
-      /// Returns the size occupied by local data in total in bytes. It's never shrinkable to zero.
-      /// </summary>
-      long OccupiedSpace { get; }
-
-      /// <summary>
-      /// Returns size occupied by binary files
-      /// </summary>
-      long OccupiedBinarySpace { get; }
+      LocalStats Stats { get; }
 
       /// <summary>
       /// Deletes all binaries from the local cache
       /// </summary>
-      void ZapBinarySpace();
+      void ZapCache();
 
-      void Register(Repo newRepo);
+      Repo Register(Repo newRepo);
 
       void Unregister(long repoId);
 
       void Update(Repo repo);
 
-      void RunScheduledSnapshotUpdates();
+      void PlaySnapshot(Repo repo, IEnumerable<PackageSnapshotKey> snapshot);
    }
 }

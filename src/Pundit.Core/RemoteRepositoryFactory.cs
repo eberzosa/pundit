@@ -7,22 +7,32 @@ using Pundit.Core.Model;
 
 namespace Pundit.Core
 {
-   static class RemoteRepositoryFactory
+   /// <summary>
+   /// 
+   /// </summary>
+   public static class RemoteRepositoryFactory
    {
       private const string HttpRepoPrefix = "http://";
       private const string DirRepoPrefix = "dir://";
 
-      public static IRemoteRepository Create(Repo r)
+      /// <summary>
+      /// 
+      /// </summary>
+      /// <param name="uri"></param>
+      /// <returns></returns>
+      /// <exception cref="ArgumentNullException"></exception>
+      /// <exception cref="NotSupportedException"></exception>
+      public static IRemoteRepository Create(string uri)
       {
-         if (r == null) throw new ArgumentNullException("r");
+         if (uri == null) throw new ArgumentNullException("uri");
 
-         if(r.Uri.StartsWith(DirRepoPrefix))
-            return new RemoteFolderRepository(r.Uri.Substring(DirRepoPrefix.Length));
+         if(uri.StartsWith(DirRepoPrefix))
+            return new RemoteFolderRepository(uri.Substring(DirRepoPrefix.Length));
 
-         if(r.Uri.StartsWith(HttpRepoPrefix))
-            return new HttpRestRemoteRepository(r.Uri.Substring(HttpRepoPrefix.Length));
+         if(uri.StartsWith(HttpRepoPrefix))
+            return new HttpRestRemoteRepository(uri.Substring(HttpRepoPrefix.Length));
 
-         throw new NotSupportedException("repository " + r.Uri + " not supported");
+         throw new NotSupportedException("repository " + uri + " not supported (typo?)");
       }
    }
 }

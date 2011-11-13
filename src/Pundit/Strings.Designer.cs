@@ -61,7 +61,7 @@ namespace Pundit.Console {
         }
         
         /// <summary>
-        ///   Looks up a localized string similar to pundit v{0} - http://pundit.codeplex.com.
+        ///   Looks up a localized string similar to pundit v{0} (Bloody Duck) - http://pundit.codeplex.com.
         /// </summary>
         internal static string Banner {
             get {

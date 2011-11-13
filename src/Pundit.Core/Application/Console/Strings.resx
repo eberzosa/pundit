@@ -166,6 +166,36 @@ examples:
   {0} publish -p:packed/*.pundit
   {0} publish -r:corporate</value>
   </data>
+  <data name="Help_repo" xml:space="preserve">
+    <value>syntax: {0} repo &lt;subcommand&gt;
+
+Repository management functions. Subcommands supported:
+
+  list - prints the list of registered repositories and some local statistics, has no extra parameters. Example:
+  {0} repo list
+
+  add - adds a new repository to local configuration. Requires repository tag, uri and refresh interval (in hours) to be passed. The following example adds repository named 'intranet' located at http://intranet/pundit/repository and pulling updates every 5 hours:
+  {0} repo add intranet http://intranet/pundit/repository 5
+
+  caps - updates existing repository capabilities.
+  syntax: {0} caps &lt;caps&gt;
+
+  caps supported:
+    refresh - update the refresh interval (value in hours)
+    enable - enables or disables repository
+    publish - enables or disables publishing to this repository
+
+  Following example enables publishing and changes refresh interval to 2 hours:
+  {0} repo caps --refresh:2 --enable:true
+
+  delete - deletes repository.
+  syntax: {0} repo delete &lt;tag&gt;
+  example: {0} repo delete corporate
+
+  update - checks if repositories need to be updated and runs update process if required
+
+  purgelocal - deletes local repository cache and compacts local database. Any binaries needed for the resolution process will be re-downloaded next time.</value>
+  </data>
   <data name="Help_resolve" xml:space="preserve">
     <value>syntax: {0} resolve [-m:&lt;manifest location&gt;] [-d:&lt;depth&gt;] [-c:&lt;configuration name&gt;] [-f] [-p]
 

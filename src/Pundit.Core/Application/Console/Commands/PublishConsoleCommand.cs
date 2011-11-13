@@ -67,7 +67,7 @@ namespace Pundit.Core.Application.Console.Commands
          if (localOnly)
          {
             console.WriteLine("publishing to local repository...");
-            long sizeBefore = LocalConfiguration.RepositoryManager.OccupiedBinarySpace;
+            long sizeBefore = LocalConfiguration.RepositoryManager.Stats.OccupiedSpaceBinaries;
 
             foreach (string packagePath in packages)
             {
@@ -77,7 +77,7 @@ namespace Pundit.Core.Application.Console.Commands
                }
             }
 
-            long sizeAfter = LocalConfiguration.RepositoryManager.OccupiedBinarySpace;
+            long sizeAfter = LocalConfiguration.RepositoryManager.Stats.OccupiedSpaceBinaries;
 
             console.WriteLine("done, local cache increased from {0} to {1} (+{2})",
                PathUtils.FileSizeToString(sizeBefore),
