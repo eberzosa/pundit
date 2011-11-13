@@ -56,12 +56,6 @@
       <DesignTime>True</DesignTime>
       <DependentUpon>AlertStrings.resx</DependentUpon>
     </Compile>
-    <Compile Include="RepositoriesControl.cs">
-      <SubType>UserControl</SubType>
-    </Compile>
-    <Compile Include="RepositoriesControl.Designer.cs">
-      <DependentUpon>RepositoriesControl.cs</DependentUpon>
-    </Compile>
     <Compile Include="Images.Designer.cs">
       <AutoGen>True</AutoGen>
       <DesignTime>True</DesignTime>
@@ -88,9 +82,6 @@
     <EmbeddedResource Include="AlertStrings.resx">
       <Generator>ResXFileCodeGenerator</Generator>
       <LastGenOutput>AlertStrings.Designer.cs</LastGenOutput>
-    </EmbeddedResource>
-    <EmbeddedResource Include="RepositoriesControl.resx">
-      <DependentUpon>RepositoriesControl.cs</DependentUpon>
     </EmbeddedResource>
     <EmbeddedResource Include="Images.resx">
       <Generator>ResXFileCodeGenerator</Generator>
