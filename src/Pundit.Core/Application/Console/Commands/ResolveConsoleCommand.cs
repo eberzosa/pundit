@@ -74,6 +74,8 @@ namespace Pundit.Core.Application.Console.Commands
       {
          Initialize();
 
+         new RepoConsoleCommand(console, CurrentDirectory, null).UpdateSnapshots();
+
          //parse command and read manifest
          string manifestPath = GetLocalManifest();
          string projectRoot = new FileInfo(manifestPath).Directory.FullName;

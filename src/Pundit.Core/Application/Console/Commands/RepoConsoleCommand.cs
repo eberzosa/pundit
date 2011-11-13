@@ -165,7 +165,7 @@ namespace Pundit.Core.Application.Console.Commands
                }
 
                console.Write("persisting {0} snapshot entries...", snapshot.Length);
-               LocalConfiguration.RepositoryManager.PlaySnapshot(newRepo, snapshot);
+               LocalConfiguration.RepositoryManager.PlaySnapshot(newRepo, snapshot, nextChangeId);
                console.Write(true);
                console.WriteLine(ConsoleColor.Green, "repository added");
             }
@@ -209,6 +209,81 @@ namespace Pundit.Core.Application.Console.Commands
 
       private void Update()
       {
+         bool force = GetBoolParameter(false, "f|force");
+         UpdateSnapshots(force);
+      }
+
+      private PackageSnapshotKey[] GetSnapshot(Repo repo, out string nextChangeId)
+      {
+         IRemoteRepository remote = RemoteRepositoryFactory.Create(repo.Uri);
+
+         PackageSnapshotKey[] snapshot;
+
+         //get changes
+         try
+         {
+            console.Write("fetching snapshot... ");
+            snapshot = remote.GetSnapshot(repo.LastChangeId, out nextChangeId);
+            console.Write("(");
+            console.Write(ConsoleColor.Green,
+                          (snapshot == null || snapshot.Length == 0) ? "no" : snapshot.Length.ToString());
+            console.Write(" changes)");
+            console.Write(true);
+         }
+         catch
+         {
+            console.Write(false);
+            throw;
+         }
+
+         return snapshot;
+      }
+
+      private void PlaySnapshot(Repo repo, PackageSnapshotKey[] snapshot, string nextChangeId)
+      {
+         if (snapshot != null && snapshot.Length > 0)
+         {
+            try
+            {
+               console.Write("applying snapshot...");
+               LocalConfiguration.RepositoryManager.PlaySnapshot(repo, snapshot, nextChangeId);
+               console.Write(true);
+            }
+            catch
+            {
+               console.Write(false);
+               throw;
+            }
+         }
+      }
+
+      public void UpdateSnapshots(bool force = false)
+      {
+         foreach(Repo repo in LocalConfiguration.RepositoryManager.ActiveRepositories)
+         {
+            DateTime now = DateTime.Now;
+            TimeSpan elapsed = now - repo.LastRefreshed;
+            bool old = force | (elapsed >= TimeSpan.FromHours(repo.RefreshIntervalInHours));
+
+            console.Write("repository: ");
+            console.Write(ConsoleColor.Yellow, repo.Tag);
+            console.Write(", age: ");
+            console.WriteLine(old ? ConsoleColor.Red : ConsoleColor.Green, elapsed.ToString());
+
+            if(old)
+            {
+               string nextChangeId;
+               var snapshot = GetSnapshot(repo, out nextChangeId);
+
+               //write to db
+               if (snapshot != null && snapshot.Length > 0)
+               {
+                  PlaySnapshot(repo, snapshot, nextChangeId);
+               }
+            }
+         }
+
+         console.WriteLine(ConsoleColor.Green, "update succeeded");
       }
    }
 }

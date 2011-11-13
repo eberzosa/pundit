@@ -184,7 +184,7 @@ namespace Pundit.Core.Application
          }
       }
 
-      public void PlaySnapshot(Repo repo, IEnumerable<PackageSnapshotKey> snapshot)
+      public void PlaySnapshot(Repo repo, IEnumerable<PackageSnapshotKey> snapshot, string nextChangeId)
       {
          if (repo == null) throw new ArgumentNullException("repo");
 
@@ -192,6 +192,16 @@ namespace Pundit.Core.Application
          {
             using (IDbTransaction tran = _sql.BeginTransaction())
             {
+               if(nextChangeId == null)
+               {
+                  using(IDbCommand cmd = _sql.CreateCommand())
+                  {
+                     cmd.CommandText = "delete from " + ManifestTableName + " where RepositoryId=(?)";
+                     cmd.Add(repo.Id);
+                     cmd.ExecuteNonQuery();
+                  }
+               }
+
                foreach (PackageSnapshotKey entry in snapshot)
                {
                   switch (entry.Diff)
@@ -207,6 +217,15 @@ namespace Pundit.Core.Application
                         DeleteManifest(repo.Id, entry.Manifest.Key);
                         break;
                   }
+               }
+
+               using(IDbCommand cmd = _sql.CreateCommand())
+               {
+                  cmd.CommandText = "update " + RepositoryTableName + " set LastRefreshed=(?), LastChangeId=(?) " +
+                                    "where RepositoryId=(?)";
+                  cmd.Add(DateTime.Now).Add(nextChangeId);
+                  cmd.Add(repo.Id);
+                  cmd.ExecuteNonQuery();
                }
 
                tran.Commit();

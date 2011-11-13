@@ -14,15 +14,15 @@ CORE:
   + redesign IRepository to work with the local db
   + home folder now needs only single pundit.db file so all configuration files and subfolders can be removed
 + add local data file location to "repo list"
-= snapshot sync - restore directory-based repository to test (dir:// protocol)
++ console commands for modifying repository list;
+  + adding/deleting repository (add now validates before saving)
+  + updating repository properties
++ snapshot sync - restore directory-based repository to test (dir:// protocol)
 - IRemoteRepository synchronisation
 - restore "pundit publish" using IRemoteRepository
 - improve conflict explanation
 - add SRC folder as default search path for pundit.xml. Root takes priority, then SRC. The problem
   is that most VS plugins won't pickup SVN updates in root folder so manifest is never updated.
-= console commands for modifying repository list;
-  + adding/deleting repository (add now validates before saving)
-  = updating repository properties
 - bug: "pundit resolve" doesn't notify about operation completion
 - progress bars in repository downloads
 - protect from manual package modifications injecting signature

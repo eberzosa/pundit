@@ -192,7 +192,7 @@ Repository management functions. Subcommands supported:
   syntax: {0} repo delete &lt;tag&gt;
   example: {0} repo delete corporate
 
-  update - checks if repositories need to be updated and runs update process if required
+  update - checks if repositories need to be updated and runs update process if required. The -f parameters forces update for all repositories even if time has not yet came.
 
   purgelocal - deletes local repository cache and compacts local database. Any binaries needed for the resolution process will be re-downloaded next time.</value>
   </data>

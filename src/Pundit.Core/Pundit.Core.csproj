@@ -76,6 +76,7 @@
     <Compile Include="Application\PackageStreamer.cs" />
     <Compile Include="Application\PackageWriter.cs" />
     <Compile Include="Application\RepositoryManager.cs" />
+    <Compile Include="Application\RepositoryUpdater.cs" />
     <Compile Include="Application\Repository\HttpRestRemoteRepository.cs" />
     <Compile Include="Application\Repository\RemoteFolderRepository.cs" />
     <Compile Include="Application\Sqlite\SqliteExtensions.cs" />

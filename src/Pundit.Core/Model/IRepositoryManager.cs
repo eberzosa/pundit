@@ -35,6 +35,6 @@ namespace Pundit.Core.Model
 
       void Update(Repo repo);
 
-      void PlaySnapshot(Repo repo, IEnumerable<PackageSnapshotKey> snapshot);
+      void PlaySnapshot(Repo repo, IEnumerable<PackageSnapshotKey> snapshot, string nextChangeId);
    }
 }

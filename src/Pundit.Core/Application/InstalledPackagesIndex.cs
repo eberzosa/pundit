@@ -7,10 +7,8 @@ using Pundit.Core.Model;
 
 namespace Pundit.Core.Application
 {
-   /// <summary>
-   /// 
-   /// </summary>
-   public class InstalledPackagesIndex
+   //todo: move any caches to local system hidden .pundit subfolder
+   class InstalledPackagesIndex
    {
       private const string CacheFileName = ".pundit-install-index";
       private readonly Dictionary<PackageKey, bool> _installed = new Dictionary<PackageKey, bool>();
