@@ -5,6 +5,10 @@
 - for local builds figure out how a script can pickup a version from repository to generate a newer next one.
 - http://pundit.codeplex.com/workitem/13528 (stable/unstable packages)
 - creating new manifests is really annoying
+- utilize threads when updating snapshots
+- utilize threads when downloading missing binaries
+- refactor: push strings from console commands to resources
+- refactor: push strings from exceptions to resources
 
 1.1.0.0
 CORE:
@@ -18,20 +22,15 @@ CORE:
   + adding/deleting repository (add now validates before saving)
   + updating repository properties
 + snapshot sync - restore directory-based repository to test (dir:// protocol)
-- IRemoteRepository synchronisation
-- restore "pundit publish" using IRemoteRepository
++ IRemoteRepository synchronisation
++ restore "pundit publish" using IRemoteRepository; after publishing local index has to be force-refreshed
 - improve conflict explanation
-- add SRC folder as default search path for pundit.xml. Root takes priority, then SRC. The problem
-  is that most VS plugins won't pickup SVN updates in root folder so manifest is never updated.
 - bug: "pundit resolve" doesn't notify about operation completion
 - progress bars in repository downloads
 - protect from manual package modifications injecting signature
 - print help article on console command error
 - pundit resolve should show package size before downloading
 - in pundit resolve display two columns (library, status)
-- compactdb command to zap the local db file
-- utilize threads when updating snapshots
-- utilize threads when downloading missing binaries
 
 VSIX:
 - check for dependencies in background and notify the user in the toolbar

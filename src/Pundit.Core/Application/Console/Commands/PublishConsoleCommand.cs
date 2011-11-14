@@ -13,9 +13,10 @@ namespace Pundit.Core.Application.Console.Commands
          : base(console, currentDirectory, args)
       {}
 
-      private ICollection<string> GetPackages()
+      private ICollection<string> GetPackagesFullNames()
       {
          string packageName = GetParameter("p:|package:", 0);
+
          //get package
          if (packageName != null)
          {
@@ -39,34 +40,14 @@ namespace Pundit.Core.Application.Console.Commands
 
       }
 
-      private ICollection<Repo> GetRepos()
-      {
-         string repoName = GetParameter("r:|repository:");
-
-         //get repo uri
-         if(repoName == null)
-         {
-            var r = new List<Repo>(LocalConfiguration.RepositoryManager.PublishingRepositories);
-            if(r.Count == 0) throw new ApplicationException("no repositories found for publishing");
-            return r;
-         }
-         else
-         {
-            Repo r = LocalConfiguration.RepositoryManager.GetRepositoryByTag(repoName);
-            if(r == null) throw new FileNotFoundException("repository " + repoName + " does not exist");
-            if(!r.UseForPublishing) throw new ApplicationException("repository does not support publishing");
-            return new[] {r};
-         }
-      }
-
       public override void Execute()
       {
-         ICollection<string> packages = GetPackages();
+         ICollection<string> packages = GetPackagesFullNames();
          bool localOnly = GetBoolParameter(false, "l|local");
 
          if (localOnly)
          {
-            console.WriteLine("publishing to local repository...");
+            //console.WriteLine(Strings);
             long sizeBefore = LocalConfiguration.RepositoryManager.Stats.OccupiedSpaceBinaries;
 
             foreach (string packagePath in packages)
@@ -86,7 +67,7 @@ namespace Pundit.Core.Application.Console.Commands
          }
          else
          {
-            ICollection<Repo> repos = GetRepos();
+            var repos = new List<Repo>(LocalConfiguration.RepositoryManager.PublishingRepositories);
 
             console.WriteLine("Publishing package to {0} repository(ies)", repos.Count);
 
@@ -96,14 +77,11 @@ namespace Pundit.Core.Application.Console.Commands
                {
                   console.WriteLine(string.Format("publishing package {0} to repository [{1}]", packagePath, repo.Tag));
 
-                  throw new NotImplementedException();
-
-                  /*IRepository ir = RepositoryFactory.Create(repo);
-
+                  IRemoteRepository remote = RemoteRepositoryFactory.Create(repo.Uri);
                   using (Stream package = File.OpenRead(packagePath))
                   {
-                     ir.Publish(package);
-                  }*/
+                     remote.Publish(package);
+                  }
 
                   console.WriteLine("published");
                }
