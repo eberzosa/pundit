@@ -77,6 +77,11 @@ namespace Pundit.Core.Application.Repository
          File.Move(tempFile, targetPath);
       }
 
+      public Stream Download(string platform, string packageId, string version)
+      {
+         return Download(new PackageKey(packageId, new Version(version), platform));
+      }
+
       public Stream Download(PackageKey key)
       {
          string fullPath = Path.Combine(_rootPath, PackageUtils.GetFileName(key));
@@ -87,7 +92,7 @@ namespace Pundit.Core.Application.Repository
          return File.OpenRead(fullPath);
       }
 
-      public PackageSnapshotKey[] GetSnapshot(string changeId, out string nextChangeId)
+      public RemoteSnapshot GetSnapshot(string changeId)
       {
          if(changeId != null) throw new NotSupportedException("deltas not supported, start from null");
          var r = new List<PackageSnapshotKey>();
@@ -103,8 +108,7 @@ namespace Pundit.Core.Application.Repository
             }
          }
 
-         nextChangeId = null;
-         return r.ToArray();
+         return new RemoteSnapshot() {Changes = r.ToArray()};
       }
    }
 }

@@ -135,9 +135,9 @@ namespace Pundit.Core.Application.Console.Commands
 
          console.Write("fetching first snapshot...");
          string nextChangeId;
-         var snapshot = repository.GetSnapshot(null, out nextChangeId);
+         var snapshot = repository.GetSnapshot(null);
 
-         if(snapshot != null && snapshot.Length > 0)
+         if(snapshot != null && snapshot.Changes.Length > 0)
          {
             console.Write(true);
             long repoId = 0;
@@ -151,7 +151,7 @@ namespace Pundit.Core.Application.Console.Commands
                   Repo newRepo1 = new Repo(tag, uri);
                   newRepo1.RefreshIntervalInHours = hours;
                   newRepo1.LastRefreshed = DateTime.Now;
-                  newRepo1.LastChangeId = nextChangeId;
+                  newRepo1.LastChangeId = snapshot.NextChangeId;
                   newRepo1.IsEnabled = true;
                   newRepo1.UseForPublishing = false;
                   newRepo = LocalConfiguration.RepositoryManager.Register(newRepo1);
@@ -164,8 +164,8 @@ namespace Pundit.Core.Application.Console.Commands
                   throw;
                }
 
-               console.Write("persisting {0} snapshot entries...", snapshot.Length);
-               LocalConfiguration.RepositoryManager.PlaySnapshot(newRepo, snapshot, nextChangeId);
+               console.Write("persisting {0} snapshot entries...", snapshot.Changes.Length);
+               LocalConfiguration.RepositoryManager.PlaySnapshot(newRepo, snapshot);
                console.Write(true);
                console.WriteLine(ConsoleColor.Green, "repository added");
             }
@@ -213,20 +213,20 @@ namespace Pundit.Core.Application.Console.Commands
          UpdateSnapshots(force);
       }
 
-      private PackageSnapshotKey[] GetSnapshot(Repo repo, out string nextChangeId)
+      private RemoteSnapshot GetSnapshot(Repo repo)
       {
          IRemoteRepository remote = RemoteRepositoryFactory.Create(repo.Uri);
 
-         PackageSnapshotKey[] snapshot;
+         RemoteSnapshot snapshot;
 
          //get changes
          try
          {
             console.Write("fetching snapshot... ");
-            snapshot = remote.GetSnapshot(repo.LastChangeId, out nextChangeId);
+            snapshot = remote.GetSnapshot(repo.LastChangeId);
             console.Write("(");
             console.Write(ConsoleColor.Green,
-                          (snapshot == null || snapshot.Length == 0) ? "no" : snapshot.Length.ToString());
+                          (snapshot == null || snapshot.Changes.Length == 0) ? "no" : snapshot.Changes.Length.ToString());
             console.Write(" changes)");
             console.Write(true);
          }
@@ -239,14 +239,14 @@ namespace Pundit.Core.Application.Console.Commands
          return snapshot;
       }
 
-      private void PlaySnapshot(Repo repo, PackageSnapshotKey[] snapshot, string nextChangeId)
+      private void PlaySnapshot(Repo repo, RemoteSnapshot snapshot)
       {
-         if (snapshot != null && snapshot.Length > 0)
+         if (snapshot != null && snapshot.Changes != null && snapshot.Changes.Length > 0)
          {
             try
             {
                console.Write("applying snapshot...");
-               LocalConfiguration.RepositoryManager.PlaySnapshot(repo, snapshot, nextChangeId);
+               LocalConfiguration.RepositoryManager.PlaySnapshot(repo, snapshot);
                console.Write(true);
             }
             catch
@@ -273,12 +273,12 @@ namespace Pundit.Core.Application.Console.Commands
             if(old)
             {
                string nextChangeId;
-               var snapshot = GetSnapshot(repo, out nextChangeId);
+               var snapshot = GetSnapshot(repo);
 
                //write to db
-               if (snapshot != null && snapshot.Length > 0)
+               if (snapshot != null && snapshot.Changes != null && snapshot.Changes.Length > 0)
                {
-                  PlaySnapshot(repo, snapshot, nextChangeId);
+                  PlaySnapshot(repo, snapshot);
                }
             }
          }

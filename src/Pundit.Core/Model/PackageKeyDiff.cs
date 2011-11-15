@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Runtime.Serialization;
 using System.Text;
 
 namespace Pundit.Core.Model
@@ -8,18 +9,27 @@ namespace Pundit.Core.Model
    /// <summary>
    /// 
    /// </summary>
+   [DataContract]
    public class PackageKeyDiff : PackageKey
    {
       /// <summary>
       /// 
       /// </summary>
+      [DataMember]
       public DiffType DiffType { get; set; }
 
       /// <summary>
       /// In case of upgraded (or downgraded) package contains a reference to the package it
       /// was updated from
       /// </summary>
+      [DataMember]
       public PackageKey OldPackageKey { get; set; }
+
+      /// <summary>
+      /// The size of the binary package corresponding to the manifest
+      /// </summary>
+      [DataMember]
+      public long BinarySize { get; set; }
 
       /// <summary>
       /// 

@@ -184,7 +184,7 @@ namespace Pundit.Core.Application
          }
       }
 
-      public void PlaySnapshot(Repo repo, IEnumerable<PackageSnapshotKey> snapshot, string nextChangeId)
+      public void PlaySnapshot(Repo repo, RemoteSnapshot snapshot)
       {
          if (repo == null) throw new ArgumentNullException("repo");
 
@@ -192,7 +192,7 @@ namespace Pundit.Core.Application
          {
             using (IDbTransaction tran = _sql.BeginTransaction())
             {
-               if(nextChangeId == null)
+               if(snapshot.NextChangeId == null)
                {
                   using(IDbCommand cmd = _sql.CreateCommand())
                   {
@@ -202,7 +202,7 @@ namespace Pundit.Core.Application
                   }
                }
 
-               foreach (PackageSnapshotKey entry in snapshot)
+               foreach (PackageSnapshotKey entry in snapshot.Changes)
                {
                   switch (entry.Diff)
                   {
@@ -223,7 +223,7 @@ namespace Pundit.Core.Application
                {
                   cmd.CommandText = "update " + RepositoryTableName + " set LastRefreshed=(?), LastChangeId=(?) " +
                                     "where RepositoryId=(?)";
-                  cmd.Add(DateTime.Now).Add(nextChangeId);
+                  cmd.Add(DateTime.Now).Add(snapshot.NextChangeId);
                   cmd.Add(repo.Id);
                   cmd.ExecuteNonQuery();
                }

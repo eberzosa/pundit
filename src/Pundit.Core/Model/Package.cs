@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.IO;
 using System.Linq;
 using System.Reflection;
+using System.Runtime.Serialization;
 using System.Text;
 using System.Text.RegularExpressions;
 using System.Xml;
@@ -12,6 +13,7 @@ namespace Pundit.Core.Model
 {
    [XmlRoot("package")]
    [XmlInclude(typeof(DevPackage))]
+   [DataContract]
    public class Package : ICloneable
    {
       public const string DefaultManifestFileName = "pundit.xml"; //package definition
@@ -32,25 +34,29 @@ namespace Pundit.Core.Model
       //WARNING!!! remember to reflect copy constructor if adding a new property to this class
 
       [XmlElement("packageId")]
+      [DataMember(Name = "packageId")]
       public string PackageId { get; set; }
 
       /// <summary>
       /// Package platform
       /// </summary>
       [XmlElement("platform")]
+      [DataMember(Name = "platform")]
       public string Platform
       {
          get { return _platform; }
          set { _platform = string.IsNullOrEmpty(value) ? NoArchPlatformName : value; }
       }
 
-      [XmlElement("project-url")]
+      [XmlElement("projectUrl")]
+      [DataMember(Name = "projectUrl")]
       public string ProjectUrl { get; set; }
 
       [XmlIgnore]
       public Version Version { get; set; }
 
       [XmlElement("version")]
+      [DataMember(Name = "version")]
       public string VersionString
       {
          get { return this.Version.ToString(); }
@@ -58,19 +64,24 @@ namespace Pundit.Core.Model
       }
 
       [XmlElement("author")]
+      [DataMember(Name = "author")]
       public string Author { get; set; }
 
       [XmlElement("description")]
+      [DataMember(Name = "description")]
       public string Description { get; set; }
 
-      [XmlElement("release-notes")]
+      [XmlElement("releaseNotes")]
+      [DataMember(Name = "releaseNotes")]
       public string ReleaseNotes { get; set; }
 
       [XmlElement("license")]
+      [DataMember(Name = "license")]
       public string License { get; set; }
 
       [XmlArray("dependencies")]
       [XmlArrayItem("package")]
+      [DataMember(Name = "dependencies", IsRequired = false)]
       public List<PackageDependency> Dependencies
       {
          get { return _dependencies; }

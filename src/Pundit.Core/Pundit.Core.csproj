@@ -104,6 +104,7 @@
     <Compile Include="Model\PackageKeyDiff.cs" />
     <Compile Include="Model\PackageSnapshotKey.cs" />
     <Compile Include="Model\Repo.cs" />
+    <Compile Include="Model\RemoteSnapshot.cs" />
     <Compile Include="Model\SourceFiles.cs" />
     <Compile Include="Model\UnresolvedPackage.cs" />
     <Compile Include="Model\VersionPattern.cs" />

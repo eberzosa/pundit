@@ -19,12 +19,12 @@ namespace Pundit.Core.Application.Repository
          throw new NotImplementedException();
       }
 
-      public Stream Download(PackageKey key)
+      public Stream Download(string platform, string packageId, string version)
       {
          throw new NotImplementedException();
       }
 
-      public PackageSnapshotKey[] GetSnapshot(string changeId, out string nextChangeId)
+      public RemoteSnapshot GetSnapshot(string changeId)
       {
          throw new NotImplementedException();
       }

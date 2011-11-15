@@ -25,12 +25,11 @@ namespace Pundit.Core.Model
       /// <summary>
       /// Downloads package
       /// </summary>
-      /// <param name="key">Package unique identifier</param>
       /// <returns>Package stream</returns>
       [OperationContract]
       [FaultContract(typeof(FileNotFoundException))]
-      [WebGet(UriTemplate = "/download")]
-      Stream Download(PackageKey key);
+      [WebGet(UriTemplate = "/download/{platform}/{packageId}/{version}", RequestFormat = WebMessageFormat.Json)]
+      Stream Download(string platform, string packageId, string version);
 
       /// <summary>
       /// Gets the snapshot of repository
@@ -41,7 +40,7 @@ namespace Pundit.Core.Model
       /// <returns></returns>
       [OperationContract]
       [FaultContract(typeof(FileNotFoundException))]
-      [WebGet(UriTemplate = "/snapshot/{changeId}")]
-      PackageSnapshotKey[] GetSnapshot(string changeId, out string nextChangeId);
+      [WebGet(UriTemplate = "/snapshot/{changeId}", ResponseFormat = WebMessageFormat.Json)]
+      RemoteSnapshot GetSnapshot(string changeId);
    }
 }

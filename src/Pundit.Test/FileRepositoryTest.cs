@@ -18,7 +18,7 @@ namespace Pundit.Test
       {
          string nextChangeId;
 
-         var snapshot = _repo.GetSnapshot(null, out nextChangeId);
+         var snapshot = _repo.GetSnapshot(null);
       }
    }
 }
