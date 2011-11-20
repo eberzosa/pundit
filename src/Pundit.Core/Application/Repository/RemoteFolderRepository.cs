@@ -39,7 +39,7 @@ namespace Pundit.Core.Application.Repository
       }
 
 
-      private static string[] SearchAllRelatedBuilds(string sourceDirectory, Package pkg)
+      private static IEnumerable<string> SearchAllRelatedBuilds(string sourceDirectory, Package pkg)
       {
          return Directory.GetFiles(sourceDirectory, GetBuildsSearchFilePattern(pkg));
       }
@@ -82,7 +82,7 @@ namespace Pundit.Core.Application.Repository
          return Download(new PackageKey(packageId, new Version(version), platform));
       }
 
-      public Stream Download(PackageKey key)
+      private Stream Download(PackageKey key)
       {
          string fullPath = Path.Combine(_rootPath, PackageUtils.GetFileName(key));
 
@@ -108,7 +108,7 @@ namespace Pundit.Core.Application.Repository
             }
          }
 
-         return new RemoteSnapshot() {Changes = r.ToArray()};
+         return new RemoteSnapshot(false, null, r.ToArray());
       }
    }
 }

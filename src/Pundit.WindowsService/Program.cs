@@ -5,6 +5,7 @@ using System.Runtime.InteropServices;
 using System.ServiceProcess;
 using System.Text;
 using Pundit.Server;
+using log4net.Config;
 
 namespace Pundit.WindowsService
 {
@@ -15,6 +16,8 @@ namespace Pundit.WindowsService
       /// </summary>
       static void Main(string[] args)
       {
+         BasicConfigurator.Configure();
+
          if(args != null && args.Length > 0 && args[0] == "console")
             RunAsConsole();
          else

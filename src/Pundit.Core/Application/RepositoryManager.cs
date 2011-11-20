@@ -30,7 +30,7 @@ namespace Pundit.Core.Application
 
       public RepositoryManager(string dbPath)
       {
-         _sql = new SqliteHelper(dbPath);
+         _sql = new SqliteHelper(dbPath, typeof(SqliteHelper).Namespace + ".pundit.db");
 
          Initialize();
       }
@@ -206,14 +206,10 @@ namespace Pundit.Core.Application
                {
                   switch (entry.Diff)
                   {
-                     case DiffType.Add:
+                     case SnapshotPackageDiff.Add:
                         _sql.WriteManifest(repo.Id, entry.Manifest);
                         break;
-                     case DiffType.Mod:
-                        DeleteManifest(repo.Id, entry.Manifest.Key);
-                        _sql.WriteManifest(repo.Id, entry.Manifest);
-                        break;
-                     case DiffType.Del:
+                     case SnapshotPackageDiff.Del:
                         DeleteManifest(repo.Id, entry.Manifest.Key);
                         break;
                   }

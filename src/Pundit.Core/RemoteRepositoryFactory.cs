@@ -30,7 +30,7 @@ namespace Pundit.Core
             return new RemoteFolderRepository(uri.Substring(DirRepoPrefix.Length));
 
          if(uri.StartsWith(HttpRepoPrefix))
-            return new HttpRestRemoteRepository(uri.Substring(HttpRepoPrefix.Length));
+            return new HttpRestRemoteRepository(uri);
 
          throw new NotSupportedException("repository " + uri + " not supported (typo?)");
       }

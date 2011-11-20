@@ -18,7 +18,7 @@ namespace Pundit.Core.Application.Repository
 
       public SqliteLocalRepository(string dbPath)
       {
-         _sql = new SqliteHelper(dbPath);
+         _sql = new SqliteHelper(dbPath, typeof(SqliteHelper).Namespace + ".pundit.db");
          _repoId = GetLocalRepositoryId();
       }
 

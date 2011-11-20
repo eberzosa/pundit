@@ -8,19 +8,26 @@ using Pundit.Core.Model;
 
 namespace Pundit.Core.Application.Sqlite
 {
-   class SqliteHelper : IDisposable
+   public class SqliteHelper : IDisposable
    {
       private const string SelectId = ";select last_insert_rowid()";
 
-      private string _absolutePath;
-      private string _absoluteDir;
+      private readonly string _absolutePath;
+      private readonly string _emptyDbResourceName;
+      private readonly string _absoluteDir;
       private SQLiteConnection _conn;
 
-      public SqliteHelper(string dbPath)
+      public SqliteHelper(string dbPath, string emptyDbResourceName)
       {
          if (dbPath == null) throw new ArgumentNullException("dbPath");
+         if (emptyDbResourceName == null) throw new ArgumentNullException("emptyDbResourceName");
+
          _absolutePath = dbPath;
+         _emptyDbResourceName = emptyDbResourceName;
          _absoluteDir = Path.GetDirectoryName(_absolutePath);
+
+         if(_absoluteDir == null)
+            throw new ArgumentException("cannot get directory from path " + dbPath);
 
          if (!Directory.Exists(_absoluteDir))
             throw new DirectoryNotFoundException("target folder not found (" + _absoluteDir + ")");
@@ -37,8 +44,10 @@ namespace Pundit.Core.Application.Sqlite
       {
          if (!File.Exists(_absolutePath))
          {
-            using (Stream s = Assembly.GetExecutingAssembly().GetManifestResourceStream(typeof(SqliteHelper).Namespace + ".pundit.db"))
+            using (Stream s = Assembly.GetExecutingAssembly().GetManifestResourceStream(_emptyDbResourceName))
             {
+               if(null == s) throw new FileNotFoundException("resource not found: " + _emptyDbResourceName);
+
                using (Stream tgt = File.Create(_absolutePath))
                {
                   s.CopyTo(tgt);
@@ -248,6 +257,39 @@ namespace Pundit.Core.Application.Sqlite
                                   new object[]
                                      {
                                         repoId, manifest.PackageId, manifest.VersionString,
+                                        manifest.Platform, manifest.ProjectUrl, manifest.Author,
+                                        manifest.Description, manifest.ReleaseNotes, manifest.License
+                                     });
+
+         foreach (PackageDependency dependency in manifest.Dependencies)
+         {
+            long depId = Insert("PackageDependency",
+                                new[]
+                                   {
+                                      "PackageManifestId", "PackageId", "VersionPattern", "Platform", "Scope",
+                                      "CreatePlatformFolder"
+                                   },
+                                new object[]
+                                   {
+                                      manifestId, dependency.PackageId, dependency.VersionPattern,
+                                      dependency.Platform, (long) dependency.Scope, dependency.CreatePlatformFolder
+                                   });
+         }
+
+         return manifestId;
+      }
+
+      public long WriteManifest(Package manifest)
+      {
+         long manifestId = Insert("PackageManifest",
+                                  new[]
+                                     {
+                                        "PackageId", "Version", "Platform", "HomeUrl", "Author",
+                                        "Description", "ReleaseNotes", "License"
+                                     },
+                                  new object[]
+                                     {
+                                        manifest.PackageId, manifest.VersionString,
                                         manifest.Platform, manifest.ProjectUrl, manifest.Author,
                                         manifest.Description, manifest.ReleaseNotes, manifest.License
                                      });

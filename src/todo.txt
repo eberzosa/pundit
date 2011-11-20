@@ -31,8 +31,8 @@ CORE:
 - pundit resolve should show package size before downloading
 - in pundit resolve display two columns (library, status)
 = pundit http server
-  - db design
-  - 
+  = db design
+  =  
 
 VSIX:
 - check for dependencies in background and notify the user in the toolbar

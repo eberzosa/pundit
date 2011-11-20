@@ -7,13 +7,19 @@ using System.Xml.Serialization;
 
 namespace Pundit.Core.Model
 {
+   public enum SnapshotPackageDiff
+   {
+      Add = 0,
+      Del = 1
+   }
+
    [XmlRoot("key")]
    [DataContract]
    public class PackageSnapshotKey
    {
       [XmlAttribute("diff")]
       [DataMember(Name = "diff")]
-      public DiffType Diff { get; set; }
+      public SnapshotPackageDiff Diff { get; set; }
 
       [XmlElement("manifest")]
       [DataMember(Name = "manifest")]
@@ -24,9 +30,9 @@ namespace Pundit.Core.Model
          
       }
 
-      public PackageSnapshotKey(Package manifest)
+      public PackageSnapshotKey(Package manifest, SnapshotPackageDiff diff = SnapshotPackageDiff.Add)
       {
-         Diff = DiffType.Add;
+         Diff = SnapshotPackageDiff.Add;
          Manifest = manifest;
       }
    }
