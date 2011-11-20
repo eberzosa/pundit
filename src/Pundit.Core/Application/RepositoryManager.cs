@@ -30,7 +30,7 @@ namespace Pundit.Core.Application
 
       public RepositoryManager(string dbPath)
       {
-         _sql = new SqliteHelper(dbPath, typeof(SqliteHelper).Namespace + ".pundit.db");
+         _sql = new SqliteHelper(dbPath, "pundit");
 
          Initialize();
       }

@@ -33,7 +33,7 @@ namespace Pundit.Server
          _log.Info("db location: " + dbLocation);
          _log.Info("data location: " + dataLocation);
 
-         _sql = new SqliteHelper(dbLocation, typeof(RepositoryServer).Namespace + ".empty.db");
+         _sql = new SqliteHelper(dbLocation, "server");
          _streams = new StreamsProvider(dataLocation);
       }
 

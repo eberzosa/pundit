@@ -120,6 +120,7 @@
   </ItemGroup>
   <ItemGroup>
     <EmbeddedResource Include="Application\Sqlite\pundit.db" />
+    <EmbeddedResource Include="Application\Sqlite\server.db" />
     <None Include="manifest.xsd">
       <SubType>Designer</SubType>
     </None>
@@ -129,7 +130,8 @@
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
   <PropertyGroup>
-    <PreBuildEvent>copy /Y ..\..\..\..\db\pundit.db ..\..\Application\sqlite\pundit.db</PreBuildEvent>
+    <PreBuildEvent>copy /Y ..\..\..\..\db\pundit.db ..\..\Application\sqlite\pundit.db
+copy /Y ..\..\..\..\db\server.db ..\..\Application\sqlite\server.db</PreBuildEvent>
   </PropertyGroup>
   <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 
        Other similar extension points exist, see Microsoft.Common.targets.

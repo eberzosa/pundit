@@ -23,7 +23,7 @@ namespace Pundit.Core.Application.Sqlite
          if (emptyDbResourceName == null) throw new ArgumentNullException("emptyDbResourceName");
 
          _absolutePath = dbPath;
-         _emptyDbResourceName = emptyDbResourceName;
+         _emptyDbResourceName = typeof (SqliteHelper).Namespace + "." + emptyDbResourceName + ".db";
          _absoluteDir = Path.GetDirectoryName(_absolutePath);
 
          if(_absoluteDir == null)
@@ -285,13 +285,13 @@ namespace Pundit.Core.Application.Sqlite
                                   new[]
                                      {
                                         "PackageId", "Version", "Platform", "HomeUrl", "Author",
-                                        "Description", "ReleaseNotes", "License"
+                                        "Description", "ReleaseNotes", "License", "IsDeleted"
                                      },
                                   new object[]
                                      {
                                         manifest.PackageId, manifest.VersionString,
                                         manifest.Platform, manifest.ProjectUrl, manifest.Author,
-                                        manifest.Description, manifest.ReleaseNotes, manifest.License
+                                        manifest.Description, manifest.ReleaseNotes, manifest.License, false
                                      });
 
          foreach (PackageDependency dependency in manifest.Dependencies)
