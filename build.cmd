@@ -12,9 +12,10 @@ del /f/s/q *.zip
 del /f/s/q *.rar
 del /f/q *.vsix
 
-rem winrar a -afzip -ep -x*vshost* pundit-%FVER%.zip bin\core\*.dll bin\core\*.exe
+winrar a -afzip -ep -x*vshost* pundit-%FVER%.zip bin\core\*.dll bin\core\*.exe
+winrar a -afzip -ep -x*vshost* punditsrv-%FVER%.zip bin\httpsrv\*.dll bin\httpsrv\*.exe bin\httpsrv\*.config
 
 copy src\Pundit.Vsix\bin\Release\Pundit.vsix .\pundit.vsix
 makensis src\installer\installer.nsi
 
-rem winrar a -afzip -ep pundit-vsix-%FVER%.zip src\Pundit.Vsix\bin\Release\*.vsix
+winrar a -afzip -ep pundit-vsix-%FVER%.zip src\Pundit.Vsix\bin\Release\*.vsix

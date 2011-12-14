@@ -158,7 +158,7 @@ namespace Pundit.Server
             _log.Debug("done (" + manifestId + "), writing history...");
 
             long historyId = WriteHistory(manifestId, SnapshotPackageDiff.Add);
-            _log.Debug("done");
+            _log.Debug("done, history record id: " + historyId);
 
             trans.Commit();
          }

@@ -33,14 +33,15 @@
          // 
          // serviceProcessInstaller1
          // 
+         this.serviceProcessInstaller1.Account = System.ServiceProcess.ServiceAccount.LocalService;
          this.serviceProcessInstaller1.Password = null;
          this.serviceProcessInstaller1.Username = null;
          // 
          // serviceInstaller1
          // 
          this.serviceInstaller1.DelayedAutoStart = true;
-         this.serviceInstaller1.DisplayName = "Pundit Dependency Management";
-         this.serviceInstaller1.ServiceName = "Pundit";
+         this.serviceInstaller1.DisplayName = "Pundit Dependency Management Service";
+         this.serviceInstaller1.ServiceName = "PunditSrv";
          this.serviceInstaller1.StartType = System.ServiceProcess.ServiceStartMode.Automatic;
          // 
          // ProjectInstaller

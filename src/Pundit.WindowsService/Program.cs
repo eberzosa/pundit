@@ -16,7 +16,7 @@ namespace Pundit.WindowsService
       /// </summary>
       static void Main(string[] args)
       {
-         BasicConfigurator.Configure();
+         XmlConfigurator.Configure();
 
          if(args != null && args.Length > 0 && args[0] == "console")
             RunAsConsole();
