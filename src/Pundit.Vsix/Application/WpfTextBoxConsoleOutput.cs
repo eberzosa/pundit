@@ -89,5 +89,14 @@ namespace Pundit.Vsix.Application
          else WriteLine(ConsoleColor.Red, "FAIL");
          ScrollToEnd();
       }
+
+      public void StartProgress(int maxValue)
+      {
+         throw new NotImplementedException();
+      }
+
+      public void UpdateProgress(int value)
+      {
+      }
    }
 }

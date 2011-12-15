@@ -1,18 +1,25 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.IO;
-using System.Linq;
-using System.Text;
 using ICSharpCode.SharpZipLib.Zip;
 using Pundit.Core.Model;
 using Pundit.Core.Model.EventArguments;
-using Pundit.Core.Utils;
 
 namespace Pundit.Core.Application
 {
+   /// <summary>
+   /// Composes binary package from a manifest definition XML file
+   /// </summary>
    public class PackageWriter : PackageStreamer
    {
+      /// <summary>
+      /// Occurs when a file is about to be packed into the binary
+      /// </summary>
       public event EventHandler<PackageFileEventArgs> BeginPackingFile;
+
+      /// <summary>
+      /// Occurs when a file has just finished packing into the binary
+      /// </summary>
       public event EventHandler<PackageFileEventArgs> EndPackingFile;
 
       private readonly string _rootDirectory;
@@ -69,70 +76,94 @@ namespace Pundit.Core.Application
          manifestPackage.WriteTo(_zipStream);
       }
 
-      private void WriteFiles()
+      class ResolvedFile
       {
-         foreach(SourceFiles files in _packageInfo.Files)
+         public string SearchBase;
+         public string FullPath;
+         public bool IsDirectory;
+         public SourceFiles Info;
+
+         public ResolvedFile(string searchBase, string fullPath, bool isDirectory, SourceFiles info)
+         {
+            this.SearchBase = searchBase;
+            this.FullPath = fullPath;
+            this.IsDirectory = isDirectory;
+            this.Info = info;
+         }
+      }
+
+      private List<ResolvedFile> ResolveAllFiles(IEnumerable<SourceFiles> files, string rootDirectory)
+      {
+         List<ResolvedFile> result = new List<ResolvedFile>();
+
+         foreach (SourceFiles ifiles in files)
          {
             string[] archiveFiles, archiveDirectories;
             string searchBase;
 
-            Resolve(files,
-               _rootDirectory,   //root directory to start search from
-               out searchBase,   //full path to the returned files and dirs search root
+            Resolve(ifiles,
+               rootDirectory,             //root directory to start search from
+               out searchBase,            //full path to the returned files and dirs search root
                out archiveFiles,          //full path to found files
                out archiveDirectories);   //full path to found folders
 
             foreach(string afile in archiveFiles)
+               result.Add(new ResolvedFile(searchBase, afile, false, ifiles));
+
+            foreach (string adir in archiveDirectories)
+               result.Add(new ResolvedFile(searchBase, adir, true, ifiles));
+         }
+
+         return result;
+      }
+
+      private void WriteFiles()
+      {
+         List<ResolvedFile> allFiles = ResolveAllFiles(_packageInfo.Files, _rootDirectory);
+         int idx = 0;
+         foreach(ResolvedFile file in allFiles)
+         {
+            if(!file.IsDirectory)
             {
-               WriteFile(files, searchBase, afile);
+               WriteFile(file, idx++, allFiles.Count);
             }
-
-            if(files.IncludeEmptyDirs)
+            else if(file.Info.IncludeEmptyDirs)
             {
-               foreach(string adir in archiveDirectories)
-               {
-                  string dirPath = GetRelativeUnixPath(files, searchBase, adir);
-                  if(!dirPath.EndsWith("/")) dirPath += "/";
+               string dirPath = GetRelativeUnixPath(file.Info, file.SearchBase, file.FullPath);
+               if(!dirPath.EndsWith("/")) dirPath += "/";
 
-                  ZipEntry ed = new ZipEntry(dirPath);
-                  _zipStream.PutNextEntry(ed);
-               }
+               var ed = new ZipEntry(dirPath);
+               _zipStream.PutNextEntry(ed);
             }
          }
       }
 
-      /// <summary>
-      /// 
-      /// </summary>
-      /// <param name="info"></param>
-      /// <param name="baseDir">file base dir (full path)</param>
-      /// <param name="filePath">file to archive (full path)</param>
-      private void WriteFile(SourceFiles info, string baseDir, string filePath)
+      private void WriteFile(ResolvedFile file, int fileNo, int filesCount)
       {
-         string unixPath = GetRelativeUnixPath(info, baseDir, filePath);
+         string unixPath = GetRelativeUnixPath(file.Info, file.SearchBase, file.FullPath);
 
          if (!_packedFiles.ContainsKey(unixPath))
          {
             _packedFiles[unixPath] = true;
 
-            long originalSize = new FileInfo(filePath).Length;
+            long originalSize = new FileInfo(file.FullPath).Length;
             _bytesWritten += originalSize;
 
             if(BeginPackingFile != null)
-               BeginPackingFile(this, new PackageFileEventArgs(unixPath, originalSize));
+               BeginPackingFile(this, new PackageFileEventArgs(unixPath, originalSize, fileNo, filesCount));
 
             ZipEntry entry = new ZipEntry(unixPath);
             entry.DateTime = DateTime.Now;
             entry.Size = originalSize;
             _zipStream.PutNextEntry(entry);
 
-            using (Stream fileStream = File.OpenRead(filePath))
+            using (Stream fileStream = File.OpenRead(file.FullPath))
             {
                fileStream.CopyTo(_zipStream);
             }
 
             if(EndPackingFile != null)
-               EndPackingFile(this, new PackageFileEventArgs(unixPath, originalSize));
+               EndPackingFile(this, new PackageFileEventArgs(unixPath, originalSize, fileNo, filesCount));
          }
       }
 

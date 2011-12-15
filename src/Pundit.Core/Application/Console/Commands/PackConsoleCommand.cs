@@ -44,7 +44,7 @@ namespace Pundit.Core.Application.Console.Commands
          if (vi != null)
          {
             if (!Version.TryParse(vi, out overrideVersion))
-               throw new ArgumentException("version given [" + vi + "] is not in valid format");
+               throw new ArgumentException(string.Format(Errors.InvalidVersionFormat, vi));
          }
          else overrideVersion = null;
 

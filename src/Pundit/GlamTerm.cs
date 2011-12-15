@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Drawing;
 using Pundit.Core.Model;
 using ConsoleS = System.Console;
 
@@ -69,29 +70,76 @@ namespace Pundit.Console
          Write(ForeNormalColor, true, null);
       }
 
+      private int WindowWidth
+      {
+         get
+         {
+            int width = 80;
+
+            try
+            {
+               width = ConsoleS.WindowWidth;
+            }
+            catch
+            {
+            }
+
+            return width;
+         }
+      }
+
+      private void MoveCursor(int left, int top)
+      {
+         try
+         {
+            ConsoleS.SetCursorPosition(left, top);
+         }
+         catch
+         {
+            
+         }
+      }
+
+      private void MoveCursor(int left)
+      {
+         MoveCursor(left, CursorPosition.Y);
+      }
+
+      private Point CursorPosition
+      {
+         get
+         {
+            int left = 0;
+            int top = 0;
+
+            try
+            {
+               left = ConsoleS.CursorLeft;
+            }
+            catch
+            {
+               
+            }
+
+            try
+            {
+               top = ConsoleS.CursorTop;
+            }
+            catch
+            {
+               
+            }
+
+            return new Point(left, top);
+         }
+      }
+
       private void WriteStatsWord(string word, ConsoleColor wordColor)
       {
          if (word.Length > 4) word = word.Substring(0, 4);
          if (word.Length < 4) word = word.PadLeft(4);
 
-         int width = 80;
-
-         try
-         {
-            width = ConsoleS.WindowWidth;
-         }
-         catch
-         {
-         }
-
-         try
-         {
-            ConsoleS.SetCursorPosition(width - 8, ConsoleS.CursorTop);
-         }
-         catch
-         {
-         }
-
+         MoveCursor(WindowWidth - 8, ConsoleS.CursorTop);
 
          Write(ConsoleColor.White, "[");
          Write(wordColor, word);
@@ -113,5 +161,43 @@ namespace Pundit.Console
          if(result) WriteOk();
          else WriteFail();
       }
+
+      #region [ Progress Bar ]
+
+      private int _progressBarStart;
+      private int _progressMaxValue;
+
+      public void StartProgress(int maxValue)
+      {
+         _progressMaxValue = maxValue;
+         _progressBarStart = CursorPosition.X;
+      }
+
+      public void UpdateProgress(int value)
+      {
+         //[========               ] 035%
+
+         int blocksTotal = WindowWidth - _progressBarStart -
+                           1 - //[
+                           1 - //]
+                           1 - //<space>
+                           4 - //percentage
+                           2 - //end spacing
+                           0;
+         int percent = value*100/_progressMaxValue;
+         int blocksPainted = percent*blocksTotal/100;
+
+         MoveCursor(_progressBarStart);
+         Write(ConsoleColor.White, "[");
+         for(int i = 0; i < blocksPainted - 1; i++) Write(ConsoleColor.Green, "=");
+         Write(ConsoleColor.White, "=");
+         for (int i = 0; i < blocksTotal - blocksPainted; i++) Write(ConsoleColor.Green, " ");
+         Write(ConsoleColor.White, "] ");
+         Write(ConsoleColor.Yellow, percent.ToString().PadLeft(3));
+         Write(ConsoleColor.Green, "% ");
+      }
+
+      #endregion
+
    }
 }

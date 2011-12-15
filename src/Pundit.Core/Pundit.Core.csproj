@@ -72,6 +72,7 @@
     <Compile Include="Application\DependencyResolution.cs" />
     <Compile Include="Application\InstalledPackagesIndex.cs" />
     <Compile Include="Application\PackageInstaller.cs" />
+    <Compile Include="Application\PackageIntegrityCheck.cs" />
     <Compile Include="Application\PackageReader.cs" />
     <Compile Include="Application\PackageStreamer.cs" />
     <Compile Include="Application\PackageWriter.cs" />
@@ -82,6 +83,11 @@
     <Compile Include="Application\Sqlite\SqliteExtensions.cs" />
     <Compile Include="Application\Repository\SqliteLocalRepository.cs" />
     <Compile Include="Application\Sqlite\SqliteHelper.cs" />
+    <Compile Include="Errors.Designer.cs">
+      <AutoGen>True</AutoGen>
+      <DesignTime>True</DesignTime>
+      <DependentUpon>Errors.resx</DependentUpon>
+    </Compile>
     <Compile Include="Exceptions\RepositoryOfflineException.cs" />
     <Compile Include="LocalConfiguration.cs" />
     <Compile Include="Model\EventArguments\PackageDownloadEventArgs.cs" />
@@ -121,6 +127,10 @@
   <ItemGroup>
     <EmbeddedResource Include="Application\Sqlite\pundit.db" />
     <EmbeddedResource Include="Application\Sqlite\server.db" />
+    <EmbeddedResource Include="Errors.resx">
+      <Generator>ResXFileCodeGenerator</Generator>
+      <LastGenOutput>Errors.Designer.cs</LastGenOutput>
+    </EmbeddedResource>
     <None Include="manifest.xsd">
       <SubType>Designer</SubType>
     </None>

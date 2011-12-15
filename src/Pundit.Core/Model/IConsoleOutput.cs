@@ -43,5 +43,16 @@ namespace Pundit.Core.Model
       /// </summary>
       /// <param name="result"></param>
       void Write(bool result);
+
+      /// <summary>
+      /// Draws a progress bar starting from 0%
+      /// </summary>
+      void StartProgress(int maxValue);
+
+      /// <summary>
+      /// Updates current progress bar value
+      /// </summary>
+      /// <param name="value">0-maxValue set in StartProgress</param>
+      void UpdateProgress(int value);
    }
 }

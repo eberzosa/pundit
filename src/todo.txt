@@ -26,7 +26,7 @@ CORE:
 + restore "pundit publish" using IRemoteRepository; after publishing local index has to be force-refreshed
 - improve conflict explanation
 - bug: "pundit resolve" doesn't notify about operation completion
-- progress bars in repository downloads
+= progress bars support in console mode
 - pundit resolve should show package size before downloading
 = pundit http server
   + db design
@@ -34,9 +34,14 @@ CORE:
   = getting history and snapshots via http
   - binary http downloads
   - limit number of stored binary revisions (configurable)
+- revisit commands to support progress
+- for windows dlls included in the package check that version information at least comes from same company, otherwise
+  display an error "error checking package integrity, are you mixing libraries from several vendors in the same package?"
+- write personal header to package binary so it includes extra metadata and won't open by zip clients anymore
 
 VSIX:
 - check for dependencies in background and notify the user in the toolbar
+- progress bars support in WPF mode
 
 ----------------------------------------------------------------------------------------------------------------------------
 

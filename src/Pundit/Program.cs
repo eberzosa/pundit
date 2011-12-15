@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Threading;
 using Pundit.Core;
 using Pundit.Core.Application.Console;
 using Pundit.Core.Model;
@@ -15,28 +16,35 @@ namespace Pundit.Console
       {
          PrintBanner();
 
-         try
+         Con.StartProgress(400);
+         for (int i = 0; i <= 400; i++)
          {
-            IConsoleCommand cmd = CommandFactory.CreateCommand(Con, Environment.CurrentDirectory, args);
-
-            cmd.Execute();
+            Con.UpdateProgress(i);
+            Thread.Sleep(3);
          }
-         catch(Exception ex)
-         {
-            Con.WriteLine(ConsoleColor.Red, ex.Message);
 
-            if (ex is InvalidPackageException)
-               Con.WriteLine(ConsoleColor.Red, ex.ToString());
-            else
+            try
             {
+               IConsoleCommand cmd = CommandFactory.CreateCommand(Con, Environment.CurrentDirectory, args);
+
+               cmd.Execute();
+            }
+            catch (Exception ex)
+            {
+               Con.WriteLine(ConsoleColor.Red, ex.Message);
+
+               if (ex is InvalidPackageException)
+                  Con.WriteLine(ConsoleColor.Red, ex.ToString());
+               else
+               {
 
 #if DEBUG
-               Con.WriteLine(ConsoleColor.Red, ex.ToString());
+                  Con.WriteLine(ConsoleColor.Red, ex.ToString());
 #endif
-            }
+               }
 
-            return 1;
-         }
+               return 1;
+            }
 
          return 0;
       }

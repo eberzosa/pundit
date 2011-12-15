@@ -9,6 +9,24 @@ using Pundit.Core.Utils;
 
 namespace Pundit.Core.Application
 {
+   class FileHeader
+   {
+      private byte _typeCode = (byte)'P'; //short for Pundit
+      private byte _compressionMethod = 0;
+      private byte _reserved0 = 0;
+      private byte _reserved1 = 0;
+
+      public FileHeader()
+      {
+         
+      }
+
+      public void RewriteHeader(string targetFileName)
+      {
+         
+      }
+   }
+
    public abstract class PackageStreamer : IDisposable
    {
       protected virtual void Dispose(bool disposing)
