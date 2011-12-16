@@ -17,30 +17,22 @@ namespace Pundit.Core.Application.Console.Commands
       {
          packagePath = GetLocalManifest();
 
-         string po = null;
-         string vi = null;
-
-
-         OptionSet oset = new OptionSet()
-            .Add("f:|folder:", o => po = o)
-            .Add("v:|version:", v => vi = v);
-
-         oset.Parse(GetCommandLine());
-
          //resolve output path
-         if(po != null)
+         destinationFolder = GetParameter("o:|out:");
+         if (destinationFolder != null)
          {
-            if (Path.IsPathRooted(po))
-               destinationFolder = po;
-            else
-               destinationFolder = Path.Combine(CurrentDirectory, po);
+            destinationFolder = Path.IsPathRooted(destinationFolder)
+                                   ? destinationFolder
+                                   : Path.Combine(CurrentDirectory, destinationFolder);
          }
          else
          {
             destinationFolder = CurrentDirectory;
          }
 
+
          //resolve override version
+         string vi = GetParameter("v:|version:");
          if (vi != null)
          {
             if (!Version.TryParse(vi, out overrideVersion))
@@ -49,7 +41,6 @@ namespace Pundit.Core.Application.Console.Commands
          else overrideVersion = null;
 
          //validate
-
          if(!Directory.Exists(destinationFolder))
             throw new ArgumentException("destination directory does not exist at [" + destinationFolder + "]");
 
@@ -95,11 +86,12 @@ namespace Pundit.Core.Application.Console.Commands
          {
             using (var pw = new PackageWriter(solutionRoot, devPack, writeStream))
             {
-               pw.BeginPackingFile += pw_BeginPackingFile;
-               pw.EndPackingFile += pw_EndPackingFile;
+               pw.BeginPackingFile += PackageWriterBeginWritePackage;
+               pw.EndPackingFile += PackageWriterEndWritePackage;
                bytesWritten = pw.WriteAll();
             }
          }
+         console.FinishProgress();
 
          long packageSize = new FileInfo(destinationFile).Length;
 
@@ -109,16 +101,25 @@ namespace Pundit.Core.Application.Console.Commands
             packageSize * 100 / bytesWritten));
       }
 
-      void pw_EndPackingFile(object sender, Core.Model.EventArguments.PackageFileEventArgs e)
+      void PackageWriterEndWritePackage(object sender, Core.Model.EventArguments.PackageFileEventArgs e)
       {
-         console.Write(true);
+         //console.Write(true);
+         console.UpdateProgress(e.FileIndex + 1);
       }
 
-      void pw_BeginPackingFile(object sender, Core.Model.EventArguments.PackageFileEventArgs e)
+      private bool _progressStarted;
+
+      void PackageWriterBeginWritePackage(object sender, Core.Model.EventArguments.PackageFileEventArgs e)
       {
-         console.Write("packing ");
-         console.Write(ConsoleColor.Green, e.FileName);
-         console.Write("... ");
+         if(!_progressStarted)
+         {
+            console.StartProgress(e.FilesTotal);
+            _progressStarted = true;
+         }
+
+         //console.Write("packing ");
+         //console.Write(ConsoleColor.Green, e.FileName);
+         //console.Write("... ");
       }
    }
 }

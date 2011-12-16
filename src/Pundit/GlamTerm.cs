@@ -7,6 +7,8 @@ namespace Pundit.Console
 {
    class GlamTerm : IConsoleOutput
    {
+      private readonly bool _supportsCursor;
+
       private class ForeColorProtector : IDisposable
       {
          private readonly ConsoleColor _oldColour;
@@ -33,6 +35,16 @@ namespace Pundit.Console
          ForeNormalColor = ConsoleS.ForegroundColor;
          ForeWarnColor = ConsoleColor.Yellow;
          ForeErrorColor = ConsoleColor.Red;
+
+         try
+         {
+            int left = ConsoleS.CursorLeft;
+            _supportsCursor = true;
+         }
+         catch
+         {
+            
+         }
       }
 
       private void Write(ConsoleColor defaultColor, bool newLine, string format, params object[] args)
@@ -166,35 +178,48 @@ namespace Pundit.Console
 
       private int _progressBarStart;
       private int _progressMaxValue;
+      private int _progressCurrentValue;
 
       public void StartProgress(int maxValue)
       {
+         _progressCurrentValue = 0;
          _progressMaxValue = maxValue;
          _progressBarStart = CursorPosition.X;
+         UpdateProgress(0);
       }
 
       public void UpdateProgress(int value)
       {
          //[========               ] 035%
+         int percent = value * 100 / _progressMaxValue;
+         if (percent > 100) percent = 100;
+         if (percent != _progressCurrentValue)
+         {
+            _progressCurrentValue = percent;
+            int blocksTotal = WindowWidth - _progressBarStart -
+                              1 - //[
+                              1 - //]
+                              1 - //<space>
+                              4 - //percentage
+                              2 - //end spacing
+                              0;
+            int blocksPainted = percent*blocksTotal/100;
 
-         int blocksTotal = WindowWidth - _progressBarStart -
-                           1 - //[
-                           1 - //]
-                           1 - //<space>
-                           4 - //percentage
-                           2 - //end spacing
-                           0;
-         int percent = value*100/_progressMaxValue;
-         int blocksPainted = percent*blocksTotal/100;
+            MoveCursor(_progressBarStart);
+            Write(ConsoleColor.White, "[");
+            for (int i = 0; i < blocksPainted - 1; i++) Write(ConsoleColor.Green, "=");
+            Write(ConsoleColor.White, "=");
+            for (int i = 0; i < blocksTotal - blocksPainted; i++) Write(ConsoleColor.Green, " ");
+            Write(ConsoleColor.White, "] ");
+            Write(ConsoleColor.Yellow, percent.ToString().PadLeft(3));
+            Write(ConsoleColor.Green, "% ");
+         }
+      }
 
-         MoveCursor(_progressBarStart);
-         Write(ConsoleColor.White, "[");
-         for(int i = 0; i < blocksPainted - 1; i++) Write(ConsoleColor.Green, "=");
-         Write(ConsoleColor.White, "=");
-         for (int i = 0; i < blocksTotal - blocksPainted; i++) Write(ConsoleColor.Green, " ");
-         Write(ConsoleColor.White, "] ");
-         Write(ConsoleColor.Yellow, percent.ToString().PadLeft(3));
-         Write(ConsoleColor.Green, "% ");
+      public void FinishProgress()
+      {
+         UpdateProgress(_progressMaxValue);
+         ConsoleS.WriteLine();
       }
 
       #endregion

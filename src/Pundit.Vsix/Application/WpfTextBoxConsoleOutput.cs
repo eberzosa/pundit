@@ -98,5 +98,9 @@ namespace Pundit.Vsix.Application
       public void UpdateProgress(int value)
       {
       }
+
+      public void FinishProgress()
+      {
+      }
    }
 }

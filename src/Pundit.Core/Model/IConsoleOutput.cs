@@ -54,5 +54,10 @@ namespace Pundit.Core.Model
       /// </summary>
       /// <param name="value">0-maxValue set in StartProgress</param>
       void UpdateProgress(int value);
+
+      /// <summary>
+      /// Complete progress bar and dispose any objects involved in drawing the progress
+      /// </summary>
+      void FinishProgress();
    }
 }

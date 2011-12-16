@@ -91,9 +91,7 @@ namespace Pundit.Core.Application.Console.Commands
 
       protected string GetLocalManifest()
       {
-         string manifestPath = null;
-
-         new OptionSet().Add("m:|manifest:", i => manifestPath = i).Parse(_args);
+         string manifestPath = GetParameter("m:|manifest:", 0);
 
          if (manifestPath != null)
          {

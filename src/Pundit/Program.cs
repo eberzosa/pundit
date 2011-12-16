@@ -16,35 +16,28 @@ namespace Pundit.Console
       {
          PrintBanner();
 
-         Con.StartProgress(400);
-         for (int i = 0; i <= 400; i++)
+         try
          {
-            Con.UpdateProgress(i);
-            Thread.Sleep(3);
+            IConsoleCommand cmd = CommandFactory.CreateCommand(Con, Environment.CurrentDirectory, args);
+
+            cmd.Execute();
          }
+         catch (Exception ex)
+         {
+            Con.WriteLine(ConsoleColor.Red, ex.Message);
 
-            try
+            if (ex is InvalidPackageException)
+               Con.WriteLine(ConsoleColor.Red, ex.ToString());
+            else
             {
-               IConsoleCommand cmd = CommandFactory.CreateCommand(Con, Environment.CurrentDirectory, args);
-
-               cmd.Execute();
-            }
-            catch (Exception ex)
-            {
-               Con.WriteLine(ConsoleColor.Red, ex.Message);
-
-               if (ex is InvalidPackageException)
-                  Con.WriteLine(ConsoleColor.Red, ex.ToString());
-               else
-               {
 
 #if DEBUG
-                  Con.WriteLine(ConsoleColor.Red, ex.ToString());
+               Con.WriteLine(ConsoleColor.Red, ex.ToString());
 #endif
-               }
-
-               return 1;
             }
+
+            return 1;
+         }
 
          return 0;
       }
