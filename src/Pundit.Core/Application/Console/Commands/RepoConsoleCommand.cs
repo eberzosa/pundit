@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
+using Pundit.Core.Exceptions;
 using Pundit.Core.Model;
 using Pundit.Core.Utils;
 
@@ -217,18 +218,28 @@ namespace Pundit.Core.Application.Console.Commands
       {
          IRemoteRepository remote = RemoteRepositoryFactory.Create(repo.Uri);
 
-         RemoteSnapshot snapshot;
-
          //get changes
          try
          {
             console.Write("fetching snapshot... ");
-            snapshot = remote.GetSnapshot(repo.LastChangeId);
-            console.Write("(");
-            console.Write(ConsoleColor.Green,
-                          (snapshot == null || snapshot.Changes.Length == 0) ? "no" : snapshot.Changes.Length.ToString());
-            console.Write(" changes)");
-            console.Write(true);
+
+            try
+            {
+               RemoteSnapshot snapshot = remote.GetSnapshot(repo.LastChangeId);
+               console.Write("(");
+               console.Write(ConsoleColor.Green,
+                             (snapshot == null || snapshot.Changes.Length == 0)
+                                ? "no"
+                                : snapshot.Changes.Length.ToString());
+               console.Write(" changes)");
+               console.Write(true);
+               return snapshot;
+            }
+            catch(RepositoryOfflineException)
+            {
+               console.Write(ConsoleColor.Red, " [offline]");
+               console.Write(false);
+            }
          }
          catch
          {
@@ -236,7 +247,7 @@ namespace Pundit.Core.Application.Console.Commands
             throw;
          }
 
-         return snapshot;
+         return null;
       }
 
       private void PlaySnapshot(Repo repo, RemoteSnapshot snapshot)
