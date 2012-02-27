@@ -184,8 +184,8 @@ namespace Pundit.Core.Application.Repository
          Package root;
 
          using(IDataReader reader = _sql.ExecuteReader("PackageManifest", null,
-            new[] { "RepositoryId=(?)", "PackageId=(?)", "Version=(?)", "Platform=(?)" },
-            new object[] {_repoId, key.PackageId, key.Version.ToString(), key.Platform}))
+            new[] { "PackageId=(?)", "Version=(?)", "Platform=(?)" },
+            new object[] {key.PackageId, key.Version.ToString(), key.Platform}))
          {
             if (reader.Read())
             {

@@ -118,13 +118,10 @@ namespace Pundit.Core.Application
             {
                manifest = _repo.GetManifest(node.ActiveVersionKey);
             }
-            catch(FileNotFoundException)
+            catch(FileNotFoundException ex)
             {
-                  
+               throw new ApplicationException("could not find manifest for node " + node.Path, ex);               
             }
-
-            if(manifest == null)
-               throw new ApplicationException("could not find manifest for node " + node.Path);
 
             node.SetManifest(manifest);
          }

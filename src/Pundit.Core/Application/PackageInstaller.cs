@@ -138,13 +138,13 @@ namespace Pundit.Core.Application
 
       private void Install(PackageKeyDiff pck, PackageDependency originalDependency, BuildConfiguration configuration)
       {
-         //if(!_index.IsInstalled(pck))
-         //{
+         if (!_index.IsInstalled(pck))
+         {
             using (Stream s = _localRepository.Get(pck))
             {
                using (PackageReader reader = new PackageReader(s))
                {
-                  if(BeginInstallPackage != null)
+                  if (BeginInstallPackage != null)
                      BeginInstallPackage(this, new PackageKeyDiffEventArgs(pck, true));
 
                   reader.InstallTo(_rootDirectory, originalDependency, configuration);
@@ -153,9 +153,9 @@ namespace Pundit.Core.Application
 
             _index.Install(pck);
 
-            if(FinishInstallPackage != null)
+            if (FinishInstallPackage != null)
                FinishInstallPackage(this, new PackageKeyDiffEventArgs(pck, true));
-         //}
+         }
       }
 
       ///<summary>
