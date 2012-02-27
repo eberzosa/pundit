@@ -48,6 +48,11 @@ namespace Pundit.Test.Mocks
          throw new NotImplementedException();
       }
 
+      public long GetClosestRepositoryId(PackageKey key)
+      {
+         throw new NotImplementedException();
+      }
+
       public ICollection<PackageKey> Search(string substring)
       {
          throw new NotImplementedException();

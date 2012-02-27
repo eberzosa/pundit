@@ -4,6 +4,7 @@ using System.Data;
 using System.IO;
 using System.Linq;
 using System.Data.SQLite;
+using System.Text;
 using Pundit.Core.Application.Sqlite;
 using Pundit.Core.Model;
 
@@ -214,13 +215,33 @@ namespace Pundit.Core.Application.Repository
          if (packages == null) return null;
 
          var r = new List<bool>();
-
+         
          foreach(PackageKey key in packages)
          {
             r.Add(GetBinaryId(key) != 0);
          }
 
          return r;
+      }
+
+      public long GetClosestRepositoryId(PackageKey key)
+      {
+         var txt = new StringBuilder();
+         txt.Append("select RepositoryId from PackageManifest ");
+         txt.Append("where PackageId=(?) and Version=(?) and Platform=(?) ");
+         txt.Append("order by RepositoryId asc limit 0,1");
+
+         using(IDbCommand cmd = _sql.CreateCommand())
+         {
+            cmd.CommandText = txt.ToString();
+            cmd.Add(key.PackageId);
+            cmd.Add(key.VersionString);
+            cmd.Add(key.Platform);
+
+            object repoId = cmd.ExecuteScalar();
+
+            return (repoId is long) ? (long) repoId : 0;
+         }
       }
 
       public ICollection<PackageKey> Search(string substring)

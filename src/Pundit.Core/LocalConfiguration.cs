@@ -75,10 +75,11 @@ namespace Pundit.Core
       /// <param name="packages"></param>
       public static void DownloadLocally(IEnumerable<PackageKey> packages)
       {
-         /*ILocalRepository localRepo = _mgr.LocalRepository;
+         if (packages == null) return;
+         ILocalRepository localRepo = _mgr.LocalRepository;
 
          PackageKey[] packagesArray = packages.ToArray();
-         ICollection<bool> existance = localRepo.PackagesExist(packagesArray);
+         bool[] existance = localRepo.BinariesExists(packagesArray).ToArray();
 
          for(int i = 0; i < packagesArray.Length; i++)
          {
@@ -93,32 +94,33 @@ namespace Pundit.Core
             {
                bool downloaded = false;
 
-               foreach(IRepository activeRepository in activeRepositories)
+               long repoId = localRepo.GetClosestRepositoryId(pck);
+               Repo downRepoMeta = _mgr.GetRepositoryById(repoId);
+               IRemoteRepository downRepo = RemoteRepositoryFactory.Create(downRepoMeta.Uri);
+
+               try
                {
-                  try
+                  using (Stream pckStream = downRepo.Download(pck.Platform, pck.PackageId, pck.VersionString))
                   {
-                     using (Stream pckStream = activeRepository.Download(pck))
-                     {
-                        if(PackageDownloadToLocalRepository != null)
-                           PackageDownloadToLocalRepository(null, new PackageDownloadEventArgs(pck, true, 1, 0));
+                     if (PackageDownloadToLocalRepository != null)
+                        PackageDownloadToLocalRepository(null, new PackageDownloadEventArgs(pck, true, 1, 0));
 
-                        localRepo.Publish(pckStream);
-                     }
-
-                     downloaded = true;
-
-                     break;
+                     localRepo.Put(pckStream);
                   }
-                  catch(FileNotFoundException)
-                  {
-                     
-                  }
+
+                  downloaded = true;
+
+                  break;
+               }
+               catch (FileNotFoundException)
+               {
+
                }
 
                if (PackageDownloadToLocalRepository != null)
                   PackageDownloadToLocalRepository(null, new PackageDownloadEventArgs(pck, downloaded, 1, 1));
             }
-         }*/
+         }
       }
    }
 }

@@ -34,6 +34,13 @@ namespace Pundit.Core.Model
       ICollection<bool> BinariesExists(IEnumerable<PackageKey> packages);
 
       /// <summary>
+      /// Gets the closest possible repository where this package exists
+      /// </summary>
+      /// <param name="key"></param>
+      /// <returns></returns>
+      long GetClosestRepositoryId(PackageKey key);
+
+      /// <summary>
       /// Performs search in the repository
       /// </summary>
       /// <param name="substring">search substring to search in package id. Case-insensitive.</param>
