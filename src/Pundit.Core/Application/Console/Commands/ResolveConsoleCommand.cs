@@ -74,7 +74,7 @@ namespace Pundit.Core.Application.Console.Commands
       {
          Initialize();
 
-         new RepoConsoleCommand(console, CurrentDirectory, null).UpdateSnapshots();
+         new RepoConsoleCommand(console, CurrentDirectory, null).UpdateSnapshots(_forceResolve);
 
          //parse command and read manifest
          string manifestPath = GetLocalManifest();
@@ -160,12 +160,12 @@ namespace Pundit.Core.Application.Console.Commands
 
       void installer_BeginInstallPackage(object sender, PackageKeyDiffEventArgs e)
       {
-         console.Write("installing {0} v{1} ({2})...", e.PackageKeyDiff.PackageId, e.PackageKeyDiff.Version, e.PackageKeyDiff.Platform);
+         console.WriteLine("installing {0} v{1} ({2})...", e.PackageKeyDiff.PackageId, e.PackageKeyDiff.Version, e.PackageKeyDiff.Platform);
       }
 
-      void LocalRepository_PackageDownloadToLocalRepository(object sender, Model.EventArguments.PackageDownloadEventArgs e)
+      void LocalRepository_PackageDownloadToLocalRepository(object sender, PackageDownloadEventArgs e)
       {
-         console.Write("download: {0}, b: {1}, total: {2}, now: {3}", e.PackageKey.PackageId, e.Succeeded, e.TotalSize, e.DownloadedSize);
+         console.WriteLine("download: {0}, b: {1}, total: {2}, now: {3}", e.PackageKey.PackageId, e.Succeeded, e.TotalSize, e.DownloadedSize);
       }
    }
 }

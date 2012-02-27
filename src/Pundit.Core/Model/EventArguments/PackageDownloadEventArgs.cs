@@ -19,5 +19,7 @@ namespace Pundit.Core.Model.EventArguments
       public long TotalSize { get; private set; }
 
       public long DownloadedSize { get; private set; }
+
+      public string FailureReason { get; private set; }
    }
 }

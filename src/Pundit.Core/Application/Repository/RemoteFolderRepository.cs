@@ -87,7 +87,7 @@ namespace Pundit.Core.Application.Repository
          string fullPath = Path.Combine(_rootPath, PackageUtils.GetFileName(key));
 
          if(!File.Exists(fullPath))
-            throw new FileNotFoundException("package not found");
+            throw new FileNotFoundException("package not found: " + fullPath);
 
          return File.OpenRead(fullPath);
       }

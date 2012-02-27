@@ -109,12 +109,10 @@ namespace Pundit.Core
                   }
 
                   downloaded = true;
-
-                  break;
                }
                catch (FileNotFoundException)
                {
-
+                  throw;
                }
 
                if (PackageDownloadToLocalRepository != null)

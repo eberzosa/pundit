@@ -125,7 +125,7 @@ namespace Pundit.Core.Application.Repository
 
             using(IDataReader reader = cmd.ExecuteReader())
             {
-               if (!reader.Read()) throw new FileNotFoundException("package not found");
+               if (!reader.Read()) throw new FileNotFoundException("package not found: " + key);
 
                byte[] data = (byte[])reader["Data"];
 
