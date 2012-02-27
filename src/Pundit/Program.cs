@@ -14,7 +14,7 @@ namespace Pundit.Console
 
       static int Main(string[] args)
       {
-         System.Console.ReadKey();
+         //System.Console.ReadKey();
          PrintBanner();
 
          try
