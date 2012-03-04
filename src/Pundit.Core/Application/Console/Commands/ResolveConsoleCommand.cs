@@ -109,6 +109,7 @@ namespace Pundit.Core.Application.Console.Commands
          //resolve dependencies
          console.Write("resolving...\t\t\t");
 
+         //System.Console.ReadKey();
          var dr = new DependencyResolution(devPackage, LocalConfiguration.RepositoryManager.LocalRepository);
          var resolutionResult = dr.Resolve();
 

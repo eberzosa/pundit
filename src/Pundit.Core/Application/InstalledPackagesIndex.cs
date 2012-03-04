@@ -8,6 +8,10 @@ using Pundit.Core.Model;
 namespace Pundit.Core.Application
 {
    //todo: move any caches to local system hidden .pundit subfolder
+
+   /// <summary>
+   /// Private pundit index
+   /// </summary>
    public class InstalledPackagesIndex
    {
       private const string CacheFileName = ".pundit-install-index";
