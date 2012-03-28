@@ -37,6 +37,7 @@ CORE:
 - improve conflict explanation
 - bug: "pundit resolve" doesn't notify about operation completion
 - pundit resolve should show package size before downloading
+- add nuget adapter as more and more opensource libs are now moving to nuget
 
 VSIX:
 - check for dependencies in background and notify the user in the toolbar
