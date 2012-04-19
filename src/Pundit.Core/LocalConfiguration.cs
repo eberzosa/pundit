@@ -70,54 +70,55 @@ namespace Pundit.Core
       }
 
       /// <summary>
-      /// Downloads specified packages to the local repository
+      /// Filters packages giving only ones that are missing from the local archive
       /// </summary>
       /// <param name="packages"></param>
-      public static void DownloadLocally(IEnumerable<PackageKey> packages)
+      /// <returns></returns>
+      /// <exception cref="ArgumentNullException"></exception>
+      public static ICollection<PackageKey> GetForDownload(IEnumerable<PackageKey> packages)
       {
-         if (packages == null) return;
+         if (packages == null) throw new ArgumentNullException("packages");
+
          ILocalRepository localRepo = _mgr.LocalRepository;
 
          PackageKey[] packagesArray = packages.ToArray();
          bool[] existance = localRepo.BinariesExists(packagesArray).ToArray();
+         var r = new List<PackageKey>();
 
-         for(int i = 0; i < packagesArray.Length; i++)
+         for (int i = 0; i < packagesArray.Length; i++)
          {
             PackageKey pck = packagesArray[i];
+            if(!existance[i]) r.Add(pck);
+         }
 
-            if(existance[i])
+         return r;
+      }
+
+      /// <summary>
+      /// Downloads specified packages to the local repository, doesn't check if they already exist
+      /// </summary>
+      /// <param name="packages"></param>
+      public static void DownloadLocally(IEnumerable<PackageKey> packages)
+      {
+         if (packages == null) throw new ArgumentNullException("packages");
+         ILocalRepository localRepo = _mgr.LocalRepository;
+
+         foreach (PackageKey pck in packages)
+         {
+            long repoId = localRepo.GetClosestRepositoryId(pck);
+            Repo downRepoMeta = _mgr.GetRepositoryById(repoId);
+            IRemoteRepository downRepo = RemoteRepositoryFactory.Create(downRepoMeta.Uri);
+
+            using (Stream pckStream = downRepo.Download(pck.Platform, pck.PackageId, pck.VersionString))
             {
-               //package already here
-               //Log.InfoFormat("[+] {0}", pck);
-            }
-            else
-            {
-               bool downloaded = false;
-
-               long repoId = localRepo.GetClosestRepositoryId(pck);
-               Repo downRepoMeta = _mgr.GetRepositoryById(repoId);
-               IRemoteRepository downRepo = RemoteRepositoryFactory.Create(downRepoMeta.Uri);
-
-               try
-               {
-                  using (Stream pckStream = downRepo.Download(pck.Platform, pck.PackageId, pck.VersionString))
-                  {
-                     if (PackageDownloadToLocalRepository != null)
-                        PackageDownloadToLocalRepository(null, new PackageDownloadEventArgs(pck, true, 1, 0));
-
-                     localRepo.Put(pckStream);
-                  }
-
-                  downloaded = true;
-               }
-               catch (FileNotFoundException)
-               {
-                  throw;
-               }
-
                if (PackageDownloadToLocalRepository != null)
-                  PackageDownloadToLocalRepository(null, new PackageDownloadEventArgs(pck, downloaded, 1, 1));
+                  PackageDownloadToLocalRepository(null, new PackageDownloadEventArgs(pck, true, 1, 0));
+
+               localRepo.Put(pckStream);
             }
+
+            if (PackageDownloadToLocalRepository != null)
+               PackageDownloadToLocalRepository(null, new PackageDownloadEventArgs(pck, true, 1, 1));
          }
       }
    }

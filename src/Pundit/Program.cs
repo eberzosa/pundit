@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Diagnostics;
 using System.Threading;
 using Pundit.Core;
 using Pundit.Core.Application.Console;
@@ -14,7 +15,6 @@ namespace Pundit.Console
 
       static int Main(string[] args)
       {
-         //System.Console.ReadKey();
          PrintBanner();
 
          try

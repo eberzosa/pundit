@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Collections;
 using System.Collections.Generic;
 using System.IO;
 using System.Linq;
@@ -12,6 +13,8 @@ namespace Pundit.Core.Application.Console.Commands
       private BuildConfiguration _buildConfiguration;
       private bool _forceResolve;
       private bool _pingOnly;
+      private int _packagesDownloaded;
+      private int _packagesInstalled;
 
       public ResolveConsoleCommand(IConsoleOutput console, string currentDirectory, string[] args)
          : base(console, currentDirectory, args)
@@ -65,7 +68,7 @@ namespace Pundit.Core.Application.Console.Commands
       private void PrintSuccess(IEnumerable<PackageKeyDiff> diffs)
       {
          PrintDiff(diffs, ConsoleColor.Yellow, DiffType.Add, "added");
-         PrintDiff(diffs, ConsoleColor.Green, DiffType.Mod, "changed");
+         PrintDiff(diffs, ConsoleColor.Green, DiffType.Mod, "upgraded");
          PrintDiff(diffs, ConsoleColor.White, DiffType.NoChange, "no change for");
          PrintDiff(diffs, ConsoleColor.Red, DiffType.Del, "deleted");
       }
@@ -125,8 +128,15 @@ namespace Pundit.Core.Application.Console.Commands
          }
 
          //ensure that all packages exist in local repository
-         LocalConfiguration.PackageDownloadToLocalRepository += LocalRepository_PackageDownloadToLocalRepository;
-         LocalConfiguration.DownloadLocally(resolutionResult.Item1.GetPackages());
+         ICollection<PackageKey> forDownload = LocalConfiguration.GetForDownload(resolutionResult.Item1.GetPackages());
+         if (forDownload.Count > 0)
+         {
+            console.WriteLine("downloading {0} packages...", forDownload.Count);
+            console.StartProgress(forDownload.Count);
+            LocalConfiguration.PackageDownloadToLocalRepository += LocalRepository_PackageDownloadToLocalRepository;
+            LocalConfiguration.DownloadLocally(forDownload);
+            console.FinishProgress();
+         }
 
          //install all packages
          using(PackageInstaller installer = new PackageInstaller(projectRoot,
@@ -139,7 +149,9 @@ namespace Pundit.Core.Application.Console.Commands
 
             if (_forceResolve)
             {
-               console.WriteLine("reinstalling all packages");
+               int n = resolutionResult.Item1.GetPackages().Count();
+               console.WriteLine("reinstalling {0} packages...", n);
+               console.StartProgress(n);
 
                installer.Reinstall(_buildConfiguration);
             }
@@ -151,22 +163,25 @@ namespace Pundit.Core.Application.Console.Commands
 
                installer.Upgrade(_buildConfiguration, diff);
             }
+            console.FinishProgress();
          }
       }
 
       void installer_FinishInstallPackage(object sender, PackageKeyDiffEventArgs e)
       {
-         console.Write(e.Succeeded);
+         //console.Write(e.Succeeded);
+         console.UpdateProgress(_packagesInstalled++);
       }
 
       void installer_BeginInstallPackage(object sender, PackageKeyDiffEventArgs e)
       {
-         console.WriteLine("installing {0} v{1} ({2})...", e.PackageKeyDiff.PackageId, e.PackageKeyDiff.Version, e.PackageKeyDiff.Platform);
+         //console.WriteLine("installing {0} v{1} ({2})...", e.PackageKeyDiff.PackageId, e.PackageKeyDiff.Version, e.PackageKeyDiff.Platform);
+         //console.UpdateProgress(_packagesInstalled++);
       }
 
       void LocalRepository_PackageDownloadToLocalRepository(object sender, PackageDownloadEventArgs e)
       {
-         console.WriteLine("download: {0}, b: {1}, total: {2}, now: {3}", e.PackageKey.PackageId, e.Succeeded, e.TotalSize, e.DownloadedSize);
+         console.UpdateProgress(_packagesDownloaded++);
       }
    }
 }

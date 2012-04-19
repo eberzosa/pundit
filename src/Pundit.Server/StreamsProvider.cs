@@ -9,8 +9,6 @@ namespace Pundit.Server
 {
    /// <summary>
    /// Saves and retrieves packages binary data.
-   /// 
-   /// 
    /// </summary>
    internal class StreamsProvider
    {

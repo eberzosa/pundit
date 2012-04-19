@@ -1,6 +1,5 @@
 ﻿using System;
 using System.IO;
-using NDesk.Options;
 using Pundit.Core.Model;
 using Pundit.Core.Utils;
 
@@ -116,10 +115,6 @@ namespace Pundit.Core.Application.Console.Commands
             console.StartProgress(e.FilesTotal);
             _progressStarted = true;
          }
-
-         //console.Write("packing ");
-         //console.Write(ConsoleColor.Green, e.FileName);
-         //console.Write("... ");
       }
    }
 }

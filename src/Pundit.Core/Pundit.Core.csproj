@@ -140,7 +140,10 @@
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
   <PropertyGroup>
-    <PreBuildEvent>copy /Y ..\..\..\..\db\pundit.db ..\..\Application\sqlite\pundit.db
+    <PreBuildEvent>if exist "$(TargetPath).locked" del "$(TargetPath).locked"
+if exist "$(TargetPath)" if not exist "$(TargetPath).locked" move "$(TargetPath)" "$(TargetPath).locked"
+
+copy /Y ..\..\..\..\db\pundit.db ..\..\Application\sqlite\pundit.db
 copy /Y ..\..\..\..\db\server.db ..\..\Application\sqlite\server.db</PreBuildEvent>
   </PropertyGroup>
   <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 

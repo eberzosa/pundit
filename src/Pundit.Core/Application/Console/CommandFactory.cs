@@ -19,8 +19,7 @@ namespace Pundit.Core.Application.Console
       /// <exception cref="ArgumentException"></exception>
       public static IConsoleCommand CreateCommand(IConsoleOutput console, string currentDirectory, string[] cmdline)
       {
-         if(cmdline == null || cmdline.Length == 0)
-            throw new ArgumentException("command line is empty");
+         if (cmdline == null || cmdline.Length == 0) return new HelpConsoleCommand(console, currentDirectory, null);
 
          string command = cmdline[0];
          string[] parameters = new string[cmdline.Length - 1];

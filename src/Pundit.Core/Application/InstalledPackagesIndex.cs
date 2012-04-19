@@ -14,7 +14,7 @@ namespace Pundit.Core.Application
    /// </summary>
    public class InstalledPackagesIndex
    {
-      private const string CacheFileName = ".pundit-install-index";
+      private const string CacheFileName = ".pundit";
       private readonly Dictionary<PackageKey, bool> _installed = new Dictionary<PackageKey, bool>();
 
       /// <summary>
