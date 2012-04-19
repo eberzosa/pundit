@@ -188,13 +188,30 @@ namespace Pundit.Console
          UpdateProgress(0);
       }
 
-      public void UpdateProgress(int value)
+      private string Multiply(char ch, int times)
+      {
+         string r = string.Empty;
+         for (int i = 0; i < times; i++) r += ch;
+         return r;
+      }
+
+      public void UpdateProgress(int value, string hint = null)
       {
          //[========               ] 035%
          int percent = value * 100 / _progressMaxValue;
          if (percent > 100) percent = 100;
          if (percent != _progressCurrentValue)
          {
+            //draw hint
+            if(hint != null)
+            {
+               MoveCursor(0);
+               int spaces = WindowWidth - hint.Length%WindowWidth + 1;
+               Write(ConsoleColor.DarkGreen, hint);
+               Write(ConsoleColor.Gray, Multiply(' ', spaces));
+            }
+
+            //draw line
             _progressCurrentValue = percent;
             int blocksTotal = WindowWidth - _progressBarStart -
                               1 - //[
@@ -207,9 +224,10 @@ namespace Pundit.Console
 
             MoveCursor(_progressBarStart);
             Write(ConsoleColor.White, "[");
-            for (int i = 0; i < blocksPainted - 1; i++) Write(ConsoleColor.Green, "=");
+            //if(hint != null) Write(ConsoleColor.DarkGreen, hint);
+            Write(ConsoleColor.Green, Multiply('=', blocksPainted - 1));
             Write(ConsoleColor.White, "=");
-            for (int i = 0; i < blocksTotal - blocksPainted; i++) Write(ConsoleColor.Green, " ");
+            Write(ConsoleColor.Green, Multiply(' ', blocksTotal - blocksPainted));
             Write(ConsoleColor.White, "] ");
             Write(ConsoleColor.Yellow, percent.ToString().PadLeft(3));
             Write(ConsoleColor.Green, "% ");

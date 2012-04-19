@@ -169,19 +169,17 @@ namespace Pundit.Core.Application.Console.Commands
 
       void installer_FinishInstallPackage(object sender, PackageKeyDiffEventArgs e)
       {
-         //console.Write(e.Succeeded);
          console.UpdateProgress(_packagesInstalled++);
       }
 
       void installer_BeginInstallPackage(object sender, PackageKeyDiffEventArgs e)
       {
-         //console.WriteLine("installing {0} v{1} ({2})...", e.PackageKeyDiff.PackageId, e.PackageKeyDiff.Version, e.PackageKeyDiff.Platform);
-         //console.UpdateProgress(_packagesInstalled++);
+         console.UpdateProgress(_packagesInstalled, string.Format("installing {0} v{1} ({2})...", e.PackageKeyDiff.PackageId, e.PackageKeyDiff.Version, e.PackageKeyDiff.Platform));
       }
 
       void LocalRepository_PackageDownloadToLocalRepository(object sender, PackageDownloadEventArgs e)
       {
-         console.UpdateProgress(_packagesDownloaded++);
+         console.UpdateProgress(_packagesDownloaded++, e.PackageKey.PackageId);
       }
    }
 }
