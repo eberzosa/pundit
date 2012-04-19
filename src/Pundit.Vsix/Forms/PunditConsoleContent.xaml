@@ -13,7 +13,8 @@
          <RowDefinition Height="Auto"/>
       </Grid.RowDefinitions>
 
-      <RichTextBox x:Name="txtConsole" Foreground="White" Background="Black"
+      <RichTextBox x:Name="txtConsole"
+               Background="{DynamicResource {x:Static vsfx:VsBrushes.ToolWindowBackgroundKey}}"
                AcceptsReturn="True" IsReadOnly="True" VerticalScrollBarVisibility="Visible"
                FontFamily="Consolas"/>
 
@@ -25,7 +26,8 @@
          <Label Content=">" Foreground="{DynamicResource {x:Static vsfx:VsBrushes.ToolWindowTextKey}}" FontWeight="Bold"/>
          <TextBox Grid.Column="1" KeyUp="CommandKeyUp"
                   x:Name="txtCommand"
-                  Background="Black" Foreground="White" FontFamily="Consolas"/>
+                  Background="{DynamicResource {x:Static vsfx:VsBrushes.ToolWindowBackgroundKey}}"
+                  Foreground="White" FontFamily="Consolas"/>
       </Grid>
    </Grid>
 </UserControl>

@@ -70,6 +70,7 @@
     <Compile Include="Application\Console\NoCurrentDirectoryException.cs" />
     <Compile Include="Application\Console\Strings.Designer.cs" />
     <Compile Include="Application\DependencyResolution.cs" />
+    <Compile Include="Application\Extensions\NumericExtensions.cs" />
     <Compile Include="Application\InstalledPackagesIndex.cs" />
     <Compile Include="Application\PackageInstaller.cs" />
     <Compile Include="Application\PackageIntegrityCheck.cs" />

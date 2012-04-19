@@ -95,7 +95,7 @@ namespace Pundit.Vsix.Application
          throw new NotImplementedException();
       }
 
-      public void UpdateProgress(int value)
+      public void UpdateProgress(int value, string hint)
       {
       }
 

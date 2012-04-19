@@ -40,7 +40,7 @@ namespace Pundit.Vsix.Forms
          TimeSpan span = TimeSpan.FromTicks(ticks);
          if(span.TotalDays > 0)
          {
-            numPingInterval.Value = (decimal)span.TotalDays;
+            numPingInterval.Value = ((decimal)span.TotalDays).FitRange(numPingInterval.Minimum, numPingInterval.Maximum);
             cmbPingMeasure.SelectedIndex = 2;
          }
          else if(span.TotalHours > 0)
