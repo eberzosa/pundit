@@ -35,9 +35,6 @@
          this.pnlPing = new System.Windows.Forms.Panel();
          this.label2 = new System.Windows.Forms.Label();
          this.groupBox1 = new System.Windows.Forms.GroupBox();
-         this.lblVersion = new System.Windows.Forms.Label();
-         this.lnkLicense = new System.Windows.Forms.LinkLabel();
-         this.lnkDocs = new System.Windows.Forms.LinkLabel();
          ((System.ComponentModel.ISupportInitialize)(this.numPingInterval)).BeginInit();
          this.pnlPing.SuspendLayout();
          this.SuspendLayout();
@@ -125,49 +122,10 @@
          this.groupBox1.TabIndex = 6;
          this.groupBox1.TabStop = false;
          // 
-         // lblVersion
-         // 
-         this.lblVersion.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Left)));
-         this.lblVersion.AutoSize = true;
-         this.lblVersion.Enabled = false;
-         this.lblVersion.ForeColor = System.Drawing.SystemColors.ActiveCaption;
-         this.lblVersion.Location = new System.Drawing.Point(0, 269);
-         this.lblVersion.Name = "lblVersion";
-         this.lblVersion.Size = new System.Drawing.Size(151, 13);
-         this.lblVersion.TabIndex = 7;
-         this.lblVersion.Text = "Pundit {0} open-source project";
-         // 
-         // lnkLicense
-         // 
-         this.lnkLicense.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Right)));
-         this.lnkLicense.AutoSize = true;
-         this.lnkLicense.Location = new System.Drawing.Point(471, 269);
-         this.lnkLicense.Name = "lnkLicense";
-         this.lnkLicense.Size = new System.Drawing.Size(40, 13);
-         this.lnkLicense.TabIndex = 8;
-         this.lnkLicense.TabStop = true;
-         this.lnkLicense.Text = "license";
-         this.lnkLicense.LinkClicked += new System.Windows.Forms.LinkLabelLinkClickedEventHandler(this.lnkLicense_LinkClicked);
-         // 
-         // lnkDocs
-         // 
-         this.lnkDocs.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Right)));
-         this.lnkDocs.AutoSize = true;
-         this.lnkDocs.Location = new System.Drawing.Point(394, 269);
-         this.lnkDocs.Name = "lnkDocs";
-         this.lnkDocs.Size = new System.Drawing.Size(77, 13);
-         this.lnkDocs.TabIndex = 9;
-         this.lnkDocs.TabStop = true;
-         this.lnkDocs.Text = "documentation";
-         this.lnkDocs.LinkClicked += new System.Windows.Forms.LinkLabelLinkClickedEventHandler(this.lnkDocs_LinkClicked);
-         // 
          // VsixOptions
          // 
          this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
          this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
-         this.Controls.Add(this.lnkDocs);
-         this.Controls.Add(this.lnkLicense);
-         this.Controls.Add(this.lblVersion);
          this.Controls.Add(this.groupBox1);
          this.Controls.Add(this.label2);
          this.Controls.Add(this.pnlPing);
@@ -191,8 +149,5 @@
       private System.Windows.Forms.Panel pnlPing;
       private System.Windows.Forms.Label label2;
       private System.Windows.Forms.GroupBox groupBox1;
-      private System.Windows.Forms.Label lblVersion;
-      private System.Windows.Forms.LinkLabel lnkLicense;
-      private System.Windows.Forms.LinkLabel lnkDocs;
    }
 }

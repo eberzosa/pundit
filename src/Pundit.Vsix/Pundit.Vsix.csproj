@@ -78,6 +78,21 @@
   <ItemGroup>
     <Compile Include="Application\WpfTextBoxConsoleOutput.cs" />
     <Compile Include="Forms\ConsoleVsToolWindow.cs" />
+    <Compile Include="Forms\Integration.cs">
+      <SubType>UserControl</SubType>
+    </Compile>
+    <Compile Include="Forms\Integration.Designer.cs">
+      <DependentUpon>Integration.cs</DependentUpon>
+    </Compile>
+    <Compile Include="Forms\IntegrationPage.cs">
+      <SubType>Component</SubType>
+    </Compile>
+    <Compile Include="Forms\PageFooter.cs">
+      <SubType>UserControl</SubType>
+    </Compile>
+    <Compile Include="Forms\PageFooter.Designer.cs">
+      <DependentUpon>PageFooter.cs</DependentUpon>
+    </Compile>
     <Compile Include="Forms\VsixOptionsPage.cs">
       <SubType>Component</SubType>
     </Compile>
@@ -119,6 +134,12 @@
     </VSCTCompile>
   </ItemGroup>
   <ItemGroup>
+    <EmbeddedResource Include="Forms\Integration.resx">
+      <DependentUpon>Integration.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Forms\PageFooter.resx">
+      <DependentUpon>PageFooter.cs</DependentUpon>
+    </EmbeddedResource>
     <EmbeddedResource Include="Forms\VsixOptions.resx">
       <DependentUpon>VsixOptions.cs</DependentUpon>
     </EmbeddedResource>

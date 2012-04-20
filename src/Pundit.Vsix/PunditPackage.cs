@@ -23,6 +23,7 @@ namespace Pundit.Vsix
    [InstalledProductRegistration("#110", "#112", "1.0", IconResourceID = 400)]
    [ProvideToolWindow(typeof(ConsoleVsToolWindow))]
    [ProvideOptionPage(typeof(VsixOptionsPage), "Pundit", "General", 113, 114, true)]
+   [ProvideOptionPage(typeof(IntegrationPage), "Pundit", "Integration", 113, 114, true)]
    //[ProvideOptionPage(typeof(RepositoriesOptionsPage), "Pundit", "Repositories", 113, 115, true)]
 	[ComVisible(true)]
 	public partial class PunditPackage : Package, IVsSolutionEvents

@@ -18,8 +18,6 @@ namespace Pundit.Vsix.Forms
       {
          InitializeComponent();
 
-         lblVersion.Text = string.Format(lblVersion.Text, Assembly.GetExecutingAssembly().GetName().Version);
-
          RestoreSettings();
       }
 
@@ -78,16 +76,6 @@ namespace Pundit.Vsix.Forms
       private void chkDoPing_CheckedChanged(object sender, EventArgs e)
       {
          pnlPing.Enabled = chkDoPing.Checked;
-      }
-
-      private void lnkDocs_LinkClicked(object sender, LinkLabelLinkClickedEventArgs e)
-      {
-         Process.Start("http://pundit.codeplex.com/documentation");
-      }
-
-      private void lnkLicense_LinkClicked(object sender, LinkLabelLinkClickedEventArgs e)
-      {
-         Process.Start("http://pundit.codeplex.com/license");
       }
    }
 }
