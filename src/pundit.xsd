@@ -1,0 +1,49 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<xs:schema xmlns:xs="http://www.w3.org/2001/XMLSchema"
+           elementFormDefault="qualified"
+           xmlns:pundit="http://pundit-dm.com/1.1.0.0/pundit.xsd"
+           targetNamespace="http://pundit-dm.com/1.1.0.0/pundit.xsd">
+   <xs:simpleType name="scope">
+      <xs:restriction base="xs:string">
+         <xs:enumeration value="normal"/>
+         <xs:enumeration value="test"/>
+         <xs:enumeration value="build"/>
+      </xs:restriction>
+   </xs:simpleType>
+   <xs:element name="package">
+      <xs:annotation>
+         <xs:documentation>
+            this is a root of a Pundit manifest definition
+         </xs:documentation>
+      </xs:annotation>
+      <xs:complexType>
+         <xs:sequence minOccurs="0" maxOccurs="unbounded">
+            <xs:choice minOccurs="0" maxOccurs="unbounded">
+               <xs:element name="packageId" type="xs:string" />
+               <xs:element name="platform" type="xs:string"/>
+               <xs:element name="projectUrl" type="xs:string"/>
+               <xs:element name="version" type="xs:string"/>
+               <xs:element name="author" type="xs:string"/>
+               <xs:element name="description" type="xs:string"/>
+               <xs:element name="releaseNotes" type="xs:string"/>
+               <xs:element name="license" type="xs:string"/>
+               <xs:element name="dependencies">
+                  <xs:complexType>
+                     <xs:sequence minOccurs="1" maxOccurs="unbounded">
+                        <xs:element name="package">
+                           <xs:complexType>
+                              <xs:attribute name="id" type="xs:string"/>
+                              <xs:attribute name="version" type="xs:string"/>
+                              <xs:attribute name="platform" type="xs:string"/>
+                              <xs:attribute name="scope" type="pundit:scope"/>
+                              <xs:attribute name="createPlatformFolder" type="xs:boolean"/>
+                           </xs:complexType>
+                        </xs:element>
+                     </xs:sequence>
+                  </xs:complexType>
+               </xs:element>
+            </xs:choice>
+         </xs:sequence>
+      </xs:complexType>
+   </xs:element>
+</xs:schema>

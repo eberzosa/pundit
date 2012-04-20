@@ -1,0 +1,7 @@
+<?xml version="1.0" encoding="utf-8"?>
+<package xmlns="http://pundit-dm.com/1.1.0.0/pundit.xsd">
+   <packageId>shit</packageId>
+   <dependencies>
+      <package id="shit" scope="test"/>
+   </dependencies>
+</package>
