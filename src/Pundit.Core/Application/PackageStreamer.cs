@@ -1,32 +1,14 @@
 ﻿using System;
-using System.Collections.Generic;
 using System.IO;
-using System.Linq;
-using System.Text;
 using NAnt.Core;
 using Pundit.Core.Model;
 using Pundit.Core.Utils;
 
 namespace Pundit.Core.Application
 {
-   class FileHeader
-   {
-      private byte _typeCode = (byte)'P'; //short for Pundit
-      private byte _compressionMethod = 0;
-      private byte _reserved0 = 0;
-      private byte _reserved1 = 0;
-
-      public FileHeader()
-      {
-         
-      }
-
-      public void RewriteHeader(string targetFileName)
-      {
-         
-      }
-   }
-
+   /// <summary>
+   /// Streamer base
+   /// </summary>
    public abstract class PackageStreamer : IDisposable
    {
       protected virtual void Dispose(bool disposing)

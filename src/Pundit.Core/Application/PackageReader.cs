@@ -7,12 +7,19 @@ using Pundit.Core.Utils;
 
 namespace Pundit.Core.Application
 {
+   /// <summary>
+   /// Reads package manifest from stream
+   /// </summary>
    public class PackageReader : PackageStreamer
    {
       public event EventHandler<ResolvedFileEventArgs> InstallingResolvedFile;
 
       private ZipInputStream _zipStream;
 
+      /// <summary>
+      /// Create an instance of <see cref="PackageReader"/>
+      /// </summary>
+      /// <param name="packageStream"></param>
       public PackageReader(Stream packageStream)
       {
          _zipStream = new ZipInputStream(packageStream);

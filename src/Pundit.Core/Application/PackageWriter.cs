@@ -51,12 +51,16 @@ namespace Pundit.Core.Application
          _zipStream.SetLevel(9);
       }
 
-      public long WriteAll(bool includeDevTime = false)
+      /// <summary>
+      /// Writes all manifest data into target stream. The stream is packed into a zip package.
+      /// </summary>
+      /// <returns>Total size of the original unpacked data including the xml manifest.</returns>
+      public long WriteAll()
       {
          if(_packageInfo.Files == null || _packageInfo.Files.Count == 0)
             throw new InvalidPackageException("manifest has no input files");
 
-         WriteManifest(includeDevTime);
+         WriteManifest(false);
 
          _bytesWritten += _zipStream.Length;
 
@@ -149,12 +153,12 @@ namespace Pundit.Core.Application
             long originalSize = new FileInfo(file.FullPath).Length;
             _bytesWritten += originalSize;
 
-            if(BeginPackingFile != null)
+            if (BeginPackingFile != null)
+            {
                BeginPackingFile(this, new PackageFileEventArgs(unixPath, originalSize, fileNo, filesCount));
+            }
 
-            ZipEntry entry = new ZipEntry(unixPath);
-            entry.DateTime = DateTime.Now;
-            entry.Size = originalSize;
+            var entry = new ZipEntry(unixPath) {DateTime = DateTime.Now, Size = originalSize};
             _zipStream.PutNextEntry(entry);
 
             using (Stream fileStream = File.OpenRead(file.FullPath))
@@ -162,15 +166,17 @@ namespace Pundit.Core.Application
                fileStream.CopyTo(_zipStream);
             }
 
-            if(EndPackingFile != null)
+            if (EndPackingFile != null)
+            {
                EndPackingFile(this, new PackageFileEventArgs(unixPath, originalSize, fileNo, filesCount));
+            }
          }
       }
 
       protected override void Dispose(bool disposing)
       {
-         _zipStream.Close();
-         _zipStream.Dispose();
+         //_zipStream.Close();
+         //_zipStream.Dispose();
       }
    }
 }

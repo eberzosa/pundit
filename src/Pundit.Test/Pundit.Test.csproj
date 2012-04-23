@@ -51,6 +51,7 @@
     <Compile Include="Model\UnresolvedPackageTest.cs" />
     <Compile Include="PackageUtilsTest.cs" />
     <Compile Include="Model\PackageTest.cs" />
+    <Compile Include="PackageWriterTest.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="ResolutionsTest.cs" />
     <Compile Include="SqliteRepositoryTest.cs" />
@@ -74,6 +75,12 @@
     <Content Include="Data\vsdoc.xml">
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </Content>
+    <Content Include="TestRepo\src\log4net\log4net.dll">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </Content>
+    <Content Include="TestRepo\src\log4net\log4net.xml">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </Content>
   </ItemGroup>
   <ItemGroup>
     <None Include="Data\stateless-2.3.1-1-net35.pundit">
@@ -81,7 +88,7 @@
     </None>
   </ItemGroup>
   <ItemGroup>
-    <Folder Include="TestRepo\" />
+    <Folder Include="TestRepo\packed\" />
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
   <PropertyGroup>

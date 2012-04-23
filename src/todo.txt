@@ -37,10 +37,9 @@ CORE:
 + progress bars support in console mode
 + bug: "pundit resolve" doesn't notify about operation completion
 = analyze and test every command
- - Pack
+ = Pack & Resolve
  - Publish
  - Repo
- - Resolve
  - Search
  - Template
  - Utils
@@ -54,10 +53,9 @@ CORE:
 VSIX:
 - support new console output
 = analyze and test every command
- - Pack
+ - Pack & Resolve
  - Publish
  - Repo
- - Resolve
  - Search
  - Template
  - Utils
