@@ -133,7 +133,7 @@ namespace Pundit.Server
 
             using (PackageReader rdr = new PackageReader(fs))
             {
-               p = rdr.ReadManifest();
+               p = rdr.Manifest;
             }
 
             return p;

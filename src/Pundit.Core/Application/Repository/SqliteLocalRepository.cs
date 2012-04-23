@@ -87,7 +87,7 @@ namespace Pundit.Core.Application.Repository
                {
                   using (var pr = new PackageReader(ts))
                   {
-                     manifest = pr.ReadManifest();
+                     manifest = pr.Manifest;
                   }
                }
                manifest.Validate();

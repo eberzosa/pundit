@@ -12,6 +12,9 @@ namespace Pundit.Core.Application
    /// </summary>
    public class PackageReader : PackageStreamer
    {
+      /// <summary>
+      /// Throws when a file is about to be installed to the target folder
+      /// </summary>
       public event EventHandler<ResolvedFileEventArgs> InstallingResolvedFile;
 
       private ZipInputStream _zipStream;
@@ -23,9 +26,15 @@ namespace Pundit.Core.Application
       public PackageReader(Stream packageStream)
       {
          _zipStream = new ZipInputStream(packageStream);
+         Manifest = ReadManifest();
       }
 
-      public Package ReadManifest()
+      /// <summary>
+      /// Gets this package's manifest definition
+      /// </summary>
+      public Package Manifest { get; private set; }
+
+      private Package ReadManifest()
       {
          ZipEntry entry;
 
@@ -51,18 +60,9 @@ namespace Pundit.Core.Application
             if (idx != -1)
             {
                string folderName = entry.Name.Substring(0, idx);
-
-               if (folderName == "bin")
-                  return PackageFileKind.Binary;
-
-               if (folderName == "include")
-                  return PackageFileKind.Include;
-
-               if (folderName == "tools")
-                  return PackageFileKind.Tools;
-
-               if (folderName == "other")
-                  return PackageFileKind.Other;
+               return FolderNameToFileKind.ContainsKey(folderName)
+                         ? FolderNameToFileKind[folderName]
+                         : PackageFileKind.Other;
             }
          }
 
@@ -96,9 +96,8 @@ namespace Pundit.Core.Application
       private void InstallLibrary(string packageId, string root, string name, BuildConfiguration targetConfig, string subfolderName)
       {
          name = name.Substring(name.IndexOf("/") + 1);
-        
-         BuildConfiguration config =
-            (BuildConfiguration) Enum.Parse(typeof (BuildConfiguration), name.Substring(0, name.IndexOf("/")), true);
+
+         var config = (BuildConfiguration) Enum.Parse(typeof (BuildConfiguration), name.Substring(0, name.IndexOf("/")), true);
 
          bool install = (targetConfig == BuildConfiguration.Any) || (config == BuildConfiguration.Any) ||
                         (config == BuildConfiguration.Debug &&

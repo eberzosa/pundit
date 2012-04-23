@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Collections.Generic;
 using System.IO;
 using NAnt.Core;
 using Pundit.Core.Model;
@@ -11,6 +12,24 @@ namespace Pundit.Core.Application
    /// </summary>
    public abstract class PackageStreamer : IDisposable
    {
+      protected static readonly Dictionary<PackageFileKind, string> FileKindToFolderName =
+         new Dictionary<PackageFileKind, string>
+            {
+               {PackageFileKind.Binary, "bin"},
+               {PackageFileKind.Include, "include"},
+               {PackageFileKind.Tools, "tools"},
+               {PackageFileKind.Other, "other"}
+            };
+
+      protected static readonly Dictionary<string, PackageFileKind> FolderNameToFileKind =
+         new Dictionary<string, PackageFileKind>
+            {
+               {"bin", PackageFileKind.Binary},
+               {"include", PackageFileKind.Include},
+               {"tools", PackageFileKind.Tools},
+               {"other", PackageFileKind.Other}
+            };
+
       protected virtual void Dispose(bool disposing)
       {
          
@@ -91,25 +110,8 @@ namespace Pundit.Core.Application
                break;
          }
 
-         switch (sourceFiles.FileKind)
-         {
-            case PackageFileKind.Binary:
-               path = "bin/" + path;
-               break;
-            case PackageFileKind.Include:
-               path = "include/" + path;
-               break;
-            case PackageFileKind.Tools:
-               path = "tools/" + path;
-               break;
-            case PackageFileKind.Other:
-               path = "other/" + path;
-               break;
-         }
-
-         return path;
+         return FileKindToFolderName[sourceFiles.FileKind] + "/" + path;
       }
-
 
       public void Dispose()
       {

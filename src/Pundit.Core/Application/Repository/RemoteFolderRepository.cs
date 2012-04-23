@@ -60,7 +60,7 @@ namespace Pundit.Core.Application.Repository
          {
             using (var pr = new PackageReader(ts))
             {
-               manifest = pr.ReadManifest();
+               manifest = pr.Manifest;
             }
          }
 
@@ -103,7 +103,7 @@ namespace Pundit.Core.Application.Repository
             {
                using (var rdr = new PackageReader(s))
                {
-                  r.Add(new PackageSnapshotKey(rdr.ReadManifest()));
+                  r.Add(new PackageSnapshotKey(rdr.Manifest));
                }
             }
          }

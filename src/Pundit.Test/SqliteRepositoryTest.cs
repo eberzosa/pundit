@@ -86,7 +86,7 @@ namespace Pundit.Test
          Package p;
          using (Stream s = File.OpenRead(path))
          {
-            p = new PackageReader(s).ReadManifest();
+            p = new PackageReader(s).Manifest;
          }
          using (Stream s = File.OpenRead(path))
          {

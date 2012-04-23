@@ -51,7 +51,7 @@ namespace Pundit.Test
          Package upkg;
          using(var reader = new PackageReader(_outStream))
          {
-            upkg = reader.ReadManifest();
+            upkg = reader.Manifest;
          }
          Assert.AreEqual(pkg.PackageId, upkg.PackageId);
          Assert.AreEqual(pkg.Platform, upkg.Platform);
