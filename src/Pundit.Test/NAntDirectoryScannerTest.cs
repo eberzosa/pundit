@@ -1,16 +1,12 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Collections.Specialized;
+﻿using System.Collections.Specialized;
 using System.IO;
-using System.Linq;
-using System.Text;
 using NAnt.Core;
 using NUnit.Framework;
 
 namespace Pundit.Test
 {
    [TestFixture]
-   public class ThirdPartyTryOutTest
+   public class NAntDirectoryScannerTest
    {
       [Test, Ignore]
       public void DirScanerTest()

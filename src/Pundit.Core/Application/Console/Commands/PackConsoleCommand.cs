@@ -102,7 +102,6 @@ namespace Pundit.Core.Application.Console.Commands
 
       void PackageWriterEndWritePackage(object sender, Core.Model.EventArguments.PackageFileEventArgs e)
       {
-         //console.Write(true);
          console.UpdateProgress(e.FileIndex + 1);
       }
 

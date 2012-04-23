@@ -1,14 +1,11 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
+﻿using System.Collections.Generic;
 using NUnit.Framework;
 using Pundit.Core.Model;
 
-namespace Pundit.Test
+namespace Pundit.Test.Model
 {
    [TestFixture]
-   public class ModelTest
+   public class UnresolvedPackageTest
    {
       [Test]
       public void EqualityTest()

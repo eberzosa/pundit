@@ -1,3 +1,5 @@
+1.1.0.2
+
 1.1.0.1
 - refactor RepositoryStreamer to use compression methods different from ZIP (for example 7z)
 - would be nice to have a special case for .NET assemblies, when the whole package is a single
@@ -9,8 +11,16 @@
 - utilize threads when downloading missing binaries
 - refactor: push strings from console commands to resources
 - refactor: push strings from exceptions to resources
+- add nuget adapter as more and more opensource libs are now moving to nuget
+- for windows dlls included in the package check that version information at least comes from same company, otherwise
+  display an error "error checking package integrity, are you mixing libraries from several vendors in the same package?"
+- improve conflict explanation
+- pundit resolve should show package size before downloading
 
-1.1.0.0
+VSIX:
+- check for dependencies in background and notify the user in the toolbar
+
+1.1.0.0 (Bloody Duck)
 CORE:
 + create sqlite-based local repository
   + all the cached binaries must reside in the local sqlite db file
@@ -18,30 +28,39 @@ CORE:
   + redesign IRepository to work with the local db
   + home folder now needs only single pundit.db file so all configuration files and subfolders can be removed
 + add local data file location to "repo list"
-+ console commands for modifying repository list;
++ console commands for modifying repository list;  
   + adding/deleting repository (add now validates before saving)
   + updating repository properties
 + snapshot sync - restore directory-based repository to test (dir:// protocol)
 + IRemoteRepository synchronisation
 + restore "pundit publish" using IRemoteRepository; after publishing local index has to be force-refreshed
 + progress bars support in console mode
++ bug: "pundit resolve" doesn't notify about operation completion
+= analyze and test every command
+ - Pack
+ - Publish
+ - Repo
+ - Resolve
+ - Search
+ - Template
+ - Utils
 = pundit http server
   + db design
   + publishing over http, adding manifest and history record
   = getting history and snapshots via http
   - binary http downloads
   - limit number of stored binary revisions (configurable)
-- for windows dlls included in the package check that version information at least comes from same company, otherwise
-  display an error "error checking package integrity, are you mixing libraries from several vendors in the same package?"
-- write personal header to package binary so it includes extra metadata and won't open by zip clients anymore
-- improve conflict explanation
-- bug: "pundit resolve" doesn't notify about operation completion
-- pundit resolve should show package size before downloading
-- add nuget adapter as more and more opensource libs are now moving to nuget
 
 VSIX:
-- check for dependencies in background and notify the user in the toolbar
-- progress bars support in WPF mode
+- support new console output
+= analyze and test every command
+ - Pack
+ - Publish
+ - Repo
+ - Resolve
+ - Search
+ - Template
+ - Utils
 
 ----------------------------------------------------------------------------------------------------------------------------
 

@@ -122,7 +122,7 @@
   </data>
   <data name="Help" xml:space="preserve">
     <value>
-Copyright (c) 2011 Ivan Gavryliuk.
+Copyright (c) 2011-2012 Ivan Gavryliuk.
 
 syntax: {0} &lt;command&gt; [&lt;options&gt;]
 

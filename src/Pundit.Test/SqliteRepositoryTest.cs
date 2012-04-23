@@ -12,7 +12,7 @@ using Pundit.Core.Model;
 
 namespace Pundit.Test
 {
-   [TestFixture, Ignore]
+   [TestFixture]
    public class SqliteRepositoryTest
    {
       private string _localFile;

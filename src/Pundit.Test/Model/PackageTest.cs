@@ -2,10 +2,10 @@
 using NUnit.Framework;
 using Pundit.Core.Model;
 
-namespace Pundit.Test
+namespace Pundit.Test.Model
 {
    [TestFixture]
-   public class PomTest
+   public class PackageTest
    {
       [Test]
       public void PackageSerializationTest()

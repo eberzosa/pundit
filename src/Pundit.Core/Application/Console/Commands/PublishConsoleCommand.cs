@@ -47,7 +47,6 @@ namespace Pundit.Core.Application.Console.Commands
 
          if (localOnly)
          {
-            //console.WriteLine(Strings);
             long sizeBefore = LocalConfiguration.RepositoryManager.Stats.OccupiedSpaceBinaries;
 
             foreach (string packagePath in packages)

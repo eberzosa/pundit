@@ -14,7 +14,8 @@ namespace Pundit.Core.Application.Console.Commands
 
       public override void Execute()
       {
-         if(GetCommandLine().Length == 0)
+         string[] cmdLine = GetCommandLine();
+         if(cmdLine == null || cmdLine.Length == 0)
          {
             console.WriteLine(Strings.Help, "");
          }

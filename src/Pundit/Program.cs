@@ -28,10 +28,11 @@ namespace Pundit.Console
             Con.WriteLine(ConsoleColor.Red, ex.Message);
 
             if (ex is InvalidPackageException)
+            {
                Con.WriteLine(ConsoleColor.Red, ex.ToString());
+            }
             else
             {
-
 #if DEBUG
                Con.WriteLine(ConsoleColor.Red, ex.ToString());
 #endif
