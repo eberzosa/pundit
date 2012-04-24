@@ -242,7 +242,7 @@ namespace Pundit.Console
 
       public void FinishCommand()
       {
-         Write(ConsoleColor.Yellow, "all done.");
+         WriteLine(ConsoleColor.Yellow, "all done.");
       }
 
       #endregion
