@@ -22,6 +22,8 @@ namespace Pundit.Console
             IConsoleCommand cmd = CommandFactory.CreateCommand(Con, Environment.CurrentDirectory, args);
 
             cmd.Execute();
+
+            Con.FinishCommand();
          }
          catch (Exception ex)
          {

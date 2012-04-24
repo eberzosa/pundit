@@ -92,7 +92,6 @@ namespace Pundit.Vsix.Application
 
       public void StartProgress(int maxValue)
       {
-         throw new NotImplementedException();
       }
 
       public void UpdateProgress(int value, string hint)
@@ -101,6 +100,11 @@ namespace Pundit.Vsix.Application
 
       public void FinishProgress()
       {
+      }
+
+      public void FinishCommand()
+      {
+         
       }
    }
 }

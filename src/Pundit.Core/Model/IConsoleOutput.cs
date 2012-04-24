@@ -59,5 +59,7 @@ namespace Pundit.Core.Model
       /// Complete progress bar and dispose any objects involved in drawing the progress
       /// </summary>
       void FinishProgress();
+
+      void FinishCommand();
    }
 }

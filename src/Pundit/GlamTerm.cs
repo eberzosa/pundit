@@ -198,7 +198,7 @@ namespace Pundit.Console
       public void UpdateProgress(int value, string hint = null)
       {
          //[========               ] 035%
-         int percent = value * 100 / _progressMaxValue;
+         int percent = _progressMaxValue == 0 ? 0 : value * 100 / _progressMaxValue;
          if (percent > 100) percent = 100;
          if (percent != _progressCurrentValue)
          {
@@ -238,6 +238,11 @@ namespace Pundit.Console
       {
          UpdateProgress(_progressMaxValue);
          ConsoleS.WriteLine();
+      }
+
+      public void FinishCommand()
+      {
+         Write(ConsoleColor.Yellow, "all done.");
       }
 
       #endregion
