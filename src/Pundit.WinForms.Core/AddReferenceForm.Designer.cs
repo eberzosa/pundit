@@ -59,7 +59,7 @@
          this.txtRoot.Location = new System.Drawing.Point(85, 7);
          this.txtRoot.Name = "txtRoot";
          this.txtRoot.ReadOnly = true;
-         this.txtRoot.Size = new System.Drawing.Size(391, 20);
+         this.txtRoot.Size = new System.Drawing.Size(513, 20);
          this.txtRoot.TabIndex = 1;
          // 
          // gridReferences
@@ -101,7 +101,7 @@
          dataGridViewCellStyle3.WrapMode = System.Windows.Forms.DataGridViewTriState.False;
          this.gridReferences.RowsDefaultCellStyle = dataGridViewCellStyle3;
          this.gridReferences.ShowEditingIcon = false;
-         this.gridReferences.Size = new System.Drawing.Size(457, 323);
+         this.gridReferences.Size = new System.Drawing.Size(579, 269);
          this.gridReferences.TabIndex = 2;
          // 
          // ComponentName
@@ -135,7 +135,7 @@
          // cmdOk
          // 
          this.cmdOk.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Right)));
-         this.cmdOk.Location = new System.Drawing.Point(312, 370);
+         this.cmdOk.Location = new System.Drawing.Point(434, 316);
          this.cmdOk.Name = "cmdOk";
          this.cmdOk.Size = new System.Drawing.Size(75, 23);
          this.cmdOk.TabIndex = 3;
@@ -145,7 +145,7 @@
          // cmdCancel
          // 
          this.cmdCancel.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Right)));
-         this.cmdCancel.Location = new System.Drawing.Point(393, 370);
+         this.cmdCancel.Location = new System.Drawing.Point(515, 316);
          this.cmdCancel.Name = "cmdCancel";
          this.cmdCancel.Size = new System.Drawing.Size(75, 23);
          this.cmdCancel.TabIndex = 4;
@@ -156,7 +156,7 @@
          // 
          this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
          this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
-         this.ClientSize = new System.Drawing.Size(481, 405);
+         this.ClientSize = new System.Drawing.Size(603, 351);
          this.Controls.Add(this.cmdCancel);
          this.Controls.Add(this.cmdOk);
          this.Controls.Add(this.gridReferences);

@@ -1,7 +1,4 @@
 ﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
 using Pundit.Core.Model;
 
 namespace Pundit.Core.Application.Console.Commands
@@ -17,7 +14,7 @@ namespace Pundit.Core.Application.Console.Commands
          string[] cmdLine = GetCommandLine();
          if(cmdLine == null || cmdLine.Length == 0)
          {
-            console.WriteLine(Strings.Help, "");
+            console.WriteLine(Strings.Help, "pundit");
          }
          else
          {

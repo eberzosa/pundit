@@ -54,7 +54,7 @@ namespace Pundit.Core.Application
       /// <summary>
       /// Writes all manifest data into target stream. The stream is packed into a zip package.
       /// </summary>
-      /// <returns>Total size of the original unpacked data including the xml manifest.</returns>
+      /// <returns>Total size of the original unpacked data excluding the xml manifest.</returns>
       public long WriteAll()
       {
          if(_packageInfo.Files == null || _packageInfo.Files.Count == 0)
@@ -62,7 +62,7 @@ namespace Pundit.Core.Application
 
          WriteManifest(false);
 
-         _bytesWritten += _zipStream.Length;
+         //_bytesWritten += _zipStream.Length;  //don't
 
          WriteFiles();
 
@@ -164,6 +164,7 @@ namespace Pundit.Core.Application
             using (Stream fileStream = File.OpenRead(file.FullPath))
             {
                fileStream.CopyTo(_zipStream);
+               _zipStream.Flush();
             }
 
             if (EndPackingFile != null)
@@ -175,6 +176,7 @@ namespace Pundit.Core.Application
 
       protected override void Dispose(bool disposing)
       {
+         _zipStream.Flush();
          //_zipStream.Close();
          //_zipStream.Dispose();
       }

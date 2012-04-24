@@ -48,6 +48,7 @@
   <ItemGroup>
     <Compile Include="ExceptionalTest.cs" />
     <Compile Include="Mocks\MockedRepository.cs" />
+    <Compile Include="Mocks\StatCollectorInstallTarget.cs" />
     <Compile Include="Model\UnresolvedPackageTest.cs" />
     <Compile Include="PackageUtilsTest.cs" />
     <Compile Include="Model\PackageTest.cs" />

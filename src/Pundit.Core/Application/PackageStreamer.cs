@@ -12,7 +12,7 @@ namespace Pundit.Core.Application
    /// </summary>
    public abstract class PackageStreamer : IDisposable
    {
-      protected static readonly Dictionary<PackageFileKind, string> FileKindToFolderName =
+      private static readonly Dictionary<PackageFileKind, string> FileKindToFolderName =
          new Dictionary<PackageFileKind, string>
             {
                {PackageFileKind.Binary, "bin"},

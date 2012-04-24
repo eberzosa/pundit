@@ -6,7 +6,7 @@ using System.Xml.Serialization;
 namespace Pundit.Core.Model
 {
    ///<summary>
-   /// Package dependency
+   /// Dependency on another package definition
    ///</summary>
    [XmlRoot("package")]
    [Serializable]
@@ -15,11 +15,19 @@ namespace Pundit.Core.Model
    {
       private string _plaftorm;
 
+      /// <summary>
+      /// 
+      /// </summary>
       public PackageDependency()
       {
          Platform = Platform;
       }
 
+      /// <summary>
+      /// 
+      /// </summary>
+      /// <param name="packageId"></param>
+      /// <param name="versionPattern"></param>
       public PackageDependency(string packageId, string versionPattern) : this()
       {
          if (packageId == null) throw new ArgumentNullException("packageId");
@@ -29,10 +37,16 @@ namespace Pundit.Core.Model
          VersionPattern = versionPattern;
       }
 
+      /// <summary>
+      /// Package id
+      /// </summary>
       [XmlAttribute("id")]
       [DataMember(Name = "id")]
       public string PackageId { get; set; }
 
+      /// <summary>
+      /// Version pattern
+      /// </summary>
       [XmlAttribute("version")]
       [DataMember(Name = "versionPattern")]
       public string VersionPattern { get; set; }
@@ -91,6 +105,9 @@ namespace Pundit.Core.Model
          }
       }
 
+      /// <summary>
+      /// Dependency scope
+      /// </summary>
       [XmlAttribute("scope")]
       [DefaultValue(DependencyScope.Normal)]
       [DataMember(Name = "scope")]

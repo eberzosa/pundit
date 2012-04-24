@@ -61,13 +61,23 @@ namespace Pundit.Core.Model
       [XmlAttribute("configuration")]
       public BuildConfiguration Configuration { get; set; }
 
+      /// <summary>
+      /// 
+      /// </summary>
       public SourceFiles()
       {
          this.IncludeEmptyDirs = true;
       }
 
-      public SourceFiles(string include, PackageFileKind kind = PackageFileKind.Binary) : this()
+      /// <summary>
+      /// 
+      /// </summary>
+      /// <param name="baseDirectory"></param>
+      /// <param name="include"></param>
+      /// <param name="kind"></param>
+      public SourceFiles(string baseDirectory, string include, PackageFileKind kind = PackageFileKind.Binary) : this()
       {
+         this.BaseDirectory = baseDirectory;
          this.Include = include;
          this.FileKind = kind;
       }

@@ -139,7 +139,7 @@ namespace Pundit.Core.Application.Console.Commands
          }
 
          //install all packages
-         using(PackageInstaller installer = new PackageInstaller(projectRoot,
+         using(var installer = new PackageInstaller(projectRoot,
             resolutionResult.Item1,
             devPackage,
             LocalConfiguration.RepositoryManager.LocalRepository))

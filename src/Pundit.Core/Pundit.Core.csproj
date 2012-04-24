@@ -70,6 +70,7 @@
     <Compile Include="Application\Console\NoCurrentDirectoryException.cs" />
     <Compile Include="Application\Console\Strings.Designer.cs" />
     <Compile Include="Application\DependencyResolution.cs" />
+    <Compile Include="Application\DiskInstallTarget.cs" />
     <Compile Include="Application\Extensions\NumericExtensions.cs" />
     <Compile Include="Application\InstalledPackagesIndex.cs" />
     <Compile Include="Application\PackageInstaller.cs" />
@@ -84,14 +85,21 @@
     <Compile Include="Application\Sqlite\SqliteExtensions.cs" />
     <Compile Include="Application\Repository\SqliteLocalRepository.cs" />
     <Compile Include="Application\Sqlite\SqliteHelper.cs" />
+    <Compile Include="C.cs" />
     <Compile Include="Errors.Designer.cs">
       <AutoGen>True</AutoGen>
       <DesignTime>True</DesignTime>
       <DependentUpon>Errors.resx</DependentUpon>
     </Compile>
+    <Compile Include="Ex.Designer.cs">
+      <AutoGen>True</AutoGen>
+      <DesignTime>True</DesignTime>
+      <DependentUpon>Ex.resx</DependentUpon>
+    </Compile>
     <Compile Include="Exceptions\RepositoryOfflineException.cs" />
     <Compile Include="LocalConfiguration.cs" />
     <Compile Include="Model\EventArguments\PackageDownloadEventArgs.cs" />
+    <Compile Include="Model\IInstallTarget.cs" />
     <Compile Include="Model\ILocalRepository.cs" />
     <Compile Include="Model\IRemoteRepository.cs" />
     <Compile Include="Model\DependencyNode.cs" />
@@ -131,6 +139,10 @@
     <EmbeddedResource Include="Errors.resx">
       <Generator>ResXFileCodeGenerator</Generator>
       <LastGenOutput>Errors.Designer.cs</LastGenOutput>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Ex.resx">
+      <Generator>ResXFileCodeGenerator</Generator>
+      <LastGenOutput>Ex.Designer.cs</LastGenOutput>
     </EmbeddedResource>
     <None Include="manifest.xsd">
       <SubType>Designer</SubType>

@@ -1,9 +1,9 @@
 ﻿using System;
+using System.Collections.Generic;
 using System.IO;
 using ICSharpCode.SharpZipLib.Zip;
 using Pundit.Core.Model;
 using Pundit.Core.Model.EventArguments;
-using Pundit.Core.Utils;
 
 namespace Pundit.Core.Application
 {
@@ -55,7 +55,7 @@ namespace Pundit.Core.Application
       {
          if(entry.IsFile)
          {
-            int idx = entry.Name.IndexOf("/");
+            int idx = entry.Name.IndexOf("/", StringComparison.InvariantCultureIgnoreCase);
 
             if (idx != -1)
             {
@@ -69,35 +69,32 @@ namespace Pundit.Core.Application
          return PackageFileKind.Unknown;
       }
 
-      private void InstallGenericFile(string root, string name, PackageFileKind kind, string packageId)
+      private void InstallGenericFile(IInstallTarget installTarget, string name, PackageFileKind kind, string packageId)
       {
          string kindName = kind.ToString().ToLower();
-         string relativeKindRoot = Path.Combine(root, kindName);
-         if (!Directory.Exists(relativeKindRoot)) Directory.CreateDirectory(relativeKindRoot);
-
-         string shortName = name.Substring(name.IndexOf("/") + 1);
+         string shortName = name.Substring(name.IndexOf("/", StringComparison.CurrentCultureIgnoreCase) + 1);
          string fullName = kindName + "/" + packageId + "/" + shortName;
+
+         var path = new List<string>();
+         path.Add(kindName);
+         path.Add(packageId);
+         path.Add(shortName);
 
          if(InstallingResolvedFile != null)
             InstallingResolvedFile(this, new ResolvedFileEventArgs(packageId, kind, BuildConfiguration.Any, fullName));
 
-         string fullPath = PathUtils.FixPathSeparators(Path.Combine(root, fullName));
-         string fullDirPath = new FileInfo(fullPath).Directory.FullName;
-
-         PathUtils.EnsureDirectoryExists(fullDirPath);
-         if(File.Exists(fullPath)) File.Delete(fullPath);
-
-         using(Stream df = File.Create(fullPath))
+         using(Stream df = installTarget.CreateTargetStream(path))
          {
             _zipStream.CopyTo(df);
          }
       }
 
-      private void InstallLibrary(string packageId, string root, string name, BuildConfiguration targetConfig, string subfolderName)
+      private void InstallLibrary(string packageId, IInstallTarget installTarget, string name, BuildConfiguration targetConfig, string subfolderName)
       {
-         name = name.Substring(name.IndexOf("/") + 1);
+         name = name.Substring(name.IndexOf("/", StringComparison.InvariantCultureIgnoreCase) + 1);
 
-         var config = (BuildConfiguration) Enum.Parse(typeof (BuildConfiguration), name.Substring(0, name.IndexOf("/")), true);
+         var config = (BuildConfiguration) Enum.Parse(typeof (BuildConfiguration),
+            name.Substring(0, name.IndexOf("/", StringComparison.InvariantCultureIgnoreCase)), true);
 
          bool install = (targetConfig == BuildConfiguration.Any) || (config == BuildConfiguration.Any) ||
                         (config == BuildConfiguration.Debug &&
@@ -107,46 +104,27 @@ namespace Pundit.Core.Application
 
          if (install)
          {
-            name = name.Substring(name.IndexOf("/") + 1);
+            name = name.Substring(name.IndexOf("/", StringComparison.InvariantCultureIgnoreCase) + 1);
 
             if (InstallingResolvedFile != null)
                InstallingResolvedFile(this, new ResolvedFileEventArgs(packageId, PackageFileKind.Binary, config, name));
 
-            string targetPath = Path.Combine(root, "lib");
-            if (!Directory.Exists(targetPath)) Directory.CreateDirectory(targetPath);
-
-            if (!string.IsNullOrEmpty(subfolderName))
-            {
-               targetPath = Path.Combine(targetPath, subfolderName);
-               if (!Directory.Exists(targetPath)) Directory.CreateDirectory(targetPath);
-            }
-
-            targetPath = Path.Combine(targetPath, name);
+            var targetPath = new List<string>();
+            targetPath.Add("lib");
+            if (!string.IsNullOrEmpty(subfolderName)) targetPath.Add(subfolderName);
+            targetPath.Add(name);
 
             try
             {
-
-               if (File.Exists(targetPath)) File.Delete(targetPath);
-
-               using (Stream ts = File.Create(targetPath))
+               using (Stream ts = installTarget.CreateTargetStream(targetPath))
                {
                   _zipStream.CopyTo(ts);
                }
             }
             catch(UnauthorizedAccessException)
             {
-               if(Exceptional.IsVsDocFile(targetPath))
-               {
-               }
-               else
-               {
-                  throw;
-               }
+               //todo: think about it (can I just skip it?)
             }
-         }
-         else
-         {
-            //_log.Debug("ignoring " + name);
          }
       }
 
@@ -154,15 +132,16 @@ namespace Pundit.Core.Application
       /// Installs the package to a specific location. If destination files exist
       /// they will be silently overwritten.
       /// </summary>
-      /// <param name="rootFolder">Solution's root folder</param>
-      /// <param name="originalDependency"></param>
+      /// <param name="installTarget"></param>
+      /// <param name="originalDependency">Original dependency used as a source for metainformation while installing the package.
+      /// Parameters like scope, subfolder name etc are read from it</param>
       /// <param name="configuration">Desired configuration name</param>
-      public void InstallTo(string rootFolder, PackageDependency originalDependency, BuildConfiguration configuration)
+      public void InstallTo(IInstallTarget installTarget, PackageDependency originalDependency, BuildConfiguration configuration)
       {
-         Package pkg = ReadManifest();
+         if (installTarget == null) throw new ArgumentNullException("installTarget");
 
-         ZipEntry entry;
-         while ((entry = _zipStream.GetNextEntry()) != null)
+         ZipEntry entry = _zipStream.GetNextEntry();
+         while (entry != null)
          {
             if (entry.IsFile)
             {
@@ -171,7 +150,7 @@ namespace Pundit.Core.Application
                switch(kind)
                {
                   case PackageFileKind.Binary:
-                     InstallLibrary(pkg.PackageId, rootFolder, entry.Name, configuration,
+                     InstallLibrary(Manifest.PackageId, installTarget, entry.Name, configuration,
                                     (originalDependency != null && originalDependency.CreatePlatformFolder)
                                        ? originalDependency.Platform
                                        : null);
@@ -179,9 +158,19 @@ namespace Pundit.Core.Application
                   case PackageFileKind.Include:
                   case PackageFileKind.Tools:
                   case PackageFileKind.Other:
-                     InstallGenericFile(rootFolder, entry.Name, kind, pkg.PackageId);
+                     InstallGenericFile(installTarget, entry.Name, kind, Manifest.PackageId);
                      break;
                }
+            }
+
+            try
+            {
+               entry = _zipStream.GetNextEntry();
+            }
+            catch(ArgumentOutOfRangeException)
+            {
+               //for some unknown reason this sometimes happens when enumerating after last entry, but it is safe to ignore
+               entry = null;
             }
          }
       }

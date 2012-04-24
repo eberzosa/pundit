@@ -7,6 +7,9 @@ using Pundit.Core.Model.EventArguments;
 
 namespace Pundit.Core.Application
 {
+   /// <summary>
+   /// Installs packages
+   /// </summary>
    public class PackageInstaller : IDisposable
    {
       private readonly string _rootDirectory;
@@ -24,6 +27,14 @@ namespace Pundit.Core.Application
       public event EventHandler<PackageKeyDiffEventArgs> BeginInstallPackage;
       public event EventHandler<PackageKeyDiffEventArgs> FinishInstallPackage;
 
+      /// <summary>
+      /// 
+      /// </summary>
+      /// <param name="rootDirectory"></param>
+      /// <param name="versionTable"></param>
+      /// <param name="devManifest"></param>
+      /// <param name="localRepository"></param>
+      /// <exception cref="ArgumentNullException"></exception>
       public PackageInstaller(string rootDirectory, VersionResolutionTable versionTable,
          DevPackage devManifest,
          ILocalRepository localRepository)
@@ -142,12 +153,13 @@ namespace Pundit.Core.Application
          {
             using (Stream s = _localRepository.Get(pck))
             {
-               using (PackageReader reader = new PackageReader(s))
+               using (var reader = new PackageReader(s))
                {
                   if (BeginInstallPackage != null)
                      BeginInstallPackage(this, new PackageKeyDiffEventArgs(pck, true));
 
-                  reader.InstallTo(_rootDirectory, originalDependency, configuration);
+                  IInstallTarget installTarget = new DiskInstallTarget(_rootDirectory);
+                  reader.InstallTo(installTarget, originalDependency, configuration);
                }
             }
 

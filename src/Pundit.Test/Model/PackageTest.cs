@@ -29,7 +29,7 @@ namespace Pundit.Test.Model
                                Author = "NUnit team"
                             };
 
-         dp.Files.Add(new SourceFiles("framework\\nunit.framework.*", PackageFileKind.Binary));
+         dp.Files.Add(new SourceFiles("base", "framework\\nunit.framework.*", PackageFileKind.Binary));
 
          string s = dp.ToString();
 

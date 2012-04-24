@@ -112,22 +112,14 @@ namespace Pundit.Core.Utils
          return files.Select(f => new FileInfo(f));
       }
 
+      /// <summary>
+      /// Replaces any path separators found to platform-specific path separators
+      /// </summary>
+      /// <param name="s"></param>
+      /// <returns></returns>
       public static string FixPathSeparators(string s)
       {
          return s == null ? null : s.Replace('/', Path.DirectorySeparatorChar);
       }
-
-      public static string ExeFolder
-      {
-         get
-         {
-            Assembly asm = Assembly.GetExecutingAssembly();
-
-            return (asm == null || asm.Location == null ? null : Path.GetDirectoryName(asm.Location))
-               ?? Environment.CurrentDirectory
-               ?? AppDomain.CurrentDomain.BaseDirectory;
-         }
-      }
-
    }
 }

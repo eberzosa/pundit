@@ -24,8 +24,7 @@ namespace Pundit.Core.Application.Console.Commands
          dp.ReleaseNotes = "release notes for this version";
          dp.Version = Assembly.GetExecutingAssembly().GetName().Version;
 
-         SourceFiles sampleFile =  new SourceFiles("*.h");
-         sampleFile.BaseDirectory = "base/dir";
+         SourceFiles sampleFile =  new SourceFiles("base/dir", "*.h");
          sampleFile.Configuration = BuildConfiguration.Debug;
          sampleFile.TargetDirectory = "targetdir";
          dp.Files.Add(sampleFile);
