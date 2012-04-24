@@ -24,7 +24,14 @@ namespace Pundit.Core.Application
       private readonly string _toolsFolderPath;
       private readonly string _otherFolderPath;
 
+      /// <summary>
+      /// Occurs when a package is about to be installed
+      /// </summary>
       public event EventHandler<PackageKeyDiffEventArgs> BeginInstallPackage;
+
+      /// <summary>
+      /// Occurs when a package has finished installing
+      /// </summary>
       public event EventHandler<PackageKeyDiffEventArgs> FinishInstallPackage;
 
       /// <summary>
@@ -62,9 +69,11 @@ namespace Pundit.Core.Application
       /// </summary>
       /// <param name="resolutionResult">Resolution result</param>
       /// <returns>Differences between the current state and the resolution result</returns>
-      public IEnumerable<PackageKeyDiff> GetDiffWithCurrent(IEnumerable<PackageKey> resolutionResult)
+      public ICollection<PackageKeyDiff> GetDiffWithCurrent(IEnumerable<PackageKey> resolutionResult)
       {
          if (resolutionResult == null) throw new ArgumentNullException("resolutionResult");
+         var rres = new List<PackageKey>(resolutionResult);
+
 
          var diff = new List<PackageKeyDiff>();
 
@@ -72,23 +81,23 @@ namespace Pundit.Core.Application
 
          if(indexEmpty)
          {
-            diff.AddRange(resolutionResult.Select(rr => new PackageKeyDiff(DiffType.Add, rr)));
+            diff.AddRange(rres.Select(rr => new PackageKeyDiff(DiffType.Add, rr)));
          }
          else
          {
-            var added = from rr in resolutionResult
+            var added = from rr in rres
                         where _index.InstalledPackages.FirstOrDefault(ip => ip.LooseEquals(rr)) == null
                         select new PackageKeyDiff(DiffType.Add, rr);
 
             diff.AddRange(added);
 
             var deleted = from ip in _index.InstalledPackages
-                          where resolutionResult.FirstOrDefault(rr => rr.LooseEquals(ip)) == null
+                          where rres.FirstOrDefault(rr => rr.LooseEquals(ip)) == null
                           select new PackageKeyDiff(DiffType.Del, ip);
 
             diff.AddRange(deleted);
 
-            var other = from rr in resolutionResult
+            var other = from rr in rres
                         let ip = _index.InstalledPackages.FirstOrDefault(ip => ip.LooseEquals(rr))
                         let noChange = ip != null && rr.Equals(ip)
                         where ip != null

@@ -200,34 +200,30 @@ Repository management functions. Subcommands supported:
   purgelocal - deletes local repository cache and compacts local database. Any binaries needed for the resolution process will be re-downloaded next time.</value>
   </data>
   <data name="Help_resolve" xml:space="preserve">
-    <value>syntax: {0} resolve [-m:&lt;manifest location&gt;] [-d:&lt;depth&gt;] [-c:&lt;configuration name&gt;] [-f] [-p]
+    <value>syntax: {0} resolve [&lt;manifest name&gt;] [-c:&lt;configuration name&gt;] [-f] [-p]
 
 Resolves manifest version dependencies, checking for conflicts, downloading missing libraries and installing them into the solution.
   &lt;manifest location&gt; is a name or path to manifest file; by default manifest is taken from the current folder
-  &lt;depth&gt; is a repository search depth; by default all the repositories are searched, however this can be overriden; set depth "local" to search only the local repository or to a number which specifies how many repositories specified in the local configuration file to search
   &lt;configuration name&gt; build configuration (debug or release); by default release is used; if a dependency doesn't include debug build release will be used
   -f parameter specifies that all dependencies must be deleted and reinstalled from scratch even if none changed since the last time
   -p parameter specifies that dependencies must be checked but no changes to the local repository should be made; use it to check for changes without updating to latest versions
 
 examples:
   {0} resolve
-  {0} resolve -p:Pundit.Extensions.xml
-  {0} resolve -d:local
-  {0} resolve -d:2
+  {0} resolve Pundit.Extensions.xml
   {0} resolve -c:debug
   {0} resolve -f</value>
   </data>
   <data name="Help_search" xml:space="preserve">
-    <value>syntax: {0} search &lt;-t:text&gt; [&lt;-d:depth&gt;] [&lt;-x&gt;]
+    <value>syntax: {0} search &lt;text&gt; [-d:&lt;depth&gt;] [-x]
 
   &lt;text&gt; is mandatory package name or name part (case insensitive). -t parameter name can be ommited so that the first nameless parameter will become a search expression
   &lt;depth&gt; is a repository search depth; by default all the repositories are searched, however this can be overriden; set depth "local" to search only the local repository or to a number which specifies how many repositories specified in the local configuration file to search
   &lt;x&gt; is an optional switch allowing to output the search result in XML format ready for copy-pasting into the manifest file
 
 examples:
-  {0} search -t:log4net
-  {0} search log4net -x
-  {0} search -t:log4net -d:local</value>
+  {0} search log4net
+  {0} search log4net -x</value>
   </data>
   <data name="Help_template" xml:space="preserve">
     <value>syntax: {0} template

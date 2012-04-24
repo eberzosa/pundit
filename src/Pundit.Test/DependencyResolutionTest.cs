@@ -1,7 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Linq;
-using System.Text;
 using NUnit.Framework;
 using Pundit.Core.Application;
 using Pundit.Core.Model;
@@ -10,7 +9,7 @@ using Pundit.Test.Mocks;
 namespace Pundit.Test
 {
    [TestFixture]
-   public class ResolutionsTest
+   public class DependencyResolutionTest
    {
       private ILocalRepository _repo;
 

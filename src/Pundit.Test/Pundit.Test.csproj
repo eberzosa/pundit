@@ -54,7 +54,7 @@
     <Compile Include="Model\PackageTest.cs" />
     <Compile Include="PackageWriterTest.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
-    <Compile Include="ResolutionsTest.cs" />
+    <Compile Include="DependencyResolutionTest.cs" />
     <Compile Include="SqliteRepositoryTest.cs" />
     <Compile Include="NAntDirectoryScannerTest.cs" />
     <Compile Include="VersionPatternTest.cs" />

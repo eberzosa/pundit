@@ -34,12 +34,10 @@
          this.label1 = new System.Windows.Forms.Label();
          this.txtRoot = new System.Windows.Forms.TextBox();
          this.gridReferences = new System.Windows.Forms.DataGridView();
-         this.ComponentName = new System.Windows.Forms.DataGridViewTextBoxColumn();
-         this.Version = new System.Windows.Forms.DataGridViewTextBoxColumn();
-         this.Runtime = new System.Windows.Forms.DataGridViewTextBoxColumn();
-         this.Path = new System.Windows.Forms.DataGridViewTextBoxColumn();
          this.cmdOk = new System.Windows.Forms.Button();
          this.cmdCancel = new System.Windows.Forms.Button();
+         this.ComponentName = new System.Windows.Forms.DataGridViewTextBoxColumn();
+         this.Version = new System.Windows.Forms.DataGridViewTextBoxColumn();
          ((System.ComponentModel.ISupportInitialize)(this.gridReferences)).BeginInit();
          this.SuspendLayout();
          // 
@@ -54,8 +52,8 @@
          // 
          // txtRoot
          // 
-         this.txtRoot.Anchor = ((System.Windows.Forms.AnchorStyles)(((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Left)
-                     | System.Windows.Forms.AnchorStyles.Right)));
+         this.txtRoot.Anchor = ((System.Windows.Forms.AnchorStyles)(((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Left) 
+            | System.Windows.Forms.AnchorStyles.Right)));
          this.txtRoot.Location = new System.Drawing.Point(85, 7);
          this.txtRoot.Name = "txtRoot";
          this.txtRoot.ReadOnly = true;
@@ -67,9 +65,9 @@
          this.gridReferences.AllowUserToAddRows = false;
          this.gridReferences.AllowUserToDeleteRows = false;
          this.gridReferences.AllowUserToResizeRows = false;
-         this.gridReferences.Anchor = ((System.Windows.Forms.AnchorStyles)((((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Bottom)
-                     | System.Windows.Forms.AnchorStyles.Left)
-                     | System.Windows.Forms.AnchorStyles.Right)));
+         this.gridReferences.Anchor = ((System.Windows.Forms.AnchorStyles)((((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Bottom) 
+            | System.Windows.Forms.AnchorStyles.Left) 
+            | System.Windows.Forms.AnchorStyles.Right)));
          this.gridReferences.BackgroundColor = System.Drawing.SystemColors.ControlLightLight;
          dataGridViewCellStyle1.Alignment = System.Windows.Forms.DataGridViewContentAlignment.MiddleLeft;
          dataGridViewCellStyle1.BackColor = System.Drawing.SystemColors.Control;
@@ -83,9 +81,7 @@
          this.gridReferences.ColumnHeadersHeightSizeMode = System.Windows.Forms.DataGridViewColumnHeadersHeightSizeMode.DisableResizing;
          this.gridReferences.Columns.AddRange(new System.Windows.Forms.DataGridViewColumn[] {
             this.ComponentName,
-            this.Version,
-            this.Runtime,
-            this.Path});
+            this.Version});
          this.gridReferences.Location = new System.Drawing.Point(12, 41);
          this.gridReferences.Name = "gridReferences";
          this.gridReferences.ReadOnly = true;
@@ -104,6 +100,28 @@
          this.gridReferences.Size = new System.Drawing.Size(579, 269);
          this.gridReferences.TabIndex = 2;
          // 
+         // cmdOk
+         // 
+         this.cmdOk.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Right)));
+         this.cmdOk.DialogResult = System.Windows.Forms.DialogResult.OK;
+         this.cmdOk.Location = new System.Drawing.Point(434, 316);
+         this.cmdOk.Name = "cmdOk";
+         this.cmdOk.Size = new System.Drawing.Size(75, 23);
+         this.cmdOk.TabIndex = 3;
+         this.cmdOk.Text = "&Ok";
+         this.cmdOk.UseVisualStyleBackColor = true;
+         // 
+         // cmdCancel
+         // 
+         this.cmdCancel.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Right)));
+         this.cmdCancel.DialogResult = System.Windows.Forms.DialogResult.Cancel;
+         this.cmdCancel.Location = new System.Drawing.Point(515, 316);
+         this.cmdCancel.Name = "cmdCancel";
+         this.cmdCancel.Size = new System.Drawing.Size(75, 23);
+         this.cmdCancel.TabIndex = 4;
+         this.cmdCancel.Text = "&Cancel";
+         this.cmdCancel.UseVisualStyleBackColor = true;
+         // 
          // ComponentName
          // 
          this.ComponentName.HeaderText = "Component Name";
@@ -118,40 +136,6 @@
          this.Version.ReadOnly = true;
          this.Version.Width = 103;
          // 
-         // Runtime
-         // 
-         this.Runtime.HeaderText = "Runtime";
-         this.Runtime.Name = "Runtime";
-         this.Runtime.ReadOnly = true;
-         this.Runtime.Width = 104;
-         // 
-         // Path
-         // 
-         this.Path.HeaderText = "Path";
-         this.Path.Name = "Path";
-         this.Path.ReadOnly = true;
-         this.Path.Width = 103;
-         // 
-         // cmdOk
-         // 
-         this.cmdOk.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Right)));
-         this.cmdOk.Location = new System.Drawing.Point(434, 316);
-         this.cmdOk.Name = "cmdOk";
-         this.cmdOk.Size = new System.Drawing.Size(75, 23);
-         this.cmdOk.TabIndex = 3;
-         this.cmdOk.Text = "&Ok";
-         this.cmdOk.UseVisualStyleBackColor = true;
-         // 
-         // cmdCancel
-         // 
-         this.cmdCancel.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Right)));
-         this.cmdCancel.Location = new System.Drawing.Point(515, 316);
-         this.cmdCancel.Name = "cmdCancel";
-         this.cmdCancel.Size = new System.Drawing.Size(75, 23);
-         this.cmdCancel.TabIndex = 4;
-         this.cmdCancel.Text = "&Cancel";
-         this.cmdCancel.UseVisualStyleBackColor = true;
-         // 
          // AddReferenceForm
          // 
          this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
@@ -164,7 +148,7 @@
          this.Controls.Add(this.label1);
          this.FormBorderStyle = System.Windows.Forms.FormBorderStyle.FixedToolWindow;
          this.Name = "AddReferenceForm";
-         this.Text = "Add Pundit Reference...";
+         this.Text = "Add Pundit Reference";
          ((System.ComponentModel.ISupportInitialize)(this.gridReferences)).EndInit();
          this.ResumeLayout(false);
          this.PerformLayout();
@@ -180,7 +164,5 @@
       private System.Windows.Forms.Button cmdCancel;
       private System.Windows.Forms.DataGridViewTextBoxColumn ComponentName;
       private System.Windows.Forms.DataGridViewTextBoxColumn Version;
-      private System.Windows.Forms.DataGridViewTextBoxColumn Runtime;
-      private System.Windows.Forms.DataGridViewTextBoxColumn Path;
    }
 }

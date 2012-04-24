@@ -1,5 +1,4 @@
 ﻿using System;
-using System.Collections;
 using System.Collections.Generic;
 using System.IO;
 using System.Linq;
@@ -65,12 +64,15 @@ namespace Pundit.Core.Application.Console.Commands
          }
       }
 
-      private void PrintSuccess(IEnumerable<PackageKeyDiff> diffs)
+      private int PrintSuccess(IEnumerable<PackageKeyDiff> diffs1)
       {
+         var diffs = new List<PackageKeyDiff>(diffs1);
          PrintDiff(diffs, ConsoleColor.Yellow, DiffType.Add, "added");
          PrintDiff(diffs, ConsoleColor.Green, DiffType.Mod, "upgraded");
          PrintDiff(diffs, ConsoleColor.White, DiffType.NoChange, "no change for");
          PrintDiff(diffs, ConsoleColor.Red, DiffType.Del, "deleted");
+
+         return diffs.Count(d => d.DiffType != DiffType.NoChange);
       }
 
       public override void Execute()
@@ -157,11 +159,19 @@ namespace Pundit.Core.Application.Console.Commands
             }
             else
             {
-               IEnumerable<PackageKeyDiff> diff = installer.GetDiffWithCurrent(resolutionResult.Item1.GetPackages());
+               ICollection<PackageKeyDiff> diff = installer.GetDiffWithCurrent(resolutionResult.Item1.GetPackages());
 
-               PrintSuccess(diff);
-
-               installer.Upgrade(_buildConfiguration, diff);
+               int changed = PrintSuccess(diff);
+               if (changed > 0)
+               {
+                  console.WriteLine("reflecting {0} changes...", changed);
+                  console.StartProgress(changed);
+                  installer.Upgrade(_buildConfiguration, diff);
+               }
+               else
+               {
+                  console.WriteLine(ConsoleColor.Green, "no changes detected");
+               }
             }
             console.FinishProgress();
          }
@@ -179,7 +189,8 @@ namespace Pundit.Core.Application.Console.Commands
 
       void LocalRepository_PackageDownloadToLocalRepository(object sender, PackageDownloadEventArgs e)
       {
-         console.UpdateProgress(_packagesDownloaded++, e.PackageKey.PackageId);
+         string hint = string.Format("downloading {0}...", e.PackageKey.PackageId);
+         console.UpdateProgress(_packagesDownloaded++, hint);
       }
    }
 }
