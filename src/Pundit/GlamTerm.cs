@@ -176,7 +176,6 @@ namespace Pundit.Console
 
       #region [ Progress Bar ]
 
-      private int _progressBarStart;
       private int _progressMaxValue;
       private int _progressCurrentValue;
 
@@ -184,7 +183,6 @@ namespace Pundit.Console
       {
          _progressCurrentValue = 0;
          _progressMaxValue = maxValue;
-         _progressBarStart = CursorPosition.X;
          UpdateProgress(0);
       }
 
@@ -200,7 +198,7 @@ namespace Pundit.Console
          //[========               ] 035%
          int percent = _progressMaxValue == 0 ? 0 : value * 100 / _progressMaxValue;
          if (percent > 100) percent = 100;
-         if (percent != _progressCurrentValue)
+         if (hint != null || percent != _progressCurrentValue)
          {
             //draw hint
             if(hint != null)
@@ -213,7 +211,7 @@ namespace Pundit.Console
 
             //draw line
             _progressCurrentValue = percent;
-            int blocksTotal = WindowWidth - _progressBarStart -
+            int blocksTotal = WindowWidth - 
                               1 - //[
                               1 - //]
                               1 - //<space>
@@ -221,13 +219,25 @@ namespace Pundit.Console
                               2 - //end spacing
                               0;
             int blocksPainted = percent*blocksTotal/100;
+            int darkBlocks, liteBlocks, spaceBlocks;
+            if(blocksPainted == 0)
+            {
+               darkBlocks = 0;
+               liteBlocks = 1;
+               spaceBlocks = blocksTotal - 1;
+            }
+            else
+            {
+               darkBlocks = blocksPainted - 1;
+               liteBlocks = 1;
+               spaceBlocks = blocksTotal - blocksPainted;
+            }
 
-            MoveCursor(_progressBarStart);
+            MoveCursor(0);
             Write(ConsoleColor.White, "[");
-            //if(hint != null) Write(ConsoleColor.DarkGreen, hint);
-            Write(ConsoleColor.Green, Multiply('=', blocksPainted - 1));
-            Write(ConsoleColor.White, "=");
-            Write(ConsoleColor.Green, Multiply(' ', blocksTotal - blocksPainted));
+            Write(ConsoleColor.Green, Multiply('=', darkBlocks));
+            Write(ConsoleColor.White, Multiply('=', liteBlocks));
+            Write(ConsoleColor.Green, Multiply(' ', spaceBlocks));
             Write(ConsoleColor.White, "] ");
             Write(ConsoleColor.Yellow, percent.ToString().PadLeft(3));
             Write(ConsoleColor.Green, "% ");
@@ -236,7 +246,7 @@ namespace Pundit.Console
 
       public void FinishProgress()
       {
-         UpdateProgress(_progressMaxValue);
+         if(_progressMaxValue != 0) UpdateProgress(_progressMaxValue);
          ConsoleS.WriteLine();
       }
 

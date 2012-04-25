@@ -61,7 +61,7 @@ namespace Pundit.Vsix
 		protected override void Initialize()
 		{
 			base.Initialize();
-		   settingsStore = GetWritableSettingsStore(SettingsRoot);
+		   _settingsStore = GetWritableSettingsStore(SettingsRoot);
 
 			// Now get the OleCommandService object provided by the MPF; this object is the one
 			// responsible for handling the collection of commands implemented by the package.

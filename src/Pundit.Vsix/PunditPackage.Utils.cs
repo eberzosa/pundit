@@ -1,8 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
-using System.IO;
-using System.Linq;
-using System.Text;
+﻿using System.IO;
 using Microsoft.VisualStudio.Settings;
 using Microsoft.VisualStudio.Shell.Interop;
 using Microsoft.VisualStudio.Shell.Settings;
@@ -14,7 +10,7 @@ namespace Pundit.Vsix
 {
 	public partial class PunditPackage : Package
 	{
-	   private static WritableSettingsStore settingsStore;
+	   private static WritableSettingsStore _settingsStore;
 
       private DirectoryInfo GetPropAsDir(__VSPROPID prop)
       {
@@ -141,13 +137,13 @@ namespace Pundit.Vsix
 
       public static void SaveSetting(string key, string value)
       {
-         settingsStore.SetString(SettingsRoot, key, value);         
+         _settingsStore.SetString(SettingsRoot, key, value);         
       }
 
       public static string ReadSetting(string key)
       {
-         if(settingsStore.PropertyExists(SettingsRoot, key))
-            return settingsStore.GetString(SettingsRoot, key);
+         if(_settingsStore.PropertyExists(SettingsRoot, key))
+            return _settingsStore.GetString(SettingsRoot, key);
 
          return null;
       }

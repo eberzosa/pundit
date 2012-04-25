@@ -37,8 +37,8 @@ CORE:
 + progress bars support in console mode
 + bug: "pundit resolve" doesn't notify about operation completion
 = analyze and test every command
- = Pack & Resolve
- - Publish
+ + Pack & Resolve
+ = Publish
  - Repo
  - Search
  - Template

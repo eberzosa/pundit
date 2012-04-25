@@ -160,11 +160,9 @@ namespace Pundit.Core.Application.Console.Commands
             else
             {
                ICollection<PackageKeyDiff> diff = installer.GetDiffWithCurrent(resolutionResult.Item1.GetPackages());
-
                int changed = PrintSuccess(diff);
                if (changed > 0)
                {
-                  console.WriteLine("reflecting {0} changes...", changed);
                   console.StartProgress(changed);
                   installer.Upgrade(_buildConfiguration, diff);
                }
