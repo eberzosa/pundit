@@ -61,9 +61,9 @@
       </Buttons>
 
       <Bitmaps>
-         <Bitmap guid="guidBulletWrench" href="../Graphics/bullet_wrench.png" usedList="pngWrench"/>
+         <!--<Bitmap guid="guidBulletWrench" href="../Graphics/bullet_wrench.png" usedList="pngWrench"/>-->
          <Bitmap guid="guidDatabaseRefresh" href="../Graphics/database_refresh.png" usedList="pngDbRefresh"/>
-         <Bitmap guid="guidLogo" href="../Graphics/logo.png" usedList="pngLogo"/>
+         <Bitmap guid="guidLogo" href="../Graphics/logo.bmp" usedList="pngLogo"/>
       </Bitmaps>
    </Commands>
 
@@ -103,9 +103,9 @@
          <IDSymbol name="cmdidPunditConsole" value="0x200A"/>
       </GuidSymbol>
 
-      <GuidSymbol name="guidBulletWrench" value="{1203AEA0-726C-40B3-8444-165ADA07EB16}">
+      <!--<GuidSymbol name="guidBulletWrench" value="{1203AEA0-726C-40B3-8444-165ADA07EB16}">
          <IDSymbol name="pngWrench" value="1"/>
-      </GuidSymbol>
+      </GuidSymbol>-->
 
       <GuidSymbol name="guidDatabaseRefresh" value="{382D7CE9-A8E9-440D-A6D9-7D4D24CA6508}">
          <IDSymbol name="pngDbRefresh" value="1"/>

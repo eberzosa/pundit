@@ -38,7 +38,7 @@ CORE:
 + bug: "pundit resolve" doesn't notify about operation completion
 = analyze and test every command
  + Pack & Resolve
- = Publish
+ = Publish (including http service test)
  - Repo
  - Search
  - Template

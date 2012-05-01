@@ -156,6 +156,7 @@
   </ItemGroup>
   <ItemGroup>
     <Compile Include="PunditPackage.Utils.cs" />
+    <None Include="Graphics\icons.psd" />
     <None Include="Weirdo\GenericCmd.bmp" />
   </ItemGroup>
   <ItemGroup>
@@ -191,9 +192,7 @@
     </BootstrapperPackage>
   </ItemGroup>
   <ItemGroup>
-    <Content Include="Graphics\bullet_wrench.png" />
     <Content Include="Graphics\logo.bmp" />
-    <Content Include="Graphics\logo.png" />
     <Content Include="Graphics\database_refresh.png" />
     <Content Include="license.txt">
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>

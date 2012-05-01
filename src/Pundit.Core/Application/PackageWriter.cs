@@ -66,6 +66,7 @@ namespace Pundit.Core.Application
 
          WriteFiles();
 
+         _zipStream.Flush();
          return _bytesWritten;
       }
 
