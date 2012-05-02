@@ -26,19 +26,33 @@ namespace Pundit.Server
          if (!int.TryParse(s, out _maxRevisions)) _maxRevisions = 10;
       }
 
-      public bool Exists(PackageKey key)
-      {
-         return false;
-      }
-
       public Stream Read(PackageKey key)
       {
-         return null;
+         string sourceDir = ResolveFolder(key, false);
+         string sourceFile = null;
+         if (sourceDir != null) sourceFile = Path.Combine(sourceDir, PackageUtils.GetFileName(key));            
+         if(sourceFile == null || !File.Exists(sourceFile)) throw new FileNotFoundException("package does not exist: " + key);
+
+         return File.OpenRead(sourceFile);
       }
 
       public void Delete(PackageKey key)
       {
-         
+         string sourceDir = ResolveFolder(key, false);
+         if(sourceDir != null)
+         {
+            string sourceFile = Path.Combine(sourceDir, PackageUtils.GetFileName(key));
+            if(File.Exists(sourceFile))
+            {
+               try
+               {
+                  File.Delete(sourceFile);
+               }
+               catch
+               {
+               }
+            }
+         }
       }
 
       public void Save(PackageKey key, Stream data)

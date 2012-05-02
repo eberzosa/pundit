@@ -28,6 +28,7 @@
       <Buttons>
          <Button guid="guidPunditCmdSet" id="cmdidAddPackages" priority="0x0100" type="Button">
             <Parent guid="guidReferenceContext" id="cmdAddReferenceGroup" />
+            <Icon guid="guidPackage" id="pngPackage"/>
             <Strings>
                <CommandName>cmdidAddPackages</CommandName>
                <ButtonText>Add Pundit Reference...</ButtonText>
@@ -38,7 +39,7 @@
             <Parent guid="guidPunditCmdSet" id="PunditToolbarGroup"/>
             <Icon guid="guidDatabaseRefresh" id="pngDbRefresh"/>
             <Strings>
-               <ButtonText>Pundit: Resolve Dependencies</ButtonText>
+               <ButtonText>Resolve Dependencies</ButtonText>
             </Strings>
          </Button>
 
@@ -52,7 +53,7 @@
 
          <Button guid="guidPunditCmdSet" id="cmdidPunditConsole" priority="0x100" type="Button">
             <Parent guid="guidSHLMainMenu" id="IDG_VS_WNDO_OTRWNDWS1"/>
-            <Icon guid="guidLogo" id="pngLogo"/>
+            <Icon guid="guidConsole" id="pngConsole"/>
             <Strings>
                <CommandName>cmdidPunditConsole</CommandName>
                <ButtonText>Pundit Console</ButtonText>
@@ -64,6 +65,8 @@
          <!--<Bitmap guid="guidBulletWrench" href="../Graphics/bullet_wrench.png" usedList="pngWrench"/>-->
          <Bitmap guid="guidDatabaseRefresh" href="../Graphics/database_refresh.png" usedList="pngDbRefresh"/>
          <Bitmap guid="guidLogo" href="../Graphics/logo.bmp" usedList="pngLogo"/>
+         <Bitmap guid="guidPackage" href="../Graphics/package.png" usedList="pngPackage"/>
+         <Bitmap guid="guidConsole" href="../Graphics/console.png" usedList="pngConsole"/>
       </Bitmaps>
    </Commands>
 
@@ -117,6 +120,14 @@
 
       <GuidSymbol name="guidLogo" value="{3C25F13D-BF43-4BA3-ABAC-4D196B1E87CF}">
          <IDSymbol name="pngLogo" value="1"/>
+      </GuidSymbol>
+
+      <GuidSymbol name="guidPackage" value="{DFC8984B-5261-4A47-8AE0-96A9C1C746CD}">
+         <IDSymbol name="pngPackage" value="1"/>
+      </GuidSymbol>
+
+      <GuidSymbol name="guidConsole" value="{6915576B-DCAD-4E79-86A1-1F9ACC3685BA}">
+         <IDSymbol name="pngConsole" value="1"/>
       </GuidSymbol>
 
       <GuidSymbol name="GuidToolWindow" value="{D8F68431-0AE8-4742-AE23-F6B62A17B1B3}"/>

@@ -8,15 +8,6 @@ namespace Pundit.Vsix.Weirdo
 	/// </summary>
 	internal static class GuidsList
 	{
-		// Now define the list of guids as public static members.
-      [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Performance", "CA1823:AvoidUnusedPrivateFields")]
-      public static readonly Guid guidPunditPkg = new Guid("{3C7C5ABE-82AC-4A37-B077-0FF60E8B1FD3}");
-
       public static readonly Guid guidPunditCmdSet = new Guid("{19492BCB-32B3-4EC3-8826-D67CD5526653}");
-
-		[System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Performance", "CA1823:AvoidUnusedPrivateFields")]
-		public static readonly Guid guidGenericCmdBmp = new Guid("{0A4C51BD-3239-4370-8869-16E0AE8C0A46}");
-
-      public static readonly Guid GuidToolWindow = new Guid("{D8F68431-0AE8-4742-AE23-F6B62A17B1B3}");
 	}
 }

@@ -8,20 +8,28 @@ using log4net;
 
 namespace Pundit.Server
 {
-   public class RepositoryServer : IRemoteRepository
+   public class RepositoryServer : IRemoteRepository, IDisposable
    {
+      private const string ManifestTableName = "PackageManifest";
+
       private readonly ILog _log = LogManager.GetLogger(typeof (RepositoryServer));
       private SqliteHelper _sql;
       private StreamsProvider _streams;
 
-      public RepositoryServer()
+      //MUST have old-style parameterless constructor for IoC and WCF
+      public RepositoryServer() : this(null)
       {
-         Initialize();
+         
       }
 
-      private void Initialize()
+      public RepositoryServer(string rootDir)
       {
-         string rootDir = AppDomain.CurrentDomain.BaseDirectory;
+         Initialize(rootDir);
+      }
+
+      private void Initialize(string rootDirOpt)
+      {
+         string rootDir = rootDirOpt ?? AppDomain.CurrentDomain.BaseDirectory;
          string dbLocation = Path.Combine(rootDir, "meta.db");
          string dataLocation = Path.Combine(rootDir, "files");
 
@@ -85,14 +93,22 @@ namespace Pundit.Server
 
       private Stream Download(PackageKey key)
       {
-         return null;
+         if (key == null) throw new ArgumentNullException("key");
+
+         //check that package exists in the index first
+         long count = _sql.ExecuteScalar<long>(ManifestTableName, "count(*)",
+                                               new[] {"PackageId=(?)", "Platform=(?)", "Version=(?)"},
+                                               key.PackageId, key.Platform, key.VersionString);
+         if (count == 0) throw new FileNotFoundException(string.Format(Ex.RepositoryServer_NoPackageInIndex, key));
+
+         return _streams.Read(key);
       }
 
       public RemoteSnapshot GetSnapshot(string changeId)
       {
          _log.Debug("snapshot requested for changeId " + changeId);
 
-         PackageSnapshotKey[] keys = new[] {new PackageSnapshotKey(new Package("test1", new Version("1.2.10")))};
+         var keys = new[] {new PackageSnapshotKey(new Package("test1", new Version("1.2.10")))};
 
          return new RemoteSnapshot {Changes = keys, NextChangeId = "testnext"};
       }
@@ -160,5 +176,14 @@ namespace Pundit.Server
             trans.Commit();
          }
       }
+
+      #region Implementation of IDisposable
+
+      public void Dispose()
+      {
+         _sql.Dispose();
+      }
+
+      #endregion
    }
 }

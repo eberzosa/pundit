@@ -38,17 +38,14 @@ CORE:
 + bug: "pundit resolve" doesn't notify about operation completion
 = analyze and test every command
  + Pack & Resolve
- = Publish (including http service test)
+ + Publish (implemented in server and tested)
+ = RepositoryServer change history
  - Repo
+   - "repo delete" should drop all manifests and binaries from cache
  - Search
  - Template
  - Utils
-= pundit http server
-  + db design
-  + publishing over http, adding manifest and history record
-  = getting history and snapshots via http
-  - binary http downloads
-  - limit number of stored binary revisions (configurable)
+- end-to-end testing for all the commands
 
 VSIX:
 - support new console output
@@ -59,6 +56,7 @@ VSIX:
  - Search
  - Template
  - Utils
+- add xsd installation
 
 ----------------------------------------------------------------------------------------------------------------------------
 

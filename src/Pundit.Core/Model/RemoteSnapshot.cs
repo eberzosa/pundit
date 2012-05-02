@@ -1,8 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Runtime.Serialization;
-using System.Text;
+﻿using System.Runtime.Serialization;
 
 namespace Pundit.Core.Model
 {
@@ -13,7 +9,9 @@ namespace Pundit.Core.Model
    public class RemoteSnapshot
    {
       /// <summary>
-      /// False indicates that this is a full snapshot as opposet to just a changeset
+      /// False indicates that this is a full snapshot as opposed to just a changeset. It will be returned
+      /// if you are passing a wrong delta which cannot be resolved or repote repository does not support
+      /// incremental updates
       /// </summary>
       [DataMember(Name = "isDelta")]
       public bool IsDelta { get; set; }

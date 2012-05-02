@@ -47,6 +47,7 @@
   </ItemGroup>
   <ItemGroup>
     <Compile Include="ExceptionalTest.cs" />
+    <Compile Include="LocalConfigurationTest.cs" />
     <Compile Include="Mocks\MockedRepository.cs" />
     <Compile Include="Mocks\StatCollectorInstallTarget.cs" />
     <Compile Include="Model\UnresolvedPackageTest.cs" />
@@ -55,14 +56,20 @@
     <Compile Include="PackageWriterTest.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="DependencyResolutionTest.cs" />
+    <Compile Include="Server\RepositoryServerTest.cs" />
     <Compile Include="SqliteRepositoryTest.cs" />
     <Compile Include="NAntDirectoryScannerTest.cs" />
+    <Compile Include="Utils.cs" />
     <Compile Include="VersionPatternTest.cs" />
   </ItemGroup>
   <ItemGroup>
     <ProjectReference Include="..\Pundit.Core\Pundit.Core.csproj">
       <Project>{BEEA1FD6-D6DB-44BC-A4C4-F42321A6796F}</Project>
       <Name>Pundit.Core</Name>
+    </ProjectReference>
+    <ProjectReference Include="..\Pundit.Server\Pundit.Server.csproj">
+      <Project>{80C4A9D3-77AB-411D-98E4-67ABC6C306D1}</Project>
+      <Name>Pundit.Server</Name>
     </ProjectReference>
     <ProjectReference Include="..\Pundit\Pundit.Console.csproj">
       <Project>{9296FDE6-2BE9-472B-9E82-FC023959CBA2}</Project>
@@ -87,10 +94,11 @@
     <None Include="Data\stateless-2.3.1-1-net35.pundit">
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </None>
+    <None Include="TestRepo\packed\log4net-1.2.11-0-net20.pundit">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </None>
   </ItemGroup>
-  <ItemGroup>
-    <Folder Include="TestRepo\packed\" />
-  </ItemGroup>
+  <ItemGroup />
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
   <PropertyGroup>
     <PreBuildEvent>rem copy /Y ..\..\..\..\lib\sqlite.interop.dll $(TargetDir)</PreBuildEvent>
