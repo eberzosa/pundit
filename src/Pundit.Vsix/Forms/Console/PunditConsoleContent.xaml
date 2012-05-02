@@ -17,12 +17,8 @@
             
          </DockPanel>
       </Border>-->
-
-      <RichTextBox x:Name="txtConsole"
-                  Grid.Row="0"
-            Background="{DynamicResource {x:Static vsfx:VsBrushes.ToolWindowBackgroundKey}}"
-            AcceptsReturn="True" IsReadOnly="False" VerticalScrollBarVisibility="Visible"
-            FontFamily="Consolas"
-                   PreviewKeyDown="CommandKeyDown"/>
+      
+      <WindowsFormsHost x:Name="FormsHost" />
+     
    </Grid>
 </UserControl>

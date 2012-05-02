@@ -24,8 +24,9 @@ namespace Pundit.Vsix.Forms.Console
 
       private void InitConsole()
       {
-         _console = new WpfTextBoxConsoleOutput(txtConsole);
-         _console.Write(Strings.Console_Prompt);
+         var container = new FormsContainer();
+         FormsHost.Child = container;
+         _console = new FormsTextBoxConsoleOutput(container.TextBox);
       }
 
       private string LastSolutionDirectory
@@ -63,25 +64,11 @@ namespace Pundit.Vsix.Forms.Console
          {
             _console.WriteLine(ConsoleColor.Red, ex.Message);
          }
-         finally
-         {
-            //txtCommand.Text = string.Empty;
-         }         
       }
 
       public void ResolveDependencies()
       {
          ExecuteCommand(new[] { "resolve" });
       }
-
-      private void CommandKeyDown(object sender, KeyEventArgs e)
-      {
-         txtConsole.CursorToEnd();
-
-         if(e.Key == Key.Return)
-         {
-
-         }
-      }      
    }
 }
