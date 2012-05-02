@@ -1,7 +1,4 @@
 ﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
 using System.Windows;
 using System.Windows.Controls;
 using System.Windows.Documents;
@@ -9,13 +6,12 @@ using System.Windows.Media;
 using System.Windows.Threading;
 using Pundit.Core.Model;
 
-namespace Pundit.Vsix.Application
+namespace Pundit.Vsix.Forms.Console
 {
    class WpfTextBoxConsoleOutput : IConsoleOutput
    {
       private readonly RichTextBox _txt;
-      private Brush _bg = new SolidColorBrush(Colors.Black);
-      private Brush _fg = new SolidColorBrush(Colors.White);
+      private readonly Brush _defaultForeground = new SolidColorBrush(Colors.Black);
 
       public WpfTextBoxConsoleOutput(RichTextBox txt)
       {
@@ -33,19 +29,10 @@ namespace Pundit.Vsix.Application
             case ConsoleColor.Green:
                return Brushes.Green;
             case ConsoleColor.Yellow:
-               return Brushes.Yellow;
+               return Brushes.Goldenrod;
          }
 
-         return _fg;
-      }
-
-      private void ScrollToEnd()
-      {
-         //_txt.Select(_txt.Text.Length, _txt.Text.Length);
-         //_txt.CaretIndex = _txt.Text.Length;
-         //_txt.ScrollToLine(_txt.LineCount - 1);
-         _txt.ScrollToEnd();
-         _txt.Dispatcher.Invoke(DispatcherPriority.Background, new Action(delegate { }));
+         return _defaultForeground;
       }
 
       public void Write(string format, params object[] args)
@@ -61,33 +48,26 @@ namespace Pundit.Vsix.Application
       public void Write(ConsoleColor color, string format, params object[] args)
       {
          string s = string.Format(format, args);
-         /*Paragraph p = new Paragraph();
-         p.Margin = new Thickness(0.0);
-         p.Foreground = TranslateColor(color);
-         p.Inlines.Add(s);
-         _txt.Document.Blocks.Add(p);*/
 
-         TextRange tr = new TextRange(_txt.Document.ContentEnd, _txt.Document.ContentEnd);
-         tr.Text = s;
+         var tr = new TextRange(_txt.Document.ContentEnd, _txt.Document.ContentEnd) {Text = s};
          tr.ApplyPropertyValue(TextElement.ForegroundProperty, TranslateColor(color));
 
-         ScrollToEnd();
+         _txt.ScrollToEnd2();
       }
 
       public void WriteLine(ConsoleColor defaultColor, string format, params object[] args)
       {
          Write(defaultColor, format, args);
-         Paragraph p = new Paragraph();
-         p.Margin = new Thickness(0.0);
+         var p = new Paragraph {Margin = new Thickness(0.0)};
          _txt.Document.Blocks.Add(p);
-         ScrollToEnd();
+         _txt.ScrollToEnd2();
       }
 
       public void Write(bool result)
       {
          if(result) WriteLine(ConsoleColor.Green, "OK");
          else WriteLine(ConsoleColor.Red, "FAIL");
-         ScrollToEnd();
+         _txt.ScrollToEnd2();
       }
 
       public void StartProgress(int maxValue)

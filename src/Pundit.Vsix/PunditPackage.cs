@@ -5,6 +5,7 @@ using System.Security.Permissions;
 using Microsoft.VisualStudio.Shell;
 using Microsoft.VisualStudio.Shell.Interop;
 using Pundit.Vsix.Forms;
+using Pundit.Vsix.Forms.Console;
 using Pundit.Vsix.Weirdo;
 
 namespace Pundit.Vsix

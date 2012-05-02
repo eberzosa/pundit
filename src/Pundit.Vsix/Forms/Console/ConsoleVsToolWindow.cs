@@ -1,11 +1,7 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Runtime.InteropServices;
-using System.Text;
+﻿using System.Runtime.InteropServices;
 using Microsoft.VisualStudio.Shell;
 
-namespace Pundit.Vsix.Forms
+namespace Pundit.Vsix.Forms.Console
 {
    [Guid("D8F68431-0AE8-4742-AE23-F6B62A17B1B3")]
    public class ConsoleVsToolWindow : ToolWindowPane

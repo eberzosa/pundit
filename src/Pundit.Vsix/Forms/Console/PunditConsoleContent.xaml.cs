@@ -1,23 +1,12 @@
 ﻿using System;
-using System.Collections.Generic;
 using System.IO;
-using System.Linq;
 using System.Reflection;
-using System.Text;
-using System.Windows;
 using System.Windows.Controls;
-using System.Windows.Data;
-using System.Windows.Documents;
 using System.Windows.Input;
-using System.Windows.Media;
-using System.Windows.Media.Imaging;
-using System.Windows.Navigation;
-using System.Windows.Shapes;
 using Pundit.Core.Application.Console;
 using Pundit.Core.Model;
-using Pundit.Vsix.Application;
 
-namespace Pundit.Vsix.Forms
+namespace Pundit.Vsix.Forms.Console
 {
    /// <summary>
    /// Interaction logic for PunditConsoleContent.xaml
@@ -36,8 +25,7 @@ namespace Pundit.Vsix.Forms
       private void InitConsole()
       {
          _console = new WpfTextBoxConsoleOutput(txtConsole);
-
-         _console.WriteLine(Strings.ConsoleIntro, Assembly.GetExecutingAssembly().GetName().Version);
+         _console.Write(Strings.Console_Prompt);
       }
 
       private string LastSolutionDirectory
@@ -77,7 +65,7 @@ namespace Pundit.Vsix.Forms
          }
          finally
          {
-            txtCommand.Text = string.Empty;
+            //txtCommand.Text = string.Empty;
          }         
       }
 
@@ -86,13 +74,14 @@ namespace Pundit.Vsix.Forms
          ExecuteCommand(new[] { "resolve" });
       }
 
-      private void CommandKeyUp(object sender, KeyEventArgs e)
+      private void CommandKeyDown(object sender, KeyEventArgs e)
       {
+         txtConsole.CursorToEnd();
+
          if(e.Key == Key.Return)
          {
-            ExecuteCommand(txtCommand.Text.Split(' '));
+
          }
-      }
-      
+      }      
    }
 }
