@@ -108,7 +108,7 @@ namespace Pundit.Core.Application.Repository
             }
          }
 
-         return new RemoteSnapshot(false, null, r.ToArray());
+         return new RemoteSnapshot(true, r, null);
       }
    }
 }

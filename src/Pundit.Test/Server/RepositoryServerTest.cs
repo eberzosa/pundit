@@ -5,7 +5,8 @@ using System.Linq;
 using System.Text;
 using NUnit.Framework;
 using Pundit.Core.Application;
-using Pundit.Server;
+using Pundit.Core.Application.Server;
+using Pundit.Core.Model;
 
 namespace Pundit.Test.Server
 {
@@ -44,7 +45,7 @@ namespace Pundit.Test.Server
             //expect this
          }
 
-         using (Stream s = File.OpenRead(Utils.GetAnyPacked()))
+         using (Stream s = File.OpenRead(Utils.GetLog4Net1211net20Package()))
          {
             _server.Publish(s);
          }
@@ -59,6 +60,14 @@ namespace Pundit.Test.Server
                Assert.AreEqual("1.2.11.0", rdr.Manifest.VersionString);
             }
          }
+      }
+
+      [Test]
+      public void IncrementalDeltasTest()
+      {
+         RemoteSnapshot shapshot0 = _server.GetSnapshot(null);
+
+
       }
    }
 }

@@ -123,4 +123,7 @@
   <data name="DiskInstallTarget_NoRoot" xml:space="preserve">
     <value>root directory [{0}] must exist</value>
   </data>
+  <data name="RepositoryServer_NoPackageInIndex" xml:space="preserve">
+    <value>package {0} not found in the index</value>
+  </data>
 </root>

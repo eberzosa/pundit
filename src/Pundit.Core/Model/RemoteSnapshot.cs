@@ -1,4 +1,6 @@
-﻿using System.Runtime.Serialization;
+﻿using System.Collections.Generic;
+using System.Linq;
+using System.Runtime.Serialization;
 
 namespace Pundit.Core.Model
 {
@@ -40,13 +42,13 @@ namespace Pundit.Core.Model
       /// 
       /// </summary>
       /// <param name="isDelta"></param>
-      /// <param name="nextChangeId"></param>
       /// <param name="changes"></param>
-      public RemoteSnapshot(bool isDelta, string nextChangeId, PackageSnapshotKey[] changes)
+      /// <param name="nextChangeId"></param>
+      public RemoteSnapshot(bool isDelta, IEnumerable<PackageSnapshotKey> changes, string nextChangeId)
       {
          IsDelta = isDelta;
+         if (changes != null) Changes = changes.ToArray();
          NextChangeId = nextChangeId;
-         Changes = changes;
       }
    }
 }

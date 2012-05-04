@@ -4,7 +4,6 @@ using System.Linq;
 using System.Runtime.InteropServices;
 using System.ServiceProcess;
 using System.Text;
-using Pundit.Server;
 using log4net.Config;
 
 namespace Pundit.WindowsService

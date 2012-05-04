@@ -23,8 +23,6 @@ Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Pundit.WindowsService", "Pu
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Pundit.Vsix", "Pundit.Vsix\Pundit.Vsix.csproj", "{58922993-9830-4A40-B462-0326342F69ED}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Pundit.Server", "Pundit.Server\Pundit.Server.csproj", "{80C4A9D3-77AB-411D-98E4-67ABC6C306D1}"
-EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Pundit.Server.Management", "Pundit.Server.Management\Pundit.Server.Management.csproj", "{04545009-6122-4284-983B-2372512017C0}"
 EndProject
 Global
@@ -97,16 +95,6 @@ Global
 		{58922993-9830-4A40-B462-0326342F69ED}.Release|Mixed Platforms.ActiveCfg = Release|Any CPU
 		{58922993-9830-4A40-B462-0326342F69ED}.Release|Mixed Platforms.Build.0 = Release|Any CPU
 		{58922993-9830-4A40-B462-0326342F69ED}.Release|x86.ActiveCfg = Release|Any CPU
-		{80C4A9D3-77AB-411D-98E4-67ABC6C306D1}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
-		{80C4A9D3-77AB-411D-98E4-67ABC6C306D1}.Debug|Any CPU.Build.0 = Debug|Any CPU
-		{80C4A9D3-77AB-411D-98E4-67ABC6C306D1}.Debug|Mixed Platforms.ActiveCfg = Debug|Any CPU
-		{80C4A9D3-77AB-411D-98E4-67ABC6C306D1}.Debug|Mixed Platforms.Build.0 = Debug|Any CPU
-		{80C4A9D3-77AB-411D-98E4-67ABC6C306D1}.Debug|x86.ActiveCfg = Debug|Any CPU
-		{80C4A9D3-77AB-411D-98E4-67ABC6C306D1}.Release|Any CPU.ActiveCfg = Release|Any CPU
-		{80C4A9D3-77AB-411D-98E4-67ABC6C306D1}.Release|Any CPU.Build.0 = Release|Any CPU
-		{80C4A9D3-77AB-411D-98E4-67ABC6C306D1}.Release|Mixed Platforms.ActiveCfg = Release|Any CPU
-		{80C4A9D3-77AB-411D-98E4-67ABC6C306D1}.Release|Mixed Platforms.Build.0 = Release|Any CPU
-		{80C4A9D3-77AB-411D-98E4-67ABC6C306D1}.Release|x86.ActiveCfg = Release|Any CPU
 		{04545009-6122-4284-983B-2372512017C0}.Debug|Any CPU.ActiveCfg = Debug|x86
 		{04545009-6122-4284-983B-2372512017C0}.Debug|Mixed Platforms.ActiveCfg = Debug|x86
 		{04545009-6122-4284-983B-2372512017C0}.Debug|Mixed Platforms.Build.0 = Debug|x86

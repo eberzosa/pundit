@@ -8,7 +8,7 @@ using Pundit.Core.Model;
 
 namespace Pundit.Core.Application.Sqlite
 {
-   public class SqliteHelper : IDisposable
+   class SqliteHelper : IDisposable
    {
       private const string SelectId = ";select last_insert_rowid()";
 

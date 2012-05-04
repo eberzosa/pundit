@@ -5,7 +5,7 @@ using Pundit.Core.Model;
 using Pundit.Core.Utils;
 using log4net;
 
-namespace Pundit.Server
+namespace Pundit.Core.Application.Server
 {
    /// <summary>
    /// Saves and retrieves packages binary data.

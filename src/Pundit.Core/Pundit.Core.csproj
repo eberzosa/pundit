@@ -40,7 +40,11 @@
     <Reference Include="ICSharpCode.SharpZipLib">
       <HintPath>..\..\lib\ICSharpCode.SharpZipLib.dll</HintPath>
     </Reference>
+    <Reference Include="log4net">
+      <HintPath>..\..\lib\log4net.dll</HintPath>
+    </Reference>
     <Reference Include="System" />
+    <Reference Include="System.Configuration" />
     <Reference Include="System.Core" />
     <Reference Include="System.Data.SQLite">
       <HintPath>..\..\lib\System.Data.SQLite.dll</HintPath>
@@ -82,6 +86,8 @@
     <Compile Include="Application\RepositoryUpdater.cs" />
     <Compile Include="Application\Repository\HttpRestRemoteRepository.cs" />
     <Compile Include="Application\Repository\RemoteFolderRepository.cs" />
+    <Compile Include="Application\Server\RepositoryServer.cs" />
+    <Compile Include="Application\Server\StreamsProvider.cs" />
     <Compile Include="Application\Sqlite\SqliteExtensions.cs" />
     <Compile Include="Application\Repository\SqliteLocalRepository.cs" />
     <Compile Include="Application\Sqlite\SqliteHelper.cs" />
@@ -127,6 +133,7 @@
     <Compile Include="Model\VersionResolutionTable.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="RemoteRepositoryFactory.cs" />
+    <Compile Include="RemoteRepositoryServerFactory.cs" />
     <Compile Include="Utils\Exceptional.cs" />
     <Compile Include="Utils\FileSet.cs" />
     <Compile Include="Utils\FileSizeFormatProvider.cs" />
@@ -151,6 +158,7 @@
   <ItemGroup>
     <EmbeddedResource Include="Application\Console\Strings.resx" />
   </ItemGroup>
+  <ItemGroup />
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
   <PropertyGroup>
     <PreBuildEvent>if exist "$(TargetPath).locked" del "$(TargetPath).locked"

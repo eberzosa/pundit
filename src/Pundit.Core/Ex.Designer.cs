@@ -77,5 +77,14 @@ namespace Pundit.Core {
                 return ResourceManager.GetString("DiskInstallTarget_NoRoot", resourceCulture);
             }
         }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to package {0} not found in the index.
+        /// </summary>
+        internal static string RepositoryServer_NoPackageInIndex {
+            get {
+                return ResourceManager.GetString("RepositoryServer_NoPackageInIndex", resourceCulture);
+            }
+        }
     }
 }

@@ -67,10 +67,6 @@
       <Project>{BEEA1FD6-D6DB-44BC-A4C4-F42321A6796F}</Project>
       <Name>Pundit.Core</Name>
     </ProjectReference>
-    <ProjectReference Include="..\Pundit.Server\Pundit.Server.csproj">
-      <Project>{80C4A9D3-77AB-411D-98E4-67ABC6C306D1}</Project>
-      <Name>Pundit.Server</Name>
-    </ProjectReference>
     <ProjectReference Include="..\Pundit\Pundit.Console.csproj">
       <Project>{9296FDE6-2BE9-472B-9E82-FC023959CBA2}</Project>
       <Name>Pundit.Console</Name>
@@ -92,6 +88,9 @@
   </ItemGroup>
   <ItemGroup>
     <None Include="Data\stateless-2.3.1-1-net35.pundit">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </None>
+    <None Include="TestRepo\packed\Castle.Core-3.0.0-2227-net40.pundit">
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </None>
     <None Include="TestRepo\packed\log4net-1.2.11-0-net20.pundit">

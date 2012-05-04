@@ -1,10 +1,11 @@
 ﻿using System;
 using System.ServiceModel;
 using System.ServiceModel.Description;
+using Pundit.Core;
 using Pundit.Core.Model;
 using log4net;
 
-namespace Pundit.Server
+namespace Pundit.WindowsService
 {
    public class StandaloneHost : IDisposable
    {
@@ -24,7 +25,9 @@ namespace Pundit.Server
                              TransferMode = TransferMode.Streamed,
                              MaxReceivedMessageSize = int.MaxValue
                           };
-         _host = new ServiceHost(typeof(RepositoryServer));
+         IRemoteRepository serverInstance =
+            RemoteRepositoryServerFactory.CreateSqlDiskServer(AppDomain.CurrentDomain.BaseDirectory);
+         _host = new ServiceHost(serverInstance);
          _endpoint = _host.AddServiceEndpoint(typeof (IRemoteRepository), binding, uri);
          _endpoint.Behaviors.Add(new WebHttpBehavior());
       }

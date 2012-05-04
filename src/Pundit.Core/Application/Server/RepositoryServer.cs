@@ -1,16 +1,17 @@
 ﻿using System;
+using System.Collections.Generic;
 using System.Data;
 using System.IO;
-using Pundit.Core.Application;
 using Pundit.Core.Application.Sqlite;
 using Pundit.Core.Model;
 using log4net;
 
-namespace Pundit.Server
+namespace Pundit.Core.Application.Server
 {
-   public class RepositoryServer : IRemoteRepository, IDisposable
+   class RepositoryServer : IRemoteRepository, IDisposable
    {
       private const string ManifestTableName = "PackageManifest";
+      private const string HistoryTableName = "ManifestHistory";
 
       private readonly ILog _log = LogManager.GetLogger(typeof (RepositoryServer));
       private SqliteHelper _sql;
@@ -104,13 +105,37 @@ namespace Pundit.Server
          return _streams.Read(key);
       }
 
+      private PackageSnapshotKey ReadPackageSnapshotKey(IDataReader reader)
+      {
+         long modType = (long) reader["ModType"];
+         long manifestId = (long) reader["PackageManifestId"];
+
+         
+
+         //var key = new PackageSnapshotKey()
+         return null;
+      }
+
       public RemoteSnapshot GetSnapshot(string changeId)
       {
-         _log.Debug("snapshot requested for changeId " + changeId);
+         _log.Debug("snapshot requested for changeId [" + changeId + "]");
 
-         var keys = new[] {new PackageSnapshotKey(new Package("test1", new Version("1.2.10")))};
+         long internalChangeId;
+         long.TryParse(changeId, out internalChangeId);
 
-         return new RemoteSnapshot {Changes = keys, NextChangeId = "testnext"};
+         var keys = new List<PackageSnapshotKey>();
+         using (IDataReader reader = _sql.ExecuteReader(HistoryTableName,
+            new[] { "ManifestHistoryId", "ModType", "ModTime", "PackageManifestId" },
+            new[] { "ManifestHistoryId > (?)" },
+            internalChangeId))
+         {
+            while(reader.Read())
+            {
+               
+            }
+         }
+
+         return new RemoteSnapshot(true, keys, null);
       }
 
       private string DownloadToTemp(Stream httpStream)
