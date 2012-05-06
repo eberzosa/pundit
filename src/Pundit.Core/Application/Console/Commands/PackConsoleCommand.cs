@@ -89,7 +89,6 @@ namespace Pundit.Core.Application.Console.Commands
                pw.EndPackingFile += PackageWriterEndWritePackage;
                bytesWritten = pw.WriteAll();
             }
-            writeStream.Flush();
          }
          console.FinishProgress();
 

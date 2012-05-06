@@ -10,7 +10,7 @@ namespace Pundit.Core.Application.Server
    /// <summary>
    /// Saves and retrieves packages binary data.
    /// </summary>
-   internal class StreamsProvider
+   class StreamsProvider
    {
       private readonly string _rootDir;
       private readonly ILog _log = LogManager.GetLogger(typeof (StreamsProvider));

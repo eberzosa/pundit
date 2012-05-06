@@ -390,7 +390,10 @@ namespace Pundit.Core.Application.Sqlite
 
       public void Dispose()
       {
-         _conn.Close();
+         if (_conn != null)
+         {
+            _conn.Close();
+         }
       }
    }
 }

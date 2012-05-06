@@ -101,10 +101,32 @@ namespace Pundit.Test.Server
          Assert.AreEqual("2", snapshot2.NextChangeId);
       }
 
-      [Test, Ignore]
+      [Test]
       public void OverwriteRevisionDeltaTest()
       {
-         
+         using(Stream s = File.OpenRead(Utils.GetLog4Net1210net20Package()))
+         {
+            _server.Publish(s);
+         }
+         RemoteSnapshot snapshot0 = _server.GetSnapshot(null);
+         Assert.AreEqual("1.2.10.0", snapshot0.Changes[0].Manifest.VersionString);
+
+         //next "revision" must delete exiting
+         using(Stream s = File.OpenRead(Utils.GetLog4Net12101234net20Package()))
+         {
+            _server.Publish(s);
+         }
+         RemoteSnapshot snapshot1 = _server.GetSnapshot(null);
+         Assert.AreEqual(3, snapshot1.Changes.Length);
+
+         Assert.AreEqual("1.2.10.0", snapshot1.Changes[0].Manifest.VersionString);
+         Assert.AreEqual(SnapshotPackageDiff.Add, snapshot1.Changes[0].Diff);
+
+         Assert.AreEqual("1.2.10.0", snapshot1.Changes[0].Manifest.VersionString);
+         Assert.AreEqual(SnapshotPackageDiff.Del, snapshot1.Changes[0].Diff);
+
+         Assert.AreEqual("1.2.11.0", snapshot1.Changes[0].Manifest.VersionString);
+         Assert.AreEqual(SnapshotPackageDiff.Add, snapshot1.Changes[0].Diff);
       }
    }
 }

@@ -178,8 +178,8 @@ namespace Pundit.Core.Application
       protected override void Dispose(bool disposing)
       {
          _zipStream.Flush();
-         //_zipStream.Close();
-         //_zipStream.Dispose();
+         _zipStream.Close();
+         _zipStream.Dispose();
       }
    }
 }

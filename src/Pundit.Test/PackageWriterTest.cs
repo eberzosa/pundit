@@ -48,7 +48,7 @@ namespace Pundit.Test
          Assert.AreEqual(writtenSize, twoFilesLength);
 
          //unpack the file
-         _outStream.Position = 0;
+         _outStream = new MemoryStream(_outStream.ToArray());
          Package upkg;
          var originalDependency = new PackageDependency("log4net", "1.2.11") {Platform = "net40"};
          var target = new StatCollectorInstallTarget();
