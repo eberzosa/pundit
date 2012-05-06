@@ -136,7 +136,7 @@ namespace Pundit.Core.Application.Server
          _log.Debug("snapshot requested for changeId [" + changeId + "]");
 
          long internalChangeId = GetChangeId(changeId);
-         bool isDelta = false;
+         bool isDelta = internalChangeId != -1;
          long nextChangeId = 0;
 
          var keys = new List<PackageSnapshotKey>();

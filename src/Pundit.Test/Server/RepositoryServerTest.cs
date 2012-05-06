@@ -84,6 +84,27 @@ namespace Pundit.Test.Server
          Assert.IsTrue(snapshot0.IsDelta);
          Assert.AreEqual(1, snapshot0.Changes.Length);
          Assert.AreEqual("1", snapshot0.NextChangeId);
+
+         using(Stream s = File.OpenRead(Utils.GetCasteCore30net40Package()))
+         {
+            _server.Publish(s);
+         }
+
+         RemoteSnapshot snapshot1 = _server.GetSnapshot(snapshot0.NextChangeId);
+         Assert.IsTrue(snapshot0.IsDelta);
+         Assert.AreEqual(1, snapshot1.Changes.Length);
+         Assert.AreEqual("2", snapshot1.NextChangeId);
+
+         RemoteSnapshot snapshot2 = _server.GetSnapshot(null);
+         Assert.IsTrue(snapshot2.IsDelta);
+         Assert.AreEqual(2, snapshot2.Changes.Length);
+         Assert.AreEqual("2", snapshot2.NextChangeId);
+      }
+
+      [Test, Ignore]
+      public void DeleteDelatesTest()
+      {
+         
       }
    }
 }
