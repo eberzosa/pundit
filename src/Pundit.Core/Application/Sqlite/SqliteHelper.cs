@@ -10,6 +10,8 @@ namespace Pundit.Core.Application.Sqlite
 {
    class SqliteHelper : IDisposable
    {
+      protected const string ManifestTableName = "PackageManifest";
+
       private const string SelectId = ";select last_insert_rowid()";
 
       private readonly string _absolutePath;
@@ -311,6 +313,78 @@ namespace Pundit.Core.Application.Sqlite
 
          return manifestId;
       }
+
+      private Package ReadPackage(IDataReader reader, out long dbId)
+      {
+         dbId = reader.AsLong("PackageManifestId");
+
+         return new Package(reader.AsString("PackageId"), new Version(reader.AsString("Version")))
+         {
+            Platform = reader.AsString("Platform"),
+            ProjectUrl = reader.AsString("HomeUrl"),
+            Author = reader.AsString("Author"),
+            Description = reader.AsString("Description"),
+            ReleaseNotes = reader.AsString("ReleaseNotes"),
+            License = reader.AsString("License")
+         };
+      }
+
+      private PackageDependency ReadDependency(IDataReader reader)
+      {
+         return new PackageDependency(reader.AsString("PackageId"), reader.AsString("VersionPattern"))
+         {
+            Platform = reader.AsString("Platform"),
+            Scope = (DependencyScope)reader.AsLong("Scope"),
+            CreatePlatformFolder = reader.AsBool("CreatePlatformFolder")
+         };
+      }
+
+      public Package GetManifest(long manifestId)
+      {
+         using(IDataReader reader = ExecuteReader(ManifestTableName, null,
+            new[] { "PackageManifestId=(?)"}, manifestId))
+         {
+            if(reader.Read())
+            {
+               long dbid;
+               return ReadPackage(reader, out dbid);
+            }
+         }
+
+         throw new FileNotFoundException("manifest " + manifestId + " not found");
+      }
+
+      public Package GetManifest(PackageKey key)
+      {
+         long dbId;
+         Package root;
+
+         using (IDataReader reader = ExecuteReader(ManifestTableName, null,
+            new[] { "PackageId=(?)", "Version=(?)", "Platform=(?)" },
+            new object[] { key.PackageId, key.Version.ToString(), key.Platform }))
+         {
+            if (reader.Read())
+            {
+               root = ReadPackage(reader, out dbId);
+            }
+            else
+            {
+               throw new FileNotFoundException("package " + key + " not found");
+            }
+         }
+
+         using (IDataReader reader = ExecuteReader("PackageDependency", null,
+            new[] { "PackageManifestId=(?)" }, new object[] { dbId }))
+         {
+            while (reader.Read())
+            {
+               root.Dependencies.Add(ReadDependency(reader));
+            }
+         }
+
+         return root;
+      }
+
 
       #endregion
 

@@ -1,4 +1,5 @@
-﻿using System;
+﻿
+using System;
 using System.Collections.Generic;
 using System.IO;
 using System.Linq;
@@ -14,7 +15,7 @@ namespace Pundit.Test.Server
    public class RepositoryServerTest
    {
       private string _rootDir;
-      private RepositoryServer _server;
+      private IRemoteRepository _server;
 
       [SetUp]
       public void SetUp()
@@ -63,11 +64,26 @@ namespace Pundit.Test.Server
       }
 
       [Test]
+      public void EmptyRepositoryDeltaTest()
+      {
+         RemoteSnapshot s = _server.GetSnapshot(null);
+         Assert.AreEqual(false, s.IsDelta);
+         Assert.AreEqual(0, s.Changes.Length);
+         Assert.IsNull(s.NextChangeId);
+      }
+
+      [Test]
       public void IncrementalDeltasTest()
       {
-         RemoteSnapshot shapshot0 = _server.GetSnapshot(null);
+         using (Stream s = File.OpenRead(Utils.GetLog4Net1211net20Package()))
+         {
+            _server.Publish(s);
+         }
 
-
+         RemoteSnapshot snapshot0 = _server.GetSnapshot(null);
+         Assert.IsTrue(snapshot0.IsDelta);
+         Assert.AreEqual(1, snapshot0.Changes.Length);
+         Assert.AreEqual("1", snapshot0.NextChangeId);
       }
    }
 }

@@ -10,7 +10,7 @@ namespace Pundit.Core.Model
    /// Remote repository wire contract
    /// </summary>
    [ServiceContract]
-   public interface IRemoteRepository
+   public interface IRemoteRepository : IDisposable
    {
       /// <summary>
       /// Publishes package in the repository. Only package stream should be passes as

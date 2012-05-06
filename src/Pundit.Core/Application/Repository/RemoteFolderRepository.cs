@@ -110,5 +110,14 @@ namespace Pundit.Core.Application.Repository
 
          return new RemoteSnapshot(true, r, null);
       }
+
+      #region Implementation of IDisposable
+
+      public void Dispose()
+      {
+         
+      }
+
+      #endregion
    }
 }

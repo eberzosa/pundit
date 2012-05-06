@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Data;
+using System.Data.SQLite;
 using System.IO;
 using Pundit.Core.Application.Sqlite;
 using Pundit.Core.Model;
@@ -8,7 +9,7 @@ using log4net;
 
 namespace Pundit.Core.Application.Server
 {
-   class RepositoryServer : IRemoteRepository, IDisposable
+   class RepositoryServer : IRemoteRepository
    {
       private const string ManifestTableName = "PackageManifest";
       private const string HistoryTableName = "ManifestHistory";
@@ -110,32 +111,49 @@ namespace Pundit.Core.Application.Server
          long modType = (long) reader["ModType"];
          long manifestId = (long) reader["PackageManifestId"];
 
+         var diff = (SnapshotPackageDiff)modType;
+         Package manifest = _sql.GetManifest(manifestId);
          
+         return new PackageSnapshotKey(manifest, diff);
+      }
 
-         //var key = new PackageSnapshotKey()
-         return null;
+      private long GetChangeId(string changeId)
+      {
+         long inputChangeId;
+         if(long.TryParse(changeId, out inputChangeId))
+         {
+            long dbid = _sql.ExecuteScalar<long>(HistoryTableName, "ManifestHistoryId",
+                                                 new[] {"ManifestHistoryId=(?)"}, inputChangeId);
+
+            if (dbid > 0) return dbid;
+         }
+
+         return -1;
       }
 
       public RemoteSnapshot GetSnapshot(string changeId)
       {
          _log.Debug("snapshot requested for changeId [" + changeId + "]");
 
-         long internalChangeId;
-         long.TryParse(changeId, out internalChangeId);
+         long internalChangeId = GetChangeId(changeId);
+         bool isDelta = false;
+         long nextChangeId = 0;
 
          var keys = new List<PackageSnapshotKey>();
          using (IDataReader reader = _sql.ExecuteReader(HistoryTableName,
             new[] { "ManifestHistoryId", "ModType", "ModTime", "PackageManifestId" },
             new[] { "ManifestHistoryId > (?)" },
-            internalChangeId))
+            internalChangeId == -1 ? 0 : internalChangeId))
          {
             while(reader.Read())
             {
-               
+               isDelta = true;
+               nextChangeId = reader.AsLong("ManifestHistoryId");
+               keys.Add(ReadPackageSnapshotKey(reader));
             }
          }
 
-         return new RemoteSnapshot(true, keys, null);
+         return new RemoteSnapshot(isDelta, keys, nextChangeId == 0 ? null : nextChangeId.ToString());
       }
 
       private string DownloadToTemp(Stream httpStream)

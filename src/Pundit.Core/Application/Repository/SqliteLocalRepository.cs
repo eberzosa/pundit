@@ -154,60 +154,9 @@ namespace Pundit.Core.Application.Repository
          return r.ToArray();
       }
 
-      private Package ReadPackage(IDataReader reader, out long dbId)
-      {
-         dbId = reader.AsLong("PackageManifestId");
-
-         return new Package(reader.AsString("PackageId"), new Version(reader.AsString("Version")))
-                   {
-                      Platform = reader.AsString("Platform"),
-                      ProjectUrl = reader.AsString("HomeUrl"),
-                      Author = reader.AsString("Author"),
-                      Description = reader.AsString("Description"),
-                      ReleaseNotes = reader.AsString("ReleaseNotes"),
-                      License = reader.AsString("License")
-                   };
-      }
-
-      private PackageDependency ReadDependency(IDataReader reader)
-      {
-         return new PackageDependency(reader.AsString("PackageId"), reader.AsString("VersionPattern"))
-                   {
-                      Platform = reader.AsString("Platform"),
-                      Scope = (DependencyScope)reader.AsLong("Scope"),
-                      CreatePlatformFolder = reader.AsBool("CreatePlatformFolder")
-                   };
-      }
-
       public Package GetManifest(PackageKey key)
       {
-         long dbId;
-         Package root;
-
-         using(IDataReader reader = _sql.ExecuteReader("PackageManifest", null,
-            new[] { "PackageId=(?)", "Version=(?)", "Platform=(?)" },
-            new object[] {key.PackageId, key.Version.ToString(), key.Platform}))
-         {
-            if (reader.Read())
-            {
-               root = ReadPackage(reader, out dbId);
-            }
-            else
-            {
-               throw new FileNotFoundException("package " + key + " not found");
-            }
-         }
-
-         using(IDataReader reader = _sql.ExecuteReader("PackageDependency", null,
-            new[] {"PackageManifestId=(?)"}, new object[] {dbId}))
-         {
-            while(reader.Read())
-            {
-               root.Dependencies.Add(ReadDependency(reader));
-            }
-         }
-
-         return root;
+         return _sql.GetManifest(key);
       }
 
       public ICollection<bool> BinariesExists(IEnumerable<PackageKey> packages)

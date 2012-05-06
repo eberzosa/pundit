@@ -56,5 +56,14 @@ namespace Pundit.Core.Application.Repository
             throw new RepositoryOfflineException();
          }
       }
+
+      #region Implementation of IDisposable
+
+      public void Dispose()
+      {
+         _channel.Dispose();
+      }
+
+      #endregion
    }
 }
