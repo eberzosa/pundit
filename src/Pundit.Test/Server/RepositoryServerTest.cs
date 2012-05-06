@@ -102,7 +102,7 @@ namespace Pundit.Test.Server
       }
 
       [Test, Ignore]
-      public void DeleteDelatesTest()
+      public void OverwriteRevisionDeltaTest()
       {
          
       }

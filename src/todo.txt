@@ -1,24 +1,12 @@
+1.2
+- http://pundit.codeplex.com/workitem/13528 (stable/unstable packages)
+
 1.1.0.2
 
 1.1.0.1
-- refactor RepositoryStreamer to use compression methods different from ZIP (for example 7z)
-- would be nice to have a special case for .NET assemblies, when the whole package is a single
-  .NET assembly. Autopackage dll, pdb, xml, get versions and other info.
-- for local builds figure out how a script can pickup a version from repository to generate a newer next one.
-- http://pundit.codeplex.com/workitem/13528 (stable/unstable packages)
-- creating new manifests is really annoying
-- utilize threads when updating snapshots
-- utilize threads when downloading missing binaries
-- refactor: push strings from console commands to resources
-- refactor: push strings from exceptions to resources
 - add nuget adapter as more and more opensource libs are now moving to nuget
-- for windows dlls included in the package check that version information at least comes from same company, otherwise
-  display an error "error checking package integrity, are you mixing libraries from several vendors in the same package?"
 - improve conflict explanation
-- pundit resolve should show package size before downloading
-
-VSIX:
-- check for dependencies in background and notify the user in the toolbar
+- vsix: check for dependencies in background and notify the user in the toolbar
 
 1.1.0.0 (Bloody Duck)
 CORE:
@@ -40,8 +28,6 @@ CORE:
  + Pack & Resolve
  + Publish (implemented in server and tested)
  = RepositoryServer change history
- - Repo
-   - "repo delete" should drop all manifests and binaries from cache
  - Search
  - Template
  - Utils
