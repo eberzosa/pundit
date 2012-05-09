@@ -1,22 +1,35 @@
 ﻿using System;
-using System.Collections.Generic;
-using System.Linq;
 using System.Runtime.Serialization;
-using System.Text;
 using System.Xml.Serialization;
 
 namespace Pundit.Core.Model
 {
+   /// <summary>
+   /// Difference type
+   /// </summary>
    public enum SnapshotPackageDiff
    {
+      /// <summary>
+      /// Package was added
+      /// </summary>
       Add = 0,
+
+      /// <summary>
+      /// Package was deleted
+      /// </summary>
       Del = 1
    }
 
+   /// <summary>
+   /// Snapshot atom
+   /// </summary>
    [XmlRoot("key")]
    [DataContract]
    public class PackageSnapshotKey
    {
+      /// <summary>
+      /// Modification type
+      /// </summary>
       [XmlAttribute("diff")]
       [DataMember(Name = "diff")]
       public SnapshotPackageDiff Diff { get; set; }
@@ -30,10 +43,17 @@ namespace Pundit.Core.Model
          
       }
 
-      public PackageSnapshotKey(Package manifest, SnapshotPackageDiff diff = SnapshotPackageDiff.Add)
+      public PackageSnapshotKey(Package manifest, SnapshotPackageDiff diff)
       {
-         Diff = SnapshotPackageDiff.Add;
+         if (manifest == null) throw new ArgumentNullException("manifest");
+
+         Diff = diff;
          Manifest = manifest;
+      }
+
+      public override string ToString()
+      {
+         return string.Format("{0}: {1}", Diff, Manifest.Key);
       }
    }
 }

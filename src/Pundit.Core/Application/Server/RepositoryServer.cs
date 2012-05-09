@@ -13,6 +13,7 @@ namespace Pundit.Core.Application.Server
    {
       private const string ManifestTableName = "PackageManifest";
       private const string HistoryTableName = "ManifestHistory";
+      private const string LiveManifestTableName = "LivePackageManifest";
 
       private readonly ILog _log = LogManager.GetLogger(typeof (RepositoryServer));
       private SqliteHelper _sql;
@@ -44,6 +45,14 @@ namespace Pundit.Core.Application.Server
          _streams = new StreamsProvider(dataLocation);
       }
 
+      /// <summary>
+      /// Pundit stores only last revision of a package and needs to clean up the old ones before publishing.
+      /// </summary>
+      /// <param name="manifest"></param>
+      private void CleanupOldRevisions(Package manifest)
+      {
+      }
+
       public void Publish(Stream packageStream)
       {
          try
@@ -66,7 +75,11 @@ namespace Pundit.Core.Application.Server
 
                _log.Debug("binary saved, persisting metadata...");
 
-               PersistPublish(p);
+               PackageKey oldKey = PersistPublish(p);
+               if(oldKey != null)
+               {
+                  _streams.Delete(oldKey);
+               }
                _log.Debug("success");
             }
             finally
@@ -206,18 +219,72 @@ namespace Pundit.Core.Application.Server
                             (long) diff, DateTime.Now, manifestId);
       }
 
-      private void PersistPublish(Package p)
+      private PackageKey UpdateLivePackage(long newManifestId, PackageKey key, out long oldManifestId)
       {
+         //PackageKey key = newManifest.Key;
+         long recordId = 0;
+         bool keyFound = false;
+         PackageKey r = null;
+         oldManifestId = 0;
+         string versionPattern = string.Format("{0}.{1}.{2}.%",
+                                               key.Version.Major, key.Version.Minor, key.Version.Build);
+         using (IDataReader reader = _sql.ExecuteReader(
+            LiveManifestTableName,
+            null,
+            new[] { "PackageId=(?)", "Platform=(?)", "Version like (?)" },
+            key.PackageId, key.Platform, versionPattern))
+         {
+            if (reader.Read())
+            {
+               keyFound = true;
+               recordId = reader.AsLong("LivePackageManifestId");
+               r = new PackageKey(
+                  reader.AsString("PackageId"),
+                  new Version(reader.AsString("Version")),
+                  reader.AsString("Platform"));
+               oldManifestId = reader.AsLong("PackageManifestId");
+            }
+         }
+
+         if(!keyFound)
+         {
+            _sql.Insert(LiveManifestTableName,
+                        new[] {"PackageId", "Version", "Platform", "PackageManifestId"},
+                        key.PackageId, key.VersionString, key.Platform, newManifestId);
+         }
+         else
+         {
+            _sql.Update(LiveManifestTableName,
+                        new[] { "PackageId", "Platform", "Version", "PackageManifestId" },
+                        new object[] { key.PackageId, key.Platform, key.VersionString, newManifestId },
+                        new[] { "LivePackageManifestId=(?)" },
+                        recordId);            
+         }
+         return r;
+      }
+
+      private PackageKey PersistPublish(Package p)
+      {
+         PackageKey oldKey = null;
          using(IDbTransaction trans = _sql.BeginTransaction())
          {
+            _log.Debug("writing manifest...");
             long manifestId = _sql.WriteManifest(p);
             _log.Debug("done (" + manifestId + "), writing history...");
 
-            long historyId = WriteHistory(manifestId, SnapshotPackageDiff.Add);
-            _log.Debug("done, history record id: " + historyId);
+            long oldManifestId;
+            oldKey = UpdateLivePackage(manifestId, p.Key, out oldManifestId); //only updates LivePackageManifest
+            if (oldKey != null)
+            {
+               WriteHistory(oldManifestId, SnapshotPackageDiff.Del);
+            }
+
+            WriteHistory(manifestId, SnapshotPackageDiff.Add);
 
             trans.Commit();
          }
+         _log.Debug("done");
+         return oldKey;
       }
 
       #region Implementation of IDisposable

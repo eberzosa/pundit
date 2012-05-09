@@ -105,7 +105,7 @@ namespace Pundit.Core.Application.Sqlite
          if (columns == null || columns.Length == 0)
             throw new ArgumentException("columns are required");
          if (values == null || values.Length != columns.Length)
-            throw new ArgumentException("values should match columns");
+            throw new ArgumentException("values must match columns");
 
          StringBuilder b = new StringBuilder();
          b.Append("insert into [");
@@ -136,6 +136,51 @@ namespace Pundit.Core.Application.Sqlite
             }
 
             return (long) cmd.ExecuteScalar();
+         }
+      }
+
+      public void Update(string tableName, string[] columns, object[] values,
+         string[] where, params object[] whereValues)
+      {
+         if (tableName == null) throw new ArgumentNullException("tableName");
+         if (columns == null) throw new ArgumentNullException("columns");
+         if (values == null) throw new ArgumentNullException("values");
+         if (columns.Length != values.Length) throw new ArgumentException("columns must match values");
+
+         var b = new StringBuilder();
+         b.Append("update ");
+         b.Append(tableName);
+         b.Append(" set ");
+         for (int i = 0; i < columns.Length; i++)
+         {
+            if (i > 0) b.Append(", ");
+            b.Append(columns[i]);
+            b.Append("=(?)");
+         }
+         if(where != null && where.Length > 0)
+         {
+            b.Append(" where ");
+            for(int i = 0; i < where.Length;i++)
+            {
+               if (i > 0) b.Append(" and ");
+               b.Append(where[i]);
+            }
+         }
+
+         using (SQLiteCommand cmd = Connection.CreateCommand())
+         {
+            cmd.CommandText = b.ToString();
+            foreach (object value in values)
+            {
+               Add(cmd, value);
+            }
+            if (whereValues != null)
+            {
+               foreach (object value in whereValues)
+               {
+                  Add(cmd, value);
+               }
+            }
          }
       }
 
@@ -383,6 +428,13 @@ namespace Pundit.Core.Application.Sqlite
          }
 
          return root;
+      }
+
+      public long FindManifest(PackageKey key)
+      {
+         return ExecuteScalar<long>(ManifestTableName, "PackageManifestId",
+                                    new[] {"PackageId=(?)", "Version=(?)", "Platform=(?)"},
+                                    key.PackageId, key.VersionString, key.Platform);
       }
 
 

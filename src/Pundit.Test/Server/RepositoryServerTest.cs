@@ -122,11 +122,11 @@ namespace Pundit.Test.Server
          Assert.AreEqual("1.2.10.0", snapshot1.Changes[0].Manifest.VersionString);
          Assert.AreEqual(SnapshotPackageDiff.Add, snapshot1.Changes[0].Diff);
 
-         Assert.AreEqual("1.2.10.0", snapshot1.Changes[0].Manifest.VersionString);
-         Assert.AreEqual(SnapshotPackageDiff.Del, snapshot1.Changes[0].Diff);
+         Assert.AreEqual("1.2.10.0", snapshot1.Changes[1].Manifest.VersionString);
+         Assert.AreEqual(SnapshotPackageDiff.Del, snapshot1.Changes[1].Diff);
 
-         Assert.AreEqual("1.2.11.0", snapshot1.Changes[0].Manifest.VersionString);
-         Assert.AreEqual(SnapshotPackageDiff.Add, snapshot1.Changes[0].Diff);
+         Assert.AreEqual("1.2.10.1234", snapshot1.Changes[2].Manifest.VersionString);
+         Assert.AreEqual(SnapshotPackageDiff.Add, snapshot1.Changes[2].Diff);
       }
    }
 }
