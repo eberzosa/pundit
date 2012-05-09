@@ -27,7 +27,8 @@ CORE:
 = analyze and test every command
  + Pack & Resolve
  + Publish (implemented in server and tested)
- = RepositoryServer change history
+ + RepositoryServer change history (add and del changes)
+ = LocalRepositoy accepting add and del changes
  - Search
  - Template
  - Utils
