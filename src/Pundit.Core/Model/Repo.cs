@@ -14,7 +14,6 @@ namespace Pundit.Core.Model
       /// <summary>
       /// 
       /// </summary>
-      /// <param name="id"></param>
       /// <param name="tag"></param>
       /// <param name="uri"></param>
       /// <exception cref="ArgumentNullException"></exception>
@@ -26,6 +25,8 @@ namespace Pundit.Core.Model
 
          _tag = tag;
          _uri = uri;
+         IsEnabled = true;
+         RefreshIntervalInHours = 1;
       }
 
       public Repo(long id, string tag, string uri) : this(tag, uri)

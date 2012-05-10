@@ -34,9 +34,7 @@ namespace Pundit.Core.Model
       /// <summary>
       /// Gets the snapshot of repository
       /// </summary>
-      /// <param name="changeId"></param>
-      /// <param name="nextChangeId">change id used in next call to get only the package changes. When 0 returned
-      /// all of the local shapshot must be rewritten by the received one</param>
+      /// <param name="changeId">current change id or null for the full snapshot</param>
       /// <returns></returns>
       [OperationContract]
       [FaultContract(typeof(FileNotFoundException))]

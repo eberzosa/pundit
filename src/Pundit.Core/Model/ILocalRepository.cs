@@ -9,7 +9,7 @@ namespace Pundit.Core.Model
    /// <summary>
    /// 
    /// </summary>
-   public interface ILocalRepository
+   public interface ILocalRepository : IDisposable
    {
       /// <summary>
       /// Gets versions of the package in this repository which satisfy the version pattern

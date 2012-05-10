@@ -7,6 +7,9 @@ using Pundit.Core.Model;
 
 namespace Pundit.Core.Application.Repository
 {
+   /// <summary>
+   /// Client for IRemoteRepository
+   /// </summary>
    class HttpRestRemoteRepository : IRemoteRepository
    {
       private const string NullChangeId = "0";

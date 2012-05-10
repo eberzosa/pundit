@@ -445,6 +445,7 @@ namespace Pundit.Core.Application.Sqlite
          if (_conn != null)
          {
             _conn.Close();
+            _conn.Dispose();
          }
       }
    }

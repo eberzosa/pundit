@@ -69,5 +69,13 @@ namespace Pundit.Test.Mocks
       }
 
       #endregion
+
+      #region Implementation of IDisposable
+
+      public void Dispose()
+      {
+      }
+
+      #endregion
    }
 }

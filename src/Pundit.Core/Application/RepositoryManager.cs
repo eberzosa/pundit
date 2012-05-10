@@ -4,7 +4,6 @@ using System.Data;
 using System.Data.SQLite;
 using System.IO;
 using System.Linq;
-using System.Text;
 using Pundit.Core.Application.Repository;
 using Pundit.Core.Application.Sqlite;
 using Pundit.Core.Model;
@@ -132,9 +131,9 @@ namespace Pundit.Core.Application
       public Repo Register(Repo newRepo)
       {
          if (newRepo == null) throw new ArgumentNullException("newRepo");
-
-         if(newRepo.Tag == null) throw new ArgumentNullException("newRepo", "Tag is required");
-         if(newRepo.Uri == null) throw new ArgumentNullException("newRepo", "Uri is required");
+         if (!newRepo.IsEnabled) throw new ArgumentException("newRepo", "can't create inactive repository");
+         if (newRepo.Tag == null) throw new ArgumentNullException("newRepo", "Tag is required");
+         if (newRepo.Uri == null) throw new ArgumentNullException("newRepo", "Uri is required");
 
          if(AllRepositories.Any(r => r.Tag == newRepo.Tag))
             throw new ApplicationException("repository '" + newRepo.Tag + "' already registered");
@@ -192,7 +191,7 @@ namespace Pundit.Core.Application
          {
             using (IDbTransaction tran = _sql.BeginTransaction())
             {
-               if(snapshot.NextChangeId == null)
+               if(!snapshot.IsDelta)
                {
                   using(IDbCommand cmd = _sql.CreateCommand())
                   {
@@ -228,5 +227,15 @@ namespace Pundit.Core.Application
             }
          }
       }
+
+      #region Implementation of IDisposable
+
+      public void Dispose()
+      {
+         _localRepo.Dispose();
+         _sql.Dispose();
+      }
+
+      #endregion
    }
 }

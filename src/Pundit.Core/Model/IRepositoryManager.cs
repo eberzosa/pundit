@@ -8,7 +8,7 @@ namespace Pundit.Core.Model
    /// <summary>
    /// Sets of methods to work with local configuration
    /// </summary>
-   public interface IRepositoryManager
+   public interface IRepositoryManager : IDisposable
    {
       ILocalRepository LocalRepository { get; }
 
@@ -35,6 +35,11 @@ namespace Pundit.Core.Model
 
       void Update(Repo repo);
 
+      /// <summary>
+      /// Plays remote snapshot on local repository
+      /// </summary>
+      /// <param name="repo"></param>
+      /// <param name="snapshot"></param>
       void PlaySnapshot(Repo repo, RemoteSnapshot snapshot);
    }
 }
