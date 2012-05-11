@@ -1,8 +1,5 @@
 ﻿using System;
-using System.Collections.Generic;
 using System.IO;
-using System.Linq;
-using System.Text;
 using NUnit.Framework;
 using Pundit.Core.Application;
 using Pundit.Core.Model;
@@ -15,6 +12,8 @@ namespace Pundit.Test
       private string _rootDir;
       private IRepositoryManager _manager;
       private Repo _repo;
+      private Package _p1;
+      private Package _p2;
 
       [SetUp]
       public void SetUp()
@@ -25,7 +24,24 @@ namespace Pundit.Test
 
          _manager = new RepositoryManager(Path.Combine(_rootDir, "localrp"));
 
-         //_repo = new Repo();
+         _repo = new Repo("primary", "http://primary.com");
+         _repo = _manager.Register(_repo);
+
+         using(Stream s = File.OpenRead(Utils.GetLog4Net1210net20Package()))
+         {
+            using (var rdr = new PackageReader(s))
+            {
+               _p1 = rdr.Manifest;
+            }
+         }
+
+         using(Stream s = File.OpenRead(Utils.GetCasteCore30net40Package()))
+         {
+            using (var rdr = new PackageReader(s))
+            {
+               _p2 = rdr.Manifest;
+            }
+         }
       }
 
       [TearDown]
@@ -42,12 +58,30 @@ namespace Pundit.Test
          Repo rc = _manager.Register(r);
 
          Assert.IsNotNull(rc);
-         Assert.AreEqual(2, rc.Id);
+         Assert.AreEqual(3, rc.Id);
+         Assert.IsTrue(rc.IsEnabled);
+         Assert.AreEqual(1, rc.RefreshIntervalInHours);
+         Assert.AreEqual("test1", rc.Tag);
+         Assert.AreEqual(new Uri("fake://fake"), r.Uri);
       }
 
-      [Test, Ignore]
+      [Test]
       public void PlaySimpleAddSnaphotTest()
       {
+         var key1 = new PackageSnapshotKey(_p1, SnapshotPackageDiff.Add);
+         var key2 = new PackageSnapshotKey(_p2, SnapshotPackageDiff.Add);
+         var snapshot = new RemoteSnapshot(false, new[] {key1, key2}, "delta1");
+
+         var r1 = _manager.LocalRepository.Search("log4net");
+         var r2 = _manager.LocalRepository.Search("castle");
+         Assert.AreEqual(0, r1.Count);
+         Assert.AreEqual(0, r2.Count);
+
+         _manager.PlaySnapshot(_repo, snapshot);
+         r1 = _manager.LocalRepository.Search("log4net");
+         r2 = _manager.LocalRepository.Search("castle");
+         Assert.AreEqual(1, r1.Count);
+         Assert.AreEqual(1, r2.Count);
       }
 
       [Test, Ignore]

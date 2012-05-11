@@ -136,6 +136,11 @@ namespace Pundit.Core.Model
          VersionString = version.ToString();
       }
 
+      /// <summary>
+      /// Deserializes package from xml stream
+      /// </summary>
+      /// <param name="inputStream">Stream of xml document</param>
+      /// <returns></returns>
       public static Package FromStream(Stream inputStream)
       {
          XmlSerializer xmls = new XmlSerializer(typeof(Package));
