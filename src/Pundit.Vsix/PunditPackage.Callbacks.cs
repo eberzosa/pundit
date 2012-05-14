@@ -18,6 +18,28 @@ namespace Pundit.Vsix
          new AddReferenceForm(ManifestDirectory).ShowDialog();
       }
 
+      private void FindPackageCommandCallback(object caller, EventArgs args)
+      {
+         if(args != null && args != EventArgs.Empty)
+         {
+            var oleArgs = args as OleMenuCmdEventArgs;
+            if(oleArgs != null)
+            {
+               string text = oleArgs.InValue as string;
+               if(!string.IsNullOrEmpty(text))
+               {
+                  ConsoleVsToolWindow.Search(text, true);
+                  ShowToolWindow();
+               }
+            }
+         }
+      }
+
+      private void OpenXmlManifest(object caller, EventArgs args)
+      {
+         
+      }
+
       private void ShowToolWindow()
       {
          //this method will show the window if it's not active or bring it to front if it's collapsed

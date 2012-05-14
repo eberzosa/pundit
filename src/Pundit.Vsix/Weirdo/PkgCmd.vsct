@@ -6,8 +6,8 @@
 
    <Commands package="guidPunditPkg">
       <Menus>
-         <Menu guid="guidPunditCmdSet" id="PunditToolbar" priority="0x100" type="Toolbar">
-            <Parent guid="guidPunditCmdSet" id="PunditToolbar" />
+         <Menu guid="guidCommandSet" id="PunditToolbar" priority="0x100" type="Toolbar">
+            <Parent guid="guidCommandSet" id="PunditToolbar" />
             <Strings>
                <ButtonText>Pundit</ButtonText>
             </Strings>
@@ -15,45 +15,62 @@
       </Menus>
 
       <Groups>
-         <Group guid="guidPunditCmdSet" id="PunditToolsMenuGroup" priority="0x600">
+         <Group guid="guidCommandSet" id="PunditToolsMenuGroup" priority="0x600">
             <Parent guid="guidSHLMainMenu" id="IDM_VS_MENU_TOOLS"/>
          </Group>
 
-         <Group guid="guidPunditCmdSet" id="PunditToolbarGroup" priority="0x100">
-            <Parent guid="guidPunditCmdSet" id="PunditToolbar"/>
+         <Group guid="guidCommandSet" id="PunditToolbarGroup" priority="0x100">
+            <Parent guid="guidCommandSet" id="PunditToolbar"/>
          </Group>
 
       </Groups>
 
       <Buttons>
-         <Button guid="guidPunditCmdSet" id="cmdidAddPackages" priority="0x0100" type="Button">
+         <Button guid="guidCommandSet" id="CommandAddPackages" priority="0x0100" type="Button">
             <Parent guid="guidReferenceContext" id="cmdAddReferenceGroup" />
-            <Icon guid="guidPackage" id="pngPackage"/>
+            <Icon guid="guidToolbarBmp" id="pngPackage"/>
             <Strings>
-               <CommandName>cmdidAddPackages</CommandName>
+               <CommandName>CommandAddPackages</CommandName>
                <ButtonText>Add Pundit Reference...</ButtonText>
             </Strings>
          </Button>
 
-         <Button guid="guidPunditCmdSet" id="cmdidResolveDependencies" priority="0x100" type="Button">
-            <Parent guid="guidPunditCmdSet" id="PunditToolbarGroup"/>
-            <Icon guid="guidDatabaseRefresh" id="pngDbRefresh"/>
+         <Button guid="guidCommandSet" id="cmdidShowManifest" priority="0x0100" type="Button">
+            <Parent guid="guidCommandSet" id="PunditToolbarGroup"/>
+            <Icon guid="guidToolbarBmp" id="pngManifest"/>
+            <Strings>
+               <ButtonText>Open XML Manifest for editing</ButtonText>
+            </Strings>
+         </Button>
+
+         <Button guid="guidCommandSet" id="CommandResolve" priority="0x101" type="Button">
+            <Parent guid="guidCommandSet" id="PunditToolbarGroup"/>
+            <Icon guid="guidToolbarBmp" id="pngRefresh"/>
             <Strings>
                <ButtonText>Resolve Dependencies</ButtonText>
             </Strings>
          </Button>
 
-         <!--<Button guid="guidPunditCmdSet" id="cmdidGlobalSettings" priority="0x200" type="Button">
-            <Parent guid="guidPunditCmdSet" id="PunditToolsMenuGroup"/>
-            <Icon guid="guidBulletWrench" id="pngWrench"/>
+         <Button guid="guidCommandSet" id="CommandAddPackages" priority="0x0103" type="Button">
+            <Parent guid="guidCommandSet" id="PunditToolbarGroup"/>
+            <Icon guid="guidToolbarBmp" id="pngPackage"/>
             <Strings>
-               <ButtonText>Pundit Global Settings...</ButtonText>
+               <CommandName>CommandAddPackages</CommandName>
+               <ButtonText>Add File Reference...</ButtonText>
             </Strings>
-         </Button>-->
+         </Button>
 
-         <Button guid="guidPunditCmdSet" id="cmdidPunditConsole" priority="0x100" type="Button">
+         <Button guid="guidCommandSet" id="CommandHelp" priority="0x104" type="Button">
+            <Parent guid="guidCommandSet" id="PunditToolbarGroup"/>
+            <Icon guid="guidToolbarBmp" id="pngHelp"/>
+            <Strings>
+               <ButtonText>Help on Commands</ButtonText>
+            </Strings>
+         </Button>
+
+         <Button guid="guidCommandSet" id="cmdidPunditConsole" priority="0x100" type="Button">
             <Parent guid="guidSHLMainMenu" id="IDG_VS_WNDO_OTRWNDWS1"/>
-            <Icon guid="guidConsole" id="pngConsole"/>
+            <Icon guid="guidToolbarBmp" id="pngConsole"/>
             <Strings>
                <CommandName>cmdidPunditConsole</CommandName>
                <ButtonText>Pundit Console</ButtonText>
@@ -61,30 +78,42 @@
          </Button>
       </Buttons>
 
+      <Combos>
+         <Combo guid="guidCommandSet" id="cmdidSearchCombo" priority="0x0102" type="MRUCombo" defaultWidth="150" idCommandList="0">
+            <Parent guid="guidCommandSet" id="PunditToolbarGroup"/>
+            <CommandFlag>IconAndText</CommandFlag>
+            <CommandFlag>CommandWellOnly</CommandFlag>
+            <CommandFlag>NoAutoComplete</CommandFlag>
+            <CommandFlag>CaseSensitive</CommandFlag>
+            <Strings>
+               <ButtonText>Find:</ButtonText>
+               <ToolTipText>Find a package across repositories by substring</ToolTipText>
+               <CommandName>cmdidSearchCombo</CommandName>
+               <CanonicalName>Canonical Name</CanonicalName>
+            </Strings>
+         </Combo>
+      </Combos>
+
       <Bitmaps>
-         <!--<Bitmap guid="guidBulletWrench" href="../Graphics/bullet_wrench.png" usedList="pngWrench"/>-->
-         <Bitmap guid="guidDatabaseRefresh" href="../Graphics/database_refresh.png" usedList="pngDbRefresh"/>
-         <Bitmap guid="guidLogo" href="../Graphics/logo.bmp" usedList="pngLogo"/>
-         <Bitmap guid="guidPackage" href="../Graphics/package.png" usedList="pngPackage"/>
-         <Bitmap guid="guidConsole" href="../Graphics/console.png" usedList="pngConsole"/>
+         <Bitmap guid="guidToolbarBmp" href="../Graphics/toolbar.png"/>
       </Bitmaps>
    </Commands>
 
    <CommandPlacements>
 
       <!--Now we place a previously defined group inside the Solution Explorer's toolbar.-->
-      <CommandPlacement guid="guidPunditCmdSet" id="PunditToolbarGroup" priority="0x600">
+      <!--<CommandPlacement guid="guidCommandSet" id="PunditToolbarGroup" priority="0x600">
          <Parent guid="guidSHLMainMenu" id="IDM_VS_TOOL_PROJWIN"/>
-      </CommandPlacement>
+      </CommandPlacement>-->
 
       <!-- experimental shit -->
-      <CommandPlacement guid="guidPunditCmdSet" id="cmdidAddPackages" priority="0xF100">
+      <CommandPlacement guid="guidCommandSet" id="CommandAddPackages" priority="0xF100">
          <Parent guid="guidSHLMainMenu" id="IDG_VS_CTXT_REFROOT_ADD"/>
       </CommandPlacement>
-      <CommandPlacement guid="guidPunditCmdSet" id="cmdidAddPackages" priority="0xF100">
+      <CommandPlacement guid="guidCommandSet" id="CommandAddPackages" priority="0xF100">
          <Parent guid="guidSHLMainMenu" id="IDG_VS_CTXT_PROJECT_ADD"/>
       </CommandPlacement>
-      <CommandPlacement guid="guidPunditCmdSet" id="cmdidAddPackages" priority="0xF100">
+      <CommandPlacement guid="guidCommandSet" id="CommandAddPackages" priority="0xF100">
          <Parent guid="guidSHLMainMenu" id="IDG_VS_PROJ_OPTIONS"/>
       </CommandPlacement>
 
@@ -93,41 +122,32 @@
    <Symbols>
       <GuidSymbol name="guidPunditPkg" value="{3C7C5ABE-82AC-4A37-B077-0FF60E8B1FD3}" />
 
-      <GuidSymbol name="guidPunditCmdSet" value="{19492BCB-32B3-4EC3-8826-D67CD5526653}">
+      <GuidSymbol name="guidCommandSet" value="{19492BCB-32B3-4EC3-8826-D67CD5526653}">
          <!--Menus-->
          <IDSymbol name="PunditToolbar" value="0x101" />
          <!--Groups-->
          <IDSymbol name="PunditToolsMenuGroup" value="0x1010" />
          <IDSymbol name="PunditToolbarGroup" value="0x1011" />
          <!--Commands-->
-         <IDSymbol name="cmdidAddPackages" value="0x2007"/>
+         <IDSymbol name="CommandAddPackages" value="0x2007"/>
          <IDSymbol name="cmdidGlobalSettings" value="0x2008"/>
-         <IDSymbol name="cmdidResolveDependencies" value="0x2009"/>
+         <IDSymbol name="CommandResolve" value="0x2009"/>
          <IDSymbol name="cmdidPunditConsole" value="0x200A"/>
+         <IDSymbol name="CommandHelp" value="0x200B"/>
+         <IDSymbol name="cmdidSearchCombo" value="0x200C"/>
+         <IDSymbol name="cmdidShowManifest" value="0x200D"/>
       </GuidSymbol>
 
-      <!--<GuidSymbol name="guidBulletWrench" value="{1203AEA0-726C-40B3-8444-165ADA07EB16}">
-         <IDSymbol name="pngWrench" value="1"/>
-      </GuidSymbol>-->
-
-      <GuidSymbol name="guidDatabaseRefresh" value="{382D7CE9-A8E9-440D-A6D9-7D4D24CA6508}">
-         <IDSymbol name="pngDbRefresh" value="1"/>
+      <GuidSymbol name="guidToolbarBmp" value="{382D7CE9-A8E9-440D-A6D9-7D4D24CA6508}">
+         <IDSymbol name="pngConsole" value="1"/>
+         <IDSymbol name="pngPackage" value="2"/>
+         <IDSymbol name="pngRefresh" value="3"/>
+         <IDSymbol name="pngHelp" value="4"/>
+         <IDSymbol name="pngManifest" value="5"/>
       </GuidSymbol>
 
       <GuidSymbol name="guidReferenceContext" value="{D309F791-903F-11D0-9EFC-00A0C911004F}">
          <IDSymbol name="cmdAddReferenceGroup" value="0x450" />
-      </GuidSymbol>
-
-      <GuidSymbol name="guidLogo" value="{3C25F13D-BF43-4BA3-ABAC-4D196B1E87CF}">
-         <IDSymbol name="pngLogo" value="1"/>
-      </GuidSymbol>
-
-      <GuidSymbol name="guidPackage" value="{DFC8984B-5261-4A47-8AE0-96A9C1C746CD}">
-         <IDSymbol name="pngPackage" value="1"/>
-      </GuidSymbol>
-
-      <GuidSymbol name="guidConsole" value="{6915576B-DCAD-4E79-86A1-1F9ACC3685BA}">
-         <IDSymbol name="pngConsole" value="1"/>
       </GuidSymbol>
 
       <GuidSymbol name="GuidToolWindow" value="{D8F68431-0AE8-4742-AE23-F6B62A17B1B3}"/>

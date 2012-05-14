@@ -26,7 +26,14 @@ namespace Pundit.Vsix.Forms.Console
       {
          var container = new FormsContainer();
          FormsHost.Child = container;
-         _console = new FormsTextBoxConsoleOutput(container.TextBox);
+         var fco = new FormsTextBoxConsoleOutput(container.TextBox);
+         fco.ExecuteCommand += UserExecuteCommand;
+         _console = fco;
+      }
+
+      void UserExecuteCommand(string obj)
+      {
+         ExecuteCommand(obj.Split(' '));
       }
 
       private string LastSolutionDirectory
@@ -69,6 +76,11 @@ namespace Pundit.Vsix.Forms.Console
       public void ResolveDependencies()
       {
          ExecuteCommand(new[] { "resolve" });
+      }
+
+      public void Search(string text, bool formatXml)
+      {
+         ExecuteCommand(new[] {"search", text});
       }
    }
 }

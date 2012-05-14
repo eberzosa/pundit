@@ -21,7 +21,7 @@ namespace Pundit.Vsix
 	[ProvideMenuResource(1000, 1)]
    [ProvideAutoLoad(UIContextGuids80.SolutionExists)]   //auto-load extension on solution start so we can start background activity if configured
    [Guid("3C7C5ABE-82AC-4A37-B077-0FF60E8B1FD3")]
-   [InstalledProductRegistration("#110", "#112", "1.0", IconResourceID = 400)]
+   [InstalledProductRegistration("#110", "#112", "1.0", IconResourceID = 301)]
    [ProvideToolWindow(typeof(ConsoleVsToolWindow))]
    [ProvideOptionPage(typeof(VsixOptionsPage), "Pundit", "General", 113, 114, true)]
    [ProvideOptionPage(typeof(IntegrationPage), "Pundit", "Integration", 113, 114, true)]
@@ -43,6 +43,7 @@ namespace Pundit.Vsix
 		/// </summary>
 		public PunditPackage()
 		{
+         //"VisualSVN.Update"
 		}
 
       private OleMenuCommand BindHandler(int commandId, EventHandler handler, bool visible = true)
@@ -71,10 +72,12 @@ namespace Pundit.Vsix
 
 			if (null != mcs)
 			{
-			   BindHandler(PkgCmdIDList.cmdidAddPackages, AddReferenceCommandCallback);
-			   //BindHandler(PkgCmdIDList.cmdidGlobalSettings, GlobalSettingsCommandCallback);
-			   _cmdResolve = BindHandler(PkgCmdIDList.cmdidResolveDependencies, ResolveDependenciesCommandCallback, false);
-			   BindHandler(PkgCmdIDList.cmdidPunditConsole, ShowPunditConsoleCallback);
+			   BindHandler(CommandSet.AddPackages, AddReferenceCommandCallback);
+			   //BindHandler(CommandSet.cmdidGlobalSettings, GlobalSettingsCommandCallback);
+			   _cmdResolve = BindHandler(CommandSet.Resolve, ResolveDependenciesCommandCallback, false);
+			   BindHandler(CommandSet.cmdidPunditConsole, ShowPunditConsoleCallback);
+			   BindHandler(CommandSet.SearchCombo, FindPackageCommandCallback);
+			   BindHandler(CommandSet.cmdidShowManifest, OpenXmlManifest);
 			}
 
          InitializeShell();

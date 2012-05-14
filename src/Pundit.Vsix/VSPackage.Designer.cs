@@ -61,7 +61,7 @@ namespace Pundit.Vsix {
         }
         
         /// <summary>
-        ///   Looks up a localized string similar to Pundit Dependency Manager.
+        ///   Looks up a localized string similar to Pundit.
         /// </summary>
         internal static string _110 {
             get {
@@ -70,7 +70,7 @@ namespace Pundit.Vsix {
         }
         
         /// <summary>
-        ///   Looks up a localized string similar to Pundit Dependency Manager.
+        ///   Looks up a localized string similar to Binary Dependency Management System.
         /// </summary>
         internal static string _112 {
             get {
@@ -86,20 +86,20 @@ namespace Pundit.Vsix {
         }
         
         /// <summary>
-        ///   Looks up a localized string similar to C# Text Changes.
+        ///   Looks up a localized string similar to pundit $.
         /// </summary>
-        internal static string DynamicTextBaseText {
+        internal static string Console_Prompt {
             get {
-                return ResourceManager.GetString("DynamicTextBaseText", resourceCulture);
+                return ResourceManager.GetString("Console_Prompt", resourceCulture);
             }
         }
         
         /// <summary>
-        ///   Looks up a localized string similar to {0} (Clicked {1} times).
+        ///   Looks up a localized string similar to pundit.
         /// </summary>
-        internal static string DynamicTextFormat {
+        internal static string PunditConsoleWindowTitle {
             get {
-                return ResourceManager.GetString("DynamicTextFormat", resourceCulture);
+                return ResourceManager.GetString("PunditConsoleWindowTitle", resourceCulture);
             }
         }
     }

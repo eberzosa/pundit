@@ -70,34 +70,6 @@ namespace Pundit.Vsix {
         }
         
         /// <summary>
-        ///   Looks up a localized string similar to pundit $ .
-        /// </summary>
-        internal static string Console_Prompt {
-            get {
-                return ResourceManager.GetString("Console_Prompt", resourceCulture);
-            }
-        }
-        
-        /// <summary>
-        ///   Looks up a localized string similar to Pundit {0} ready.
-        ///Type &quot;help&quot; for console commands help pages..
-        /// </summary>
-        internal static string ConsoleIntro {
-            get {
-                return ResourceManager.GetString("ConsoleIntro", resourceCulture);
-            }
-        }
-        
-        /// <summary>
-        ///   Looks up a localized string similar to Pundit Console.
-        /// </summary>
-        internal static string PunditConsoleWindowTitle {
-            get {
-                return ResourceManager.GetString("PunditConsoleWindowTitle", resourceCulture);
-            }
-        }
-        
-        /// <summary>
         ///   Looks up a localized string similar to This solution has no valid Pundit manifest file expected at location {0}.
         /// </summary>
         internal static string SolutionHasNoManifest {

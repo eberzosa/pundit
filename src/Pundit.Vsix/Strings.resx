@@ -120,16 +120,6 @@
   <data name="CantCreateToolWindow" xml:space="preserve">
     <value>Visual Studio has no idea why the window cannot be created</value>
   </data>
-  <data name="ConsoleIntro" xml:space="preserve">
-    <value>Pundit {0} ready.
-Type "help" for console commands help pages.</value>
-  </data>
-  <data name="Console_Prompt" xml:space="preserve">
-    <value>pundit $ </value>
-  </data>
-  <data name="PunditConsoleWindowTitle" xml:space="preserve">
-    <value>Pundit Console</value>
-  </data>
   <data name="SolutionHasNoManifest" xml:space="preserve">
     <value>This solution has no valid Pundit manifest file expected at location {0}</value>
   </data>

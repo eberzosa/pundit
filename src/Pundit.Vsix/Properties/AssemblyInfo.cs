@@ -4,12 +4,12 @@ using System.Runtime.InteropServices;
 // General Information about an assembly is controlled through the following 
 // set of attributes. Change these attribute values to modify the information
 // associated with an assembly.
-[assembly: AssemblyTitle("MenuAndCommands")]
-[assembly: AssemblyDescription("VsSDK reference sample for Menus and Commands")]
+[assembly: AssemblyTitle("Pundit")]
+[assembly: AssemblyDescription("Pundit")]
 [assembly: AssemblyConfiguration("")]
-[assembly: AssemblyCompany("Microsoft")]
-[assembly: AssemblyProduct("MenuAndCommands")]
-[assembly: AssemblyCopyright("Copyright © Microsoft 2005")]
+[assembly: AssemblyCompany("Ivan Gavryliuk")]
+[assembly: AssemblyProduct("Pundit")]
+[assembly: AssemblyCopyright("Copyright © Ivan Gavryliuk 2011-2012")]
 [assembly: AssemblyTrademark("")]
 [assembly: AssemblyCulture("")]
 
@@ -32,3 +32,4 @@ using System.Runtime.InteropServices;
 // by using the '*' as shown below:
 [assembly: AssemblyVersion("1.1.0.0")]
 [assembly: AssemblyFileVersion("1.1.0.0")]
+[assembly: System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Design", "CA2210:AssembliesShouldHaveValidStrongNames")]
