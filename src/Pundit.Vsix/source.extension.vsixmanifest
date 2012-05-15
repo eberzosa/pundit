@@ -10,6 +10,7 @@
       <License>license.txt</License>
       <GettingStartedGuide>http://pundit.codeplex.com/wikipage?title=Pundit%20overview</GettingStartedGuide>
       <Icon>pundit-logo-big.png</Icon>
+      <PreviewImage>pundit-logo-big.png</PreviewImage>
       <InstalledByMsi>false</InstalledByMsi>
       <SupportedProducts>
          <VisualStudio Version="10.0">

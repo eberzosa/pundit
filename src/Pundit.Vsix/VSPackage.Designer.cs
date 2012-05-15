@@ -95,7 +95,7 @@ namespace Pundit.Vsix {
         }
         
         /// <summary>
-        ///   Looks up a localized string similar to pundit.
+        ///   Looks up a localized string similar to Pundit Console.
         /// </summary>
         internal static string PunditConsoleWindowTitle {
             get {

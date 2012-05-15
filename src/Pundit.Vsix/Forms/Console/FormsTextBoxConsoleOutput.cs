@@ -155,7 +155,7 @@ namespace Pundit.Vsix.Forms.Console
 
       public void WriteLine(ConsoleColor defaultColor, string format, params object[] args)
       {
-         Write(defaultColor + Environment.NewLine, format, args);
+         Write(defaultColor, format + Environment.NewLine, args);
       }
 
       public void Write(bool result)

@@ -133,6 +133,6 @@
     <value>pundit $</value>
   </data>
   <data name="PunditConsoleWindowTitle" xml:space="preserve">
-    <value>pundit</value>
+    <value>Pundit Console</value>
   </data>
 </root>
