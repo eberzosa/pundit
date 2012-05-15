@@ -49,6 +49,7 @@
     <WarningLevel>4</WarningLevel>
     <RunCodeAnalysis>true</RunCodeAnalysis>
     <CodeAnalysisRuleSet>AllRules.ruleset</CodeAnalysisRuleSet>
+    <DeployExtension>False</DeployExtension>
   </PropertyGroup>
   <ItemGroup>
     <Reference Include="Microsoft.CSharp" />
@@ -120,11 +121,6 @@
     <Compile Include="PunditPackage.SolutionEvents.cs" />
     <Compile Include="PunditPackage.StaticProperties.cs" />
     <Compile Include="Settings.cs" />
-    <Compile Include="Strings.Designer.cs">
-      <AutoGen>True</AutoGen>
-      <DesignTime>True</DesignTime>
-      <DependentUpon>Strings.resx</DependentUpon>
-    </Compile>
     <Compile Include="Weirdo\Guids.cs" />
     <Compile Include="Weirdo\PkgCmdId.cs" />
     <Compile Include="VSPackage.Designer.cs">
@@ -152,10 +148,6 @@
     </EmbeddedResource>
     <EmbeddedResource Include="Forms\Configuration\General\VsixOptions.resx">
       <DependentUpon>VsixOptions.cs</DependentUpon>
-    </EmbeddedResource>
-    <EmbeddedResource Include="Strings.resx">
-      <Generator>ResXFileCodeGenerator</Generator>
-      <LastGenOutput>Strings.Designer.cs</LastGenOutput>
     </EmbeddedResource>
     <EmbeddedResource Include="VSPackage.resx">
       <Generator>ResXFileCodeGenerator</Generator>

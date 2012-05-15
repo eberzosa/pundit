@@ -46,7 +46,7 @@ namespace Pundit.Vsix
          ToolWindowPane window = this.FindToolWindow(typeof(ConsoleVsToolWindow), 0, true);
          if ((null == window) || (null == window.Frame))
          {
-            throw new NotSupportedException(Strings.CantCreateToolWindow);
+            throw new NotSupportedException(VSPackage.CantCreateToolWindow);
          }
          IVsWindowFrame windowFrame = (IVsWindowFrame)window.Frame;
          Microsoft.VisualStudio.ErrorHandler.ThrowOnFailure(windowFrame.Show());         

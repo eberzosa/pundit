@@ -46,5 +46,12 @@ namespace System.Windows.Forms
       {
          txt.GoToLine(txt.Lines.Length);
       }
+
+      public static bool IsOnLastLine(this RichTextBox txt)
+      {
+         int sel = txt.SelectionStart;
+         int line = txt.GetLineFromCharIndex(sel);
+         return line == txt.Lines.Length - 1;
+      }
    }
 }

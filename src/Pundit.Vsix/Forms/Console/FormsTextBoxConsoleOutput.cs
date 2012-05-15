@@ -36,7 +36,25 @@ namespace Pundit.Vsix.Forms.Console
          _txt = txt;
          _txt.Font = new Font("Consolas", 10);
          _txt.PreviewKeyDown += TxtPreviewKeyDown;
+         _txt.KeyDown += TxtKeyDown;
          PrintConsolePrompt();
+      }
+
+      void TxtKeyDown(object sender, KeyEventArgs e)
+      {
+         if (e.KeyValue == 13)
+         {
+            e.SuppressKeyPress = true;
+            if (ExecuteCommand != null)
+            {
+               string s = _txt.GetLastLineText();
+               if (s != null && s.Length > VSPackage.Console_Prompt.Length)
+               {
+                  s = s.Substring(VSPackage.Console_Prompt.Length).Trim();
+                  Execute(s);
+               }
+            }
+         }
       }
 
       private void Execute(string s)
@@ -51,27 +69,6 @@ namespace Pundit.Vsix.Forms.Console
 
       void TxtPreviewKeyDown(object sender, PreviewKeyDownEventArgs e)
       {
-         if (!AllowedKeys.Contains(e.KeyValue))
-         {
-            if (e.KeyValue == 13)
-            {
-               if (ExecuteCommand != null)
-               {
-                  string s = _txt.GetLastLineText();
-                  if (s != null && s.Length > VSPackage.Console_Prompt.Length)
-                  {
-                     s = s.Substring(VSPackage.Console_Prompt.Length).Trim();
-                     Execute(s);
-                  }
-               }
-            }
-            else
-            {
-               FixConsolePrompt();
-               _txt.GoToEnd();
-               _txt.SelectionColor = NormalColor;
-            }
-         }
       }
 
       void PrintConsolePrompt()
@@ -81,16 +78,21 @@ namespace Pundit.Vsix.Forms.Console
 
       void FixConsolePrompt()
       {
-         string prompt = _txt.GetLastLineText();
-         if(prompt != null)
-         {
-            if(!prompt.StartsWith(VSPackage.Console_Prompt))
-            {
-               _txt.GoToLastLine();
-               PrintConsolePrompt();
-               _txt.GoToEnd();
-            }
-         }
+         UiInvoke(() =>
+                     {
+                        string prompt = _txt.GetLastLineText();
+                        if (prompt != null)
+                        {
+                           if (!prompt.StartsWith(VSPackage.Console_Prompt))
+                           {
+                              _txt.GoToLastLine();
+                              PrintConsolePrompt();
+                              _txt.GoToEnd();
+
+                           }
+                        }
+
+                     });
       }
 
       private Color TranslateColor(ConsoleColor color)

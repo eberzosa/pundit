@@ -106,14 +106,14 @@ namespace Pundit.Vsix
 	      {
             if (SolutionDirectory == null)
             {
-               Alert.Error(Strings.SolutionNotAccessible);
+               Alert.Error(VSPackage.SolutionNotAccessible);
 
                return false;
             }
 
             if(!SolutionHasManifest)
             {
-               Alert.Error(string.Format(Strings.SolutionHasNoManifest, ManifestPath));
+               Alert.Error(string.Format(VSPackage.SolutionHasNoManifest, ManifestPath));
 
                return false;
             }

@@ -78,15 +78,24 @@ namespace Pundit.Vsix {
             }
         }
         
-        internal static System.Drawing.Bitmap _301 {
+        internal static System.Drawing.Bitmap _400 {
             get {
-                object obj = ResourceManager.GetObject("301", resourceCulture);
+                object obj = ResourceManager.GetObject("400", resourceCulture);
                 return ((System.Drawing.Bitmap)(obj));
             }
         }
         
         /// <summary>
-        ///   Looks up a localized string similar to pundit $.
+        ///   Looks up a localized string similar to Visual Studio has no idea why the window cannot be created.
+        /// </summary>
+        internal static string CantCreateToolWindow {
+            get {
+                return ResourceManager.GetString("CantCreateToolWindow", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to P&gt; .
         /// </summary>
         internal static string Console_Prompt {
             get {
@@ -100,6 +109,24 @@ namespace Pundit.Vsix {
         internal static string PunditConsoleWindowTitle {
             get {
                 return ResourceManager.GetString("PunditConsoleWindowTitle", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to This solution has no valid Pundit manifest file expected at location {0}.
+        /// </summary>
+        internal static string SolutionHasNoManifest {
+            get {
+                return ResourceManager.GetString("SolutionHasNoManifest", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Could not access solution properties. Is any solution open at at all at the moment?.
+        /// </summary>
+        internal static string SolutionNotAccessible {
+            get {
+                return ResourceManager.GetString("SolutionNotAccessible", resourceCulture);
             }
         }
     }

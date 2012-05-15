@@ -11,7 +11,7 @@ namespace Pundit.Vsix.Forms.Console
       public ConsoleVsToolWindow() : base(null)
       {
          this.Caption = VSPackage.PunditConsoleWindowTitle;
-         this.BitmapResourceID = 301;
+         this.BitmapResourceID = 400;
          this.BitmapIndex = 0;
          _instance = new PunditConsoleContent();
          base.Content = _instance;
