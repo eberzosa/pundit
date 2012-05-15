@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Drawing;
 using System.Linq;
+using System.Threading.Tasks;
 using System.Windows.Forms;
 using Pundit.Core.Model;
 
@@ -14,25 +15,38 @@ namespace Pundit.Vsix.Forms.Console
          new[]
             {
                37,   //arrow left
-               38,   //arrow up
+               //38,   //arrow up
                39,   //arrow right
-               40,   //arrow down
-               33,   //pgup
-               34    //pgdn
+               //40,   //arrow down
+               //33,   //pgup
+               //34    //pgdn
             };
 
       private static readonly Color NormalColor = Color.Gray;
 
+      private readonly Control _host;
       private readonly RichTextBox _txt;
 
-      public FormsTextBoxConsoleOutput(RichTextBox txt)
+      public FormsTextBoxConsoleOutput(Control host, RichTextBox txt)
       {
+         if (host == null) throw new ArgumentNullException("host");
          if (txt == null) throw new ArgumentNullException("txt");
 
+         _host = host;
          _txt = txt;
          _txt.Font = new Font("Consolas", 10);
          _txt.PreviewKeyDown += TxtPreviewKeyDown;
          PrintConsolePrompt();
+      }
+
+      private void Execute(string s)
+      {
+         Task.Factory.StartNew(() =>
+                                  {
+                                     WriteLine(null);
+                                     ExecuteCommand(s);
+                                     FixConsolePrompt();
+                                  }, TaskCreationOptions.LongRunning);
       }
 
       void TxtPreviewKeyDown(object sender, PreviewKeyDownEventArgs e)
@@ -46,9 +60,8 @@ namespace Pundit.Vsix.Forms.Console
                   string s = _txt.GetLastLineText();
                   if (s != null && s.Length > VSPackage.Console_Prompt.Length)
                   {
-                     WriteLine(null);
-                     ExecuteCommand(s.Substring(VSPackage.Console_Prompt.Length).Trim());
-                     FixConsolePrompt();
+                     s = s.Substring(VSPackage.Console_Prompt.Length).Trim();
+                     Execute(s);
                   }
                }
             }
@@ -95,39 +108,54 @@ namespace Pundit.Vsix.Forms.Console
          }
       }
 
+      private void UiInvoke(Action a)
+      {
+         if (a != null)
+         {
+            if (_host.InvokeRequired)
+            {
+               _host.Invoke(a);
+            }
+            else
+            {
+               a();
+            }
+         }
+      }
+
       #region Implementation of IConsoleOutput
 
       public void Write(string format, params object[] args)
       {
          if (format != null)
          {
-            _txt.AppendText(string.Format(format, args));
+            UiInvoke(() => _txt.AppendText(string.Format(format, args)));
          }
       }
 
       public void WriteLine(string format, params object[] args)
       {
-         Write(format, args);
-         _txt.AppendText(Environment.NewLine);
+         Write(format + Environment.NewLine, args);
       }
 
       public void Write(ConsoleColor color, string format, params object[] args)
       {
-         _txt.SelectionColor = TranslateColor(color);
-         Write(format, args);
+         Write(TranslateColor(color), format, args);
       }
 
       private void Write(Color color, string format, params object[] args)
       {
-         _txt.SelectionColor = color;
-         _txt.AppendText(string.Format(format, args));
-         _txt.SelectionColor = NormalColor;
+         UiInvoke(() =>
+                     {
+                        _txt.SelectionColor = color;
+                        _txt.AppendText(string.Format(format, args));
+                        _txt.SelectionColor = NormalColor;
+                     });
       }
 
       public void WriteLine(ConsoleColor defaultColor, string format, params object[] args)
       {
-         Write(defaultColor, format, args);
-         _txt.AppendText(Environment.NewLine);
+         Write(defaultColor + Environment.NewLine, format, args);
       }
 
       public void Write(bool result)
@@ -153,7 +181,7 @@ namespace Pundit.Vsix.Forms.Console
 
       public void FinishCommand()
       {
-         WriteLine(ConsoleColor.Gray, "______________");
+         
       }
 
       #endregion

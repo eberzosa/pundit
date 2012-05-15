@@ -80,8 +80,8 @@ VIAddVersionKey /LANG=${LANG_ENGLISH} "LegalCopyright" "Copyright ${PRODUCT_PUBL
 VIAddVersionKey /LANG=${LANG_ENGLISH} "FileDescription" "${PRODUCT_NAME} installer"
 VIAddVersionKey /LANG=${LANG_ENGLISH} "FileVersion" "${PRODUCT_VERSION}"
 
-Section "!Core" SCCORE
-  SectionIn 1 RO
+Section "!Core" SCCONSOLE
+  SectionIn 1
   SetOverwrite ifdiff
   SetShellVarContext all
 
@@ -99,6 +99,11 @@ Section "!Core" SCCORE
   createShortCut "$SMPROGRAMS\${PRODUCT_DIR_NAME}\License Agreement.lnk" "$INSTDIR\License.rtf"
   createShortCut "$SMPROGRAMS\${PRODUCT_DIR_NAME}\Documentation.lnk" "http://pundit.codeplex.com"
   createShortCut "$SMPROGRAMS\${PRODUCT_DIR_NAME}\Uninstall.lnk" "$INSTDIR\uninstall.exe"
+
+SectionEnd
+
+Section "!VSIX" SCVSIX
+  SectionIn 1
 
 SectionEnd
 

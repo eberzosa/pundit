@@ -1,8 +1,6 @@
 ﻿using System;
 using System.IO;
-using System.Reflection;
 using System.Windows.Controls;
-using System.Windows.Input;
 using Pundit.Core.Application.Console;
 using Pundit.Core.Model;
 
@@ -26,7 +24,7 @@ namespace Pundit.Vsix.Forms.Console
       {
          var container = new FormsContainer();
          FormsHost.Child = container;
-         var fco = new FormsTextBoxConsoleOutput(container.TextBox);
+         var fco = new FormsTextBoxConsoleOutput(container, container.TextBox);
          fco.ExecuteCommand += UserExecuteCommand;
          _console = fco;
       }
