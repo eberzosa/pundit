@@ -1,8 +1,6 @@
 ﻿using System;
-using System.IO;
 using Microsoft.VisualStudio.Shell;
 using Microsoft.VisualStudio.Shell.Interop;
-using Pundit.Vsix.Forms;
 using Pundit.Vsix.Forms.Console;
 using Pundit.WinForms.Core;
 using Package = Microsoft.VisualStudio.Shell.Package;

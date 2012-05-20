@@ -1,7 +1,4 @@
-﻿using System;
-using System.IO;
-using System.Windows.Controls;
-using Pundit.Core.Application.Console;
+﻿using System.Windows.Controls;
 using Pundit.Core.Model;
 
 namespace Pundit.Vsix.Forms.Console
@@ -27,58 +24,13 @@ namespace Pundit.Vsix.Forms.Console
          var fco = new FormsTextBoxConsoleOutput(container, container.TextBox);
          fco.ExecuteCommand += UserExecuteCommand;
          _console = fco;
+
+         ExtensionApplication.Instance.AssignConsole(_console);
       }
 
-      void UserExecuteCommand(string obj)
+      void UserExecuteCommand(string rawText)
       {
-         ExecuteCommand(obj.Split(' '));
-      }
-
-      private string LastSolutionDirectory
-      {
-         get { return PunditPackage.LastSolutionDirectory == null ? null : PunditPackage.LastSolutionDirectory.FullName; }
-      }
-
-      private string LastManifestDirectory
-      {
-         get
-         {
-            string sd = LastSolutionDirectory;
-
-            if (sd == null) return null;
-
-            return new DirectoryInfo(sd).Parent.FullName;
-         }
-      }
-
-      private void ExecuteCommand(string[] args)
-      {
-         try
-         {
-            IConsoleCommand cmd = CommandFactory.CreateCommand(_console,
-               LastManifestDirectory,
-               args);
-
-            cmd.Execute();
-         }
-         catch (NoCurrentDirectoryException)
-         {
-            _console.WriteLine(ConsoleColor.Red, "this command requires a solution to be opened");
-         }
-         catch (Exception ex)
-         {
-            _console.WriteLine(ConsoleColor.Red, ex.Message);
-         }
-      }
-
-      public void ResolveDependencies()
-      {
-         ExecuteCommand(new[] { "resolve" });
-      }
-
-      public void Search(string text, bool formatXml)
-      {
-         ExecuteCommand(new[] {"search", text});
+         ExtensionApplication.Instance.ExecuteCommand(rawText);
       }
    }
 }

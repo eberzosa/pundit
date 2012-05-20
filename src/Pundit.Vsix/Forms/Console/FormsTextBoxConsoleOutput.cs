@@ -1,6 +1,5 @@
 ﻿using System;
 using System.Drawing;
-using System.Linq;
 using System.Threading.Tasks;
 using System.Windows.Forms;
 using Pundit.Core.Model;
@@ -10,17 +9,6 @@ namespace Pundit.Vsix.Forms.Console
    class FormsTextBoxConsoleOutput : IConsoleOutput
    {
       public event Action<string> ExecuteCommand;
-
-      private static readonly int[] AllowedKeys =
-         new[]
-            {
-               37,   //arrow left
-               //38,   //arrow up
-               39,   //arrow right
-               //40,   //arrow down
-               //33,   //pgup
-               //34    //pgdn
-            };
 
       private static readonly Color NormalColor = Color.Gray;
 
@@ -59,12 +47,8 @@ namespace Pundit.Vsix.Forms.Console
 
       private void Execute(string s)
       {
-         Task.Factory.StartNew(() =>
-                                  {
-                                     WriteLine(null);
-                                     ExecuteCommand(s);
-                                     FixConsolePrompt();
-                                  }, TaskCreationOptions.LongRunning);
+         WriteLine(null);
+         ExecuteCommand(s);
       }
 
       void TxtPreviewKeyDown(object sender, PreviewKeyDownEventArgs e)
@@ -183,7 +167,7 @@ namespace Pundit.Vsix.Forms.Console
 
       public void FinishCommand()
       {
-         
+         FixConsolePrompt();         
       }
 
       #endregion

@@ -10,27 +10,11 @@ namespace Pundit.Vsix.Forms.Console
 
       public ConsoleVsToolWindow() : base(null)
       {
-         this.Caption = VSPackage.PunditConsoleWindowTitle;
-         this.BitmapResourceID = 400;
-         this.BitmapIndex = 0;
+         Caption = VSPackage.PunditConsoleWindowTitle;
+         BitmapResourceID = 400;
+         BitmapIndex = 0;
          _instance = new PunditConsoleContent();
          base.Content = _instance;
-      }
-
-      public static void ResolveDependencies()
-      {
-         if(_instance != null)
-         {
-            _instance.ResolveDependencies();
-         }
-      }
-
-      public static void Search(string text, bool formatXml)
-      {
-         if(_instance != null)
-         {
-            _instance.Search(text, formatXml);
-         }
       }
    }
 }
