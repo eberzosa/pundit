@@ -1,6 +1,5 @@
 ﻿using System;
 using System.Drawing;
-using System.Threading.Tasks;
 using System.Windows.Forms;
 using Pundit.Core.Model;
 
@@ -38,7 +37,8 @@ namespace Pundit.Vsix.Forms.Console
                string s = _txt.GetLastLineText();
                if (s != null && s.Length > VSPackage.Console_Prompt.Length)
                {
-                  s = s.Substring(VSPackage.Console_Prompt.Length).Trim();
+                  s = s.Trim();
+                  if(s.StartsWith(VSPackage.Console_Prompt)) s = s.Substring(VSPackage.Console_Prompt.Length).Trim();
                   Execute(s);
                }
             }
@@ -60,7 +60,7 @@ namespace Pundit.Vsix.Forms.Console
          Write(Color.Black, VSPackage.Console_Prompt);
       }
 
-      void FixConsolePrompt()
+      public void FixPrompt()
       {
          UiInvoke(() =>
                      {
@@ -167,7 +167,7 @@ namespace Pundit.Vsix.Forms.Console
 
       public void FinishCommand()
       {
-         FixConsolePrompt();         
+         FixPrompt();
       }
 
       #endregion

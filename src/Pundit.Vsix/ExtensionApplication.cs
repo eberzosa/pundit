@@ -1,16 +1,21 @@
 ﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
+using System.IO;
+using System.Threading.Tasks;
 using Pundit.Core.Application.Console;
 using Pundit.Core.Model;
 
 namespace Pundit.Vsix
 {
+   interface IPunditVsCommands
+   {
+      void ShowConsoleToolWindow();
+   }
+
    class ExtensionApplication
    {
       private IConsoleOutput _console;
-      private string _manifestDirectoryName;
+      private DirectoryInfo _solutionDirectory;
+      private IPunditVsCommands _vsCommands;
 
       private ExtensionApplication()
       {
@@ -30,20 +35,95 @@ namespace Pundit.Vsix
          _console = console;
       }
 
-      public void AssignManifestDirectory(string fullName)
+      public void AssignVsCommands(IPunditVsCommands vsCommands)
       {
-         _manifestDirectoryName = fullName;
+         _vsCommands = vsCommands;
+      }
+
+      public void AssignSolutionDirectory(DirectoryInfo directory)
+      {
+         _solutionDirectory = directory;
       }
 
       #endregion
 
       #region [ Command Wrappers ]
 
-      public void SearchTextCommand(string text)
+      public void SearchTextCommand(string text, bool formatXml)
+      {
+         ExecuteCommand("search " + text + (formatXml ? " -x" : ""));
+      }
+
+      public void ResolveDependenciesCommand()
+      {
+         ExecuteCommand("resolve");
+      }
+
+      public void OpenXmlManifestCommand()
+      {
+         
+      }
+
+      public void ShowHelpCommand()
+      {
+         ExecuteCommand("help");
+      }
+
+      public void ShowConsoleCommand()
+      {
+         if(_vsCommands != null) _vsCommands.ShowConsoleToolWindow();
+      }
 
       #endregion
 
+      private DirectoryInfo ManifestDirectory
+      {
+         get
+         {
+            if (_solutionDirectory != null && _solutionDirectory.Parent != null)
+            {
+               return _solutionDirectory.Parent;
+            }
+
+            return null;
+         }
+      }
+
+      private string ManifestPath
+      {
+         get
+         {
+            DirectoryInfo md = ManifestDirectory;
+
+            if (md != null)
+            {
+               string manifestPath = Path.Combine(
+                  md.FullName,
+                  Package.DefaultManifestFileName);
+
+               return manifestPath;
+            }
+
+            return null;
+         }
+      }
+
+      private bool SolutionHasManifest
+      {
+         get
+         {
+            string path = ManifestPath;
+
+            return path != null && File.Exists(path);
+         }
+      }
+
       public void ExecuteCommand(string rawText)
+      {
+         Task.Factory.StartNew(() => ExecuteCommandImpl(rawText), TaskCreationOptions.LongRunning);
+      }
+
+      private void ExecuteCommandImpl(string rawText)
       {
          if (string.IsNullOrEmpty(rawText)) return;
          string[] args = rawText.Trim().Split(' ');
@@ -51,8 +131,11 @@ namespace Pundit.Vsix
 
          try
          {
+            if(_vsCommands != null) _vsCommands.ShowConsoleToolWindow();
+
             IConsoleCommand cmd = CommandFactory.CreateCommand(_console,
-               _manifestDirectoryName, args);
+               ManifestDirectory == null ? null : ManifestDirectory.FullName,
+               args);
 
             cmd.Execute();
          }
@@ -64,8 +147,11 @@ namespace Pundit.Vsix
          {
             _console.WriteLine(ConsoleColor.Red, ex.Message);
          }
-
+         finally
+         {
+            _console.FinishCommand();
+            if (_vsCommands != null) _vsCommands.ShowConsoleToolWindow();
+         }
       }
-
    }
 }

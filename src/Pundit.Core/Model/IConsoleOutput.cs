@@ -61,5 +61,7 @@ namespace Pundit.Core.Model
       void FinishProgress();
 
       void FinishCommand();
+
+      void FixPrompt();
    }
 }

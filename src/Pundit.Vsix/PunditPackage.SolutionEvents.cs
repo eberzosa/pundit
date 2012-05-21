@@ -3,6 +3,7 @@ using Microsoft.VisualStudio.Shell.Interop;
 
 namespace Pundit.Vsix
 {
+   //IVsSolutionEvents
    partial class PunditPackage
    {
       public int OnAfterOpenProject(IVsHierarchy pHierarchy, int fAdded)

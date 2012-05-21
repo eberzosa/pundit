@@ -255,6 +255,10 @@ namespace Pundit.Console
          WriteLine(ConsoleColor.Yellow, "all done.");
       }
 
+      public void FixPrompt()
+      {
+      }
+
       #endregion
 
    }

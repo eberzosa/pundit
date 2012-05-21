@@ -38,60 +38,6 @@ namespace Pundit.Vsix
          get { return GetPropAsDir(__VSPROPID.VSPROPID_SolutionDirectory); }
       }
 
-	   private DirectoryInfo ManifestDirectory
-	   {
-	      get
-	      {
-	         DirectoryInfo solutionDir = SolutionDirectory;
-
-            if (solutionDir != null && solutionDir.Parent != null)
-            {
-               return solutionDir.Parent;
-            }
-
-	         return null;
-	      }
-	   }
-
-	   private string ManifestPath
-	   {
-	      get
-	      {
-	         DirectoryInfo md = ManifestDirectory;
-
-            if(md != null)
-            {
-               string manifestPath = Path.Combine(
-                  md.FullName,
-                  Pundit.Core.Model.Package.DefaultManifestFileName);
-
-               return manifestPath;
-            }
-
-            return null;
-	      }
-	   }
-
-	   private bool SolutionHasManifest
-	   {
-	      get
-         {
-            string path = ManifestPath;
-
-            return path != null && File.Exists(path);
-         }
-	   }
-
-	   private DevPackage InstantManifest
-	   {
-	      get
-	      {
-	         using(Stream s = File.OpenRead(ManifestPath))
-	         {
-	            return DevPackage.FromStream(s);
-	         }
-	      }
-	   }
 
       private void Test()
       {
@@ -99,28 +45,6 @@ namespace Pundit.Vsix
 
          //proj.AddItem()
       }
-
-	   private bool IsInValidState
-	   {
-	      get
-	      {
-            if (SolutionDirectory == null)
-            {
-               Alert.Error(VSPackage.SolutionNotAccessible);
-
-               return false;
-            }
-
-            if(!SolutionHasManifest)
-            {
-               Alert.Error(string.Format(VSPackage.SolutionHasNoManifest, ManifestPath));
-
-               return false;
-            }
-
-	         return true;
-	      }
-	   }
 
 	   private const string SettingsRoot = "Pundit\\Common";
 

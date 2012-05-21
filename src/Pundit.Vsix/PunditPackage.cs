@@ -26,11 +26,13 @@ namespace Pundit.Vsix
    [ProvideOptionPage(typeof(VsixOptionsPage), "Pundit", "General", 113, 114, true)]
    [ProvideOptionPage(typeof(IntegrationPage), "Pundit", "Integration", 113, 114, true)]
 	[ComVisible(true)]
-	public partial class PunditPackage : Package, IVsSolutionEvents
+	public partial class PunditPackage : Package, IVsSolutionEvents, IPunditVsCommands
 	{
 	   private OleMenuCommandService _mcs;
 	   private uint _solutionEventsCookie;
+
 	   private OleMenuCommand _cmdResolve;
+	   private OleMenuCommand _cmdAddReference;
 
 		/// <summary>
 		/// Default constructor of the package. This is the constructor that will be used by VS
@@ -71,16 +73,18 @@ namespace Pundit.Vsix
 
 			if (null != mcs)
 			{
-			   BindHandler(CommandSet.AddPackages, AddReferenceCommandCallback);
+			   _cmdAddReference = BindHandler(CommandSet.AddPackages, AddReferenceCommandCallback);
 			   //BindHandler(CommandSet.cmdidGlobalSettings, GlobalSettingsCommandCallback);
 			   _cmdResolve = BindHandler(CommandSet.Resolve, ResolveDependenciesCommandCallback, false);
 			   BindHandler(CommandSet.cmdidPunditConsole, ShowPunditConsoleCallback);
 			   BindHandler(CommandSet.SearchCombo, FindPackageCommandCallback);
-			   BindHandler(CommandSet.cmdidShowManifest, OpenXmlManifest);
+			   BindHandler(CommandSet.cmdidShowManifest, OpenXmlManifestCallback);
+			   BindHandler(CommandSet.Help, ShowHelpCallback);
 			}
 
          InitializeShell();
-
+         ExtensionApplication.Instance.AssignVsCommands(this);
+         EnableSolutionButtons(false);
          //StartBackgroundActivity(); //it will start when solution gets opened
 		}
 
@@ -100,6 +104,5 @@ namespace Pundit.Vsix
 
          base.Dispose(disposing);
       }
-
 	}
 }
