@@ -44,29 +44,25 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
-    <Compile Include="AddReferenceForm.cs">
+    <Compile Include="Forms\AddManifestForm.cs">
       <SubType>Form</SubType>
     </Compile>
-    <Compile Include="AddReferenceForm.Designer.cs">
+    <Compile Include="Forms\AddManifestForm.Designer.cs">
+      <DependentUpon>AddManifestForm.cs</DependentUpon>
+    </Compile>
+    <Compile Include="Forms\AddReferenceForm.cs">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="Forms\AddReferenceForm.Designer.cs">
       <DependentUpon>AddReferenceForm.cs</DependentUpon>
     </Compile>
     <Compile Include="Alert.cs" />
-    <Compile Include="AlertStrings.Designer.cs">
-      <AutoGen>True</AutoGen>
-      <DesignTime>True</DesignTime>
-      <DependentUpon>AlertStrings.resx</DependentUpon>
-    </Compile>
     <Compile Include="Images.Designer.cs">
       <AutoGen>True</AutoGen>
       <DesignTime>True</DesignTime>
       <DependentUpon>Images.resx</DependentUpon>
     </Compile>
     <Compile Include="Properties\AssemblyInfo.cs" />
-    <Compile Include="Strings.Designer.cs">
-      <AutoGen>True</AutoGen>
-      <DesignTime>True</DesignTime>
-      <DependentUpon>Strings.resx</DependentUpon>
-    </Compile>
     <Service Include="{94E38DFF-614B-4cbd-B67C-F211BB35CE8B}" />
   </ItemGroup>
   <ItemGroup>
@@ -76,46 +72,20 @@
     </ProjectReference>
   </ItemGroup>
   <ItemGroup>
-    <EmbeddedResource Include="AddReferenceForm.resx">
-      <DependentUpon>AddReferenceForm.cs</DependentUpon>
+    <EmbeddedResource Include="Forms\AddManifestForm.resx">
+      <DependentUpon>AddManifestForm.cs</DependentUpon>
     </EmbeddedResource>
-    <EmbeddedResource Include="AlertStrings.resx">
-      <Generator>ResXFileCodeGenerator</Generator>
-      <LastGenOutput>AlertStrings.Designer.cs</LastGenOutput>
+    <EmbeddedResource Include="Forms\AddReferenceForm.resx">
+      <DependentUpon>AddReferenceForm.cs</DependentUpon>
     </EmbeddedResource>
     <EmbeddedResource Include="Images.resx">
       <Generator>ResXFileCodeGenerator</Generator>
       <LastGenOutput>Images.Designer.cs</LastGenOutput>
     </EmbeddedResource>
-    <EmbeddedResource Include="Strings.resx">
-      <Generator>ResXFileCodeGenerator</Generator>
-      <LastGenOutput>Strings.Designer.cs</LastGenOutput>
-    </EmbeddedResource>
   </ItemGroup>
   <ItemGroup>
-    <Content Include="app.ico" />
-    <None Include="Resources\arrow_refresh.png" />
-    <None Include="Resources\arrow_refresh_small.png" />
-    <None Include="Resources\arrow_down.png" />
-    <None Include="Resources\arrow_up.png" />
-    <None Include="Resources\delete.png" />
-    <None Include="Resources\add.png" />
-    <None Include="Resources\image_add.png" />
-    <None Include="Resources\ajax-loader.gif" />
-    <None Include="Resources\disk.png" />
-    <None Include="Resources\drive_network.png" />
-    <None Include="Resources\picture_empty.png" />
-    <None Include="Resources\flag_red.png" />
-    <None Include="Resources\flag_purple.png" />
-    <None Include="Resources\flag_pink.png" />
-    <None Include="Resources\flag_orange.png" />
-    <None Include="Resources\flag_green.png" />
-    <None Include="Resources\flag_blue.png" />
-    <None Include="Resources\flag_yellow.png" />
-    <None Include="Resources\sad.gif" />
-    <None Include="Resources\sun.gif" />
+    <Folder Include="Resources\" />
   </ItemGroup>
-  <ItemGroup />
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
   <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 
        Other similar extension points exist, see Microsoft.Common.targets.

@@ -135,11 +135,11 @@
   <data name="Console_Prompt" xml:space="preserve">
     <value>P&gt; </value>
   </data>
+  <data name="OpenXmlManifest_DoesntExist" xml:space="preserve">
+    <value>This solution has no Pundit manifest. Would you like to create a new one at '{0}'?</value>
+  </data>
   <data name="PunditConsoleWindowTitle" xml:space="preserve">
     <value>Pundit Console</value>
-  </data>
-  <data name="SolutionHasNoManifest" xml:space="preserve">
-    <value>This solution has no valid Pundit manifest file expected at location {0}</value>
   </data>
   <data name="SolutionNotAccessible" xml:space="preserve">
     <value>Could not access solution properties. Is any solution open at at all at the moment?</value>

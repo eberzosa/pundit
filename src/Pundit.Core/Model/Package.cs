@@ -20,8 +20,8 @@ namespace Pundit.Core.Model
       public const string PackedExtension = ".pundit";
       public const string NoArchPlatformName = "noarch";
 
-      private static Regex _packageStringRgx = new Regex("^[0-9a-zA-Z\\._]+$");
-      private static Regex _packageVersionRgx = new Regex("^[0-9\\*]+(\\.[0-9\\*]+){3}$");
+      private static readonly Regex PackageStringRgx = new Regex("^[0-9a-zA-Z\\._]+$");
+      private static readonly Regex PackageVersionRgx = new Regex("^[0-9\\*]+(\\.[0-9\\*]+){3}$");
       private const string PackageStringDescr = "allowed characters: letters (A-Z, a-z), numbers, underscore (_) and dot sign (.)";
 
       private string _platform;
@@ -187,14 +187,21 @@ namespace Pundit.Core.Model
          }
       }
 
-      private bool IsValidPackageNameString(string s)
+      /// <summary>
+      /// 
+      /// </summary>
+      /// <param name="s"></param>
+      /// <returns></returns>
+      public static bool IsValidPackageNameString(string s)
       {
-         return _packageStringRgx.IsMatch(s);
+         if (string.IsNullOrEmpty(s)) return false;
+
+         return PackageStringRgx.IsMatch(s);
       }
 
       private bool IsValidPackageVersion(string s)
       {
-         return _packageVersionRgx.IsMatch(s);
+         return PackageVersionRgx.IsMatch(s);
       }
 
       /// <summary>

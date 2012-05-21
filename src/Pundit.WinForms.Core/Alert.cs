@@ -1,8 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Windows.Forms;
+﻿using System.Windows.Forms;
 using Pundit.Core;
 
 namespace Pundit.WinForms.Core
@@ -29,11 +25,6 @@ namespace Pundit.WinForms.Core
       public static void Error(string msg)
       {
          MessageBox.Show(msg, DefaultAlertTitle, MessageBoxButtons.OK, MessageBoxIcon.Error);
-      }
-
-      public static void MessageManifestSaved(string manifestLocation)
-      {
-         Message(string.Format(AlertStrings.MessageManifestSaved, manifestLocation));
       }
    }
 }

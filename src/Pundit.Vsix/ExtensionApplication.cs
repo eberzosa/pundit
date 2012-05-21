@@ -1,8 +1,11 @@
 ﻿using System;
 using System.IO;
 using System.Threading.Tasks;
+using System.Windows.Forms;
 using Pundit.Core.Application.Console;
 using Pundit.Core.Model;
+using Pundit.WinForms.Core;
+using Pundit.WinForms.Core.Forms;
 
 namespace Pundit.Vsix
 {
@@ -68,7 +71,31 @@ namespace Pundit.Vsix
             string path = ManifestPath;
             if (path != null)
             {
-               _vsCommands.OpenFileInEditor(ManifestPath);
+               if (File.Exists(path))
+               {
+                  _vsCommands.OpenFileInEditor(path);
+               }
+               else
+               {
+                  if(DialogResult.Yes == Alert.AskYesNo(string.Format(VSPackage.OpenXmlManifest_DoesntExist, path)))
+                  {
+                     var form = new AddManifestForm();
+                     if(DialogResult.OK == form.ShowDialog())
+                     {
+                        var package = new DevPackage();
+                        package.PackageId = form.PackageId;
+                        package.Platform = form.Platform;
+                        package.Version = new Version(1, 0, 0, 0);
+                        
+                        using(Stream s = File.Create(path))
+                        {
+                           package.WriteTo(s);
+                        }
+
+                        _vsCommands.OpenFileInEditor(path);
+                     }
+                  }
+               }
             }
          }
       }
