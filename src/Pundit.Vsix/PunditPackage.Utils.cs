@@ -2,8 +2,6 @@
 using Microsoft.VisualStudio.Settings;
 using Microsoft.VisualStudio.Shell.Interop;
 using Microsoft.VisualStudio.Shell.Settings;
-using Pundit.Core.Model;
-using Pundit.WinForms.Core;
 using Package = Microsoft.VisualStudio.Shell.Package;
 
 namespace Pundit.Vsix
@@ -37,7 +35,6 @@ namespace Pundit.Vsix
       {
          get { return GetPropAsDir(__VSPROPID.VSPROPID_SolutionDirectory); }
       }
-
 
       private void Test()
       {

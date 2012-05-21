@@ -9,6 +9,8 @@ namespace Pundit.Vsix
    interface IPunditVsCommands
    {
       void ShowConsoleToolWindow();
+
+      void OpenFileInEditor(string fullPath);
    }
 
    class ExtensionApplication
@@ -61,7 +63,14 @@ namespace Pundit.Vsix
 
       public void OpenXmlManifestCommand()
       {
-         
+         if(_vsCommands != null)
+         {
+            string path = ManifestPath;
+            if (path != null)
+            {
+               _vsCommands.OpenFileInEditor(ManifestPath);
+            }
+         }
       }
 
       public void ShowHelpCommand()

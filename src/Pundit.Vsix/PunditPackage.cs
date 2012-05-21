@@ -33,6 +33,7 @@ namespace Pundit.Vsix
 
 	   private OleMenuCommand _cmdResolve;
 	   private OleMenuCommand _cmdAddReference;
+	   private OleMenuCommand _cmdEditManifest;
 
 		/// <summary>
 		/// Default constructor of the package. This is the constructor that will be used by VS
@@ -78,7 +79,7 @@ namespace Pundit.Vsix
 			   _cmdResolve = BindHandler(CommandSet.Resolve, ResolveDependenciesCommandCallback, false);
 			   BindHandler(CommandSet.cmdidPunditConsole, ShowPunditConsoleCallback);
 			   BindHandler(CommandSet.SearchCombo, FindPackageCommandCallback);
-			   BindHandler(CommandSet.cmdidShowManifest, OpenXmlManifestCallback);
+			   _cmdEditManifest = BindHandler(CommandSet.cmdidShowManifest, OpenXmlManifestCallback);
 			   BindHandler(CommandSet.Help, ShowHelpCallback);
 			}
 

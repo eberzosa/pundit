@@ -68,7 +68,7 @@ namespace Pundit.Vsix
       {
          _cmdResolve.Enabled = enable;
          _cmdAddReference.Enabled = enable;
-         //_cmdShowManifest.Enabled = enable;
+         _cmdEditManifest.Enabled = enable;
       }
 
       private void OnSolutionOpened()
