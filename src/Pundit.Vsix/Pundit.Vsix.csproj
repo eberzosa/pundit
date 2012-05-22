@@ -79,6 +79,7 @@
     <Reference Include="WindowsFormsIntegration" />
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="Application\StatusBarIconManager.cs" />
     <Compile Include="ExtensionApplication.cs" />
     <Compile Include="Forms\Console\FormsContainer.cs">
       <SubType>UserControl</SubType>
@@ -197,6 +198,9 @@
   </ItemGroup>
   <ItemGroup>
     <Content Include="Resources\console.png" />
+    <EmbeddedResource Include="Resources\Status\green.png" />
+    <EmbeddedResource Include="Resources\Status\red.png" />
+    <EmbeddedResource Include="Resources\Status\yellow.png" />
     <Content Include="Resources\toolbar.png" />
     <Content Include="Resources\license.txt">
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>

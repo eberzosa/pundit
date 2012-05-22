@@ -4,6 +4,7 @@ using System.Runtime.InteropServices;
 using System.Security.Permissions;
 using Microsoft.VisualStudio.Shell;
 using Microsoft.VisualStudio.Shell.Interop;
+using Pundit.Vsix.Application;
 using Pundit.Vsix.Forms;
 using Pundit.Vsix.Forms.Console;
 using Pundit.Vsix.Weirdo;
@@ -30,6 +31,7 @@ namespace Pundit.Vsix
 	{
 	   private OleMenuCommandService _mcs;
 	   private uint _solutionEventsCookie;
+	   private StatusBarIconManager _statusBar;
 
 	   private OleMenuCommand _cmdResolve;
 	   private OleMenuCommand _cmdAddReference;
@@ -86,7 +88,10 @@ namespace Pundit.Vsix
          InitializeShell();
          ExtensionApplication.Instance.AssignVsCommands(this);
          EnableSolutionButtons(false);
-         //StartBackgroundActivity(); //it will start when solution gets opened
+		   _statusBar = new StatusBarIconManager();
+         _statusBar.StatusIcon = StatusIcon.Red;
+		   _statusBar.StatusText = "1 conflict(s)!";
+		   //StartBackgroundActivity(); //it will start when solution gets opened
 		}
 
       private void InitializeShell()

@@ -104,6 +104,15 @@ namespace Pundit.Vsix.Resources {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to VS2010 status bar not found.
+        /// </summary>
+        internal static string Ex_CantFindStatusBar {
+            get {
+                return ResourceManager.GetString("Ex_CantFindStatusBar", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized string similar to This solution has no Pundit manifest. Would you like to create a new one at &apos;{0}&apos;?.
         /// </summary>
         internal static string OpenXmlManifest_DoesntExist {

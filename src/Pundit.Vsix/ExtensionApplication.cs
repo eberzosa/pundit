@@ -162,6 +162,7 @@ namespace Pundit.Vsix
 
       private void ExecuteCommandImpl(string rawText)
       {
+         if (_console == null) return;
          if (string.IsNullOrEmpty(rawText)) return;
          string[] args = rawText.Trim().Split(' ');
          if (args.Length == 0) return;

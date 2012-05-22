@@ -135,6 +135,9 @@
   <data name="Console_Prompt" xml:space="preserve">
     <value>P&gt; </value>
   </data>
+  <data name="Ex_CantFindStatusBar" xml:space="preserve">
+    <value>VS2010 status bar not found</value>
+  </data>
   <data name="OpenXmlManifest_DoesntExist" xml:space="preserve">
     <value>This solution has no Pundit manifest. Would you like to create a new one at '{0}'?</value>
   </data>
