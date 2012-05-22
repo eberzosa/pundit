@@ -89,8 +89,8 @@ namespace Pundit.Vsix
          ExtensionApplication.Instance.AssignVsCommands(this);
          EnableSolutionButtons(false);
 		   _statusBar = new StatusBarIconManager();
-         _statusBar.StatusIcon = StatusIcon.Red;
-		   _statusBar.StatusText = "1 conflict(s)!";
+         _statusBar.StatusIcon = StatusIcon.Green;
+		   _statusBar.StatusText = null;
 		   //StartBackgroundActivity(); //it will start when solution gets opened
 		}
 

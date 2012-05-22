@@ -2,7 +2,6 @@
 using System.Collections.Generic;
 using System.IO;
 using System.Reflection;
-using System.Resources;
 using System.Windows;
 using System.Windows.Controls;
 using System.Windows.Media;
@@ -11,12 +10,12 @@ using Pundit.Vsix.Resources;
 
 namespace Pundit.Vsix.Application
 {
-   public enum StatusIcon
+   public enum StatusIcon : ulong
    {
       Empty,
-      Green,
-      Red,
-      Yellow
+      Green    = 0xb2c78b,
+      Red      = 0xf5863d,
+      Yellow   = 0xfddd74
    }
 
    /// <summary>
@@ -29,7 +28,7 @@ namespace Pundit.Vsix.Application
       private Label _statusText;
       private Image _statusImage;
 
-      private readonly Dictionary<StatusIcon, Stream> _imageStreams = new Dictionary<StatusIcon, Stream>();
+      private readonly Dictionary<StatusIcon, BitmapImage> _statusImages = new Dictionary<StatusIcon, BitmapImage>();
 
       public StatusBarIconManager()
       {
@@ -65,8 +64,22 @@ namespace Pundit.Vsix.Application
                                                 typeof (PunditPackage).Namespace,
                                                 icon.ToString().ToLower());
 
-            Stream s = Assembly.GetExecutingAssembly().GetManifestResourceStream(resourceName);
-            _imageStreams[icon] = s;
+            using(Stream s = Assembly.GetExecutingAssembly().GetManifestResourceStream(resourceName))
+            {
+               if (s != null)
+               {
+                  var ms = new MemoryStream();
+                  s.CopyTo(ms);
+                  s.Flush();
+                  ms.Position = 0;
+
+                  var img = new BitmapImage();
+                  img.BeginInit();
+                  img.StreamSource = ms;
+                  img.EndInit();
+                  _statusImages[icon] = img;
+               }
+            }
          }
       }
 
@@ -80,12 +93,17 @@ namespace Pundit.Vsix.Application
       {
          set
          {
-            var img = new BitmapImage();
-            img.BeginInit();
-            img.StreamSource = _imageStreams[value];
-            img.EndInit();
-            _statusImage.Source = new BitmapImage();
-            _statusImage.Stretch = Stretch.Uniform;
+            if(_statusImages.ContainsKey(value))
+            {
+               _statusImage.Source = _statusImages[value];
+               string sc = string.Format("#{0:X}", (ulong) value);
+               _statusText.Foreground = new SolidColorBrush((Color)ColorConverter.ConvertFromString(sc));
+               _statusImage.ToolTip = "pundit (work in progress)";
+            }
+            else
+            {
+               _statusImage.Source = null;
+            }
          }
       }
 
