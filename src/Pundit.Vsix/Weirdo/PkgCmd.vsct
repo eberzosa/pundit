@@ -95,7 +95,7 @@
       </Combos>
 
       <Bitmaps>
-         <Bitmap guid="guidToolbarBmp" href="../Graphics/toolbar.png"/>
+         <Bitmap guid="guidToolbarBmp" href="../Resources/toolbar.png"/>
       </Bitmaps>
    </Commands>
 

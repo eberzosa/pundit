@@ -2,6 +2,7 @@
 using System.Drawing;
 using System.Windows.Forms;
 using Pundit.Core.Model;
+using Pundit.Vsix.Resources;
 
 namespace Pundit.Vsix.Forms.Console
 {

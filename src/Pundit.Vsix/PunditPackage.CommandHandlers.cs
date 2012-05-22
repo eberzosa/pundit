@@ -2,7 +2,7 @@
 using Microsoft.VisualStudio.Shell;
 using Microsoft.VisualStudio.Shell.Interop;
 using Pundit.Vsix.Forms.Console;
-using Pundit.WinForms.Core;
+using Pundit.Vsix.Resources;
 using Package = Microsoft.VisualStudio.Shell.Package;
 
 namespace Pundit.Vsix

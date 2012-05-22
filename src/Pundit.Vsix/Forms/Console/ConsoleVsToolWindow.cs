@@ -1,5 +1,6 @@
 ﻿using System.Runtime.InteropServices;
 using Microsoft.VisualStudio.Shell;
+using Pundit.Vsix.Resources;
 
 namespace Pundit.Vsix.Forms.Console
 {

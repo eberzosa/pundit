@@ -4,6 +4,7 @@ using System.Threading.Tasks;
 using System.Windows.Forms;
 using Pundit.Core.Application.Console;
 using Pundit.Core.Model;
+using Pundit.Vsix.Resources;
 using Pundit.WinForms.Core;
 using Pundit.WinForms.Core.Forms;
 
