@@ -7,10 +7,9 @@
       <Description xml:space="preserve">Free, open source, developer-oriented package management system</Description>
       <Locale>1033</Locale>
       <MoreInfoUrl>http://pundit.codeplex.com</MoreInfoUrl>
-      <License>license.txt</License>
+      <License>Resources\license.txt</License>
       <GettingStartedGuide>http://pundit.codeplex.com/wikipage?title=Pundit%20overview</GettingStartedGuide>
-      <Icon>pundit-logo-big.png</Icon>
-      <PreviewImage>pundit-logo-big.png</PreviewImage>
+      <Icon>Resources\pundit-logo-big.png</Icon>
       <InstalledByMsi>false</InstalledByMsi>
       <SupportedProducts>
          <VisualStudio Version="10.0">

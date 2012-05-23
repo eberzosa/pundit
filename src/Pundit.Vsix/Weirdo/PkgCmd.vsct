@@ -29,6 +29,7 @@
          <Button guid="guidCommandSet" id="CommandAddPackages" priority="0x0100" type="Button">
             <Parent guid="guidReferenceContext" id="cmdAddReferenceGroup" />
             <Icon guid="guidToolbarBmp" id="pngPackage"/>
+            <CommandFlag>DefaultDisabled</CommandFlag>
             <Strings>
                <CommandName>CommandAddPackages</CommandName>
                <ButtonText>Add Pundit Reference...</ButtonText>
@@ -38,6 +39,7 @@
          <Button guid="guidCommandSet" id="cmdidShowManifest" priority="0x0100" type="Button">
             <Parent guid="guidCommandSet" id="PunditToolbarGroup"/>
             <Icon guid="guidToolbarBmp" id="pngManifest"/>
+            <CommandFlag>DefaultDisabled</CommandFlag>
             <Strings>
                <ButtonText>Open XML Manifest for editing</ButtonText>
             </Strings>
@@ -46,6 +48,7 @@
          <Button guid="guidCommandSet" id="CommandResolve" priority="0x101" type="Button">
             <Parent guid="guidCommandSet" id="PunditToolbarGroup"/>
             <Icon guid="guidToolbarBmp" id="pngRefresh"/>
+            <CommandFlag>DefaultDisabled</CommandFlag>
             <Strings>
                <ButtonText>Resolve Dependencies</ButtonText>
             </Strings>
@@ -54,6 +57,7 @@
          <Button guid="guidCommandSet" id="CommandAddPackages" priority="0x0103" type="Button">
             <Parent guid="guidCommandSet" id="PunditToolbarGroup"/>
             <Icon guid="guidToolbarBmp" id="pngPackage"/>
+            <CommandFlag>DefaultDisabled</CommandFlag>
             <Strings>
                <CommandName>CommandAddPackages</CommandName>
                <ButtonText>Add File Reference...</ButtonText>
@@ -63,6 +67,7 @@
          <Button guid="guidCommandSet" id="CommandHelp" priority="0x104" type="Button">
             <Parent guid="guidCommandSet" id="PunditToolbarGroup"/>
             <Icon guid="guidToolbarBmp" id="pngHelp"/>
+            <CommandFlag>DefaultDisabled</CommandFlag>
             <Strings>
                <ButtonText>Help on Commands</ButtonText>
             </Strings>
@@ -85,6 +90,7 @@
             <CommandFlag>CommandWellOnly</CommandFlag>
             <CommandFlag>NoAutoComplete</CommandFlag>
             <CommandFlag>CaseSensitive</CommandFlag>
+            <CommandFlag>DefaultDisabled</CommandFlag>
             <Strings>
                <ButtonText>Find:</ButtonText>
                <ToolTipText>Find a package across repositories by substring</ToolTipText>

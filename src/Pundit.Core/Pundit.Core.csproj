@@ -168,7 +168,8 @@ copy /Y ..\..\..\..\db\pundit.db ..\..\Application\sqlite\pundit.db
 copy /Y ..\..\..\..\db\server.db ..\..\Application\sqlite\server.db</PreBuildEvent>
   </PropertyGroup>
   <PropertyGroup>
-    <PostBuildEvent>copy /y "$(SolutionDir)pundit.xsd" "C:\Program Files (x86)\Microsoft Visual Studio 10.0\Xml\Schemas\"</PostBuildEvent>
+    <PostBuildEvent>
+    </PostBuildEvent>
   </PropertyGroup>
   <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 
        Other similar extension points exist, see Microsoft.Common.targets.

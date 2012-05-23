@@ -36,6 +36,8 @@ namespace Pundit.Vsix
 	   private OleMenuCommand _cmdResolve;
 	   private OleMenuCommand _cmdAddReference;
 	   private OleMenuCommand _cmdEditManifest;
+	   private OleMenuCommand _cmdSearch;
+	   private OleMenuCommand _cmdHelp;
 
 		/// <summary>
 		/// Default constructor of the package. This is the constructor that will be used by VS
@@ -80,14 +82,15 @@ namespace Pundit.Vsix
 			   //BindHandler(CommandSet.cmdidGlobalSettings, GlobalSettingsCommandCallback);
 			   _cmdResolve = BindHandler(CommandSet.Resolve, ResolveDependenciesCommandCallback, false);
 			   BindHandler(CommandSet.cmdidPunditConsole, ShowPunditConsoleCallback);
-			   BindHandler(CommandSet.SearchCombo, FindPackageCommandCallback);
+			   _cmdSearch = BindHandler(CommandSet.SearchCombo, FindPackageCommandCallback);
 			   _cmdEditManifest = BindHandler(CommandSet.cmdidShowManifest, OpenXmlManifestCallback);
-			   BindHandler(CommandSet.Help, ShowHelpCallback);
+			   _cmdHelp = BindHandler(CommandSet.Help, ShowHelpCallback);
 			}
 
          InitializeShell();
          ExtensionApplication.Instance.AssignVsCommands(this);
          EnableSolutionButtons(false);
+
 		   _statusBar = new StatusBarIconManager();
          _statusBar.StatusIcon = StatusIcon.Green;
 		   _statusBar.StatusText = null;

@@ -79,6 +79,7 @@
     <Reference Include="WindowsFormsIntegration" />
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="Application\IntellisenseInstaller.cs" />
     <Compile Include="Application\StatusBarIconManager.cs" />
     <Compile Include="ExtensionApplication.cs" />
     <Compile Include="Forms\Console\FormsContainer.cs">
@@ -161,6 +162,9 @@
   <ItemGroup>
     <Compile Include="PunditPackage.Utils.cs" />
     <None Include="Resources\icons.psd" />
+    <EmbeddedResource Include="Resources\pundit.xsd">
+      <SubType>Designer</SubType>
+    </EmbeddedResource>
     <None Include="Resources\toolbar.psd" />
     <None Include="Resources\pundit-logo-big.psd" />
   </ItemGroup>
@@ -201,7 +205,10 @@
     <EmbeddedResource Include="Resources\Status\green.png" />
     <EmbeddedResource Include="Resources\Status\red.png" />
     <EmbeddedResource Include="Resources\Status\yellow.png" />
-    <Content Include="Resources\toolbar.png" />
+    <Content Include="Resources\toolbar.png">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+      <IncludeInVSIX>true</IncludeInVSIX>
+    </Content>
     <Content Include="Resources\license.txt">
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
       <IncludeInVSIX>true</IncludeInVSIX>

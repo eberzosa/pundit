@@ -113,6 +113,15 @@ namespace Pundit.Vsix.Resources {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to Existing manifest located at {0} is not using Pundit XSD namespace. As a result, you will not be able to use Visual Studio Intellisense. Would you like to automatically fix this problem?.
+        /// </summary>
+        internal static string ManifestNotUsingNamespace {
+            get {
+                return ResourceManager.GetString("ManifestNotUsingNamespace", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized string similar to This solution has no Pundit manifest. Would you like to create a new one at &apos;{0}&apos;?.
         /// </summary>
         internal static string OpenXmlManifest_DoesntExist {
@@ -136,6 +145,33 @@ namespace Pundit.Vsix.Resources {
         internal static string SolutionNotAccessible {
             get {
                 return ResourceManager.GetString("SolutionNotAccessible", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Could not upgrade XSD schema. Make sure you have enough permissions to access the target folder..
+        /// </summary>
+        internal static string Xsd_CantUpgrade {
+            get {
+                return ResourceManager.GetString("Xsd_CantUpgrade", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Trying to upgrade XSD manifest at &apos;{0}&apos;....
+        /// </summary>
+        internal static string Xsd_Start {
+            get {
+                return ResourceManager.GetString("Xsd_Start", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to XSD schema upgraded.
+        /// </summary>
+        internal static string Xsd_Upgraded {
+            get {
+                return ResourceManager.GetString("Xsd_Upgraded", resourceCulture);
             }
         }
     }

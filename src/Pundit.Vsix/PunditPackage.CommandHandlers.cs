@@ -40,7 +40,7 @@ namespace Pundit.Vsix
          ExtensionApplication.Instance.ShowHelpCommand();
       }
 
-      private void ShowToolWindow()
+      private void ShowToolWindow(bool show = true)
       {
          //this method will show the window if it's not active or bring it to front if it's collapsed
          ToolWindowPane window = this.FindToolWindow(typeof(ConsoleVsToolWindow), 0, true);
@@ -69,6 +69,9 @@ namespace Pundit.Vsix
          _cmdResolve.Enabled = enable;
          _cmdAddReference.Enabled = enable;
          _cmdEditManifest.Enabled = enable;
+
+         _cmdHelp.Enabled = true;
+         _cmdSearch.Enabled = true;
       }
 
       private void OnSolutionOpened()

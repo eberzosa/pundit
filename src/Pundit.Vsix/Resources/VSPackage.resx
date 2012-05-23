@@ -138,6 +138,9 @@
   <data name="Ex_CantFindStatusBar" xml:space="preserve">
     <value>VS2010 status bar not found</value>
   </data>
+  <data name="ManifestNotUsingNamespace" xml:space="preserve">
+    <value>Existing manifest located at {0} is not using Pundit XSD namespace. As a result, you will not be able to use Visual Studio Intellisense. Would you like to automatically fix this problem?</value>
+  </data>
   <data name="OpenXmlManifest_DoesntExist" xml:space="preserve">
     <value>This solution has no Pundit manifest. Would you like to create a new one at '{0}'?</value>
   </data>
@@ -146,5 +149,14 @@
   </data>
   <data name="SolutionNotAccessible" xml:space="preserve">
     <value>Could not access solution properties. Is any solution open at at all at the moment?</value>
+  </data>
+  <data name="Xsd_CantUpgrade" xml:space="preserve">
+    <value>Could not upgrade XSD schema. Make sure you have enough permissions to access the target folder.</value>
+  </data>
+  <data name="Xsd_Start" xml:space="preserve">
+    <value>Trying to upgrade XSD manifest at '{0}'...</value>
+  </data>
+  <data name="Xsd_Upgraded" xml:space="preserve">
+    <value>XSD schema upgraded</value>
   </data>
 </root>

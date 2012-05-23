@@ -39,6 +39,7 @@ namespace Pundit.Vsix
       public void AssignConsole(IConsoleOutput console)
       {
          _console = console;
+         //IntellisenseInstaller.InteractiveInstallShema(console);
       }
 
       public void AssignVsCommands(IPunditVsCommands vsCommands)

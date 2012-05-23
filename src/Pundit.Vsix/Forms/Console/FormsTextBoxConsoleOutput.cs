@@ -10,7 +10,8 @@ namespace Pundit.Vsix.Forms.Console
    {
       public event Action<string> ExecuteCommand;
 
-      private static readonly Color NormalColor = Color.Gray;
+      private static readonly Color InputColor = Color.Gray;
+      private static readonly Color NormalColor = Color.Black;
 
       private readonly Control _host;
       private readonly RichTextBox _txt;
@@ -114,10 +115,7 @@ namespace Pundit.Vsix.Forms.Console
 
       public void Write(string format, params object[] args)
       {
-         if (format != null)
-         {
-            UiInvoke(() => _txt.AppendText(string.Format(format, args)));
-         }
+         Write(NormalColor, format, args);
       }
 
       public void WriteLine(string format, params object[] args)
@@ -136,7 +134,7 @@ namespace Pundit.Vsix.Forms.Console
                      {
                         _txt.SelectionColor = color;
                         _txt.AppendText(string.Format(format, args));
-                        _txt.SelectionColor = NormalColor;
+                        _txt.SelectionColor = InputColor;
                      });
       }
 
