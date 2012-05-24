@@ -6,6 +6,7 @@ using Microsoft.VisualStudio.Shell;
 using Microsoft.VisualStudio.Shell.Interop;
 using Pundit.Vsix.Application;
 using Pundit.Vsix.Forms;
+using Pundit.Vsix.Forms.Configuration.General;
 using Pundit.Vsix.Forms.Console;
 using Pundit.Vsix.Weirdo;
 
@@ -94,7 +95,7 @@ namespace Pundit.Vsix
 		   _statusBar = new StatusBarIconManager();
          _statusBar.StatusIcon = StatusIcon.Green;
 		   _statusBar.StatusText = null;
-		   //StartBackgroundActivity(); //it will start when solution gets opened
+		   StartBackgroundActivity(); //it will start when solution gets opened
 		}
 
       private void InitializeShell()

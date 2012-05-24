@@ -4,6 +4,7 @@ using System.Threading.Tasks;
 using System.Windows.Forms;
 using Pundit.Core.Application.Console;
 using Pundit.Core.Model;
+using Pundit.Vsix.Model;
 using Pundit.Vsix.Resources;
 using Pundit.WinForms.Core;
 using Pundit.WinForms.Core.Forms;
@@ -15,6 +16,10 @@ namespace Pundit.Vsix
       void ShowConsoleToolWindow();
 
       void OpenFileInEditor(string fullPath);
+
+      void SaveOption(string key, string value);
+
+      string ReadOption(string key);
    }
 
    class ExtensionApplication
@@ -22,6 +27,7 @@ namespace Pundit.Vsix
       private IConsoleOutput _console;
       private DirectoryInfo _solutionDirectory;
       private IPunditVsCommands _vsCommands;
+      private ExtensionSettings _settings;
 
       private ExtensionApplication()
       {
@@ -113,6 +119,26 @@ namespace Pundit.Vsix
       }
 
       #endregion
+
+      public ExtensionSettings Settings
+      {
+         get
+         {
+            if(_settings == null && _vsCommands != null)
+            {
+               //todo: deserialize settings
+
+               if(_settings == null) _settings = new ExtensionSettings();
+            }
+
+            return _settings;
+         }
+      }
+
+      public void SaveSettings()
+      {
+         
+      }
 
       private DirectoryInfo ManifestDirectory
       {

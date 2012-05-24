@@ -1,16 +1,7 @@
 ﻿using System;
-using System.Collections.Generic;
-using System.ComponentModel;
-using System.Diagnostics;
-using System.Drawing;
-using System.Data;
-using System.Linq;
-using System.Reflection;
-using System.Text;
 using System.Windows.Forms;
-using Pundit.Vsix.Properties;
 
-namespace Pundit.Vsix.Forms
+namespace Pundit.Vsix.Forms.Configuration.General
 {
    public partial class VsixOptions : UserControl
    {
@@ -23,19 +14,10 @@ namespace Pundit.Vsix.Forms
 
       private void RestoreSettings()
       {
-         string sPing = PunditPackage.ReadSetting("NotifPing");
-         string sNum = PunditPackage.ReadSetting("NotifTimeSpanTicks");
-
-         bool ping;
-         long ticks;
-
-         if (!bool.TryParse(sPing, out ping)) ping = false;
-         if (!long.TryParse(sNum, out ticks)) ticks = TimeSpan.FromHours(1).Ticks;
-
-         chkDoPing.Checked = ping;
+         chkDoPing.Checked = ExtensionApplication.Instance.Settings.AutoResolveEnabled;
 
          //min, hr, days
-         TimeSpan span = TimeSpan.FromTicks(ticks);
+         TimeSpan span = TimeSpan.FromSeconds(ExtensionApplication.Instance.Settings.AutoResolveFrequencySec);
          if(span.TotalDays > 0)
          {
             numPingInterval.Value = ((decimal)span.TotalDays).FitRange(numPingInterval.Minimum, numPingInterval.Maximum);
@@ -55,7 +37,7 @@ namespace Pundit.Vsix.Forms
 
       public void Save()
       {
-         PunditPackage.SaveSetting("NotifPing", chkDoPing.Checked.ToString());
+         ExtensionApplication.Instance.Settings.AutoResolveEnabled = chkDoPing.Checked;
 
          TimeSpan span;
          switch(cmbPingMeasure.SelectedIndex)
@@ -70,7 +52,8 @@ namespace Pundit.Vsix.Forms
                span = TimeSpan.FromDays((double) numPingInterval.Value);
                break;
          }
-         PunditPackage.SaveSetting("NotifTimeSpanTicks", span.Ticks.ToString());
+         ExtensionApplication.Instance.Settings.AutoResolveFrequencySec = (long)span.TotalSeconds;
+         ExtensionApplication.Instance.SaveSettings();
       }
 
       private void chkDoPing_CheckedChanged(object sender, EventArgs e)

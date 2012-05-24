@@ -1,4 +1,4 @@
-﻿namespace Pundit.Vsix.Forms
+﻿namespace Pundit.Vsix.Forms.Configuration.General
 {
    partial class VsixOptions
    {
@@ -35,6 +35,9 @@
          this.pnlPing = new System.Windows.Forms.Panel();
          this.label2 = new System.Windows.Forms.Label();
          this.groupBox1 = new System.Windows.Forms.GroupBox();
+         this.label3 = new System.Windows.Forms.Label();
+         this.rbUpdateJustNotify = new System.Windows.Forms.RadioButton();
+         this.rbUpdateBackground = new System.Windows.Forms.RadioButton();
          ((System.ComponentModel.ISupportInitialize)(this.numPingInterval)).BeginInit();
          this.pnlPing.SuspendLayout();
          this.SuspendLayout();
@@ -44,9 +47,9 @@
          this.chkDoPing.AutoSize = true;
          this.chkDoPing.Location = new System.Drawing.Point(13, 22);
          this.chkDoPing.Name = "chkDoPing";
-         this.chkDoPing.Size = new System.Drawing.Size(228, 17);
+         this.chkDoPing.Size = new System.Drawing.Size(221, 17);
          this.chkDoPing.TabIndex = 0;
-         this.chkDoPing.Text = "check for solution\'s dependencies updates";
+         this.chkDoPing.Text = "check for solution dependencies updates";
          this.chkDoPing.UseVisualStyleBackColor = true;
          this.chkDoPing.CheckedChanged += new System.EventHandler(this.chkDoPing_CheckedChanged);
          // 
@@ -96,13 +99,16 @@
          // 
          // pnlPing
          // 
+         this.pnlPing.Controls.Add(this.rbUpdateBackground);
+         this.pnlPing.Controls.Add(this.rbUpdateJustNotify);
+         this.pnlPing.Controls.Add(this.label3);
          this.pnlPing.Controls.Add(this.cmbPingMeasure);
          this.pnlPing.Controls.Add(this.label1);
          this.pnlPing.Controls.Add(this.numPingInterval);
          this.pnlPing.Enabled = false;
          this.pnlPing.Location = new System.Drawing.Point(25, 40);
          this.pnlPing.Name = "pnlPing";
-         this.pnlPing.Size = new System.Drawing.Size(364, 38);
+         this.pnlPing.Size = new System.Drawing.Size(364, 92);
          this.pnlPing.TabIndex = 4;
          // 
          // label2
@@ -121,6 +127,37 @@
          this.groupBox1.Size = new System.Drawing.Size(440, 3);
          this.groupBox1.TabIndex = 6;
          this.groupBox1.TabStop = false;
+         // 
+         // label3
+         // 
+         this.label3.AutoSize = true;
+         this.label3.Location = new System.Drawing.Point(7, 27);
+         this.label3.Name = "label3";
+         this.label3.Size = new System.Drawing.Size(127, 13);
+         this.label3.TabIndex = 4;
+         this.label3.Text = "when an update is found:";
+         // 
+         // rbUpdateJustNotify
+         // 
+         this.rbUpdateJustNotify.AutoSize = true;
+         this.rbUpdateJustNotify.Checked = true;
+         this.rbUpdateJustNotify.Location = new System.Drawing.Point(19, 43);
+         this.rbUpdateJustNotify.Name = "rbUpdateJustNotify";
+         this.rbUpdateJustNotify.Size = new System.Drawing.Size(86, 17);
+         this.rbUpdateJustNotify.TabIndex = 5;
+         this.rbUpdateJustNotify.TabStop = true;
+         this.rbUpdateJustNotify.Text = "just notify me";
+         this.rbUpdateJustNotify.UseVisualStyleBackColor = true;
+         // 
+         // rbUpdateBackground
+         // 
+         this.rbUpdateBackground.AutoSize = true;
+         this.rbUpdateBackground.Location = new System.Drawing.Point(19, 62);
+         this.rbUpdateBackground.Name = "rbUpdateBackground";
+         this.rbUpdateBackground.Size = new System.Drawing.Size(173, 17);
+         this.rbUpdateBackground.TabIndex = 6;
+         this.rbUpdateBackground.Text = "apply silently in the background";
+         this.rbUpdateBackground.UseVisualStyleBackColor = true;
          // 
          // VsixOptions
          // 
@@ -149,5 +186,8 @@
       private System.Windows.Forms.Panel pnlPing;
       private System.Windows.Forms.Label label2;
       private System.Windows.Forms.GroupBox groupBox1;
+      private System.Windows.Forms.RadioButton rbUpdateBackground;
+      private System.Windows.Forms.RadioButton rbUpdateJustNotify;
+      private System.Windows.Forms.Label label3;
    }
 }

@@ -118,6 +118,7 @@
     <Compile Include="Forms\Console\PunditConsoleContent.xaml.cs">
       <DependentUpon>PunditConsoleContent.xaml</DependentUpon>
     </Compile>
+    <Compile Include="Model\ExtensionSettings.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="PunditPackage.Background.cs" />
     <Compile Include="PunditPackage.CommandHandlers.cs" />

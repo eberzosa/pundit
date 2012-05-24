@@ -35,7 +35,9 @@ CORE:
 - end-to-end testing for all the commands
 
 VSIX:
-- support new console output
++ all commands executing in background and not hanging main VS window
++ support new console output (RTF based)
+- some kind of progress indication in the console
 = analyze and test every command
  - Pack & Resolve
  - Publish

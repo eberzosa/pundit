@@ -8,7 +8,6 @@ namespace Pundit.Vsix
 {
 	public partial class PunditPackage : Package
 	{
-	   private static WritableSettingsStore _settingsStore;
 
       private DirectoryInfo GetPropAsDir(__VSPROPID prop)
       {
@@ -41,32 +40,6 @@ namespace Pundit.Vsix
          IVsProject proj = GetService(typeof (IVsProject)) as IVsProject;
 
          //proj.AddItem()
-      }
-
-	   private const string SettingsRoot = "Pundit\\Common";
-
-      private WritableSettingsStore GetWritableSettingsStore(string settingsRoot)
-      {
-         SettingsManager settingsManager = new ShellSettingsManager(this);
-         WritableSettingsStore userSettingsStore = settingsManager.GetWritableSettingsStore(SettingsScope.UserSettings);
-         if (!userSettingsStore.CollectionExists(settingsRoot))
-         {
-            userSettingsStore.CreateCollection(settingsRoot);
-         }
-         return userSettingsStore;
-      }
-
-      public static void SaveSetting(string key, string value)
-      {
-         _settingsStore.SetString(SettingsRoot, key, value);         
-      }
-
-      public static string ReadSetting(string key)
-      {
-         if(_settingsStore.PropertyExists(SettingsRoot, key))
-            return _settingsStore.GetString(SettingsRoot, key);
-
-         return null;
       }
 	}
 }

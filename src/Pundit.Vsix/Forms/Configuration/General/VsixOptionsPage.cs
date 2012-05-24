@@ -1,17 +1,11 @@
 ﻿using System;
-using System.Collections.Generic;
 using System.Drawing;
-using System.Linq;
 using System.Runtime.InteropServices;
-using System.Text;
 using Microsoft.VisualStudio.Shell;
-using Pundit.WinForms.Core;
 
-namespace Pundit.Vsix.Forms
+namespace Pundit.Vsix.Forms.Configuration.General
 {
-   [System.Diagnostics.CodeAnalysis.SuppressMessage(
-    "Microsoft.Interoperability",
-    "CA1408:DoNotUseAutoDualClassInterfaceType")]
+   [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Interoperability", "CA1408:DoNotUseAutoDualClassInterfaceType")]
    [Guid("49E22212-E822-489E-A2A2-E0F91EE79CEB")]
    [ComVisible(true)]
    [ClassInterface(ClassInterfaceType.AutoDual)]
@@ -43,7 +37,7 @@ namespace Pundit.Vsix.Forms
          get { return ContainerControl; }
       }
 
-      protected override void OnApply(DialogPage.PageApplyEventArgs e)
+      protected override void OnApply(PageApplyEventArgs e)
       {
          ContainerControl.Save();
          base.OnApply(e);
