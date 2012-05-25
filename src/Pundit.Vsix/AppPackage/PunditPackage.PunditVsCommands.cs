@@ -1,19 +1,15 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using Microsoft.VisualStudio.Settings;
+﻿using Microsoft.VisualStudio.Settings;
 using Microsoft.VisualStudio.Shell.Interop;
 using Microsoft.VisualStudio.Shell.Settings;
 
-namespace Pundit.Vsix
+namespace Pundit.Vsix.AppPackage
 {
    //IPunditVsCommands
    public partial class PunditPackage
    {
-      public void ShowConsoleToolWindow()
+      public void ShowConsoleToolWindow(bool bringToFront)
       {
-         ShowToolWindow();
+         ShowToolWindow(bringToFront);
       }
 
       public void OpenFileInEditor(string fullPath)
@@ -51,6 +47,16 @@ namespace Pundit.Vsix
             return _settingsStore.GetString(SettingsRoot, key);
 
          return null;
+      }
+
+      public void EnableSolutionButtons(bool enable)
+      {
+         _cmdResolve.Enabled = enable;
+         _cmdAddReference.Enabled = enable;
+         _cmdEditManifest.Enabled = enable;
+
+         _cmdHelp.Enabled = true;
+         _cmdSearch.Enabled = true;
       }
    }
 }

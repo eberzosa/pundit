@@ -25,8 +25,20 @@ namespace Pundit.Core.Application.Console.Commands
             found = true;
             if (inXml)
             {
-               console.WriteLine("<package id=\"{0}\" version=\"{1}\" platform=\"{2}\"/>",
-                                 key.PackageId, key.Version, key.Platform);
+               console.Write(ConsoleColor.Blue, "<");
+               console.Write(ConsoleColor.Gray, "package ");
+               console.Write(ConsoleColor.Red, "id");
+               console.Write(ConsoleColor.Blue, "=\"");
+               console.Write(ConsoleColor.Blue, key.PackageId);
+               console.Write(ConsoleColor.Blue, "\" ");
+               console.Write(ConsoleColor.Red, "version");
+               console.Write(ConsoleColor.Blue, "=\"");
+               console.Write(ConsoleColor.Blue, key.VersionString);
+               console.Write(ConsoleColor.Blue, "\" ");
+               console.Write(ConsoleColor.Red, "platform");
+               console.Write(ConsoleColor.Blue, "=\"");
+               console.Write(ConsoleColor.Blue, key.Platform);
+               console.WriteLine(ConsoleColor.Blue, "\"/>");
             }
             else
             {

@@ -1,7 +1,7 @@
 ﻿using Microsoft.VisualStudio;
 using Microsoft.VisualStudio.Shell.Interop;
 
-namespace Pundit.Vsix
+namespace Pundit.Vsix.AppPackage
 {
    //IVsSolutionEvents
    partial class PunditPackage
@@ -38,8 +38,8 @@ namespace Pundit.Vsix
 
       public int OnAfterOpenSolution(object pUnkReserved, int fNewSolution)
       {
-         OnSolutionOpened();
-
+         ExtensionApplication.Instance.AssignSolutionDirectory(SolutionDirectory);
+         ExtensionApplication.Instance.SolutionStatusUpdated(SolutionStatus.Loaded);
          return VSConstants.S_OK;
       }
 
@@ -55,7 +55,7 @@ namespace Pundit.Vsix
 
       public int OnAfterCloseSolution(object pUnkReserved)
       {
-         OnSolutionClosed();
+         ExtensionApplication.Instance.SolutionStatusUpdated(SolutionStatus.Unloaded);
 
          return VSConstants.S_OK;
       }

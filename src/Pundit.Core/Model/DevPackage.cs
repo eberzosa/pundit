@@ -28,6 +28,11 @@ namespace Pundit.Core.Model
          
       }
 
+      /// <summary>
+      /// 
+      /// </summary>
+      /// <param name="inputStream"></param>
+      /// <returns></returns>
       public new static DevPackage FromStream(Stream inputStream)
       {
          XmlSerializer xmls = new XmlSerializer(typeof(DevPackage));

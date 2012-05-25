@@ -113,6 +113,33 @@ namespace Pundit.Vsix.Resources {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to This solution has a Pundit manifest from a previous version which is not fully compatible with Visual Studio IntelliSense. Would you like to upgrade it now to a new format (old manifest will be backed up into the original folder)?.
+        /// </summary>
+        internal static string Manifest_NeedsUpgrade {
+            get {
+                return ResourceManager.GetString("Manifest_NeedsUpgrade", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Manifest upgrade failed: {0}.
+        /// </summary>
+        internal static string Manifest_UpgradeFail {
+            get {
+                return ResourceManager.GetString("Manifest_UpgradeFail", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Manifest successfully upgraded. Have a nice weekend!.
+        /// </summary>
+        internal static string Manifest_UpgradeOk {
+            get {
+                return ResourceManager.GetString("Manifest_UpgradeOk", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized string similar to Existing manifest located at {0} is not using Pundit XSD namespace. As a result, you will not be able to use Visual Studio Intellisense. Would you like to automatically fix this problem?.
         /// </summary>
         internal static string ManifestNotUsingNamespace {

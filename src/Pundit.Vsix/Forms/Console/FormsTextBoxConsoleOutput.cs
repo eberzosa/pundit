@@ -87,10 +87,14 @@ namespace Pundit.Vsix.Forms.Console
          {
             case ConsoleColor.Red:
                return Color.Red;
+            case ConsoleColor.Blue:
+               return Color.Blue;
             case ConsoleColor.Green:
                return Color.Green;
             case ConsoleColor.Yellow:
                return Color.Goldenrod;
+            case ConsoleColor.Gray:
+               return Color.Gray;
             default:
                return Color.Black;
          }

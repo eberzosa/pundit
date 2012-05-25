@@ -1,14 +1,10 @@
 ﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
 using System.Threading;
-using Microsoft.VisualStudio.Shell;
 using Microsoft.VisualStudio.Shell.Interop;
 
-namespace Pundit.Vsix
+namespace Pundit.Vsix.AppPackage
 {
-   public partial class PunditPackage : Package
+   public partial class PunditPackage : Microsoft.VisualStudio.Shell.Package
    {
       private Timer _pingUpdatesTimer;
 
@@ -44,6 +40,7 @@ namespace Pundit.Vsix
                if(!isFrozen)
                {
                   statusbar.SetText("checking for Pundit updates... (" + DateTime.Now + ")");
+                  //statusbar.Animation(1, )
                }
             }
          }

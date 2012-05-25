@@ -6,6 +6,7 @@ using System.Windows;
 using System.Windows.Controls;
 using System.Windows.Media;
 using System.Windows.Media.Imaging;
+using Pundit.Vsix.AppPackage;
 using Pundit.Vsix.Resources;
 
 namespace Pundit.Vsix.Application
@@ -21,7 +22,7 @@ namespace Pundit.Vsix.Application
    /// <summary>
    /// This is a pure hack created after decompiling VisualSVN with Reflector. May not work in the next version of Visual Studio.
    /// </summary>
-   class StatusBarIconManager
+   class StatusBarManager : IDisposable
    {
       private DockPanel _statusBarPanel;
       private StackPanel _indicatorPanel;
@@ -30,7 +31,7 @@ namespace Pundit.Vsix.Application
 
       private readonly Dictionary<StatusIcon, BitmapImage> _statusImages = new Dictionary<StatusIcon, BitmapImage>();
 
-      public StatusBarIconManager()
+      public StatusBarManager()
       {
          Connect();
          InitImages();
@@ -38,22 +39,28 @@ namespace Pundit.Vsix.Application
 
       private void Connect()
       {
-         UIElement statusBar = GetStatusBar(System.Windows.Application.Current.MainWindow);
-         _statusBarPanel = GetStatusBarPanel(statusBar);
-         _indicatorPanel = new StackPanel();
-         _indicatorPanel.Orientation = Orientation.Horizontal;
-         _indicatorPanel.VerticalAlignment = VerticalAlignment.Bottom;
-         DockPanel.SetDock(_indicatorPanel, Dock.Right);
-         _statusBarPanel.Children.Insert(_statusBarPanel.Children.IndexOf(statusBar), _indicatorPanel);
+         if (_statusBarPanel == null)
+         {
+            UIElement statusBar = GetStatusBar(System.Windows.Application.Current.MainWindow);
+            if (statusBar != null)
+            {
+               _statusBarPanel = GetStatusBarPanel(statusBar);
+               _indicatorPanel = new StackPanel();
+               _indicatorPanel.Orientation = Orientation.Horizontal;
+               _indicatorPanel.VerticalAlignment = VerticalAlignment.Center;
+               DockPanel.SetDock(_indicatorPanel, Dock.Right);
+               _statusBarPanel.Children.Insert(_statusBarPanel.Children.IndexOf(statusBar), _indicatorPanel);
 
-         _statusText = new Label();
-         _statusText.Content = "";
-         _indicatorPanel.Children.Add(_statusText);
+               _statusText = new Label();
+               _statusText.Content = "";
+               _indicatorPanel.Children.Add(_statusText);
 
-         _statusImage = new Image();
-         _statusImage.Width = 16;
-         _statusImage.Height = 16;
-         _indicatorPanel.Children.Add(_statusImage);
+               _statusImage = new Image();
+               _statusImage.Width = 16;
+               _statusImage.Height = 16;
+               _indicatorPanel.Children.Add(_statusImage);
+            }
+         }
       }
 
       private void InitImages()
@@ -85,24 +92,32 @@ namespace Pundit.Vsix.Application
 
       public string StatusText
       {
-         get { return _statusText.Content as string; }
-         set { _statusText.Content = value; }
+         get { return _statusText == null ? null : _statusText.Content as string; }
+         set
+         {
+            if (_statusText == null) Connect();
+            if (_statusText != null) _statusText.Content = value;
+         }
       }
 
       public StatusIcon StatusIcon
       {
          set
          {
-            if(_statusImages.ContainsKey(value))
+            if(_statusImage == null) Connect();
+            if (_statusImage != null)
             {
-               _statusImage.Source = _statusImages[value];
-               string sc = string.Format("#{0:X}", (ulong) value);
-               _statusText.Foreground = new SolidColorBrush((Color)ColorConverter.ConvertFromString(sc));
-               _statusImage.ToolTip = "pundit (work in progress)";
-            }
-            else
-            {
-               _statusImage.Source = null;
+               if (_statusImages.ContainsKey(value))
+               {
+                  _statusImage.Source = _statusImages[value];
+                  string sc = string.Format("#{0:X}", (ulong) value);
+                  _statusText.Foreground = new SolidColorBrush((Color) ColorConverter.ConvertFromString(sc));
+                  _statusImage.ToolTip = "pundit (work in progress)";
+               }
+               else
+               {
+                  _statusImage.Source = null;
+               }
             }
          }
       }
@@ -110,7 +125,7 @@ namespace Pundit.Vsix.Application
       private UIElement GetStatusBar(DependencyObject mainWindow)
       {
          DependencyObject statusBar = FindWpfStatusBar(mainWindow);
-         if (statusBar == null) throw new Exception(VSPackage.Ex_CantFindStatusBar);
+         if (statusBar == null) return null;
          var sbe = statusBar as UIElement;
          if(sbe == null) throw new InvalidCastException(VSPackage.Ex_CantFindStatusBar);
          return sbe;
@@ -137,6 +152,20 @@ namespace Pundit.Vsix.Application
       private static DockPanel GetStatusBarPanel(UIElement statusBar)
       {
          return (DockPanel)VisualTreeHelper.GetParent(statusBar);
-      } 
+      }
+
+      #region Implementation of IDisposable
+
+      public void Dispose()
+      {
+         if(_statusBarPanel != null && _indicatorPanel != null)
+         {
+            _statusBarPanel.Children.Remove(_indicatorPanel);
+            _statusText = null;
+            _statusImage = null;
+         }
+      }
+
+      #endregion
    }
 }

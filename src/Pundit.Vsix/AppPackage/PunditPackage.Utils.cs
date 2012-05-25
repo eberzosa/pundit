@@ -1,12 +1,9 @@
 ﻿using System.IO;
-using Microsoft.VisualStudio.Settings;
 using Microsoft.VisualStudio.Shell.Interop;
-using Microsoft.VisualStudio.Shell.Settings;
-using Package = Microsoft.VisualStudio.Shell.Package;
 
-namespace Pundit.Vsix
+namespace Pundit.Vsix.AppPackage
 {
-	public partial class PunditPackage : Package
+	public partial class PunditPackage : Microsoft.VisualStudio.Shell.Package
 	{
 
       private DirectoryInfo GetPropAsDir(__VSPROPID prop)

@@ -37,7 +37,7 @@ namespace Pundit.Core.Application.Console.Commands
 
          using(Stream s = File.Create(path))
          {
-            dp.WriteTo(s);
+            dp.WriteXmlTo(s);
          }
 
          console.WriteLine("done");

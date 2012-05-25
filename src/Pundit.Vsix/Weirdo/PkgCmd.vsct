@@ -54,7 +54,7 @@
             </Strings>
          </Button>
 
-         <Button guid="guidCommandSet" id="CommandAddPackages" priority="0x0103" type="Button">
+         <!--<Button guid="guidCommandSet" id="CommandAddPackages" priority="0x0103" type="Button">
             <Parent guid="guidCommandSet" id="PunditToolbarGroup"/>
             <Icon guid="guidToolbarBmp" id="pngPackage"/>
             <CommandFlag>DefaultDisabled</CommandFlag>
@@ -62,7 +62,7 @@
                <CommandName>CommandAddPackages</CommandName>
                <ButtonText>Add File Reference...</ButtonText>
             </Strings>
-         </Button>
+         </Button>-->
 
          <Button guid="guidCommandSet" id="CommandHelp" priority="0x104" type="Button">
             <Parent guid="guidCommandSet" id="PunditToolbarGroup"/>

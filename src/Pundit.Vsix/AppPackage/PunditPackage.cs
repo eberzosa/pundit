@@ -4,13 +4,12 @@ using System.Runtime.InteropServices;
 using System.Security.Permissions;
 using Microsoft.VisualStudio.Shell;
 using Microsoft.VisualStudio.Shell.Interop;
-using Pundit.Vsix.Application;
 using Pundit.Vsix.Forms;
 using Pundit.Vsix.Forms.Configuration.General;
 using Pundit.Vsix.Forms.Console;
 using Pundit.Vsix.Weirdo;
 
-namespace Pundit.Vsix
+namespace Pundit.Vsix.AppPackage
 {
 	/// <summary>
 	/// This is the class that implements the package. This is the class that Visual Studio will create
@@ -21,18 +20,17 @@ namespace Pundit.Vsix
 	/// </summary>
 	[PackageRegistration(UseManagedResourcesOnly = true)]	
 	[ProvideMenuResource(1000, 1)]
-   [ProvideAutoLoad(UIContextGuids80.SolutionExists)]   //auto-load extension on solution start so we can start background activity if configured
+   [ProvideAutoLoad(UIContextGuids80.SolutionExists)]   //auto-load extension on solution start so addin can start
    [Guid("3C7C5ABE-82AC-4A37-B077-0FF60E8B1FD3")]
    [InstalledProductRegistration("#110", "#112", "1.0", IconResourceID = 400)]
    [ProvideToolWindow(typeof(ConsoleVsToolWindow))]
    [ProvideOptionPage(typeof(VsixOptionsPage), "Pundit", "General", 113, 114, true)]
-   [ProvideOptionPage(typeof(IntegrationPage), "Pundit", "Integration", 113, 114, true)]
+   [ProvideOptionPage(typeof(IntegrationPage), "Pundit", "Integration", 113, 115, true)]
 	[ComVisible(true)]
-	public partial class PunditPackage : Package, IVsSolutionEvents, IPunditVsCommands
+	public partial class PunditPackage : Microsoft.VisualStudio.Shell.Package, IVsSolutionEvents, IPunditVsCommands
 	{
 	   private OleMenuCommandService _mcs;
 	   private uint _solutionEventsCookie;
-	   private StatusBarIconManager _statusBar;
 
 	   private OleMenuCommand _cmdResolve;
 	   private OleMenuCommand _cmdAddReference;
@@ -90,12 +88,7 @@ namespace Pundit.Vsix
 
          InitializeShell();
          ExtensionApplication.Instance.AssignVsCommands(this);
-         EnableSolutionButtons(false);
-
-		   _statusBar = new StatusBarIconManager();
-         _statusBar.StatusIcon = StatusIcon.Green;
-		   _statusBar.StatusText = null;
-		   StartBackgroundActivity(); //it will start when solution gets opened
+		   //StartBackgroundActivity(); //it will start when solution gets opened
 		}
 
       private void InitializeShell()

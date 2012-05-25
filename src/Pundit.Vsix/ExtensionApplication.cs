@@ -4,6 +4,7 @@ using System.Threading.Tasks;
 using System.Windows.Forms;
 using Pundit.Core.Application.Console;
 using Pundit.Core.Model;
+using Pundit.Vsix.Application;
 using Pundit.Vsix.Model;
 using Pundit.Vsix.Resources;
 using Pundit.WinForms.Core;
@@ -13,13 +14,21 @@ namespace Pundit.Vsix
 {
    interface IPunditVsCommands
    {
-      void ShowConsoleToolWindow();
+      void ShowConsoleToolWindow(bool bringToFront);
 
       void OpenFileInEditor(string fullPath);
 
       void SaveOption(string key, string value);
 
       string ReadOption(string key);
+
+      void EnableSolutionButtons(bool enable);
+   }
+
+   enum SolutionStatus
+   {
+      Loaded,
+      Unloaded
    }
 
    class ExtensionApplication
@@ -28,6 +37,7 @@ namespace Pundit.Vsix
       private DirectoryInfo _solutionDirectory;
       private IPunditVsCommands _vsCommands;
       private ExtensionSettings _settings;
+      private StatusBarManager _statusBar;
 
       private ExtensionApplication()
       {
@@ -51,11 +61,41 @@ namespace Pundit.Vsix
       public void AssignVsCommands(IPunditVsCommands vsCommands)
       {
          _vsCommands = vsCommands;
+         if(_vsCommands != null) _vsCommands.EnableSolutionButtons(false);
       }
 
       public void AssignSolutionDirectory(DirectoryInfo directory)
       {
          _solutionDirectory = directory;
+      }
+
+      public void SolutionStatusUpdated(SolutionStatus status)
+      {
+         switch(status)
+         {
+            case SolutionStatus.Loaded:
+               if(new ManifestUpgrader(ManifestPath).UpgradeManifest())
+               {
+                  if(_vsCommands != null) _vsCommands.OpenFileInEditor(ManifestPath);
+               }
+               if(_vsCommands != null) _vsCommands.EnableSolutionButtons(true);
+               if(_statusBar == null)
+               {
+                  _statusBar = new StatusBarManager();
+                  _statusBar.StatusIcon = StatusIcon.Yellow;
+                  _statusBar.StatusText = null;
+               }
+               break;
+            case SolutionStatus.Unloaded:
+               if(_vsCommands != null) _vsCommands.EnableSolutionButtons(false);
+               if(_statusBar != null)
+               {
+                  _statusBar.Dispose();
+                  _statusBar = null;
+               }
+               _solutionDirectory = null;
+               break;
+         }
       }
 
       #endregion
@@ -97,7 +137,7 @@ namespace Pundit.Vsix
                         
                         using(Stream s = File.Create(path))
                         {
-                           package.WriteTo(s);
+                           package.WriteXmlTo(s);
                         }
 
                         _vsCommands.OpenFileInEditor(path);
@@ -115,7 +155,7 @@ namespace Pundit.Vsix
 
       public void ShowConsoleCommand()
       {
-         if(_vsCommands != null) _vsCommands.ShowConsoleToolWindow();
+         if(_vsCommands != null) _vsCommands.ShowConsoleToolWindow(true);
       }
 
       #endregion
@@ -126,7 +166,8 @@ namespace Pundit.Vsix
          {
             if(_settings == null && _vsCommands != null)
             {
-               //todo: deserialize settings
+               string xml = _vsCommands.ReadOption("settings");
+               if (!string.IsNullOrEmpty(xml)) _settings = ExtensionSettings.Deserialize(xml);
 
                if(_settings == null) _settings = new ExtensionSettings();
             }
@@ -137,7 +178,10 @@ namespace Pundit.Vsix
 
       public void SaveSettings()
       {
-         
+         if(_vsCommands != null && _settings != null)
+         {
+            _vsCommands.SaveOption("settings", _settings.Serialize());
+         }
       }
 
       private DirectoryInfo ManifestDirectory
@@ -196,7 +240,7 @@ namespace Pundit.Vsix
 
          try
          {
-            if(_vsCommands != null) _vsCommands.ShowConsoleToolWindow();
+            if(_vsCommands != null) _vsCommands.ShowConsoleToolWindow(false);
 
             IConsoleCommand cmd = CommandFactory.CreateCommand(_console,
                ManifestDirectory == null ? null : ManifestDirectory.FullName,
@@ -215,7 +259,7 @@ namespace Pundit.Vsix
          finally
          {
             _console.FinishCommand();
-            if (_vsCommands != null) _vsCommands.ShowConsoleToolWindow();
+            if (_vsCommands != null) _vsCommands.ShowConsoleToolWindow(true);
          }
       }
    }

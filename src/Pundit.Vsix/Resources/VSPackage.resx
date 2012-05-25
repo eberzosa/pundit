@@ -141,6 +141,15 @@
   <data name="ManifestNotUsingNamespace" xml:space="preserve">
     <value>Existing manifest located at {0} is not using Pundit XSD namespace. As a result, you will not be able to use Visual Studio Intellisense. Would you like to automatically fix this problem?</value>
   </data>
+  <data name="Manifest_NeedsUpgrade" xml:space="preserve">
+    <value>This solution has a Pundit manifest from a previous version which is not fully compatible with Visual Studio IntelliSense. Would you like to upgrade it now to a new format (old manifest will be backed up into the original folder)?</value>
+  </data>
+  <data name="Manifest_UpgradeFail" xml:space="preserve">
+    <value>Manifest upgrade failed: {0}</value>
+  </data>
+  <data name="Manifest_UpgradeOk" xml:space="preserve">
+    <value>Manifest successfully upgraded. Have a nice weekend!</value>
+  </data>
   <data name="OpenXmlManifest_DoesntExist" xml:space="preserve">
     <value>This solution has no Pundit manifest. Would you like to create a new one at '{0}'?</value>
   </data>

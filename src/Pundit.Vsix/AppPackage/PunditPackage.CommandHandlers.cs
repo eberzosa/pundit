@@ -3,11 +3,10 @@ using Microsoft.VisualStudio.Shell;
 using Microsoft.VisualStudio.Shell.Interop;
 using Pundit.Vsix.Forms.Console;
 using Pundit.Vsix.Resources;
-using Package = Microsoft.VisualStudio.Shell.Package;
 
-namespace Pundit.Vsix
+namespace Pundit.Vsix.AppPackage
 {
-   public partial class PunditPackage : Package
+   public partial class PunditPackage : Microsoft.VisualStudio.Shell.Package
    {
       private void AddReferenceCommandCallback(object caller, EventArgs args)
       {
@@ -40,7 +39,7 @@ namespace Pundit.Vsix
          ExtensionApplication.Instance.ShowHelpCommand();
       }
 
-      private void ShowToolWindow(bool show = true)
+      private void ShowToolWindow(bool show)
       {
          //this method will show the window if it's not active or bring it to front if it's collapsed
          ToolWindowPane window = this.FindToolWindow(typeof(ConsoleVsToolWindow), 0, true);
@@ -54,36 +53,12 @@ namespace Pundit.Vsix
 
       private void ResolveDependenciesCommandCallback(object caller, EventArgs args)
       {
-         //SaveSetting("LastResolved", DateTime.UtcNow.Ticks.ToString());
-
          ExtensionApplication.Instance.ResolveDependenciesCommand();
       }
 
       private void ShowPunditConsoleCallback(object caller, EventArgs args)
       {
          ExtensionApplication.Instance.ShowConsoleCommand();
-      }
-
-      private void EnableSolutionButtons(bool enable)
-      {
-         _cmdResolve.Enabled = enable;
-         _cmdAddReference.Enabled = enable;
-         _cmdEditManifest.Enabled = enable;
-
-         _cmdHelp.Enabled = true;
-         _cmdSearch.Enabled = true;
-      }
-
-      private void OnSolutionOpened()
-      {
-         ExtensionApplication.Instance.AssignSolutionDirectory(SolutionDirectory);
-         EnableSolutionButtons(true);
-      }
-
-      private void OnSolutionClosed()
-      {
-         ExtensionApplication.Instance.AssignSolutionDirectory(null);
-         EnableSolutionButtons(false);
       }
    }
 }

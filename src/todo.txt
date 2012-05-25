@@ -37,15 +37,17 @@ CORE:
 VSIX:
 + all commands executing in background and not hanging main VS window
 + support new console output (RTF based)
-- some kind of progress indication in the console
++ ask to upgrade manifest to a new version
++ colored search (XML)
++ creating empty manifest from sratch
+- add manifest IntelliSense support
+- progress support in the console
 = analyze and test every command
  - Pack & Resolve
  - Publish
  - Repo
- - Search
- - Template
- - Utils
- - add xsd installation
+ + Search
+ + Utils
 
 ----------------------------------------------------------------------------------------------------------------------------
 

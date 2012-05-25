@@ -3,6 +3,7 @@ using System.IO;
 using System.Reflection;
 using System.Windows.Forms;
 using Pundit.Core.Model;
+using Pundit.Vsix.AppPackage;
 using Pundit.Vsix.Resources;
 using Pundit.WinForms.Core;
 

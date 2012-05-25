@@ -18,6 +18,11 @@ namespace Pundit.Vsix.Forms.Configuration.General
 
          //min, hr, days
          TimeSpan span = TimeSpan.FromSeconds(ExtensionApplication.Instance.Settings.AutoResolveFrequencySec);
+         if(span == TimeSpan.Zero)
+         {
+            span = TimeSpan.FromHours(1);
+            ExtensionApplication.Instance.SaveSettings();
+         }
          if(span.TotalDays > 0)
          {
             numPingInterval.Value = ((decimal)span.TotalDays).FitRange(numPingInterval.Minimum, numPingInterval.Maximum);

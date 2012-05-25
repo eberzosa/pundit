@@ -11,7 +11,10 @@ using System.Xml.Serialization;
 
 namespace Pundit.Core.Model
 {
-   [XmlRoot("package")]
+   /// <summary>
+   /// Base of Pundit package
+   /// </summary>
+   [XmlRoot(ElementName = "package")]
    [XmlInclude(typeof(DevPackage))]
    [DataContract]
    public class Package : ICloneable
@@ -19,6 +22,7 @@ namespace Pundit.Core.Model
       public const string DefaultManifestFileName = "pundit.xml"; //package definition
       public const string PackedExtension = ".pundit";
       public const string NoArchPlatformName = "noarch";
+      public const string XmlNamespace = "http://pundit-dm.com/1.1.0.0/pundit.xsd";
 
       private static readonly Regex PackageStringRgx = new Regex("^[0-9a-zA-Z\\._]+$");
       private static readonly Regex PackageVersionRgx = new Regex("^[0-9\\*]+(\\.[0-9\\*]+){3}$");
@@ -27,6 +31,9 @@ namespace Pundit.Core.Model
       private string _platform;
 
       private List<PackageDependency> _dependencies = new List<PackageDependency>();
+
+      //[XmlAttribute("xmlns")]
+      //public string Xmlns { get; set; }
 
       [XmlAttribute("coreVersion")]
       public string CoreVersion { get; set; }
@@ -48,13 +55,22 @@ namespace Pundit.Core.Model
          set { _platform = string.IsNullOrEmpty(value) ? NoArchPlatformName : value; }
       }
 
+      /// <summary>
+      /// Project URL (optional)
+      /// </summary>
       [XmlElement("projectUrl")]
       [DataMember(Name = "projectUrl")]
       public string ProjectUrl { get; set; }
 
+      /// <summary>
+      /// Package version (required)
+      /// </summary>
       [XmlIgnore]
       public Version Version { get; set; }
 
+      /// <summary>
+      /// Package version formatted as string
+      /// </summary>
       [XmlElement("version")]
       [DataMember(Name = "version")]
       public string VersionString
@@ -75,6 +91,9 @@ namespace Pundit.Core.Model
       [DataMember(Name = "releaseNotes")]
       public string ReleaseNotes { get; set; }
 
+      /// <summary>
+      /// License agreement (optional)
+      /// </summary>
       [XmlElement("license")]
       [DataMember(Name = "license")]
       public string License { get; set; }
@@ -93,8 +112,25 @@ namespace Pundit.Core.Model
       /// </summary>
       public Package()
       {
+         //Xmlns = "http://pundit-dm.com/1.1.0.0/pundit.xsd";
          CoreVersion = Assembly.GetExecutingAssembly().GetName().Version.ToString();
          Platform = Platform;
+      }
+
+      /// <summary>
+      /// Creates an instance of empty package (state is valid)
+      /// </summary>
+      /// <param name="packageId"></param>
+      /// <param name="version"></param>
+      /// <exception cref="ArgumentNullException"></exception>
+      public Package(string packageId, Version version)
+         : this()
+      {
+         if (packageId == null) throw new ArgumentNullException("packageId");
+         if (version == null) throw new ArgumentNullException("version");
+
+         PackageId = packageId;
+         VersionString = version.ToString();
       }
 
       /// <summary>
@@ -127,15 +163,6 @@ namespace Pundit.Core.Model
          get { return new PackageKey(PackageId, Version, Platform); }
       }
 
-      public Package(string packageId, Version version)
-      {
-         if (packageId == null) throw new ArgumentNullException("packageId");
-         if (version == null) throw new ArgumentNullException("version");
-
-         PackageId = packageId;
-         VersionString = version.ToString();
-      }
-
       /// <summary>
       /// Deserializes package from xml stream
       /// </summary>
@@ -152,23 +179,34 @@ namespace Pundit.Core.Model
          return dp;
       }
 
-      public virtual void WriteTo(Stream s)
+      /// <summary>
+      /// Serializes package to a stream in XML format
+      /// </summary>
+      /// <param name="s"></param>
+      public virtual void WriteXmlTo(Stream s)
       {
          Validate();
 
-         XmlWriterSettings settings = new XmlWriterSettings();
-         //settings.OmitXmlDeclaration = true;
+         var settings = new XmlWriterSettings();
          settings.Encoding = Encoding.UTF8;
          settings.Indent = true;
 
+         var namespaces = new XmlSerializerNamespaces();
+         namespaces.Add(string.Empty, XmlNamespace);
+
          using (XmlWriter writer = XmlWriter.Create(s, settings))
          {
-            XmlSerializer x = new XmlSerializer(typeof (Package));
-            x.Serialize(writer, this);
+            var x = new XmlSerializer(typeof (Package), XmlNamespace);
+            x.Serialize(writer, this, namespaces);
          }
       }
 
-      public virtual void WriteTo(string destFileName, bool createBackup = true)
+      /// <summary>
+      /// Serializes package metadata to a file in XML format
+      /// </summary>
+      /// <param name="destFileName"></param>
+      /// <param name="createBackup"></param>
+      public virtual void WriteXmlTo(string destFileName, bool createBackup = true)
       {
          if (createBackup)
          {
@@ -183,7 +221,7 @@ namespace Pundit.Core.Model
 
          using(Stream s = File.Create(destFileName))
          {
-            WriteTo(s);
+            WriteXmlTo(s);
          }
       }
 
@@ -234,7 +272,7 @@ namespace Pundit.Core.Model
       {
          using (var ms = new MemoryStream())
          {
-            WriteTo(ms);
+            WriteXmlTo(ms);
             ms.Position = 0;
 
             return Encoding.UTF8.GetString(ms.GetBuffer());

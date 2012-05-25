@@ -78,7 +78,7 @@ namespace Pundit.Core.Application
 
          var manifestPackage = new Package(_packageInfo, includeDevTime);
 
-         manifestPackage.WriteTo(_zipStream);
+         manifestPackage.WriteXmlTo(_zipStream);
       }
 
       class ResolvedFile

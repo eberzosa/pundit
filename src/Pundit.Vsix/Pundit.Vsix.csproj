@@ -80,7 +80,8 @@
   </ItemGroup>
   <ItemGroup>
     <Compile Include="Application\IntellisenseInstaller.cs" />
-    <Compile Include="Application\StatusBarIconManager.cs" />
+    <Compile Include="Application\ManifestUpgrader.cs" />
+    <Compile Include="Application\StatusBarManager.cs" />
     <Compile Include="ExtensionApplication.cs" />
     <Compile Include="Forms\Console\FormsContainer.cs">
       <SubType>UserControl</SubType>
@@ -120,11 +121,10 @@
     </Compile>
     <Compile Include="Model\ExtensionSettings.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
-    <Compile Include="PunditPackage.Background.cs" />
-    <Compile Include="PunditPackage.CommandHandlers.cs" />
-    <Compile Include="PunditPackage.PunditVsCommands.cs" />
-    <Compile Include="PunditPackage.SolutionEvents.cs" />
-    <Compile Include="Settings.cs" />
+    <Compile Include="AppPackage\PunditPackage.Background.cs" />
+    <Compile Include="AppPackage\PunditPackage.CommandHandlers.cs" />
+    <Compile Include="AppPackage\PunditPackage.PunditVsCommands.cs" />
+    <Compile Include="AppPackage\PunditPackage.SolutionEvents.cs" />
     <Compile Include="Weirdo\Guids.cs" />
     <Compile Include="Weirdo\PkgCmdId.cs" />
     <Compile Include="Resources\VSPackage.Designer.cs">
@@ -132,7 +132,7 @@
       <DesignTime>True</DesignTime>
       <DependentUpon>VSPackage.resx</DependentUpon>
     </Compile>
-    <Compile Include="PunditPackage.cs" />
+    <Compile Include="AppPackage\PunditPackage.cs" />
   </ItemGroup>
   <ItemGroup>
     <VSCTCompile Include="Weirdo\PkgCmd.vsct">
@@ -161,7 +161,7 @@
     </EmbeddedResource>
   </ItemGroup>
   <ItemGroup>
-    <Compile Include="PunditPackage.Utils.cs" />
+    <Compile Include="AppPackage\PunditPackage.Utils.cs" />
     <None Include="Resources\icons.psd" />
     <EmbeddedResource Include="Resources\pundit.xsd">
       <SubType>Designer</SubType>
