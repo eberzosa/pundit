@@ -1,15 +1,12 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.IO;
-using System.ServiceModel;
-using System.ServiceModel.Web;
 
 namespace Pundit.Core.Model
 {
    /// <summary>
    /// Remote repository wire contract
    /// </summary>
-   [ServiceContract]
    public interface IRemoteRepository : IDisposable
    {
       /// <summary>
@@ -18,17 +15,12 @@ namespace Pundit.Core.Model
       /// All the builds are removed and only this one is kept.
       /// </summary>
       /// <param name="packageStream">Package stream</param>
-      [OperationContract]
-      [WebInvoke(UriTemplate = "/publish")]
       void Publish(Stream packageStream);
 
       /// <summary>
       /// Downloads package
       /// </summary>
       /// <returns>Package stream</returns>
-      [OperationContract]
-      [FaultContract(typeof(FileNotFoundException))]
-      [WebGet(UriTemplate = "/download/{platform}/{packageId}/{version}", RequestFormat = WebMessageFormat.Json)]
       Stream Download(string platform, string packageId, string version);
 
       /// <summary>
@@ -36,9 +28,6 @@ namespace Pundit.Core.Model
       /// </summary>
       /// <param name="changeId">current change id or null for the full snapshot</param>
       /// <returns></returns>
-      [OperationContract]
-      [FaultContract(typeof(FileNotFoundException))]
-      [WebGet(UriTemplate = "/snapshot/{changeId}", ResponseFormat = WebMessageFormat.Json)]
       RemoteSnapshot GetSnapshot(string changeId);
    }
 }

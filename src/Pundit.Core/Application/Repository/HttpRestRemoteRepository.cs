@@ -1,9 +1,7 @@
 ﻿using System;
 using System.IO;
-using System.ServiceModel;
-using System.ServiceModel.Web;
-using Pundit.Core.Exceptions;
 using Pundit.Core.Model;
+using RestSharp;
 
 namespace Pundit.Core.Application.Repository
 {
@@ -15,56 +13,51 @@ namespace Pundit.Core.Application.Repository
       private const string NullChangeId = "0";
 
       private readonly string _absoluteUri;
-      private IRemoteRepository _channel;
+      private readonly RestClient _client;
 
       public HttpRestRemoteRepository(string absoluteUri)
       {
          _absoluteUri = absoluteUri;
-         InitializeChannel();
-      }
-
-      private void InitializeChannel()
-      {
-         var binding = new WebHttpBinding
-                          {
-                             Security = {Mode = WebHttpSecurityMode.None},
-                             TransferMode = TransferMode.Streamed,
-                             MaxReceivedMessageSize = int.MaxValue
-                          };
-
-         var factory = new WebChannelFactory<IRemoteRepository>(
-            binding, new Uri(_absoluteUri));
-
-         _channel = factory.CreateChannel();
+         _client = new RestClient(absoluteUri);
       }
 
       public void Publish(Stream packageStream)
       {
-         _channel.Publish(packageStream);
+         var request = new RestRequest("publish", Method.POST);
+         IRestResponse response = _client.Execute(request);
       }
 
       public Stream Download(string platform, string packageId, string version)
       {
-         return _channel.Download(platform, packageId, version);
+         var request = new RestRequest("download/{platform}/{packageId}/{version}", Method.GET);
+         request.AddParameter("platform", platform, ParameterType.UrlSegment);
+         request.AddParameter("packageId", packageId, ParameterType.UrlSegment);
+         request.AddParameter("version", version, ParameterType.UrlSegment);
+         IRestResponse response = _client.Execute(request);
+
+         throw new NotImplementedException();
       }
 
       public RemoteSnapshot GetSnapshot(string changeId)
       {
-         try
+         var request = new RestRequest("snapshot/{changeId}", Method.GET);
+         request.AddParameter("changeId", changeId ?? NullChangeId, ParameterType.UrlSegment);
+         IRestResponse response = _client.Execute(request);
+         /*try
          {
             return _channel.GetSnapshot(changeId ?? NullChangeId);
          }
          catch(EndpointNotFoundException)
          {
             throw new RepositoryOfflineException();
-         }
+         }*/
+         throw new NotImplementedException();
       }
 
       #region Implementation of IDisposable
 
       public void Dispose()
       {
-         _channel.Dispose();
       }
 
       #endregion
