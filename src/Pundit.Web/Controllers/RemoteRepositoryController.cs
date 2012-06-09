@@ -8,6 +8,9 @@ using Pundit.Core.Model;
 
 namespace Pundit.Web.Controllers
 {
+   /// <summary>
+   /// HTTP REST repository web service
+   /// </summary>
    public class RemoteRepositoryController : Controller
    {
       private static IRemoteRepository _ri;
