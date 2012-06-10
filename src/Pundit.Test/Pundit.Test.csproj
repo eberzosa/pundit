@@ -66,6 +66,7 @@
     <Compile Include="DependencyResolutionTest.cs" />
     <Compile Include="RepositoryManagerTest.cs" />
     <Compile Include="Server\RepositoryServerTest.cs" />
+    <Compile Include="Server\SqlPackageRepositoryTest.cs" />
     <Compile Include="SqliteRepositoryTest.cs" />
     <Compile Include="NAntDirectoryScannerTest.cs" />
     <Compile Include="Utils.cs" />

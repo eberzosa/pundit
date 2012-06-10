@@ -17,7 +17,7 @@ namespace Pundit.Core.Model
    [XmlRoot(ElementName = "package")]
    [XmlInclude(typeof(DevPackage))]
    [DataContract]
-   public class Package : ICloneable
+   public class Package : IEquatable<Package>, ICloneable
    {
       public const string DefaultManifestFileName = "pundit.xml"; //package definition
       public const string PackedExtension = ".pundit";
@@ -266,6 +266,21 @@ namespace Pundit.Core.Model
 
          if (ex.HasErrors)
             throw ex;
+      }
+
+      public bool Equals(Package other)
+      {
+         throw new NotImplementedException();
+      }
+
+      public override bool Equals(object obj)
+      {
+         return base.Equals(obj);
+      }
+
+      public override int GetHashCode()
+      {
+         return Key.GetHashCode();
       }
 
       public override string ToString()

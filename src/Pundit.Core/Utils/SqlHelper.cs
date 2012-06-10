@@ -8,7 +8,7 @@ namespace Pundit.Core.Utils
    {
       protected abstract IDbConnection Connection { get; }
 
-      protected abstract void Add(IDbCommand cmd, object value);
+      protected abstract void Add(IDbCommand cmd, object value, string name = null);
 
       public abstract void Dispose();
 
@@ -23,9 +23,9 @@ namespace Pundit.Core.Utils
             throw new ArgumentException("values must match columns");
 
          var b = new StringBuilder();
-         b.Append("insert into [");
+         b.Append("insert into ");
          b.Append(tableName);
-         b.Append("] (");
+         b.Append(" (");
 
          for (int i = 0; i < columns.Length; i++)
          {
@@ -37,7 +37,9 @@ namespace Pundit.Core.Utils
          for (int i = 0; i < columns.Length; i++)
          {
             if (i != 0) b.Append(", ");
-            b.Append("(?)");
+            b.Append("?P");
+            b.Append(i);
+            b.Append("");
          }
          b.Append(")");
          b.Append(GetSelectId());
@@ -45,9 +47,10 @@ namespace Pundit.Core.Utils
          using (IDbCommand cmd = Connection.CreateCommand())
          {
             cmd.CommandText = b.ToString();
-            foreach (object value in values)
+            for (int i = 0; i < values.Length; i++)
             {
-               Add(cmd, value);
+               string name = "P" + i;
+               Add(cmd, values[i], name);
             }
 
             return (long)cmd.ExecuteScalar();
@@ -113,7 +116,7 @@ namespace Pundit.Core.Utils
       {
          if (tableName == null) throw new ArgumentNullException("tableName");
 
-         StringBuilder s = new StringBuilder();
+         var s = new StringBuilder();
          s.Append("select ");
 
          if (columns == null)
@@ -149,7 +152,7 @@ namespace Pundit.Core.Utils
             {
                for (int i = 0; i < parameters.Length; i++)
                {
-                  Add(cmd, parameters[i]);
+                  Add(cmd, parameters[i], "P" + i);
                }
             }
 
@@ -160,7 +163,7 @@ namespace Pundit.Core.Utils
 
       public T ExecuteScalar<T>(string tableName, string column, string[] where, params object[] parameters)
       {
-         StringBuilder b = new StringBuilder();
+         var b = new StringBuilder();
          b.Append("select ");
          b.Append(column);
          b.Append(" from ");

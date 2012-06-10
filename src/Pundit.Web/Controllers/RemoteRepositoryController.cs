@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Configuration;
 using System.Linq;
 using System.Web;
 using System.Web.Mvc;
@@ -20,7 +21,7 @@ namespace Pundit.Web.Controllers
       {
          get
          {
-            if (_ri == null) _ri = RemoteRepositoryServerFactory.CreateSqlDiskServer(null);
+            if (_ri == null) _ri = RemoteRepositoryServerFactory.CreateSqlDiskServer(null, null);
 
             return _ri;
          }

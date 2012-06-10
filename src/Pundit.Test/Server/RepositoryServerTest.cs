@@ -19,7 +19,7 @@ namespace Pundit.Test.Server
          if(Directory.Exists(_rootDir)) Directory.Delete(_rootDir, true);
          Directory.CreateDirectory(_rootDir);
 
-         _server = new RepositoryServer(_rootDir);
+         _server = new RepositoryServer(null, _rootDir);
       }
 
       [TearDown]

@@ -79,7 +79,7 @@ namespace Pundit.Core.Application.Sqlite
          }
       }
 
-      protected override void Add(IDbCommand cmd, object value)
+      protected override void Add(IDbCommand cmd, object value, string name = null)
       {
          if (value is string)
             cmd.Parameters.Add(new SQLiteParameter(DbType.String, value));
@@ -92,7 +92,7 @@ namespace Pundit.Core.Application.Sqlite
          else if (value == null)
             cmd.Parameters.Add(new SQLiteParameter());
          else if (value is SQLiteParameter)
-            cmd.Parameters.Add((SQLiteParameter)value);
+            cmd.Parameters.Add(value);
          else throw new ArgumentException("type " + value.GetType() + " not supported");
       }
 
