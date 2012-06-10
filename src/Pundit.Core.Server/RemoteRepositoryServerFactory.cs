@@ -1,11 +1,6 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using Pundit.Core.Application.Server;
-using Pundit.Core.Model;
+﻿using Pundit.Core.Model;
 
-namespace Pundit.Core
+namespace Pundit.Core.Server
 {
    /// <summary>
    /// 

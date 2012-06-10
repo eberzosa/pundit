@@ -72,6 +72,10 @@
     <Compile Include="VersionPatternTest.cs" />
   </ItemGroup>
   <ItemGroup>
+    <ProjectReference Include="..\Pundit.Core.Server\Pundit.Core.Server.csproj">
+      <Project>{8E0C95D4-0081-44D5-9321-3EAE43E91BBF}</Project>
+      <Name>Pundit.Core.Server</Name>
+    </ProjectReference>
     <ProjectReference Include="..\Pundit.Core\Pundit.Core.csproj">
       <Project>{BEEA1FD6-D6DB-44BC-A4C4-F42321A6796F}</Project>
       <Name>Pundit.Core</Name>

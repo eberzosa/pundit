@@ -1,13 +1,8 @@
-﻿
-using System;
-using System.Collections.Generic;
-using System.IO;
-using System.Linq;
-using System.Text;
+﻿using System.IO;
 using NUnit.Framework;
 using Pundit.Core.Application;
-using Pundit.Core.Application.Server;
 using Pundit.Core.Model;
+using Pundit.Core.Server;
 
 namespace Pundit.Test.Server
 {

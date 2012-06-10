@@ -7,6 +7,7 @@ using System.Data.SQLite;
 using System.Text;
 using Pundit.Core.Application.Sqlite;
 using Pundit.Core.Model;
+using Pundit.Core.Utils;
 
 namespace Pundit.Core.Application.Repository
 {

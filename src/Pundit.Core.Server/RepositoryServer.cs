@@ -1,13 +1,12 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Data;
-using System.Data.SQLite;
 using System.IO;
-using Pundit.Core.Application.Sqlite;
+using Pundit.Core.Application;
 using Pundit.Core.Model;
 using log4net;
 
-namespace Pundit.Core.Application.Server
+namespace Pundit.Core.Server
 {
    class RepositoryServer : IRemoteRepository
    {
@@ -16,8 +15,8 @@ namespace Pundit.Core.Application.Server
       private const string LiveManifestTableName = "LivePackageManifest";
 
       private readonly ILog _log = LogManager.GetLogger(typeof (RepositoryServer));
-      private SqliteHelper _sql;
       private StreamsProvider _streams;
+      private MySqlHelper _sql;
 
       //MUST have old-style parameterless constructor for IoC and WCF
       public RepositoryServer() : this(null)
@@ -41,7 +40,7 @@ namespace Pundit.Core.Application.Server
          _log.Info("db location: " + dbLocation);
          _log.Info("data location: " + dataLocation);
 
-         _sql = new SqliteHelper(dbLocation, "server");
+         _sql = new MySqlHelper();
          _streams = new StreamsProvider(dataLocation);
       }
 

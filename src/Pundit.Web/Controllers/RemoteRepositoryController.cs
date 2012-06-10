@@ -5,6 +5,7 @@ using System.Web;
 using System.Web.Mvc;
 using Pundit.Core;
 using Pundit.Core.Model;
+using Pundit.Core.Server;
 
 namespace Pundit.Web.Controllers
 {

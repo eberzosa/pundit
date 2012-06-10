@@ -8,7 +8,7 @@
 // </auto-generated>
 //------------------------------------------------------------------------------
 
-namespace Pundit.Core {
+namespace Pundit.Core.Server {
     using System;
     
     
@@ -39,7 +39,7 @@ namespace Pundit.Core {
         internal static global::System.Resources.ResourceManager ResourceManager {
             get {
                 if (object.ReferenceEquals(resourceMan, null)) {
-                    global::System.Resources.ResourceManager temp = new global::System.Resources.ResourceManager("Pundit.Core.Ex", typeof(Ex).Assembly);
+                    global::System.Resources.ResourceManager temp = new global::System.Resources.ResourceManager("Pundit.Core.Server.Ex", typeof(Ex).Assembly);
                     resourceMan = temp;
                 }
                 return resourceMan;
@@ -61,20 +61,11 @@ namespace Pundit.Core {
         }
         
         /// <summary>
-        ///   Looks up a localized string similar to target path must contain at least file name.
+        ///   Looks up a localized string similar to package {0} not found in the index.
         /// </summary>
-        internal static string DiskInstallTarget_NoParts {
+        internal static string RepositoryServer_NoPackageInIndex {
             get {
-                return ResourceManager.GetString("DiskInstallTarget_NoParts", resourceCulture);
-            }
-        }
-        
-        /// <summary>
-        ///   Looks up a localized string similar to root directory [{0}] must exist.
-        /// </summary>
-        internal static string DiskInstallTarget_NoRoot {
-            get {
-                return ResourceManager.GetString("DiskInstallTarget_NoRoot", resourceCulture);
+                return ResourceManager.GetString("RepositoryServer_NoPackageInIndex", resourceCulture);
             }
         }
     }
