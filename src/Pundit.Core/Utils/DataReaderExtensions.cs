@@ -22,7 +22,9 @@
       {
          object value = reader[columnName];
          if (value == null || value is DBNull) return 0;
-         if (value is long) return (long)value;
+         if (value is long) return (long) value;
+         if (value is uint) return (uint) value;
+         if (value is byte) return (byte) value;
          return 0;
       }
 

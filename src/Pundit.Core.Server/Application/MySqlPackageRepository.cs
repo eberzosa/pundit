@@ -36,8 +36,10 @@ namespace Pundit.Core.Server.Application
 
       #region Implementation of IPackageRepository
 
-      public long SavePackage(Package p)
+      public long SavePackage(Package p, bool recordHistory)
       {
+         if (p == null) throw new ArgumentNullException("p");
+
          using (IDbTransaction tranny = BeginTransaction())
          {
             long id = Insert(
@@ -47,23 +49,47 @@ namespace Pundit.Core.Server.Application
                p.License);
 
             //insert dependencies
+            foreach(PackageDependency pd in p.Dependencies)
+            {
+               Insert(DependencyTableName,
+                      new[]
+                         {
+                            "PackageManifestId",
+                            "PackageId", "VersionPattern", "Platform",
+                            "Scope", "CreatePlatformFolder"
+                         },
+                      id,
+                      pd.PackageId, pd.VersionPattern, pd.Platform,
+                      (long)pd.Scope, pd.CreatePlatformFolder);
+            }
 
             tranny.Commit();
+
             return id;
          }
       }
 
+      public void DeletePackage(long packageId)
+      {
+         DeleteRecord(ManifestTableName, packageId);
+      }
+
+      public void DeletePackage(PackageKey key)
+      {
+
+      }
+
       private void AddPackageDependencies(long packageId, Package p)
       {
-         using (IDataReader reader2 = ExecuteReader(DependencyTableName, null,
+         using (IDataReader reader = ExecuteReader(DependencyTableName, null,
                                                     new[] {"PackageManifestId=?P0"}, packageId))
          {
-            while (reader2.Read())
+            while (reader.Read())
             {
-               var pd = new PackageDependency(reader2.AsString("PackageId"), reader2.AsString("VersionPattern"));
-               pd.Platform = reader2.AsString("Platform");
-               pd.Scope = (DependencyScope) reader2.AsLong("Scope");
-               pd.CreatePlatformFolder = reader2.AsBool("CreatePlatformFolder");
+               var pd = new PackageDependency(reader.AsString("PackageId"), reader.AsString("VersionPattern"));
+               pd.Platform = reader.AsString("Platform");
+               pd.Scope = (DependencyScope) reader.AsLong("Scope");
+               pd.CreatePlatformFolder = reader.AsBool("CreatePlatformFolder");
                p.Dependencies.Add(pd);
             }
          }
@@ -85,19 +111,20 @@ namespace Pundit.Core.Server.Application
       private Package ReadFullPackage(IDataReader reader)
       {
          Package p = null;
+         long id = 0;
+
          try
          {
             if (reader.Read())
             {
-               long id;
                p = ReadPackage(reader, out id);
-               AddPackageDependencies(id, p);
             }
          }
          finally
          {
             reader.Dispose();
          }
+         if(p != null) AddPackageDependencies(id, p);
          return p;
       }
 

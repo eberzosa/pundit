@@ -8,7 +8,11 @@ namespace Pundit.Core.Server.Model
 {
    public interface IPackageRepository : IDisposable
    {
-      long SavePackage(Package p);
+      long SavePackage(Package p, bool recordHistory);
+
+      void DeletePackage(long packageId);
+
+      void DeletePackage(PackageKey key);
 
       Package GetPackage(long packageId);
 
