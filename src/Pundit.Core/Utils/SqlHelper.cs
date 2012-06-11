@@ -114,6 +114,11 @@ namespace Pundit.Core.Utils
 
       public IDataReader ExecuteReader(string tableName, string[] columns, string[] where, params object[] parameters)
       {
+         return ExecuteReaderPage(tableName, -1, -1, columns, where, parameters);
+      }
+
+      public IDataReader ExecuteReaderPage(string tableName, long offset, long count, string[] columns, string[] where, params object[] parameters)
+      {
          if (tableName == null) throw new ArgumentNullException("tableName");
 
          var s = new StringBuilder();
@@ -143,6 +148,14 @@ namespace Pundit.Core.Utils
                if (i != 0) s.Append(" AND ");
                s.Append(where[i]);
             }
+         }
+
+         if(offset > -1 && count > -1)
+         {
+            s.Append(" LIMIT ");
+            s.Append(offset);
+            s.Append(", ");
+            s.Append(count);
          }
 
          using (IDbCommand cmd = CreateCommand())

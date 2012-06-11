@@ -261,7 +261,7 @@ namespace Pundit.Core.Model
          if(Version == null)
             ex.AddError("Version", "version is required");
 
-         if(Version != null && !IsValidPackageVersion(Version.ToString()))
+         if(Version != null && !IsValidPackageVersion(Version.ToString(4)))
             ex.AddError("Version", "version format is invalid, expected Major.Minor.Build.Revision");
 
          if (ex.HasErrors)
@@ -270,12 +270,16 @@ namespace Pundit.Core.Model
 
       public bool Equals(Package other)
       {
-         throw new NotImplementedException();
+         if (ReferenceEquals(other, null)) return false;
+         return Key.Equals(other.Key);
       }
 
       public override bool Equals(object obj)
       {
-         return base.Equals(obj);
+         if (ReferenceEquals(obj, null)) return false;
+         if (ReferenceEquals(obj, this)) return true;
+         if (GetType() != obj.GetType()) return false;
+         return Equals((Package) obj);
       }
 
       public override int GetHashCode()

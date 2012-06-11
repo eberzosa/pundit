@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Configuration;
 using System.Data;
 using System.IO;
 using Pundit.Core.Application;
@@ -15,6 +16,11 @@ namespace Pundit.Core.Server.Application
       private readonly ILog _log = LogManager.GetLogger(typeof (RepositoryServer));
       private StreamsProvider _streams;
 
+      public RepositoryServer(IPackageRepository pr) : this(pr, null)
+      {
+         
+      }
+
       public RepositoryServer(IPackageRepository pr, string rootDir)
       {
          if (pr == null) throw new ArgumentNullException("pr");
@@ -25,7 +31,8 @@ namespace Pundit.Core.Server.Application
 
       private void Initialize(string rootDirOpt)
       {
-         string rootDir = rootDirOpt ?? AppDomain.CurrentDomain.BaseDirectory;
+         string rootDir = rootDirOpt ?? ConfigurationManager.AppSettings["FilesRootDir"];
+         if(!Directory.Exists(rootDir)) throw new DirectoryNotFoundException("repository root (" + rootDir + ") does not exist");
          string dataLocation = Path.Combine(rootDir, "files");
          if (!Directory.Exists(dataLocation)) Directory.CreateDirectory(dataLocation);
 

@@ -7,6 +7,7 @@ using System.Web.Mvc;
 using Pundit.Core;
 using Pundit.Core.Model;
 using Pundit.Core.Server;
+using Pundit.Core.Server.Model;
 
 namespace Pundit.Web.Controllers
 {
@@ -15,16 +16,13 @@ namespace Pundit.Web.Controllers
    /// </summary>
    public class RemoteRepositoryController : Controller
    {
-      private static IRemoteRepository _ri;
+      private IConfigurationRepository _config;
+      private readonly IRemoteRepository _remote;
 
-      private static IRemoteRepository Repo
+      public RemoteRepositoryController(IConfigurationRepository config, IRemoteRepository remote)
       {
-         get
-         {
-            if (_ri == null) _ri = RepositoryFactory.CreateSqlDiskServer(null, null);
-
-            return _ri;
-         }
+         _config = config;
+         _remote = remote;
       }
 
       [HttpPost]

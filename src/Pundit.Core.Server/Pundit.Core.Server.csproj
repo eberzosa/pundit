@@ -41,6 +41,9 @@
     <Reference Include="MySql.Data">
       <HintPath>..\..\lib\MySql.Data.dll</HintPath>
     </Reference>
+    <Reference Include="Ninject">
+      <HintPath>..\..\lib\Ninject.dll</HintPath>
+    </Reference>
     <Reference Include="System" />
     <Reference Include="System.Configuration" />
     <Reference Include="System.Core" />
@@ -51,16 +54,19 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
-    <Compile Include="Application\SqlPackageRepository.cs" />
+    <Compile Include="Application\MySqlConfigurationRepository.cs" />
+    <Compile Include="Application\MySqlPackageRepository.cs" />
+    <Compile Include="Application\MySqlUpgrader.cs" />
     <Compile Include="Ex.Designer.cs">
       <AutoGen>True</AutoGen>
       <DesignTime>True</DesignTime>
       <DependentUpon>Ex.resx</DependentUpon>
     </Compile>
+    <Compile Include="InjectionModule.cs" />
+    <Compile Include="Model\IConfigurationRepository.cs" />
     <Compile Include="Model\IPackageRepository.cs" />
     <Compile Include="Application\MySqlRepositoryBase.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
-    <Compile Include="RepositoryFactory.cs" />
     <Compile Include="Application\RepositoryServer.cs" />
     <Compile Include="Application\StreamsProvider.cs" />
   </ItemGroup>
@@ -77,8 +83,8 @@
     </EmbeddedResource>
   </ItemGroup>
   <ItemGroup>
-    <Content Include="Application\Scripts\00001-00002.sql" />
-    <Content Include="Application\Scripts\create.sql" />
+    <EmbeddedResource Include="Application\Scripts\MySql\00001-00002.sql" />
+    <EmbeddedResource Include="Application\Scripts\MySql\create.sql" />
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
   <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 

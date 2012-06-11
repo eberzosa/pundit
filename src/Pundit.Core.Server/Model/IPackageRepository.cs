@@ -15,5 +15,7 @@ namespace Pundit.Core.Server.Model
       Package GetPackage(PackageKey key);
 
       bool Exists(PackageKey key);
+
+      IEnumerable<Package> GetPackages(long offset, long count, out long totalCount);
    }
 }

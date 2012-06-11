@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Configuration;
 using System.Data;
 using MySql.Data.MySqlClient;
 using Pundit.Core.Utils;
@@ -15,9 +16,16 @@ namespace Pundit.Core.Server.Application
 
       protected MySqlRepositoryBase(string connectionString)
       {
-         if (connectionString == null) throw new ArgumentNullException("connectionString");
+         if (connectionString == null)
+         {
+            _connectionString = ConfigurationManager.ConnectionStrings["MySqlDb"].ToString();
+         }
+         else
+         {
+            _connectionString = connectionString;            
+         }
 
-         _connectionString = connectionString;
+         if(_connectionString == null) throw new ApplicationException("connection string is null and application settings has no connection configured");
       }
 
       #region Overrides of SqlHelper
@@ -30,6 +38,8 @@ namespace Pundit.Core.Server.Application
             if(_conn == null)
             {
                _conn = new MySqlConnection(_connectionString);
+               _conn.Open();
+               new MySqlUpgrader().Execute(_conn);
             }
 
             if(_conn.State != ConnectionState.Open) _conn.Open();

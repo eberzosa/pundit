@@ -19,7 +19,7 @@ namespace Pundit.Test.Server
       [SetUp]
       public void SetUp()
       {
-         _repo = new SqlPackageRepository(TestConnectionString);
+         _repo = new MySqlPackageRepository(TestConnectionString);
       }
 
       [TearDown]
@@ -32,7 +32,7 @@ namespace Pundit.Test.Server
       }
 
       [Test]
-      public void WriteReadPackageTes()
+      public void WriteReadPackageTest()
       {
          var p = new Package("log4net", new Version("1.2.11"));
          long packageId = _repo.SavePackage(p);
