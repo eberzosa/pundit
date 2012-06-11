@@ -6,7 +6,7 @@ using Pundit.Core.Server.Application;
 
 namespace Pundit.Test.Server
 {
-   [TestFixture]
+   [TestFixture, Ignore]
    public class RepositoryServerTest
    {
       private string _rootDir;

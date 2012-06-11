@@ -12,8 +12,8 @@ namespace Pundit.Core.Server.Application
    {
       private const string ManifestTableName = "PackageManifest";
       private const string DependencyTableName = "PackageDependency";
-      private const string HistoryTableName = "ManifestHistory";
-      private const string LiveManifestTableName = "LivePackageManifest";
+      private const string LogTableName = "PackageLog";
+      private static readonly string[] KeyRestriction = new string[] {"PackageId", "Version", "Platform"};
 
       public MySqlPackageRepository() : this(null)
       {
@@ -32,6 +32,18 @@ namespace Pundit.Core.Server.Application
             Math.Max(0, v.Minor),
             Math.Max(0, v.Build),
             Math.Max(0, v.Revision));
+      }
+
+      private void RecordHistory(long recordId, Package p)
+      {
+         Insert(LogTableName,
+                new[]
+                   {
+                      "ModType", "ModTime", "PackageManifestId",
+                      "PackageId", "Version", "Platform"
+                   },
+                (long) SnapshotPackageDiff.Add, DateTime.UtcNow, recordId,
+                p.Key.PackageId, FormatVersion(p.Key.Version), p.Key.Platform);
       }
 
       #region Implementation of IPackageRepository
@@ -63,6 +75,8 @@ namespace Pundit.Core.Server.Application
                       (long)pd.Scope, pd.CreatePlatformFolder);
             }
 
+            if(recordHistory) RecordHistory(id, p);
+
             tranny.Commit();
 
             return id;
@@ -71,12 +85,37 @@ namespace Pundit.Core.Server.Application
 
       public void DeletePackage(long packageId)
       {
+         var ids = new List<long>();
+         using(IDataReader reader = ExecuteReader(
+            LogTableName, new[] { "PackageLogId" },
+            new[] { "PackageManifestId"}, packageId ))
+         {
+            while (reader.Read())
+            {
+               ids.Add(reader.AsLong("PackageLogId"));
+            }
+         }
+         foreach(long id in ids) DeleteRecord(LogTableName, id);
+
          DeleteRecord(ManifestTableName, packageId);
       }
 
       public void DeletePackage(PackageKey key)
       {
+         var ids = new List<long>();
+         using(IDataReader reader = ExecuteReader(
+            ManifestTableName,
+            new[] { "PackageManifestId"},
+            new[] { "PackageId=?P0", "Platform=?P1", "Version=?P2"},
+            key.PackageId, key.Platform, FormatVersion(key.Version)))
+         {
+            while (reader.Read())
+            {
+               ids.Add(reader.AsLong("PackageManifestId"));
+            }
+         }
 
+         foreach(long id in ids) DeletePackage(id);
       }
 
       private void AddPackageDependencies(long packageId, Package p)

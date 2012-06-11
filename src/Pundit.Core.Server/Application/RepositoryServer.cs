@@ -100,40 +100,8 @@ namespace Pundit.Core.Server.Application
          return _streams.Read(key);
       }
 
-      private PackageSnapshotKey ReadPackageSnapshotKey(IDataReader reader)
-      {
-         long modType = (long) reader["ModType"];
-         long manifestId = (long) reader["PackageManifestId"];
-
-         var diff = (SnapshotPackageDiff)modType;
-         Package manifest = _pr.GetPackage(manifestId);
-         
-         return new PackageSnapshotKey(manifest, diff);
-      }
-
       public RemoteSnapshot GetSnapshot(string changeId)
       {
-         /*_log.Debug("snapshot requested for changeId [" + changeId + "]");
-
-         long internalChangeId = GetChangeId(changeId);
-         bool isDelta = internalChangeId != -1;
-         long nextChangeId = 0;
-
-         var keys = new List<PackageSnapshotKey>();
-         using (IDataReader reader = _sql.ExecuteReader(HistoryTableName,
-            new[] { "ManifestHistoryId", "ModType", "ModTime", "PackageManifestId" },
-            new[] { "ManifestHistoryId > (?)" },
-            internalChangeId == -1 ? 0 : internalChangeId))
-         {
-            while(reader.Read())
-            {
-               isDelta = true;
-               nextChangeId = reader.AsLong("ManifestHistoryId");
-               keys.Add(ReadPackageSnapshotKey(reader));
-            }
-         }
-
-         return new RemoteSnapshot(isDelta, keys, nextChangeId == 0 ? null : nextChangeId.ToString());*/
          throw new NotImplementedException();
       }
 
@@ -171,7 +139,7 @@ namespace Pundit.Core.Server.Application
          {
             Package p;
 
-            using (PackageReader rdr = new PackageReader(fs))
+            using (var rdr = new PackageReader(fs))
             {
                p = rdr.Manifest;
             }
