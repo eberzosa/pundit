@@ -1,8 +1,7 @@
 ﻿<?xml version="1.0" encoding="utf-8"?>
-<package xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:xsd="http://www.w3.org/2001/XMLSchema" xsi:type="DevPackage" coreVersion="1.0.0.11">
+<package p1:type="DevPackage" coreVersion="1.0.0.11" xmlns:p1="http://www.w3.org/2001/XMLSchema-instance" xmlns="http://pundit-dm.com/1.1.0.0/pundit.xsd">
   <packageId>Pundit.Core</packageId>
   <platform>net40</platform>
-  <project-url>http://pundit.codeplex.com</project-url>
   <version>1.0.0.6</version>
   <author>Ivan Gavryliuk</author>
   <description>Pundit is a free, open source, developer-oriented package management system started in attempt to fill the empty space in C++ and .NET world.</description>
@@ -99,7 +98,7 @@ NO WARRANTY
     <package id="ILMerge" version="2.10" platform="net20" devtime="true" scope="build" />
     <package id="sharpziplib" version="0.86" platform="net20" />
     <package id="SQLite" version="1.0" platform="net40.x32" />
-    <package id="log4net" version="1.2" platform="net20"/>
+    <package id="log4net" version="1.2" platform="net20" />
   </dependencies>
   <files>
     <file kind="bin" include="Pundit*.xml" flatten="false" basedir="src/Pundit.Core/bin/Debug" includeemptydirs="true" configuration="any" />

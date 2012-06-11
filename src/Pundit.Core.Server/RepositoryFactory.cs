@@ -1,4 +1,5 @@
 ﻿using Pundit.Core.Model;
+using Pundit.Core.Server.Application;
 using Pundit.Core.Server.Model;
 
 namespace Pundit.Core.Server
@@ -6,7 +7,7 @@ namespace Pundit.Core.Server
    /// <summary>
    /// 
    /// </summary>
-   public static class RemoteRepositoryServerFactory
+   public static class RepositoryFactory
    {
       /// <summary>
       /// Creates <see cref="IRemoteRepository"/> implementtion using sqlite for metadata storage and disk for package storage

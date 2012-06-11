@@ -21,7 +21,7 @@ namespace Pundit.Web.Controllers
       {
          get
          {
-            if (_ri == null) _ri = RemoteRepositoryServerFactory.CreateSqlDiskServer(null, null);
+            if (_ri == null) _ri = RepositoryFactory.CreateSqlDiskServer(null, null);
 
             return _ri;
          }

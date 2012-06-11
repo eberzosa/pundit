@@ -6,7 +6,7 @@ using Pundit.Core.Model;
 using Pundit.Core.Server.Model;
 using log4net;
 
-namespace Pundit.Core.Server
+namespace Pundit.Core.Server.Application
 {
    class RepositoryServer : IRemoteRepository
    {

@@ -2,7 +2,7 @@
 using NUnit.Framework;
 using Pundit.Core.Application;
 using Pundit.Core.Model;
-using Pundit.Core.Server;
+using Pundit.Core.Server.Application;
 
 namespace Pundit.Test.Server
 {
