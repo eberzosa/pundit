@@ -43,15 +43,7 @@ namespace Pundit.Core.Application.Repository
          var request = new RestRequest("snapshot/{changeId}", Method.GET);
          request.AddParameter("changeId", changeId ?? NullChangeId, ParameterType.UrlSegment);
          IRestResponse response = _client.Execute(request);
-         /*try
-         {
-            return _channel.GetSnapshot(changeId ?? NullChangeId);
-         }
-         catch(EndpointNotFoundException)
-         {
-            throw new RepositoryOfflineException();
-         }*/
-         throw new NotImplementedException();
+         return RemoteSnapshot.FromXml(response.Content);
       }
 
       #region Implementation of IDisposable

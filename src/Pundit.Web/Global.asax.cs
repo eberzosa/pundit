@@ -26,6 +26,11 @@ namespace Pundit.Web
          routes.IgnoreRoute("{resource}.axd/{*pathInfo}");
 
          routes.MapRoute(
+            "IRemoteRepository-Snapshot",
+            "repository/v1/snapshot/{delta}",
+            new {controller = "RemoteRepository", action = "GetSnapshot"});
+
+         routes.MapRoute(
              "Default", // Route name
              "{controller}/{action}/{id}", // URL with parameters
              new { controller = "Home", action = "Index", id = UrlParameter.Optional } // Parameter defaults

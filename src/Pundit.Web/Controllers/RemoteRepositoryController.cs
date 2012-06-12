@@ -38,9 +38,9 @@ namespace Pundit.Web.Controllers
       }
 
       [HttpGet]
-      public ContentResult GetSnapshot(string changeId)
+      public ContentResult GetSnapshot(string delta)
       {
-         RemoteSnapshot snapshot = _remote.GetSnapshot(changeId);
+         RemoteSnapshot snapshot = _remote.GetSnapshot(delta);
          string xml = snapshot.ToXml();
          return Content(xml, "text/xml");
       }

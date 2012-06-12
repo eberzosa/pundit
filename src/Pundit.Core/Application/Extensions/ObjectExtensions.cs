@@ -7,7 +7,7 @@ namespace System
 {
    static class ObjectExtensions
    {
-      private const string XmlNamespace = "http://pundit-dm.com/1/pundit.xsd";
+      internal const string XmlNamespace = "http://pundit-dm.com/1/pundit.xsd";
 
       public static void WriteXmlTo(this object obj, Stream s)
       {

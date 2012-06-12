@@ -16,12 +16,13 @@ namespace Pundit.Test.Server.Integration
       [SetUp]
       public void SetUp()
       {
-         _client = RemoteRepositoryFactory.Create("http://localhost:81");
+         _client = RemoteRepositoryFactory.Create("http://localhost:81/repository/v1");
       }
 
+      [Test]
       public void PublishTest()
       {
-         
+         RemoteSnapshot rs = _client.GetSnapshot(null);
       }
    }
 }

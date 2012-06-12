@@ -71,5 +71,15 @@ namespace Pundit.Core.Model
       {
          return this.ToXmlString();
       }
+
+      /// <summary>
+      /// 
+      /// </summary>
+      /// <param name="s"></param>
+      /// <returns></returns>
+      public static RemoteSnapshot FromXml(string s)
+      {
+         return s.FromXmlString<RemoteSnapshot>();
+      }
    }
 }
