@@ -31,6 +31,16 @@ namespace Pundit.Web
             new {controller = "RemoteRepository", action = "GetSnapshot"});
 
          routes.MapRoute(
+            "IRemoteRepository-Download",
+            "repository/v1/download/{platform}/{packageId}/{version}",
+            new {controller = "RemoteRepository", action = "Download"});
+
+         routes.MapRoute(
+            "IRemoteRepository-Publish",
+            "repository/v1/publish",
+            new {controller = "RemoteRepository", action = "Publish"});
+
+         routes.MapRoute(
              "Default", // Route name
              "{controller}/{action}/{id}", // URL with parameters
              new { controller = "Home", action = "Index", id = UrlParameter.Optional } // Parameter defaults

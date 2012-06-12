@@ -1,7 +1,7 @@
 ﻿using System;
 using System.IO;
+using System.Net;
 using Pundit.Core.Model;
-using RestSharp;
 
 namespace Pundit.Core.Application.Repository
 {
@@ -11,39 +11,40 @@ namespace Pundit.Core.Application.Repository
    class HttpRestRemoteRepository : IRemoteRepository
    {
       private const string NullChangeId = "0";
-
-      private readonly string _absoluteUri;
-      private readonly RestClient _client;
+      private readonly Uri _absoluteUri;
 
       public HttpRestRemoteRepository(string absoluteUri)
       {
-         _absoluteUri = absoluteUri;
-         _client = new RestClient(absoluteUri);
+         if (absoluteUri == null) throw new ArgumentNullException("absoluteUri");
+         if (!absoluteUri.EndsWith("/")) absoluteUri += "/";
+         _absoluteUri = new Uri(absoluteUri);
       }
 
       public void Publish(Stream packageStream)
       {
-         var request = new RestRequest("publish", Method.POST);
-         IRestResponse response = _client.Execute(request);
+         var request = (HttpWebRequest) WebRequest.Create(new Uri(_absoluteUri, "publish"));
+         request.Method = "POST";
+         using(var rs = request.GetRequestStream())
+         {
+            packageStream.CopyTo(rs);
+         }
+         request.GetResponse();
       }
 
       public Stream Download(string platform, string packageId, string version)
       {
-         var request = new RestRequest("download/{platform}/{packageId}/{version}", Method.GET);
-         request.AddParameter("platform", platform, ParameterType.UrlSegment);
-         request.AddParameter("packageId", packageId, ParameterType.UrlSegment);
-         request.AddParameter("version", version, ParameterType.UrlSegment);
-         IRestResponse response = _client.Execute(request);
-
-         throw new NotImplementedException();
+         var request = (HttpWebRequest) WebRequest.Create(
+            new Uri(_absoluteUri, string.Format("download/{0}/{1}/{2}", platform, packageId, version)));
+         request.Method = "GET";
+         var response = (HttpWebResponse) request.GetResponse();
+         return response.GetResponseStream();
       }
 
       public RemoteSnapshot GetSnapshot(string changeId)
       {
-         var request = new RestRequest("snapshot/{changeId}", Method.GET);
-         request.AddParameter("changeId", changeId ?? NullChangeId, ParameterType.UrlSegment);
-         IRestResponse response = _client.Execute(request);
-         return RemoteSnapshot.FromXml(response.Content);
+         Uri uri = new Uri(_absoluteUri, string.Format("snapshot/{0}", changeId ?? NullChangeId));
+         string xml = new WebClient().DownloadString(uri);
+         return RemoteSnapshot.FromXml(xml);
       }
 
       #region Implementation of IDisposable

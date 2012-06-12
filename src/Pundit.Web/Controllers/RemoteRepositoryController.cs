@@ -16,19 +16,17 @@ namespace Pundit.Web.Controllers
    /// </summary>
    public class RemoteRepositoryController : Controller
    {
-      private IConfigurationRepository _config;
       private readonly IRemoteRepository _remote;
 
-      public RemoteRepositoryController(IConfigurationRepository config, IRemoteRepository remote)
+      public RemoteRepositoryController(IRemoteRepository remote)
       {
-         _config = config;
          _remote = remote;
       }
 
       [HttpPost]
-      public ActionResult Publish()
+      public void Publish()
       {
-         return null;
+         _remote.Publish(Request.InputStream);
       }
 
       [HttpGet]
