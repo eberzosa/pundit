@@ -8,7 +8,6 @@ namespace Pundit.Core.Model
    /// <summary>
    /// Unique identifier for a package
    /// </summary>
-   [DataContract]
    public class PackageKey : IEquatable<PackageKey>, ICloneable
    {
       private string _packageId;
@@ -30,7 +29,6 @@ namespace Pundit.Core.Model
       }
 
       [XmlAttribute("id")]
-      [DataMember]
       public string PackageId
       {
          get { return _packageId; }
@@ -46,7 +44,6 @@ namespace Pundit.Core.Model
       }
 
       [XmlAttribute("version")]
-      [DataMember]
       public string VersionString
       {
          get { return _version.ToString(); }
@@ -54,7 +51,6 @@ namespace Pundit.Core.Model
       }
 
       [XmlAttribute("platform")]
-      [DataMember]
       public string Platform
       {
          get { return _platform; }

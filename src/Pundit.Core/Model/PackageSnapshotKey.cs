@@ -12,11 +12,13 @@ namespace Pundit.Core.Model
       /// <summary>
       /// Package was added
       /// </summary>
+      [XmlEnum("add")]
       Add = 0,
 
       /// <summary>
       /// Package was deleted
       /// </summary>
+      [XmlEnum("del")]
       Del = 1
    }
 
@@ -24,18 +26,15 @@ namespace Pundit.Core.Model
    /// Snapshot atom
    /// </summary>
    [XmlRoot("key")]
-   [DataContract]
    public class PackageSnapshotKey
    {
       /// <summary>
       /// Modification type
       /// </summary>
       [XmlAttribute("diff")]
-      [DataMember(Name = "diff")]
       public SnapshotPackageDiff Diff { get; set; }
 
       [XmlElement("manifest")]
-      [DataMember(Name = "manifest")]
       public Package Manifest { get; set; }
 
       public PackageSnapshotKey()

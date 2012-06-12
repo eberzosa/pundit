@@ -42,7 +42,7 @@ namespace Pundit.Core.Application
          {
             if(entry.IsFile && entry.Name == Package.DefaultManifestFileName)
             {
-               Package manifest = Package.FromStream(_zipStream);
+               Package manifest = Package.FromStreamXml(_zipStream);
 
                return manifest;
             }

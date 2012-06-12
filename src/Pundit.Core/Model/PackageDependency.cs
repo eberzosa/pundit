@@ -10,7 +10,6 @@ namespace Pundit.Core.Model
    ///</summary>
    [XmlRoot("package")]
    [Serializable]
-   [DataContract]
    public class PackageDependency
    {
       private string _plaftorm;
@@ -41,14 +40,12 @@ namespace Pundit.Core.Model
       /// Package id
       /// </summary>
       [XmlAttribute("id")]
-      [DataMember(Name = "id")]
       public string PackageId { get; set; }
 
       /// <summary>
       /// Version pattern
       /// </summary>
       [XmlAttribute("version")]
-      [DataMember(Name = "versionPattern")]
       public string VersionPattern { get; set; }
 
       /// <summary>
@@ -56,7 +53,6 @@ namespace Pundit.Core.Model
       /// guess is performed
       /// </summary>
       [XmlAttribute("platform")]
-      [DataMember(Name = "platform")]
       public string Platform
       {
          get { return _plaftorm; }
@@ -110,7 +106,6 @@ namespace Pundit.Core.Model
       /// </summary>
       [XmlAttribute("scope")]
       [DefaultValue(DependencyScope.Normal)]
-      [DataMember(Name = "scope")]
       public DependencyScope Scope { get; set; }
 
       ///<summary>
@@ -119,7 +114,6 @@ namespace Pundit.Core.Model
       ///</summary>
       [XmlAttribute("createPlatformFolder")]
       [DefaultValue(false)]
-      [DataMember(Name = "createPlatformFolder")]
       public bool CreatePlatformFolder { get; set; }
    }
 }

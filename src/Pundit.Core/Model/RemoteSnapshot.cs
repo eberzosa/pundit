@@ -1,13 +1,15 @@
-﻿using System.Collections.Generic;
+﻿using System;
+using System.Collections.Generic;
+using System.IO;
 using System.Linq;
-using System.Runtime.Serialization;
+using System.Xml.Serialization;
 
 namespace Pundit.Core.Model
 {
    /// <summary>
    /// 
    /// </summary>
-   [DataContract]
+   [XmlRoot("snapshot")]
    public class RemoteSnapshot
    {
       /// <summary>
@@ -15,19 +17,20 @@ namespace Pundit.Core.Model
       /// if you are passing a wrong delta which cannot be resolved or repote repository does not support
       /// incremental updates
       /// </summary>
-      [DataMember(Name = "isDelta")]
+      [XmlAttribute("isDelta")]
       public bool IsDelta { get; set; }
 
       /// <summary>
       /// Changes of the full snapshot or a delta
       /// </summary>
-      [DataMember(Name = "changes")]
+      [XmlArray("changes")]
+      [XmlArrayItem("key")]
       public PackageSnapshotKey[] Changes { get; set; }
 
       /// <summary>
       /// Next delta id. Call <see cref="IRemoteRepository"/> with this delta value to obtain only a changeset.
       /// </summary>
-      [DataMember(Name = "delta")]
+      [XmlAttribute("nextDelta")]
       public string NextChangeId { get; set; }
 
       /// <summary>
@@ -49,6 +52,24 @@ namespace Pundit.Core.Model
          IsDelta = isDelta;
          if (changes != null) Changes = changes.ToArray();
          NextChangeId = nextChangeId;
+      }
+
+      /// <summary>
+      /// 
+      /// </summary>
+      /// <param name="s"></param>
+      public void WriteTo(Stream s)
+      {
+         this.WriteXmlTo(s);
+      }
+
+      /// <summary>
+      /// 
+      /// </summary>
+      /// <returns></returns>
+      public string ToXml()
+      {
+         return this.ToXmlString();
       }
    }
 }

@@ -33,7 +33,7 @@ namespace Pundit.Vsix.Application
 
                try
                {
-                  p.WriteXmlTo(_manifestPath, true);
+                  p.WriteTo(_manifestPath, true);
                   Alert.Message(VSPackage.Manifest_UpgradeOk);
                   return true;
                }
@@ -50,11 +50,11 @@ namespace Pundit.Vsix.Application
       {
          get
          {
-            if(_manifestPath != null && File.Exists(_manifestPath))
+            /*if(_manifestPath != null && File.Exists(_manifestPath))
             {
                string content = File.ReadAllText(_manifestPath);
                return !content.Contains(Package.XmlNamespace);
-            }
+            }*/
 
             return false;
          }

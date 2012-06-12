@@ -7,16 +7,13 @@ using System.Runtime.Serialization;
 
 namespace Pundit.Core.Model
 {
-   [DataContract]
    public class VersionPattern
    {
       //at least two numbers
-      [DataMember]
       private string _originalPattern;
 
       private static readonly Regex ValidationRgx = new Regex("^[0-9\\*]+(\\.[0-9\\*]+){1,3}$");
 
-      [DataMember]
       private Version _v;
 
       public VersionPattern(string pattern)

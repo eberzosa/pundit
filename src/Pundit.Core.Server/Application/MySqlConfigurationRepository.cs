@@ -12,6 +12,11 @@ namespace Pundit.Core.Server.Application
 
       #region Implementation of IConfigurationRepository
 
+      public MySqlConfigurationRepository() : this(null)
+      {
+         
+      }
+
       public MySqlConfigurationRepository(string connectionString) : base(connectionString)
       {
       }

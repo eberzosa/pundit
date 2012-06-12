@@ -137,7 +137,7 @@ namespace Pundit.Vsix
                         
                         using(Stream s = File.Create(path))
                         {
-                           package.WriteXmlTo(s);
+                           package.WriteTo(s);
                         }
 
                         _vsCommands.OpenFileInEditor(path);

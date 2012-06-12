@@ -1,0 +1,27 @@
+﻿using System;
+using System.Collections.Generic;
+using System.Linq;
+using System.Text;
+using NUnit.Framework;
+using Pundit.Core;
+using Pundit.Core.Model;
+
+namespace Pundit.Test.Server.Integration
+{
+   [TestFixture]
+   class RestClientIntegrationTest
+   {
+      private IRemoteRepository _client;
+
+      [SetUp]
+      public void SetUp()
+      {
+         _client = RemoteRepositoryFactory.Create("http://localhost:81");
+      }
+
+      public void PublishTest()
+      {
+         
+      }
+   }
+}

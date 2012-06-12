@@ -2,11 +2,7 @@
 using System.Collections.Generic;
 using System.IO;
 using System.Linq;
-using System.Reflection;
-using System.Runtime.Serialization;
-using System.Text;
 using System.Text.RegularExpressions;
-using System.Xml;
 using System.Xml.Serialization;
 
 namespace Pundit.Core.Model
@@ -16,13 +12,11 @@ namespace Pundit.Core.Model
    /// </summary>
    [XmlRoot(ElementName = "package")]
    [XmlInclude(typeof(DevPackage))]
-   [DataContract]
    public class Package : IEquatable<Package>, ICloneable
    {
       public const string DefaultManifestFileName = "pundit.xml"; //package definition
       public const string PackedExtension = ".pundit";
       public const string NoArchPlatformName = "noarch";
-      public const string XmlNamespace = "http://pundit-dm.com/1.1.0.0/pundit.xsd";
 
       private static readonly Regex PackageStringRgx = new Regex("^[0-9a-zA-Z\\._]+$");
       private static readonly Regex PackageVersionRgx = new Regex("^[0-9\\*]+(\\.[0-9\\*]+){3}$");
@@ -32,23 +26,15 @@ namespace Pundit.Core.Model
 
       private List<PackageDependency> _dependencies = new List<PackageDependency>();
 
-      //[XmlAttribute("xmlns")]
-      //public string Xmlns { get; set; }
-
-      [XmlAttribute("coreVersion")]
-      public string CoreVersion { get; set; }
-
       //WARNING!!! remember to reflect copy constructor if adding a new property to this class
 
       [XmlElement("packageId")]
-      [DataMember(Name = "packageId")]
       public string PackageId { get; set; }
 
       /// <summary>
       /// Package platform
       /// </summary>
       [XmlElement("platform")]
-      [DataMember(Name = "platform")]
       public string Platform
       {
          get { return _platform; }
@@ -59,7 +45,6 @@ namespace Pundit.Core.Model
       /// Project URL (optional)
       /// </summary>
       [XmlElement("projectUrl")]
-      [DataMember(Name = "projectUrl")]
       public string ProjectUrl { get; set; }
 
       /// <summary>
@@ -72,7 +57,6 @@ namespace Pundit.Core.Model
       /// Package version formatted as string
       /// </summary>
       [XmlElement("version")]
-      [DataMember(Name = "version")]
       public string VersionString
       {
          get { return this.Version.ToString(); }
@@ -80,27 +64,25 @@ namespace Pundit.Core.Model
       }
 
       [XmlElement("author")]
-      [DataMember(Name = "author")]
       public string Author { get; set; }
 
       [XmlElement("description")]
-      [DataMember(Name = "description")]
       public string Description { get; set; }
 
       [XmlElement("releaseNotes")]
-      [DataMember(Name = "releaseNotes")]
       public string ReleaseNotes { get; set; }
 
       /// <summary>
       /// License agreement (optional)
       /// </summary>
       [XmlElement("license")]
-      [DataMember(Name = "license")]
       public string License { get; set; }
 
+      /// <summary>
+      /// 
+      /// </summary>
       [XmlArray("dependencies")]
       [XmlArrayItem("package")]
-      [DataMember(Name = "dependencies", IsRequired = false)]
       public List<PackageDependency> Dependencies
       {
          get { return _dependencies; }
@@ -112,8 +94,6 @@ namespace Pundit.Core.Model
       /// </summary>
       public Package()
       {
-         //Xmlns = "http://pundit-dm.com/1.1.0.0/pundit.xsd";
-         CoreVersion = Assembly.GetExecutingAssembly().GetName().Version.ToString();
          Platform = Platform;
       }
 
@@ -158,24 +138,24 @@ namespace Pundit.Core.Model
          License = copy.License;
       }
 
+      /// <summary>
+      /// Package unique key
+      /// </summary>
       public PackageKey Key
       {
          get { return new PackageKey(PackageId, Version, Platform); }
       }
 
       /// <summary>
-      /// Deserializes package from xml stream
+      /// Deserializes package from stream
       /// </summary>
       /// <param name="inputStream">Stream of xml document</param>
       /// <returns></returns>
-      public static Package FromStream(Stream inputStream)
+      public static Package FromStreamXml(Stream inputStream)
       {
-         XmlSerializer xmls = new XmlSerializer(typeof(Package));
-
-         Package dp = (Package)xmls.Deserialize(inputStream);
-
+         var xmls = new XmlSerializer(typeof(Package));
+         var dp = (Package)xmls.Deserialize(inputStream);
          dp.Validate();
-
          return dp;
       }
 
@@ -183,22 +163,10 @@ namespace Pundit.Core.Model
       /// Serializes package to a stream in XML format
       /// </summary>
       /// <param name="s"></param>
-      public virtual void WriteXmlTo(Stream s)
+      public virtual void WriteTo(Stream s)
       {
          Validate();
-
-         var settings = new XmlWriterSettings();
-         settings.Encoding = Encoding.UTF8;
-         settings.Indent = true;
-
-         var namespaces = new XmlSerializerNamespaces();
-         namespaces.Add(string.Empty, XmlNamespace);
-
-         using (XmlWriter writer = XmlWriter.Create(s, settings))
-         {
-            var x = new XmlSerializer(typeof (Package), XmlNamespace);
-            x.Serialize(writer, this, namespaces);
-         }
+         this.WriteXmlTo(s);
       }
 
       /// <summary>
@@ -206,7 +174,7 @@ namespace Pundit.Core.Model
       /// </summary>
       /// <param name="destFileName"></param>
       /// <param name="createBackup"></param>
-      public virtual void WriteXmlTo(string destFileName, bool createBackup = true)
+      public virtual void WriteTo(string destFileName, bool createBackup = true)
       {
          if (createBackup)
          {
@@ -221,7 +189,7 @@ namespace Pundit.Core.Model
 
          using(Stream s = File.Create(destFileName))
          {
-            WriteXmlTo(s);
+            WriteTo(s);
          }
       }
 
@@ -289,13 +257,7 @@ namespace Pundit.Core.Model
 
       public override string ToString()
       {
-         using (var ms = new MemoryStream())
-         {
-            WriteXmlTo(ms);
-            ms.Position = 0;
-
-            return Encoding.UTF8.GetString(ms.GetBuffer());
-         }
+         return this.ToXmlString();
       }
 
       public virtual object Clone()
@@ -303,11 +265,16 @@ namespace Pundit.Core.Model
          return new Package(this);
       }
 
+      /// <summary>
+      /// Looks up a dependency with the specific key
+      /// </summary>
+      /// <param name="key"></param>
+      /// <returns></returns>
       public PackageDependency GetPackageDependency(PackageKey key)
       {
          if(Dependencies != null)
          {
-            return Dependencies.Where(d => d.PackageId == key.PackageId && d.Platform == key.Platform).FirstOrDefault();
+            return Dependencies.FirstOrDefault(d => d.PackageId == key.PackageId && d.Platform == key.Platform);
          }
 
          return null;

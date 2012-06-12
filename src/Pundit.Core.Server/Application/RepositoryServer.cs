@@ -102,7 +102,9 @@ namespace Pundit.Core.Server.Application
 
       public RemoteSnapshot GetSnapshot(string changeId)
       {
-         throw new NotImplementedException();
+         var p = new Package("fakery", new Version(1, 2, 3, 4));
+         var result = new RemoteSnapshot(true, new[] {new PackageSnapshotKey(p, SnapshotPackageDiff.Add)}, "123");
+         return result;
       }
 
       private string DownloadToTemp(Stream httpStream)

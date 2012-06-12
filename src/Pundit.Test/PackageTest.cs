@@ -18,11 +18,11 @@ namespace Pundit.Test
          string s;
          using (MemoryStream ms = new MemoryStream())
          {
-            pkg.WriteXmlTo(ms);
+            pkg.WriteTo(ms);
             s = Encoding.UTF8.GetString(ms.ToArray());
          }
 
-         Assert.IsTrue(s.Contains(Package.XmlNamespace));
+         Assert.IsTrue(s.Contains("pundit.xsd"));
       }
 
       [Test]
@@ -36,7 +36,7 @@ namespace Pundit.Test
 </package>
 ";
 
-         Package oldPackage = Package.FromStream(new MemoryStream(Encoding.UTF8.GetBytes(oldManifest)));
+         Package oldPackage = Package.FromStreamXml(new MemoryStream(Encoding.UTF8.GetBytes(oldManifest)));
          Assert.AreEqual("Pundit.Core", oldPackage.PackageId);
          Assert.AreEqual("1.2.3.4", oldPackage.VersionString);
          Assert.AreEqual("net40", oldPackage.Platform);

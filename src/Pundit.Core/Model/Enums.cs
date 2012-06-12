@@ -1,9 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Runtime.Serialization;
-using System.Text;
-using System.Xml.Serialization;
+﻿using System.Xml.Serialization;
 
 namespace Pundit.Core.Model
 {
@@ -71,7 +66,6 @@ namespace Pundit.Core.Model
       Build
    }
 
-   [DataContract]
    public enum DiffType
    {
       NoChange,

@@ -34,14 +34,15 @@ namespace Pundit.Web.Controllers
       [HttpGet]
       public FileResult Download(string platform, string packageId, string version)
       {
-         //return File()
-         return null;
+         return File(_remote.Download(platform, packageId, version), "pundit/package-zip");
       }
 
       [HttpGet]
-      public JsonResult GetSnapshot(string changeId)
+      public ContentResult GetSnapshot(string changeId)
       {
-         return null;
+         RemoteSnapshot snapshot = _remote.GetSnapshot(changeId);
+         string xml = snapshot.ToXml();
+         return Content(xml, "text/xml");
       }
 
    }
