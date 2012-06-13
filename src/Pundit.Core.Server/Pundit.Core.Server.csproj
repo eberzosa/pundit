@@ -67,7 +67,7 @@
     <Compile Include="Model\IPackageRepository.cs" />
     <Compile Include="Application\MySqlRepositoryBase.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
-    <Compile Include="Application\RepositoryServer.cs" />
+    <Compile Include="Application\RemoteRepository.cs" />
     <Compile Include="Application\StreamsProvider.cs" />
   </ItemGroup>
   <ItemGroup>

@@ -9,7 +9,7 @@ using Pundit.Core.Model;
 
 namespace Pundit.Test.Server.Integration
 {
-   [TestFixture]
+   [TestFixture, Ignore]
    class RestClientIntegrationTest
    {
       private IRemoteRepository _client;
@@ -17,8 +17,7 @@ namespace Pundit.Test.Server.Integration
       [SetUp]
       public void SetUp()
       {
-         //_client = RemoteRepositoryFactory.Create("http://localhost:81/repository/v1");
-         _client = RemoteRepositoryFactory.Create("http://pundit-dm.com/repository/v1");
+         _client = RemoteRepositoryFactory.Create("http://localhost:81/repository/v1");
       }
 
       [Test]
@@ -32,6 +31,16 @@ namespace Pundit.Test.Server.Integration
       {
          Stream s = File.OpenRead(Utils.GetLog4Net1210net20Package());
          _client.Publish(s);
+      }
+
+      [Test]
+      public void DownloadTest()
+      {
+         var ms = new MemoryStream();
+         using(Stream s = _client.Download("net20", "log4net", "1.2.10.0"))
+         {
+            s.CopyTo(ms);
+         }
       }
    }
 }

@@ -19,7 +19,7 @@ namespace Pundit.Core.Server
 
          Bind<IPackageRepository>().To<MySqlPackageRepository>();
 
-         Bind<IRemoteRepository>().To<RepositoryServer>().InSingletonScope();
+         Bind<IRemoteRepository>().To<RemoteRepository>().InSingletonScope();
       }
 
       #endregion

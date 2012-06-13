@@ -1,8 +1,10 @@
-﻿using System.IO;
+﻿using System;
+using System.IO;
 using NUnit.Framework;
 using Pundit.Core.Application;
 using Pundit.Core.Model;
 using Pundit.Core.Server.Application;
+using Pundit.Core.Server.Model;
 
 namespace Pundit.Test.Server
 {
@@ -11,6 +13,7 @@ namespace Pundit.Test.Server
    {
       private string _rootDir;
       private IRemoteRepository _server;
+      private IPackageRepository _package;
 
       [SetUp]
       public void SetUp()
@@ -19,12 +22,14 @@ namespace Pundit.Test.Server
          if(Directory.Exists(_rootDir)) Directory.Delete(_rootDir, true);
          Directory.CreateDirectory(_rootDir);
 
-         _server = new RepositoryServer(null, _rootDir);
+         _package = new MySqlPackageRepository(SqlPackageRepositoryTest.TestConnectionString);
+         _server = new RemoteRepository(_package, _rootDir);
       }
 
       [TearDown]
       public void TearDown()
       {
+         _package.Dispose();
          _server.Dispose();
          if (Directory.Exists(_rootDir)) Directory.Delete(_rootDir, true);
       }
@@ -32,6 +37,7 @@ namespace Pundit.Test.Server
       [Test]
       public void PublishTest()
       {
+         _package.DeletePackage(new PackageKey("log4net", new Version("1.2.11.0"), "net20"));
          try
          {
             _server.Download("net20", "log4net", "1.2.11.0");

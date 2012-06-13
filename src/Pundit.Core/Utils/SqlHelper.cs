@@ -199,7 +199,7 @@ namespace Pundit.Core.Utils
             {
                for (int i = 0; i < parameters.Length; i++)
                {
-                  Add(cmd, parameters[i]);
+                  Add(cmd, parameters[i], "P" + i);
                }
             }
 

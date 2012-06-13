@@ -9,19 +9,19 @@ using log4net;
 
 namespace Pundit.Core.Server.Application
 {
-   class RepositoryServer : IRemoteRepository
+   class RemoteRepository : IRemoteRepository
    {
       private readonly IPackageRepository _pr;
 
-      private readonly ILog _log = LogManager.GetLogger(typeof (RepositoryServer));
+      private readonly ILog _log = LogManager.GetLogger(typeof (RemoteRepository));
       private StreamsProvider _streams;
 
-      public RepositoryServer(IPackageRepository pr) : this(pr, null)
+      public RemoteRepository(IPackageRepository pr) : this(pr, null)
       {
          
       }
 
-      public RepositoryServer(IPackageRepository pr, string rootDir)
+      public RemoteRepository(IPackageRepository pr, string rootDir)
       {
          if (pr == null) throw new ArgumentNullException("pr");
          _pr = pr;
@@ -53,21 +53,23 @@ namespace Pundit.Core.Server.Application
                _log.Debug("downloaded, size: " + tmpInfo.Length + ", reading package...");
 
                Package p = GetManifest(tmpFile);
-               _log.Debug("package read, " + p.Key + ", saving binary...");
-
-               using (Stream fs = File.OpenRead(tmpFile))
+               if (!_pr.Exists(p.Key))
                {
-                  _streams.Save(p.Key, fs);
+                  _log.Debug("package read, " + p.Key + ", saving binary...");
+
+                  using (Stream fs = File.OpenRead(tmpFile))
+                  {
+                     _streams.Save(p.Key, fs);
+                  }
+
+                  _log.Debug("binary saved, persisting metadata...");
+                  _pr.SavePackage(p, true);
+                  _log.Debug("success");
                }
-
-               _log.Debug("binary saved, persisting metadata...");
-
-               /*PackageKey oldKey = PersistPublish(p);
-               if(oldKey != null)
+               else
                {
-                  _streams.Delete(oldKey);
-               }*/
-               _log.Debug("success");
+                  if(_log.IsDebugEnabled) _log.Debug("package already exists");
+               }
             }
             finally
             {

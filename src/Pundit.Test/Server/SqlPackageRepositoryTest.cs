@@ -12,7 +12,7 @@ namespace Pundit.Test.Server
    [TestFixture]
    public class SqlPackageRepositoryTest
    {
-      private const string TestConnectionString = "Server=localhost;Database=pundit;Uid=pundit;Pwd=nopassword";
+      public const string TestConnectionString = "Server=localhost;Database=pundit;Uid=pundit;Pwd=nopassword";
 
       private IPackageRepository _repo;
 

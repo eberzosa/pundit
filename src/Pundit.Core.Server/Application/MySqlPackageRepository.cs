@@ -13,7 +13,8 @@ namespace Pundit.Core.Server.Application
       private const string ManifestTableName = "PackageManifest";
       private const string DependencyTableName = "PackageDependency";
       private const string LogTableName = "PackageLog";
-      private static readonly string[] KeyRestriction = new string[] {"PackageId", "Version", "Platform"};
+      private static readonly string[] KeyColumns = new[] {"PackageId", "Version", "Platform"};
+      private static readonly string[] KeyRestriction = new[] { "PackageId=?P0", "Version=?P1", "Platform=?P2" };
 
       public MySqlPackageRepository() : this(null)
       {
@@ -56,9 +57,15 @@ namespace Pundit.Core.Server.Application
          {
             long id = Insert(
                ManifestTableName,
-               new[] {"PackageId", "Version", "Platform", "ProjectUrl", "Author", "Description", "ReleaseNotes", "License"},
-               p.PackageId, FormatVersion(p.Version), p.Platform, p.ProjectUrl, p.Author, p.Description, p.ReleaseNotes,
-               p.License);
+               new[]
+                  {
+                     "PackageId", "Version", "Platform",
+                     "ProjectUrl", "Author", "Description", "ReleaseNotes", "License",
+                     "CreatedDate"
+                  },
+               p.PackageId, FormatVersion(p.Version), p.Platform,
+               p.ProjectUrl, p.Author, p.Description, p.ReleaseNotes, p.License,
+               DateTime.UtcNow);
 
             //insert dependencies
             foreach(PackageDependency pd in p.Dependencies)
@@ -211,7 +218,9 @@ namespace Pundit.Core.Server.Application
 
       public bool Exists(PackageKey key)
       {
-         throw new NotImplementedException();
+         uint id = ExecuteScalar<uint>(ManifestTableName, "PackageManifestId",
+                                       KeyRestriction, key.PackageId, FormatVersion(key.Version), key.Platform);
+         return id != 0;
       }
 
       public IEnumerable<Package> GetPackages(long offset, long count, out long totalCount)
@@ -225,6 +234,11 @@ namespace Pundit.Core.Server.Application
          }
 
          return new Package[0];
+      }
+
+      public RemoteSnapshot ReadLog(long startRecordId, bool includePackages)
+      {
+         throw new NotImplementedException();
       }
 
       #endregion
