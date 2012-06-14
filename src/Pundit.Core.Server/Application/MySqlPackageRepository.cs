@@ -49,7 +49,7 @@ namespace Pundit.Core.Server.Application
 
       #region Implementation of IPackageRepository
 
-      public long SavePackage(Package p, bool recordHistory)
+      public long SavePackage(Package p, long fileSize, bool recordHistory)
       {
          if (p == null) throw new ArgumentNullException("p");
 
@@ -61,11 +61,11 @@ namespace Pundit.Core.Server.Application
                   {
                      "PackageId", "Version", "Platform",
                      "ProjectUrl", "Author", "Description", "ReleaseNotes", "License",
-                     "CreatedDate"
+                     "CreatedDate", "FileSize"
                   },
                p.PackageId, FormatVersion(p.Version), p.Platform,
                p.ProjectUrl, p.Author, p.Description, p.ReleaseNotes, p.License,
-               DateTime.UtcNow);
+               DateTime.UtcNow, fileSize);
 
             //insert dependencies
             foreach(PackageDependency pd in p.Dependencies)
@@ -125,10 +125,10 @@ namespace Pundit.Core.Server.Application
          foreach(long id in ids) DeletePackage(id);
       }
 
-      private void AddPackageDependencies(long packageId, Package p)
+      private void AddPackageDependencies(DbPackage p)
       {
          using (IDataReader reader = ExecuteReader(DependencyTableName, null,
-                                                    new[] {"PackageManifestId=?P0"}, packageId))
+                                                    new[] {"PackageManifestId=?P0"}, p.Id))
          {
             while (reader.Read())
             {
@@ -136,12 +136,12 @@ namespace Pundit.Core.Server.Application
                pd.Platform = reader.AsString("Platform");
                pd.Scope = (DependencyScope) reader.AsLong("Scope");
                pd.CreatePlatformFolder = reader.AsBool("CreatePlatformFolder");
-               p.Dependencies.Add(pd);
+               p.Package.Dependencies.Add(pd);
             }
          }
       }
 
-      private Package ReadPackage(IDataReader reader, out long packageId)
+      private DbPackage ReadPackage(IDataReader reader)
       {
          Package p = new Package(reader.AsString("PackageId"), new Version(reader.AsString("Version")));
          p.Platform = reader.AsString("Platform");
@@ -150,43 +150,41 @@ namespace Pundit.Core.Server.Application
          p.Description = reader.AsString("Description");
          p.ReleaseNotes = reader.AsString("ReleaseNotes");
          p.License = reader.AsString("License");
-         packageId = reader.AsLong("PackageManifestId");
-         return p;
+
+         var dp = new DbPackage(reader.AsLong("PackageManifestId"), p);
+         dp.CreatedDate = reader.AsDateTime("CreatedDate");
+         dp.FileSize = reader.AsLong("FileSize");
+         return dp;
       }
 
-      private Package ReadFullPackage(IDataReader reader)
+      private DbPackage ReadFullPackage(IDataReader reader)
       {
-         Package p = null;
-         long id = 0;
+         DbPackage p = null;
 
          try
          {
             if (reader.Read())
             {
-               p = ReadPackage(reader, out id);
+               p = ReadPackage(reader);
             }
          }
          finally
          {
             reader.Dispose();
          }
-         if(p != null) AddPackageDependencies(id, p);
+         if(p != null) AddPackageDependencies(p);
          return p;
       }
 
-      private IEnumerable<Package> ReadFullPackages(IDataReader reader)
+      private IEnumerable<DbPackage> ReadFullPackages(IDataReader reader)
       {
-         var r = new List<Package>();
-         var ids = new List<long>();
+         var r = new List<DbPackage>();
 
          try
          {
             while (reader.Read())
             {
-               long id;
-               Package p = ReadPackage(reader, out id);
-               ids.Add(id);
-               r.Add(p);
+               r.Add(ReadPackage(reader));
             }
          }
          finally
@@ -194,21 +192,18 @@ namespace Pundit.Core.Server.Application
             reader.Dispose();
          }
 
-         for (int i = 0; i < r.Count; i++ )
-         {
-            AddPackageDependencies(ids[i], r[i]);
-         }
+         foreach(var dbp in r) AddPackageDependencies(dbp);
 
          return r;
       }
 
-      public Package GetPackage(long packageId)
+      public DbPackage GetPackage(long packageId)
       {
          IDataReader reader = ExecuteReader(ManifestTableName, null, new[] {"PackageManifestId=?P0"}, packageId);
          return ReadFullPackage(reader);
       }
 
-      public Package GetPackage(PackageKey key)
+      public DbPackage GetPackage(PackageKey key)
       {
          IDataReader reader = ExecuteReader(ManifestTableName, null,
             new[] { "PackageId=?P0", "Version=?P1", "Platform=?P2" },
@@ -223,7 +218,7 @@ namespace Pundit.Core.Server.Application
          return id != 0;
       }
 
-      public IEnumerable<Package> GetPackages(long offset, long count, out long totalCount)
+      public IEnumerable<DbPackage> GetPackages(long offset, long count, out long totalCount)
       {
          totalCount = ExecuteScalar<long>(ManifestTableName, "count(*)", null, null);
 
@@ -233,7 +228,7 @@ namespace Pundit.Core.Server.Application
             return ReadFullPackages(reader);
          }
 
-         return new Package[0];
+         return new DbPackage[0];
       }
 
       public RemoteSnapshot ReadLog(long startRecordId, bool includePackages)

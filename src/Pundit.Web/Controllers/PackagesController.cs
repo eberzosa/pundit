@@ -20,7 +20,7 @@ namespace Pundit.Web.Controllers
       public ActionResult Index()
       {
          long totalCount;
-         IEnumerable<Package> list = _packages.GetPackages(0, 25, out totalCount);
+         IEnumerable<DbPackage> list = _packages.GetPackages(0, 25, out totalCount);
 
          ViewBag.Count = totalCount;
          return View(list);

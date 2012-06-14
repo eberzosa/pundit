@@ -1,5 +1,5 @@
-﻿@using Pundit.Core.Model
-@model IEnumerable<Package>
+﻿@using Pundit.Core.Server.Model
+@model IEnumerable<DbPackage>
 @{
     ViewBag.Title = "Packages";
 }
@@ -7,10 +7,15 @@
 <h2>There are @ViewBag.Count package(s)</h2>
 
 <table>
-   @foreach (Package p in Model)
+   @foreach (DbPackage p in Model)
    {
-   <tr>
-      <td>@p.PackageId @p.VersionString (@p.Platform)</td>
-   </tr>
+      <tr>
+         <td>@p.Package.PackageId @p.Package.VersionString (@p.Package.Platform)</td>
+      </tr>
+      <tr>
+         <td>
+            created: @p.CreatedDate, size: @p.FileSize   
+         </td>
+      </tr>
    }
 </table>

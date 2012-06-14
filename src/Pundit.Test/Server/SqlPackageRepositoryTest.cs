@@ -38,16 +38,16 @@ namespace Pundit.Test.Server
          var p = new Package("fake", new Version("1.2.11"));
          p.Dependencies.Add(new PackageDependency("rhino", "1.2.3"));
          p.Dependencies.Add(new PackageDependency("mocks", "4.5.6"));
-         long packageId = _repo.SavePackage(p, true);
+         long packageId = _repo.SavePackage(p, 123, true);
          Assert.Greater(packageId, 0);
 
-         Package p1 = _repo.GetPackage(packageId);
-         Package p2 = _repo.GetPackage(p.Key);
+         DbPackage p1 = _repo.GetPackage(packageId);
+         DbPackage p2 = _repo.GetPackage(p.Key);
          Assert.IsNotNull(p1);
          Assert.IsNotNull(p2);
          Assert.AreEqual(p1, p2);
-         Assert.AreEqual(2, p1.Dependencies.Count);
-         Assert.AreEqual(2, p2.Dependencies.Count);
+         Assert.AreEqual(2, p1.Package.Dependencies.Count);
+         Assert.AreEqual(2, p2.Package.Dependencies.Count);
       }
    }
 }

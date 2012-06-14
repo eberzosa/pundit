@@ -47,6 +47,8 @@
     <Reference Include="System" />
     <Reference Include="System.Configuration" />
     <Reference Include="System.Core" />
+    <Reference Include="System.Web" />
+    <Reference Include="System.Web.ApplicationServices" />
     <Reference Include="System.Xml.Linq" />
     <Reference Include="System.Data.DataSetExtensions" />
     <Reference Include="Microsoft.CSharp" />
@@ -54,6 +56,8 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="Application\AspNet\PunditMembershipProvider.cs" />
+    <Compile Include="Application\AspNet\PunditRoleProvider.cs" />
     <Compile Include="Application\MySqlConfigurationRepository.cs" />
     <Compile Include="Application\MySqlPackageRepository.cs" />
     <Compile Include="Application\MySqlUpgrader.cs" />
@@ -63,6 +67,7 @@
       <DependentUpon>Ex.resx</DependentUpon>
     </Compile>
     <Compile Include="InjectionModule.cs" />
+    <Compile Include="Model\DbPackage.cs" />
     <Compile Include="Model\IConfigurationRepository.cs" />
     <Compile Include="Model\IPackageRepository.cs" />
     <Compile Include="Application\MySqlRepositoryBase.cs" />

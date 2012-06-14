@@ -63,7 +63,7 @@ namespace Pundit.Core.Server.Application
                   }
 
                   _log.Debug("binary saved, persisting metadata...");
-                  _pr.SavePackage(p, true);
+                  _pr.SavePackage(p, tmpInfo.Length, true);
                   _log.Debug("success");
                }
                else

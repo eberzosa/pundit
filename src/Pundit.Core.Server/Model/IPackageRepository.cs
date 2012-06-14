@@ -12,21 +12,22 @@ namespace Pundit.Core.Server.Model
       /// 
       /// </summary>
       /// <param name="p"></param>
+      /// <param name="fileSize"> </param>
       /// <param name="recordHistory">When true saves action to the log</param>
       /// <returns>Saved package ID</returns>
-      long SavePackage(Package p, bool recordHistory);
+      long SavePackage(Package p, long fileSize, bool recordHistory);
 
       void DeletePackage(long packageId);
 
       void DeletePackage(PackageKey key);
 
-      Package GetPackage(long packageId);
+      DbPackage GetPackage(long packageId);
 
-      Package GetPackage(PackageKey key);
+      DbPackage GetPackage(PackageKey key);
 
       bool Exists(PackageKey key);
 
-      IEnumerable<Package> GetPackages(long offset, long count, out long totalCount);
+      IEnumerable<DbPackage> GetPackages(long offset, long count, out long totalCount);
 
       RemoteSnapshot ReadLog(long startRecordId, bool includePackages);
    }
