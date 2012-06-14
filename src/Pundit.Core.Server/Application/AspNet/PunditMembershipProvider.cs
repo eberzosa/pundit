@@ -1,15 +1,28 @@
 ﻿using System;
 using System.Web.Security;
+using Pundit.Core.Server.Model;
 
 namespace Pundit.Core.Server.Application.AspNet
 {
    public class PunditMembershipProvider : MembershipProvider
    {
+      public const string ProviderName = "pundit-membership";
+
+      private IUserRepository _repository;
+
       #region [ MembershipProvider ]
 
       public override MembershipUser CreateUser(string username, string password, string email, string passwordQuestion, string passwordAnswer, bool isApproved, object providerUserKey, out MembershipCreateStatus status)
       {
-         throw new NotImplementedException();
+         var u = new User
+                    {
+                       Login = username,
+                       PasswordHash = User.HashPassword(password)
+                    };
+
+         u = _repository.CreateUser(u);
+         status = MembershipCreateStatus.Success;
+         return (MembershipUser) u;
       }
 
       public override bool ChangePasswordQuestionAndAnswer(string username, string password, string newPasswordQuestion, string newPasswordAnswer)

@@ -1,22 +1,25 @@
 ﻿using System;
 using System.Web.Security;
+using Pundit.Core.Server.Model;
 
 namespace Pundit.Core.Server.Application.AspNet
 {
    public class PunditRoleProvider : RoleProvider
    {
+      private IUserRepository _repository;
+
       #region [ RoleProvider ]
 
       public override bool IsUserInRole(string username, string roleName)
       {
-         return username != null && username == "root" && roleName != null && roleName == "admins";
+         User u = _repository.GetUser(username);
+         return u != null && u.Role == roleName;
       }
 
       public override string[] GetRolesForUser(string username)
       {
-         if (username == "root") return new[] {"admins"};
-
-         return null;
+         User u = _repository.GetUser(username);
+         return u == null ? null : new[] {u.Role};
       }
 
       public override void CreateRole(string roleName)
