@@ -61,11 +61,11 @@ namespace Pundit.Core.Server.Application
                   {
                      "PackageId", "Version", "Platform",
                      "ProjectUrl", "Author", "Description", "ReleaseNotes", "License",
-                     "CreatedDate", "FileSize"
+                     "IsActive", "CreatedDate", "FileSize"
                   },
                p.PackageId, FormatVersion(p.Version), p.Platform,
                p.ProjectUrl, p.Author, p.Description, p.ReleaseNotes, p.License,
-               DateTime.UtcNow, fileSize);
+               true, DateTime.UtcNow, fileSize);
 
             //insert dependencies
             foreach(PackageDependency pd in p.Dependencies)
@@ -218,13 +218,16 @@ namespace Pundit.Core.Server.Application
          return id != 0;
       }
 
-      public IEnumerable<DbPackage> GetPackages(long offset, long count, out long totalCount)
+      public IEnumerable<DbPackage> GetPackages(long offset, long count, bool active, out long totalCount)
       {
-         totalCount = ExecuteScalar<long>(ManifestTableName, "count(*)", null, null);
+         totalCount = ExecuteScalar<long>(ManifestTableName, "count(*)",
+                                          new[] {"IsActive=?P0"}, active);
 
          if(totalCount > 0)
          {
-            IDataReader reader = ExecuteReaderPage(ManifestTableName, offset, count, null, null);
+            IDataReader reader = ExecuteReaderPage(
+               ManifestTableName, offset, count,
+               null, new[] {"IsActive=?P0"}, active);
             return ReadFullPackages(reader);
          }
 

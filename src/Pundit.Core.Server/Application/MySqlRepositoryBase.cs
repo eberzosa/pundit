@@ -70,7 +70,7 @@ namespace Pundit.Core.Server.Application
       {
          if(_conn != null)
          {
-            _conn.Clone();
+            _conn.Close();
             _conn.Dispose();
             _conn = null;
          }

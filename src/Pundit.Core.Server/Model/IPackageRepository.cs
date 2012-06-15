@@ -27,7 +27,7 @@ namespace Pundit.Core.Server.Model
 
       bool Exists(PackageKey key);
 
-      IEnumerable<DbPackage> GetPackages(long offset, long count, out long totalCount);
+      IEnumerable<DbPackage> GetPackages(long offset, long count, bool active, out long totalCount);
 
       RemoteSnapshot ReadLog(long startRecordId, bool includePackages);
    }

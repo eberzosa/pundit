@@ -15,9 +15,9 @@ namespace Pundit.Core.Server
 
       public override void Load()
       {
-         Bind<IConfigurationRepository>().To<MySqlConfigurationRepository>();
+         Bind<IConfigurationRepository>().To<MySqlConfigurationRepository>().InThreadScope();
 
-         Bind<IPackageRepository>().To<MySqlPackageRepository>();
+         Bind<IPackageRepository>().To<MySqlPackageRepository>().InThreadScope();
 
          Bind<IRemoteRepository>().To<RemoteRepository>().InSingletonScope();
       }

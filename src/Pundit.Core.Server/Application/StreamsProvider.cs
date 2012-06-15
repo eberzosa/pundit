@@ -1,5 +1,4 @@
 ﻿using System;
-using System.Configuration;
 using System.IO;
 using Pundit.Core.Model;
 using Pundit.Core.Utils;
@@ -14,16 +13,11 @@ namespace Pundit.Core.Server.Application
    {
       private readonly string _rootDir;
       private readonly ILog _log = LogManager.GetLogger(typeof (StreamsProvider));
-      private readonly int _maxRevisions;
 
       public StreamsProvider(string rootDir)
       {
          if (rootDir == null) throw new ArgumentNullException("rootDir");
-
          _rootDir = rootDir;
-
-         string s = ConfigurationManager.AppSettings["Pundit.Server.Store.MaxRevisions"];
-         if (!int.TryParse(s, out _maxRevisions)) _maxRevisions = 10;
       }
 
       public Stream Read(PackageKey key)
@@ -50,6 +44,7 @@ namespace Pundit.Core.Server.Application
                }
                catch
                {
+                  //don't care
                }
             }
          }

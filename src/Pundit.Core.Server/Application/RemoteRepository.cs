@@ -1,7 +1,10 @@
 ﻿using System;
+using System.Collections;
+using System.Collections.Generic;
 using System.Configuration;
 using System.Data;
 using System.IO;
+using System.Linq;
 using Pundit.Core.Application;
 using Pundit.Core.Model;
 using Pundit.Core.Server.Model;
@@ -102,11 +105,40 @@ namespace Pundit.Core.Server.Application
          return _streams.Read(key);
       }
 
+      private RemoteSnapshot GetNonDeltaSnapshot()
+      {
+         long totalCount;
+         IEnumerable<DbPackage> packages = _pr.GetPackages(-1, -1, true, out totalCount);
+         List<DbPackage> packagesList =
+            packages == null
+               ? null
+               : (packages is List<DbPackage>
+                     ? (List<DbPackage>) packages
+                     : packages.ToList());
+         IEnumerable<PackageSnapshotKey> keys =
+            packagesList == null
+               ? null
+               : new List<PackageSnapshotKey>(packagesList.Select(p => new PackageSnapshotKey(p.Package, SnapshotPackageDiff.Add)));
+         string nextChangeId = (packagesList == null || packagesList.Count == 0)
+                                  ? null
+                                  : (packagesList[packagesList.Count - 1].Id + 1).ToString();
+
+         return new RemoteSnapshot(false, keys, nextChangeId);
+      }
+
+      private RemoteSnapshot GetDeltaSnapshot(long firstRecordId)
+      {
+         throw new NotImplementedException();
+      }
+
       public RemoteSnapshot GetSnapshot(string changeId)
       {
-         var p = new Package("fakery", new Version(1, 2, 3, 4));
-         var result = new RemoteSnapshot(true, new[] {new PackageSnapshotKey(p, SnapshotPackageDiff.Add)}, "123");
-         return result;
+         long id;
+         long.TryParse(changeId, out id);
+         if (id < 0) id = 0;
+         bool isDelta = id > 0;
+
+         return isDelta ? GetDeltaSnapshot(id) : GetNonDeltaSnapshot();
       }
 
       private string DownloadToTemp(Stream httpStream)
