@@ -119,12 +119,12 @@ namespace Pundit.Core.Application.Sqlite
                                 new[]
                                    {
                                       "PackageManifestId", "PackageId", "VersionPattern", "Platform", "Scope",
-                                      "CreatePlatformFolder"
+                                      "TargetFolder"
                                    },
                                 new object[]
                                    {
                                       manifestId, dependency.PackageId, dependency.VersionPattern,
-                                      dependency.Platform, (long) dependency.Scope, dependency.CreatePlatformFolder
+                                      dependency.Platform, (long) dependency.Scope, dependency.TargetFolder
                                    });
          }
 
@@ -157,7 +157,7 @@ namespace Pundit.Core.Application.Sqlite
                                 new object[]
                                    {
                                       manifestId, dependency.PackageId, dependency.VersionPattern,
-                                      dependency.Platform, (long) dependency.Scope, dependency.CreatePlatformFolder
+                                      dependency.Platform, (long) dependency.Scope, dependency.TargetFolder
                                    });
          }
 
@@ -185,7 +185,7 @@ namespace Pundit.Core.Application.Sqlite
          {
             Platform = reader.AsString("Platform"),
             Scope = (DependencyScope)reader.AsLong("Scope"),
-            CreatePlatformFolder = reader.AsBool("CreatePlatformFolder")
+            TargetFolder = reader.AsString("TargetFolder")
          };
       }
 

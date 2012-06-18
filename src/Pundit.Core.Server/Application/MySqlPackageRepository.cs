@@ -75,11 +75,11 @@ namespace Pundit.Core.Server.Application
                          {
                             "PackageManifestId",
                             "PackageId", "VersionPattern", "Platform",
-                            "Scope", "CreatePlatformFolder"
+                            "Scope", "TargetFolder"
                          },
                       id,
                       pd.PackageId, pd.VersionPattern, pd.Platform,
-                      (long)pd.Scope, pd.CreatePlatformFolder);
+                      (long)pd.Scope, pd.TargetFolder);
             }
 
             if(recordHistory) RecordHistory(id, p);
@@ -135,7 +135,7 @@ namespace Pundit.Core.Server.Application
                var pd = new PackageDependency(reader.AsString("PackageId"), reader.AsString("VersionPattern"));
                pd.Platform = reader.AsString("Platform");
                pd.Scope = (DependencyScope) reader.AsLong("Scope");
-               pd.CreatePlatformFolder = reader.AsBool("CreatePlatformFolder");
+               pd.TargetFolder = reader.AsString("TargetFolder");
                p.Package.Dependencies.Add(pd);
             }
          }

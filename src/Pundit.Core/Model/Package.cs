@@ -14,8 +14,19 @@ namespace Pundit.Core.Model
    [XmlInclude(typeof(DevPackage))]
    public class Package : IEquatable<Package>, ICloneable
    {
+      /// <summary>
+      /// Default package manifest file name
+      /// </summary>
       public const string DefaultManifestFileName = "pundit.xml"; //package definition
+
+      /// <summary>
+      /// Default extension for packages
+      /// </summary>
       public const string PackedExtension = ".pundit";
+
+      /// <summary>
+      /// Platform name synonym for packages not targeting any platforms
+      /// </summary>
       public const string NoArchPlatformName = "noarch";
 
       private static readonly Regex PackageStringRgx = new Regex("^[0-9a-zA-Z\\._]+$");
@@ -28,6 +39,15 @@ namespace Pundit.Core.Model
 
       //WARNING!!! remember to reflect copy constructor if adding a new property to this class
 
+      /// <summary>
+      /// Specifies if this package is stable
+      /// </summary>
+      [XmlAttribute("stable")]
+      public bool IsStable { get; set; }
+
+      /// <summary>
+      /// Package ID
+      /// </summary>
       [XmlElement("packageId")]
       public string PackageId { get; set; }
 

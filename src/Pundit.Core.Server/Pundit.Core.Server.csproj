@@ -58,6 +58,7 @@
   <ItemGroup>
     <Compile Include="Application\AspNet\PunditMembershipProvider.cs" />
     <Compile Include="Application\AspNet\PunditRoleProvider.cs" />
+    <Compile Include="Application\LiquidSql.cs" />
     <Compile Include="Application\MySqlConfigurationRepository.cs" />
     <Compile Include="Application\MySqlPackageRepository.cs" />
     <Compile Include="Application\MySqlUpgrader.cs" />

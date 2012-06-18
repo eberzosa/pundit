@@ -151,8 +151,8 @@ namespace Pundit.Core.Application
                {
                   case PackageFileKind.Binary:
                      InstallLibrary(Manifest.PackageId, installTarget, entry.Name, configuration,
-                                    (originalDependency != null && originalDependency.CreatePlatformFolder)
-                                       ? originalDependency.Platform
+                                    (originalDependency != null && originalDependency.TargetFolder != null)
+                                       ? originalDependency.TargetFolder
                                        : null);
                      break;
                   case PackageFileKind.Include:
