@@ -71,7 +71,6 @@ namespace Pundit.Core.Model
       /// under LIB will be created so binaries are unpacked under LIB\TargetFolder
       ///</summary>
       [XmlAttribute("targetFolder")]
-      [DefaultValue(false)]
       public string TargetFolder { get; set; }
    }
 }

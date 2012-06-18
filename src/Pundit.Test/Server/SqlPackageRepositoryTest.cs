@@ -20,7 +20,12 @@ namespace Pundit.Test.Server
       public void SetUp()
       {
          _repo = new MySqlPackageRepository(TestConnectionString);
-         _repo.DeletePackage(new PackageKey("fake", new Version("1.2.11.0"), "noarch"));
+
+         long totalCount;
+         foreach (DbPackage dbp in _repo.GetPackages(-1, -1, true, out totalCount))
+         {
+            _repo.DeletePackage(dbp.Package.Key);
+         }
       }
 
       [TearDown]
@@ -30,6 +35,38 @@ namespace Pundit.Test.Server
          {
             _repo.Dispose();
          }
+      }
+
+      [Test]
+      public void NoPackagesTest()
+      {
+         long count;
+         var packages = _repo.GetPackages(-1, -1, true, out count);
+         Assert.AreEqual(0, packages.Count());
+      }
+
+      [Test]
+      public void GetAllRevisionsTest()
+      {
+         string packageId1 = "fake-" + Guid.NewGuid().ToString();
+         string packageId2 = "shite-" + Guid.NewGuid().ToString();
+
+         for(int i = 0; i < 5; i++)
+         {
+            var p = new Package(packageId1, new Version("1.2.11." + i));
+            _repo.SavePackage(p, 123, true);
+         }
+         for (int i = 0; i < 7; i++)
+         {
+            var p = new Package(packageId2, new Version("7.4.5." + i));
+            _repo.SavePackage(p, 123, true);
+         }
+
+         var revs1 = _repo.GetAllRevisions(new PackageKey(packageId1, new Version("1.2.11.0"), null));
+         var revs2 = _repo.GetAllRevisions(new PackageKey(packageId2, new Version("7.4.5.0"), null));
+
+         Assert.AreEqual(5, revs1.Count());
+         Assert.AreEqual(7, revs2.Count());
       }
 
       [Test]

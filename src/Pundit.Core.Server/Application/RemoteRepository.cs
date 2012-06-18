@@ -105,15 +105,13 @@ namespace Pundit.Core.Server.Application
          return _streams.Read(key);
       }
 
-      private RemoteSnapshot GetNonDeltaSnapshot()
+      private RemoteSnapshot BuildSnapshot(IEnumerable<DbPackage> packages, bool compress)
       {
-         long totalCount;
-         IEnumerable<DbPackage> packages = _pr.GetPackages(-1, -1, true, out totalCount);
          List<DbPackage> packagesList =
             packages == null
                ? null
                : (packages is List<DbPackage>
-                     ? (List<DbPackage>) packages
+                     ? (List<DbPackage>)packages
                      : packages.ToList());
          IEnumerable<PackageSnapshotKey> keys =
             packagesList == null
@@ -123,12 +121,20 @@ namespace Pundit.Core.Server.Application
                                   ? null
                                   : (packagesList[packagesList.Count - 1].Id + 1).ToString();
 
-         return new RemoteSnapshot(false, keys, nextChangeId);
+         return new RemoteSnapshot(false, keys, nextChangeId) { Count = packagesList == null ? 0 : packagesList.Count };
+      }
+
+      private RemoteSnapshot GetNonDeltaSnapshot()
+      {
+         long totalCount;
+         IEnumerable<DbPackage> packages = _pr.GetPackages(-1, -1, true, out totalCount);
+         return BuildSnapshot(packages, false);
       }
 
       private RemoteSnapshot GetDeltaSnapshot(long firstRecordId)
       {
-         throw new NotImplementedException();
+         IEnumerable<DbPackage> packages = _pr.ReadLog(firstRecordId, 10, true);
+         return BuildSnapshot(packages, true);
       }
 
       public RemoteSnapshot GetSnapshot(string changeId)

@@ -45,11 +45,11 @@ CREATE TABLE `packagedependency` (
   `VersionPattern` varchar(45) NOT NULL,
   `Platform` varchar(45) NOT NULL,
   `Scope` tinyint(3) unsigned NOT NULL,
-  `CreatePlatformFolder` tinyint(1) NOT NULL,
+  `TargetFolder` varchar(45) NOT NULL,
   PRIMARY KEY (`PackageDependencyId`),
   KEY `FK_PackageDepenency_PackageManifest` (`PackageManifestId`),
   CONSTRAINT `FK_PackageDepenency_PackageManifest` FOREIGN KEY (`PackageManifestId`) REFERENCES `packagemanifest` (`PackageManifestId`) ON DELETE CASCADE
-) ENGINE=InnoDB AUTO_INCREMENT=23 DEFAULT CHARSET=latin1;
+) ENGINE=InnoDB DEFAULT CHARSET=latin1;
 /*!40101 SET character_set_client = @saved_cs_client */;
 
 --
@@ -71,7 +71,7 @@ CREATE TABLE `packagelog` (
   KEY `FK_manifesthistory_packagemanifest` (`PackageManifestId`) USING BTREE,
   KEY `PackageLog_Key` (`PackageId`,`Platform`,`Version`),
   CONSTRAINT `FK_manifesthistory_packagemanifest` FOREIGN KEY (`PackageManifestid`) REFERENCES `packagemanifest` (`PackageManifestId`)
-) ENGINE=InnoDB AUTO_INCREMENT=9 DEFAULT CHARSET=latin1;
+) ENGINE=InnoDB AUTO_INCREMENT=10309 DEFAULT CHARSET=latin1;
 /*!40101 SET character_set_client = @saved_cs_client */;
 
 --
@@ -95,8 +95,9 @@ CREATE TABLE `packagemanifest` (
   `CreatedDate` datetime DEFAULT NULL,
   `FileSize` int(10) unsigned DEFAULT NULL,
   PRIMARY KEY (`PackageManifestId`),
-  KEY `PackageManifest_Key` (`PackageId`,`Version`,`Platform`)
-) ENGINE=InnoDB AUTO_INCREMENT=46 DEFAULT CHARSET=latin1;
+  KEY `PackageManifest_Key` (`PackageId`,`Version`,`Platform`),
+  KEY `PackageManifest_IsActive` (`IsActive`)
+) ENGINE=InnoDB AUTO_INCREMENT=10346 DEFAULT CHARSET=latin1;
 /*!40101 SET character_set_client = @saved_cs_client */;
 /*!40103 SET TIME_ZONE=@OLD_TIME_ZONE */;
 
@@ -108,4 +109,4 @@ CREATE TABLE `packagemanifest` (
 /*!40101 SET COLLATION_CONNECTION=@OLD_COLLATION_CONNECTION */;
 /*!40111 SET SQL_NOTES=@OLD_SQL_NOTES */;
 
--- Dump completed on 2012-06-14 21:07:35
+-- Dump completed on 2012-06-18 23:25:04

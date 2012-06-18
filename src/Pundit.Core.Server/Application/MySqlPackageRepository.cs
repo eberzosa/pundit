@@ -1,8 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Data;
-using System.Linq;
-using System.Text;
 using Pundit.Core.Model;
 using Pundit.Core.Server.Model;
 
@@ -35,6 +33,14 @@ namespace Pundit.Core.Server.Application
             Math.Max(0, v.Revision));
       }
 
+      private string FormatShortVersion(Version v)
+      {
+         return string.Format("{0}.{1}.{2}",
+            Math.Max(0, v.Major),
+            Math.Max(0, v.Minor),
+            Math.Max(0, v.Build));
+      }
+
       private void RecordHistory(long recordId, Package p)
       {
          Insert(LogTableName,
@@ -59,11 +65,11 @@ namespace Pundit.Core.Server.Application
                ManifestTableName,
                new[]
                   {
-                     "PackageId", "Version", "Platform",
+                     "PackageId", "Version", "VersionShort", "Platform",
                      "ProjectUrl", "Author", "Description", "ReleaseNotes", "License",
                      "IsActive", "CreatedDate", "FileSize"
                   },
-               p.PackageId, FormatVersion(p.Version), p.Platform,
+               p.PackageId, FormatVersion(p.Version), FormatShortVersion(p.Version), p.Platform,
                p.ProjectUrl, p.Author, p.Description, p.ReleaseNotes, p.License,
                true, DateTime.UtcNow, fileSize);
 
@@ -234,9 +240,31 @@ namespace Pundit.Core.Server.Application
          return new DbPackage[0];
       }
 
-      public RemoteSnapshot ReadLog(long startRecordId, bool includePackages)
+      public IEnumerable<DbPackage> GetAllRevisions(PackageKey key)
+      {
+         using(IDataReader reader = ExecuteReader(ManifestTableName,
+            null,
+            new[] { "PackageId=?P0", "Platform=?P1", "VersionShort=?P2" },
+            key.PackageId, key.Platform, FormatShortVersion(key.Version)))
+         {
+            return ReadFullPackages(reader);
+         }
+      }
+
+      public void DeactivatePackage(long packageId)
       {
          throw new NotImplementedException();
+      }
+
+      public IEnumerable<DbPackage> ReadLog(long startRecordId, int maxRecords, bool includePackages)
+      {
+         using(IDataReader reader = ExecuteReaderPage(ManifestTableName,
+            0, maxRecords,
+            null, new[] { "IsActive=?P0", "PackageManifestId>=?P1" },
+            true, startRecordId))
+         {
+            return ReadFullPackages(reader);
+         }
       }
 
       #endregion

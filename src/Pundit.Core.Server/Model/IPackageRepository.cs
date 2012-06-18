@@ -29,6 +29,10 @@ namespace Pundit.Core.Server.Model
 
       IEnumerable<DbPackage> GetPackages(long offset, long count, bool active, out long totalCount);
 
-      RemoteSnapshot ReadLog(long startRecordId, bool includePackages);
+      IEnumerable<DbPackage> GetAllRevisions(PackageKey key);
+
+      void DeactivatePackage(long packageId);
+      
+      IEnumerable<DbPackage> ReadLog(long startRecordId, int maxRecords, bool includePackages);
    }
 }

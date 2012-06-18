@@ -42,8 +42,8 @@ namespace Pundit.Core.Model
       /// <summary>
       /// Specifies if this package is stable
       /// </summary>
-      [XmlAttribute("stable")]
-      public bool IsStable { get; set; }
+      //[XmlAttribute("stable")]
+      //public bool IsStable { get; set; }
 
       /// <summary>
       /// Package ID

@@ -1,7 +1,5 @@
 ﻿using System;
-using System.Runtime.Serialization;
 using System.Xml.Serialization;
-using Pundit.Core.Utils;
 
 namespace Pundit.Core.Model
 {
@@ -14,20 +12,34 @@ namespace Pundit.Core.Model
       private Version _version;
       private string _platform;
 
+      /// <summary>
+      /// 
+      /// </summary>
       public PackageKey()
       {
          Platform = Platform;
       }
 
-      public PackageKey(string packageId, Version version, string platform) : this()
+      /// <summary>
+      /// 
+      /// </summary>
+      /// <param name="packageId"></param>
+      /// <param name="version"></param>
+      /// <param name="platform"></param>
+      /// <exception cref="ArgumentNullException"></exception>
+      public PackageKey(string packageId, Version version, string platform)
       {
          if (packageId == null) throw new ArgumentNullException("packageId");
+         if (version == null) throw new ArgumentNullException("version");
 
          PackageId = packageId;
          Version = version;
          Platform = platform;
       }
 
+      /// <summary>
+      /// Package ID
+      /// </summary>
       [XmlAttribute("id")]
       public string PackageId
       {
@@ -35,7 +47,9 @@ namespace Pundit.Core.Model
          set { _packageId = value; }
       }
 
-      //[XmlAttribute("version")]
+      /// <summary>
+      /// Exact package version
+      /// </summary>
       [XmlIgnore]
       public Version Version
       {
@@ -43,6 +57,9 @@ namespace Pundit.Core.Model
          set { _version = value; }
       }
 
+      /// <summary>
+      /// Backed string conversion for serialization
+      /// </summary>
       [XmlAttribute("version")]
       public string VersionString
       {
@@ -50,6 +67,9 @@ namespace Pundit.Core.Model
          set { _version = new Version(value);}
       }
 
+      /// <summary>
+      /// 
+      /// </summary>
       [XmlAttribute("platform")]
       public string Platform
       {

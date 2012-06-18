@@ -36,6 +36,12 @@ namespace Pundit.Core.Model
       /// <summary>
       /// 
       /// </summary>
+      [XmlAttribute("count")]
+      public long Count { get; set; }
+
+      /// <summary>
+      /// 
+      /// </summary>
       public RemoteSnapshot()
       {
          
