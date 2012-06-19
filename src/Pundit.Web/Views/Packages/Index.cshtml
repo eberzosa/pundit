@@ -11,10 +11,10 @@
 <table>
    <tr>
       <th>PackageId</th>
-      <th>Latest Version</th>
+      <th>Version</th>
       <th>Platform</th>
-      <th>Last Modified</th>
-      <th>Download</th>
+      <th>Created</th>
+      <th>Size</th>
    </tr>
    @foreach (DbPackage p in Model)
    {
@@ -23,7 +23,7 @@
          <td>@p.Package.Version</td>
          <td>@p.Package.Platform</td>
          <td>@p.CreatedDate</td>
-         <td></td>
+         <td>@p.FileSize</td>
       </tr>
    }
 </table>
