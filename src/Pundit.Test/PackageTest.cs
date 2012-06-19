@@ -28,13 +28,11 @@ namespace Pundit.Test
       [Test]
       public void BackwardCompatibilityTest()
       {
-         string oldManifest = @"
-<package xmlns:xsi=""http://www.w3.org/2001/XMLSchema-instance"" xmlns:xsd=""http://www.w3.org/2001/XMLSchema"" xsi:type=""DevPackage"" coreVersion=""1.0.0.11"">
+         string oldManifest = @"<package xmlns:xsi=""http://www.w3.org/2001/XMLSchema-instance"" xmlns:xsd=""http://www.w3.org/2001/XMLSchema"" xsi:type=""DevPackage"" coreVersion=""1.0.0.11"">
   <packageId>Pundit.Core</packageId>
    <version>1.2.3.4</version>
   <platform>net40</platform>
-</package>
-";
+</package>";
 
          Package oldPackage = Package.FromStreamXml(new MemoryStream(Encoding.UTF8.GetBytes(oldManifest)));
          Assert.AreEqual("Pundit.Core", oldPackage.PackageId);

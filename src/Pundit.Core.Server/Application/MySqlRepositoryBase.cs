@@ -81,6 +81,11 @@ namespace Pundit.Core.Server.Application
          return ";select last_insert_id();";
       }
 
+      protected override string GetParameterName(int idx)
+      {
+         return "?P" + idx;
+      }
+
       #endregion
    }
 }

@@ -250,6 +250,11 @@ namespace Pundit.Core.Application.Sqlite
          return SelectId;
       }
 
+      protected override string GetParameterName(int idx)
+      {
+         return "(?)";
+      }
+
       public override void Dispose()
       {
          if (_conn != null)

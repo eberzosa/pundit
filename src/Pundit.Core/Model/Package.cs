@@ -173,10 +173,7 @@ namespace Pundit.Core.Model
       /// <returns></returns>
       public static Package FromStreamXml(Stream inputStream)
       {
-         var xmls = new XmlSerializer(typeof(Package));
-         var dp = (Package)xmls.Deserialize(inputStream);
-         dp.Validate();
-         return dp;
+         return inputStream.FromXmlStream<Package>();
       }
 
       /// <summary>

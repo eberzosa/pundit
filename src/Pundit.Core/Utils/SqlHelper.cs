@@ -14,6 +14,8 @@ namespace Pundit.Core.Utils
 
       protected abstract string GetSelectId();
 
+      protected abstract string GetParameterName(int idx);
+
       public long Insert(string tableName, string[] columns, params object[] values)
       {
          if (tableName == null) throw new ArgumentNullException("tableName");
@@ -37,9 +39,7 @@ namespace Pundit.Core.Utils
          for (int i = 0; i < columns.Length; i++)
          {
             if (i != 0) b.Append(", ");
-            b.Append("?P");
-            b.Append(i);
-            b.Append("");
+            b.Append(GetParameterName(i));
          }
          b.Append(")");
          b.Append(GetSelectId());

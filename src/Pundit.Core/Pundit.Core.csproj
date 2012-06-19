@@ -74,6 +74,7 @@
     <Compile Include="Application\DiskInstallTarget.cs" />
     <Compile Include="Application\Extensions\NumericExtensions.cs" />
     <Compile Include="Application\Extensions\ObjectExtensions.cs" />
+    <Compile Include="Application\Extensions\StreamExtensions.cs" />
     <Compile Include="Application\Extensions\StringExtensions.cs" />
     <Compile Include="Application\InstalledPackagesIndex.cs" />
     <Compile Include="Application\PackageInstaller.cs" />
