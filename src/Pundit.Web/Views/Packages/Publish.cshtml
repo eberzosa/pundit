@@ -1,0 +1,23 @@
+﻿@{
+   ViewBag.Title = "Publish Package";
+}
+
+<h2>Publish Package</h2>
+
+The packages will be uploaded and hosted on the Pundit repository server
+
+@using (Html.BeginForm("Publish", "Packages", FormMethod.Post, new { enctype = "multipart/form-data" }))
+{
+   <table>
+      <tr>
+         <td>
+            <input type="file" name="packageFile" id="packageFile"/>
+         </td>
+      </tr>
+      <tr>
+         <td>
+            <input type="submit" value="upload"/>            
+         </td>
+      </tr>
+   </table>
+}

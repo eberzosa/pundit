@@ -4,18 +4,26 @@
     ViewBag.Title = "Packages";
 }
 
-<h2>There are @ViewBag.Count package(s)</h2>
+@Html.ActionLink("publish", "Publish")
+
+<h2>Package List (0-N of @ViewBag.Count)</h2>
 
 <table>
+   <tr>
+      <th>PackageId</th>
+      <th>Latest Version</th>
+      <th>Platform</th>
+      <th>Last Modified</th>
+      <th>Download</th>
+   </tr>
    @foreach (DbPackage p in Model)
    {
       <tr>
-         <td>@p.Package.PackageId @p.Package.VersionString (@p.Package.Platform)</td>
-      </tr>
-      <tr>
-         <td>
-            created: @p.CreatedDate, size: @p.FileSize   
-         </td>
+         <td>@p.Package.PackageId</td>
+         <td>@p.Package.Version</td>
+         <td>@p.Package.Platform</td>
+         <td>@p.CreatedDate</td>
+         <td></td>
       </tr>
    }
 </table>

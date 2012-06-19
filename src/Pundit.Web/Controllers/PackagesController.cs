@@ -10,10 +10,12 @@ namespace Pundit.Web.Controllers
 {
    public class PackagesController : Controller
    {
+      private readonly IRemoteRepository _repository;
       private readonly IPackageRepository _packages;
 
-      public PackagesController(IPackageRepository packages)
+      public PackagesController(IRemoteRepository repository, IPackageRepository packages)
       {
+         _repository = repository;
          _packages = packages;
       }
 
@@ -24,6 +26,23 @@ namespace Pundit.Web.Controllers
 
          ViewBag.Count = totalCount;
          return View(list);
+      }
+
+      [HttpGet]
+      public ActionResult Publish()
+      {
+         return View();
+      }
+
+      [HttpPost]
+      public ActionResult Publish(HttpPostedFileBase packageFile)
+      {
+         if(packageFile != null)
+         {
+            _repository.Publish(packageFile.InputStream);
+         }
+
+         return View();
       }
    }
 }
