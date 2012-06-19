@@ -45,11 +45,11 @@ CREATE TABLE `packagedependency` (
   `VersionPattern` varchar(45) NOT NULL,
   `Platform` varchar(45) NOT NULL,
   `Scope` tinyint(3) unsigned NOT NULL,
-  `TargetFolder` varchar(45) NOT NULL,
+  `TargetFolder` varchar(45) DEFAULT NULL,
   PRIMARY KEY (`PackageDependencyId`),
   KEY `FK_PackageDepenency_PackageManifest` (`PackageManifestId`),
   CONSTRAINT `FK_PackageDepenency_PackageManifest` FOREIGN KEY (`PackageManifestId`) REFERENCES `packagemanifest` (`PackageManifestId`) ON DELETE CASCADE
-) ENGINE=InnoDB DEFAULT CHARSET=latin1;
+) ENGINE=InnoDB AUTO_INCREMENT=4 DEFAULT CHARSET=latin1;
 /*!40101 SET character_set_client = @saved_cs_client */;
 
 --
@@ -71,7 +71,7 @@ CREATE TABLE `packagelog` (
   KEY `FK_manifesthistory_packagemanifest` (`PackageManifestId`) USING BTREE,
   KEY `PackageLog_Key` (`PackageId`,`Platform`,`Version`),
   CONSTRAINT `FK_manifesthistory_packagemanifest` FOREIGN KEY (`PackageManifestid`) REFERENCES `packagemanifest` (`PackageManifestId`)
-) ENGINE=InnoDB AUTO_INCREMENT=10309 DEFAULT CHARSET=latin1;
+) ENGINE=InnoDB AUTO_INCREMENT=11130 DEFAULT CHARSET=latin1;
 /*!40101 SET character_set_client = @saved_cs_client */;
 
 --
@@ -94,10 +94,13 @@ CREATE TABLE `packagemanifest` (
   `IsActive` tinyint(1) DEFAULT NULL,
   `CreatedDate` datetime DEFAULT NULL,
   `FileSize` int(10) unsigned DEFAULT NULL,
+  `VersionShort` varchar(45) DEFAULT NULL,
+  `DownloadCount` int(10) unsigned NOT NULL DEFAULT '0',
   PRIMARY KEY (`PackageManifestId`),
   KEY `PackageManifest_Key` (`PackageId`,`Version`,`Platform`),
-  KEY `PackageManifest_IsActive` (`IsActive`)
-) ENGINE=InnoDB AUTO_INCREMENT=10346 DEFAULT CHARSET=latin1;
+  KEY `PackageManifest_IsActive` (`IsActive`),
+  KEY `PackageManifest_Revisions` (`PackageId`,`Platform`,`VersionShort`) USING BTREE
+) ENGINE=InnoDB AUTO_INCREMENT=11168 DEFAULT CHARSET=latin1;
 /*!40101 SET character_set_client = @saved_cs_client */;
 /*!40103 SET TIME_ZONE=@OLD_TIME_ZONE */;
 
@@ -109,4 +112,4 @@ CREATE TABLE `packagemanifest` (
 /*!40101 SET COLLATION_CONNECTION=@OLD_COLLATION_CONNECTION */;
 /*!40111 SET SQL_NOTES=@OLD_SQL_NOTES */;
 
--- Dump completed on 2012-06-18 23:25:04
+-- Dump completed on 2012-06-19  1:28:34
