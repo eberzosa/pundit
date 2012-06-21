@@ -33,15 +33,23 @@ namespace Pundit.Core.Model
       /// </summary>
       /// <param name="inputStream"></param>
       /// <returns></returns>
-      public new static DevPackage FromStream(Stream inputStream)
+      public static DevPackage FromXmlStream(Stream inputStream)
       {
-         XmlSerializer xmls = new XmlSerializer(typeof(DevPackage));
+         using (var ms = new MemoryStream())
+         {
+            inputStream.CopyTo(ms);
+            ms.Position = 0;
 
-         DevPackage dp = (DevPackage)xmls.Deserialize(inputStream);
-
-         dp.Validate();
-
-         return dp;
+            try
+            {
+               return ms.FromXmlStream<DevPackage>();
+            }
+            catch (InvalidOperationException)
+            {
+               ms.Position = 0;
+               return ms.FromXmlStream<DevPackage>(false);
+            }
+         }
       }
 
       public override void Validate()

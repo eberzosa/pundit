@@ -82,11 +82,6 @@ namespace Pundit.Core.Model
       /// <summary>
       /// 
       /// </summary>
-      public bool UseForPublishing { get; set; }
-
-      /// <summary>
-      /// 
-      /// </summary>
       public int Priority { get; set; }
    }
 }

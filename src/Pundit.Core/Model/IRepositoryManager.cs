@@ -16,8 +16,11 @@ namespace Pundit.Core.Model
 
       IEnumerable<Repo> ActiveRepositories { get; }
 
-      IEnumerable<Repo> PublishingRepositories { get; }
-
+      /// <summary>
+      /// Gets repository by it's name
+      /// </summary>
+      /// <param name="tag"></param>
+      /// <returns>Found repository or null if not found</returns>
       Repo GetRepositoryByTag(string tag);
 
       Repo GetRepositoryById(long id);

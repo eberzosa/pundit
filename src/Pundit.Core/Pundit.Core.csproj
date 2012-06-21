@@ -78,7 +78,6 @@
     <Compile Include="Application\Extensions\StringExtensions.cs" />
     <Compile Include="Application\InstalledPackagesIndex.cs" />
     <Compile Include="Application\PackageInstaller.cs" />
-    <Compile Include="Application\PackageIntegrityCheck.cs" />
     <Compile Include="Application\PackageReader.cs" />
     <Compile Include="Application\PackageStreamer.cs" />
     <Compile Include="Application\PackageWriter.cs" />

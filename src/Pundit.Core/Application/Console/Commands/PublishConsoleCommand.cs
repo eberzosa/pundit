@@ -13,79 +13,46 @@ namespace Pundit.Core.Application.Console.Commands
          : base(console, currentDirectory, args)
       {}
 
-      private ICollection<string> GetPackagesFullNames()
+      private string GetPackageFullName()
       {
-         string packageName = GetParameter("p:|package:", 0);
-
-         //get package
-         if (packageName != null)
+         string name = GetParameter("p:|package:", 0);
+         if (name != null)
          {
-            packageName = Path.GetFullPath(packageName);
+            name = Path.GetFullPath(name);
 
-            if (!File.Exists(packageName))
-               throw new ArgumentException("package [" + packageName + "] does not exist");
-
-            return new[] { packageName };
+            if (!File.Exists(name))
+               throw new ArgumentException("package [" + name + "] does not exist", "package");
          }
          else
          {
-            FileInfo[] packedFiles =
-               new DirectoryInfo(CurrentDirectory).GetFiles("*" + Package.PackedExtension);
-
-            if (packedFiles.Length == 0)
-               throw new ApplicationException("no packages found for publishing");
-
-            return new List<string>(packedFiles.Select(fi => fi.FullName));
+            throw new ArgumentException("package not specified", "package");
          }
-
+         return name;
+      }
+      private Repo GetRepository()
+      {
+         string tag = GetParameter("r:|repository-name:");
+         if(tag == null) throw new ArgumentNullException("repository name not specified", "repository-name");
+         Repo r = LocalConfiguration.RepositoryManager.GetRepositoryByTag(tag);
+         if(r == null) throw new ArgumentOutOfRangeException("repository [" + tag + "] not registered", "repository-name");
+         return r;
       }
 
       public override void Execute()
       {
-         ICollection<string> packages = GetPackagesFullNames();
-         bool localOnly = GetBoolParameter(false, "l|local");
+         //System.Console.ReadKey();
+         string packagePath = GetPackageFullName();
+         Repo repo = GetRepository();
 
-         if (localOnly)
+         console.WriteLine(string.Format("publishing package {0} to repository [{1}]", packagePath, repo.Tag));
+
+         IRemoteRepository remote = RemoteRepositoryFactory.Create(repo.Uri);
+         using (Stream package = File.OpenRead(packagePath))
          {
-            long sizeBefore = LocalConfiguration.RepositoryManager.Stats.OccupiedSpaceBinaries;
-
-            foreach (string packagePath in packages)
-            {
-               using (Stream package = File.OpenRead(packagePath))
-               {
-                  LocalConfiguration.RepositoryManager.LocalRepository.Put(package);
-               }
-            }
-
-            long sizeAfter = LocalConfiguration.RepositoryManager.Stats.OccupiedSpaceBinaries;
-
-            console.WriteLine("done, local cache increased from {0} to {1} (+{2})",
-               PathUtils.FileSizeToString(sizeBefore),
-               PathUtils.FileSizeToString(sizeAfter),
-               PathUtils.FileSizeToString(sizeAfter - sizeBefore));
+            remote.Publish(package);
          }
-         else
-         {
-            var repos = new List<Repo>(LocalConfiguration.RepositoryManager.PublishingRepositories);
 
-            console.WriteLine("Publishing package to {0} repository(ies)", repos.Count);
-
-            foreach (Repo repo in repos)
-            {
-               foreach (string packagePath in packages)
-               {
-                  console.WriteLine(string.Format("publishing package {0} to repository [{1}]", packagePath, repo.Tag));
-
-                  IRemoteRepository remote = RemoteRepositoryFactory.Create(repo.Uri);
-                  using (Stream package = File.OpenRead(packagePath))
-                  {
-                     remote.Publish(package);
-                  }
-
-                  console.WriteLine("published");
-               }
-            }
-         }
+         console.WriteLine("published!");
       }
    }
 }

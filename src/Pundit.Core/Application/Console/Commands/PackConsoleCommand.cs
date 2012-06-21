@@ -60,7 +60,7 @@ namespace Pundit.Core.Application.Console.Commands
          DevPackage devPack;
          using(Stream devPackStream = File.OpenRead(packagePath))
          {
-            devPack = DevPackage.FromStream(devPackStream);
+            devPack = DevPackage.FromXmlStream(devPackStream);
          }
 
          if(overrideVersion != null)

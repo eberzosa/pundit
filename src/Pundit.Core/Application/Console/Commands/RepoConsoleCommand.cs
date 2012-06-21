@@ -74,10 +74,6 @@ namespace Pundit.Core.Application.Console.Commands
             console.Write("enabled:".PadRight(20));
             console.WriteLine(rr.IsEnabled ? ConsoleColor.Green : ConsoleColor.Red, rr.IsEnabled ? "yes" : "no");
 
-            console.Write("publish:".PadRight(20));
-            console.WriteLine(rr.UseForPublishing ? ConsoleColor.Green : ConsoleColor.Yellow,
-               rr.UseForPublishing ? "yes" : "no");
-
             console.Write("url:".PadRight(20));
             console.WriteLine(rr.Uri);
 
@@ -154,7 +150,6 @@ namespace Pundit.Core.Application.Console.Commands
                   newRepo1.LastRefreshed = DateTime.Now;
                   newRepo1.LastChangeId = snapshot.NextChangeId;
                   newRepo1.IsEnabled = true;
-                  newRepo1.UseForPublishing = false;
                   newRepo = LocalConfiguration.RepositoryManager.Register(newRepo1);
                   repoId = newRepo.Id;
                   console.Write(true);
@@ -195,13 +190,10 @@ namespace Pundit.Core.Application.Console.Commands
 
          string enabled = GetParameter("enabled:");
          int hours = GetIntParameter("refresh:");
-         string publish = GetParameter("publish:");
 
          bool isEnabled;
          if (bool.TryParse(enabled, out isEnabled)) r.IsEnabled = isEnabled;
          if (hours > 0) r.RefreshIntervalInHours = hours;
-         bool useForPublishing;
-         if (bool.TryParse(publish, out useForPublishing)) r.UseForPublishing = useForPublishing;
 
          console.Write("updating repository...");
          LocalConfiguration.RepositoryManager.Update(r);

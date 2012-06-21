@@ -47,8 +47,7 @@ namespace Pundit.Core.Application
             RefreshIntervalInHours = (int)reader.AsLong("RefreshIntervalHours"),
             LastRefreshed = reader.AsDateTime("LastRefreshed"),
             LastChangeId = reader.AsString("LastChangeId"),
-            IsEnabled = reader.AsBool("IsEnabled"),
-            UseForPublishing = reader.AsBool("UseForPublishing")
+            IsEnabled = reader.AsBool("IsEnabled")
          };
       }
 
@@ -79,11 +78,6 @@ namespace Pundit.Core.Application
       public IEnumerable<Repo> ActiveRepositories
       {
          get { return AllRepositories.Where(r => r.IsEnabled); }
-      }
-
-      public IEnumerable<Repo> PublishingRepositories
-      {
-         get { return ActiveRepositories.Where(r => r.UseForPublishing); }
       }
 
       public Repo GetRepositoryByTag(string tag)
@@ -146,11 +140,10 @@ namespace Pundit.Core.Application
                                    new[]
                                       {
                                          "Tag", "Uri", "RefreshIntervalHours", "LastRefreshed", "LastChangeId",
-                                         "IsEnabled",
-                                         "UseForPublishing"
+                                         "IsEnabled"
                                       },
                                    newRepo.Tag, newRepo.Uri, (long)newRepo.RefreshIntervalInHours, newRepo.LastRefreshed,
-                                   newRepo.LastChangeId, newRepo.IsEnabled, newRepo.UseForPublishing);
+                                   newRepo.LastChangeId, newRepo.IsEnabled);
 
          return GetRepositoryById(repoId);
       }
@@ -165,8 +158,8 @@ namespace Pundit.Core.Application
          using(IDbCommand cmd = _sql.CreateCommand())
          {
             cmd.CommandText = "update " + RepositoryTableName + " set " +
-                              "RefreshIntervalHours=(?), IsEnabled=(?), UseForPublishing=(?) where RepositoryId=(?)";
-            cmd.Add(repo.RefreshIntervalInHours).Add(repo.IsEnabled).Add(repo.UseForPublishing);
+                              "RefreshIntervalHours=(?), IsEnabled=(?), where RepositoryId=(?)";
+            cmd.Add(repo.RefreshIntervalInHours).Add(repo.IsEnabled);
             cmd.Add(repo.Id);
             cmd.ExecuteNonQuery();
          }

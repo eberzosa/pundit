@@ -158,16 +158,16 @@ examples:
   {0} pack -m:../pundit.xml -o:../ -v:3.0.1.401</value>
   </data>
   <data name="Help_publish" xml:space="preserve">
-    <value>syntax: {0} publish [-p:&lt;package&gt;] [-r:&lt;repository name&gt;]
+    <value>syntax: {0} publish &lt;package&gt; -r:&lt;repository name&gt;
 
-Publishes packages to repositories. By default all the packages in the current folders are published. Use optional parameters to override this behavior.
-  &lt;package&gt; specificies a package to publish; by default all packages in the current folder are published
-  &lt;repository name&gt; specifies repository to publish to; by default packages are published to repositories specified in the local configuration file; &lt;repository name&gt; is a "name" attribute of a repository from the local configuration file; for testing purposes publishing to local repository can be done specifyint "local" as the repository name
+Publishes a package to a repository.
+  &lt;package&gt; specificies a package to publish; 
+  &lt;repository name&gt; specifies repository to publish to; list of these repositories can be printed by executing "repo list" command; note that you have to have publishing permissions or the command will fail;
 
 examples:
   {0} publish
   {0} publish -p:packed/*.pundit
-  {0} publish -r:corporate</value>
+  {0} publish -r:myrepo1</value>
   </data>
   <data name="Help_repo" xml:space="preserve">
     <value>syntax: {0} repo &lt;subcommand&gt;

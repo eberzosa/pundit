@@ -28,7 +28,7 @@ namespace Pundit.Vsix.Application
                DevPackage p;
                using(Stream s = File.OpenRead(_manifestPath))
                {
-                  p = DevPackage.FromStream(s);
+                  p = DevPackage.FromXmlStream(s);
                }
 
                try
