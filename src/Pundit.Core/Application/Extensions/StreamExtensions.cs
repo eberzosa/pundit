@@ -9,10 +9,12 @@ namespace System
 {
    static class StreamExtensions
    {
-      public static T FromXmlStream<T>(this Stream s)
+      public static T FromXmlStream<T>(this Stream s, bool useNamespace = true)
       {
          if (s == null) return default(T);
-         var xmls = new XmlSerializer(typeof(T), ObjectExtensions.XmlNamespace);
+         var xmls = useNamespace
+                       ? new XmlSerializer(typeof (T), ObjectExtensions.XmlNamespace)
+                       : new XmlSerializer(typeof (T));
          var result = (T) xmls.Deserialize(s);
          return result;
       }

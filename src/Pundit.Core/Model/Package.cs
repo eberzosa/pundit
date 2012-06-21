@@ -173,7 +173,21 @@ namespace Pundit.Core.Model
       /// <returns></returns>
       public static Package FromStreamXml(Stream inputStream)
       {
-         return inputStream.FromXmlStream<Package>();
+         using(var ms = new MemoryStream())
+         {
+            inputStream.CopyTo(ms);
+            ms.Position = 0;
+
+            try
+            {
+               return ms.FromXmlStream<Package>();
+            }
+            catch(InvalidOperationException)
+            {
+               ms.Position = 0;
+               return ms.FromXmlStream<Package>(false);
+            }
+         }
       }
 
       /// <summary>
