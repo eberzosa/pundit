@@ -1,4 +1,6 @@
 ﻿using System;
+using System.Collections.Concurrent;
+using System.Collections.Generic;
 using System.Configuration;
 using System.Data;
 using MySql.Data.MySqlClient;
@@ -13,6 +15,8 @@ namespace Pundit.Core.Server.Application
    abstract class MySqlRepositoryBase : SqlHelper
    {
       private readonly string _connectionString;
+      private static readonly HashSet<string> UpgradedConnections = new HashSet<string>();
+      private static readonly object UpgradeLock = new object();
 
       protected MySqlRepositoryBase(string connectionString)
       {
@@ -26,23 +30,33 @@ namespace Pundit.Core.Server.Application
          }
 
          if(_connectionString == null) throw new ApplicationException("connection string is null and application settings has no connection configured");
+
+         lock (UpgradeLock)
+         {
+            if (!UpgradedConnections.Contains(_connectionString))
+            {
+               new LiquidSql(this, typeof(MySqlRepositoryBase).Namespace + ".Scripts.MySql").Execute();
+               UpgradedConnections.Add(_connectionString);
+            }
+         }
       }
 
       #region Overrides of SqlHelper
-
+      
       private MySqlConnection _conn;
       protected override IDbConnection Connection
       {
          get
          {
-            if(_conn == null)
+            if (_conn == null)
             {
                _conn = new MySqlConnection(_connectionString);
                _conn.Open();
-               new MySqlUpgrader().Execute(_conn);
             }
-
-            if(_conn.State != ConnectionState.Open) _conn.Open();
+            else
+            {
+               if (_conn.State != ConnectionState.Open) _conn.Open();
+            }
 
             return _conn;
          }

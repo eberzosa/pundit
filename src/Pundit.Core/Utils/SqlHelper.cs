@@ -174,6 +174,32 @@ namespace Pundit.Core.Utils
 
       }
 
+      private T CastScalar<T>(object value)
+      {
+         if (value == null || value is DBNull) return default(T);
+         if (!(value is T)) throw new InvalidCastException("cannot cast " + value.GetType() + " to " + typeof (T));
+         return (T) value;
+      }
+      
+      public T ExecuteScalar<T>(string script)
+      {
+         using(IDbCommand cmd = CreateCommand())
+         {
+            cmd.CommandText = script;
+            object r = cmd.ExecuteScalar();
+            return CastScalar<T>(r);
+         }
+      }
+
+      public void Execute(string script)
+      {
+         using(IDbCommand cmd = CreateCommand())
+         {
+            cmd.CommandText = script;
+            cmd.ExecuteNonQuery();
+         }
+      }
+
       public T ExecuteScalar<T>(string tableName, string column, string[] where, params object[] parameters)
       {
          var b = new StringBuilder();
@@ -204,10 +230,7 @@ namespace Pundit.Core.Utils
             }
 
             object r = cmd.ExecuteScalar();
-
-            if (r == null || r is DBNull) return default(T);
-            if (!(r is T)) throw new InvalidCastException("cannot cast " + r.GetType() + " to " + typeof(T));
-            return (T)r;
+            return CastScalar<T>(r);
          }
       }
 
