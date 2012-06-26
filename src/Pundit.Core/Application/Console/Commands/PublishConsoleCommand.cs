@@ -40,13 +40,13 @@ namespace Pundit.Core.Application.Console.Commands
 
       public override void Execute()
       {
-         //System.Console.ReadKey();
+         System.Console.ReadKey();
          string packagePath = GetPackageFullName();
          Repo repo = GetRepository();
 
          console.WriteLine(string.Format("publishing package {0} to repository [{1}]", packagePath, repo.Tag));
 
-         IRemoteRepository remote = RemoteRepositoryFactory.Create(repo.Uri);
+         IRemoteRepository remote = RemoteRepositoryFactory.Create(repo.Uri, repo.Login, repo.ApiKey);
          using (Stream package = File.OpenRead(packagePath))
          {
             remote.Publish(package);

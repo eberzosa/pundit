@@ -26,15 +26,13 @@ CORE:
 + restore "pundit publish" using IRemoteRepository; after publishing local index has to be force-refreshed
 + progress bars support in console mode
 + bug: "pundit resolve" doesn't notify about operation completion
-= analyze and test every command
++ analyze and test every command
  + Pack & Resolve
  + Publish (implemented in server and tested)
  + RepositoryServer change history (add and del changes)
- = LocalRepositoy accepting add and del changes
- - Search
- - Template
- - Utils
-- end-to-end testing for all the commands
+ + LocalRepository accepting add and del changes
+ + Search
+ + Utils
 
 VSIX:
 + all commands executing in background and not hanging main VS window
@@ -43,13 +41,19 @@ VSIX:
 + colored search (XML)
 + creating empty manifest from sratch
 - add manifest IntelliSense support
-- progress support in the console
+- simple progress support in the console
 = analyze and test every command
  - Pack & Resolve
- - Publish
  - Repo
  + Search
  + Utils
+
+web site:
+- full support for api keys
+- sequential database upgrade scripts
+- simplest package listing
+- home page
+- documentation
 
 ----------------------------------------------------------------------------------------------------------------------------
 

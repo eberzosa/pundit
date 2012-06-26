@@ -19,10 +19,12 @@ namespace Pundit.Core
       /// 
       /// </summary>
       /// <param name="uri"></param>
+      /// <param name="login"></param>
+      /// <param name="apiKey"></param>
       /// <returns></returns>
       /// <exception cref="ArgumentNullException"></exception>
       /// <exception cref="NotSupportedException"></exception>
-      public static IRemoteRepository Create(string uri)
+      public static IRemoteRepository Create(string uri, string login, string apiKey)
       {
          if (uri == null) throw new ArgumentNullException("uri");
 
@@ -30,7 +32,7 @@ namespace Pundit.Core
             return new RemoteFolderRepository(uri.Substring(DirRepoPrefix.Length));
 
          if(uri.StartsWith(HttpRepoPrefix))
-            return new HttpRestRemoteRepository(uri);
+            return new HttpRestRemoteRepository(uri, login, apiKey);
 
          throw new NotSupportedException("repository " + uri + " not supported (typo?)");
       }

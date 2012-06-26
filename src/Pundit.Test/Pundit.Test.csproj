@@ -52,6 +52,7 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="ApiKeyTest.cs" />
     <Compile Include="ExceptionalTest.cs" />
     <Compile Include="Import\NuGetImporterTest.cs" />
     <Compile Include="LocalConfigurationTest.cs" />

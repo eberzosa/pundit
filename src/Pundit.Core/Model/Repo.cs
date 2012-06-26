@@ -10,6 +10,8 @@ namespace Pundit.Core.Model
       private readonly long _id;
       private readonly string _tag;
       private readonly string _uri;
+      private readonly string _login;
+      private readonly string _apiKey;
 
       /// <summary>
       /// 
@@ -78,6 +80,16 @@ namespace Pundit.Core.Model
       /// 
       /// </summary>
       public bool IsEnabled { get; set; }
+
+      /// <summary>
+      /// Remote login for publishing
+      /// </summary>
+      public string Login { get; set; }
+
+      /// <summary>
+      /// API key for publishing
+      /// </summary>
+      public string ApiKey { get; set; }
 
       /// <summary>
       /// 

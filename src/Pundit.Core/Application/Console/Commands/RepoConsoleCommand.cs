@@ -82,6 +82,12 @@ namespace Pundit.Core.Application.Console.Commands
             console.Write(rr.RefreshIntervalInHours.ToString());
             console.WriteLine(" hour(s)");
 
+            console.Write("login:".PadRight(20));
+            console.WriteLine(rr.Login);
+
+            console.Write("api key:".PadRight(20));
+            console.WriteLine(rr.ApiKey);
+
             console.Write("last refreshed:".PadRight(20));
             console.WriteLine(rr.LastRefreshed == DateTime.MinValue ? "never" : rr.LastRefreshed.ToString());
 
@@ -128,7 +134,7 @@ namespace Pundit.Core.Application.Console.Commands
          console.WriteLine("adding repository '{0}' from {1}, refresh interval: {2} hour(s)...",
             tag, uri, hours);
 
-         IRemoteRepository repository = RemoteRepositoryFactory.Create(uri);
+         IRemoteRepository repository = RemoteRepositoryFactory.Create(uri, null, null);
 
          console.Write("fetching first snapshot...");
          string nextChangeId;
@@ -190,10 +196,14 @@ namespace Pundit.Core.Application.Console.Commands
 
          string enabled = GetParameter("enabled:");
          int hours = GetIntParameter("refresh:");
+         string login = GetParameter("login:");
+         string apiKey = GetParameter("api-key:");
 
          bool isEnabled;
          if (bool.TryParse(enabled, out isEnabled)) r.IsEnabled = isEnabled;
          if (hours > 0) r.RefreshIntervalInHours = hours;
+         if (login != null) r.Login = login;
+         if (apiKey != null) r.ApiKey = apiKey;
 
          console.Write("updating repository...");
          LocalConfiguration.RepositoryManager.Update(r);
@@ -208,7 +218,7 @@ namespace Pundit.Core.Application.Console.Commands
 
       private RemoteSnapshot GetSnapshot(Repo repo)
       {
-         IRemoteRepository remote = RemoteRepositoryFactory.Create(repo.Uri);
+         IRemoteRepository remote = RemoteRepositoryFactory.Create(repo.Uri, repo.Login, repo.ApiKey);
 
          //get changes
          try

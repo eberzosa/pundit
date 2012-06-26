@@ -32,5 +32,18 @@ namespace Pundit.Core.Server.Model
       {
          return clearTextPassword;  //todo: write hashing function
       }
+
+      public User()
+      {
+         
+      }
+
+      public User(string login, string role, string passwordHash, string apiKey)
+      {
+         Login = login;
+         Role = role;
+         PasswordHash = passwordHash;
+         ApiKey = apiKey;
+      }
    }
 }

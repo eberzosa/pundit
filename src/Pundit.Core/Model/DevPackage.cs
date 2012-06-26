@@ -33,7 +33,7 @@ namespace Pundit.Core.Model
       /// </summary>
       /// <param name="inputStream"></param>
       /// <returns></returns>
-      public static DevPackage FromXmlStream(Stream inputStream)
+      public new static DevPackage FromStreamXml(Stream inputStream)
       {
          using (var ms = new MemoryStream())
          {

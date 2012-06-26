@@ -34,7 +34,7 @@ namespace Pundit.Test
   <platform>net40</platform>
 </package>";
 
-         Package oldPackage = Package.FromStreamXml(new MemoryStream(Encoding.UTF8.GetBytes(oldManifest)));
+         DevPackage oldPackage = DevPackage.FromStreamXml(new MemoryStream(Encoding.UTF8.GetBytes(oldManifest)));
          Assert.AreEqual("Pundit.Core", oldPackage.PackageId);
          Assert.AreEqual("1.2.3.4", oldPackage.VersionString);
          Assert.AreEqual("net40", oldPackage.Platform);

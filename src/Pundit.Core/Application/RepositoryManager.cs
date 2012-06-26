@@ -7,7 +7,6 @@ using System.Linq;
 using Pundit.Core.Application.Repository;
 using Pundit.Core.Application.Sqlite;
 using Pundit.Core.Model;
-using Pundit.Core.Utils;
 
 namespace Pundit.Core.Application
 {
@@ -47,7 +46,9 @@ namespace Pundit.Core.Application
             RefreshIntervalInHours = (int)reader.AsLong("RefreshIntervalHours"),
             LastRefreshed = reader.AsDateTime("LastRefreshed"),
             LastChangeId = reader.AsString("LastChangeId"),
-            IsEnabled = reader.AsBool("IsEnabled")
+            IsEnabled = reader.AsBool("IsEnabled"),
+            Login = reader.AsString("Login"),
+            ApiKey = reader.AsString("ApiKey")
          };
       }
 
@@ -158,8 +159,9 @@ namespace Pundit.Core.Application
          using(IDbCommand cmd = _sql.CreateCommand())
          {
             cmd.CommandText = "update " + RepositoryTableName + " set " +
-                              "RefreshIntervalHours=(?), IsEnabled=(?), where RepositoryId=(?)";
+                              "RefreshIntervalHours=(?), IsEnabled=(?), Login=(?), ApiKey=(?) where RepositoryId=(?)";
             cmd.Add(repo.RefreshIntervalInHours).Add(repo.IsEnabled);
+            cmd.Add(repo.Login).Add(repo.ApiKey);
             cmd.Add(repo.Id);
             cmd.ExecuteNonQuery();
          }

@@ -108,7 +108,8 @@ namespace Pundit.Core.Application.Console.Commands
 
 
          console.Write("reading manifest...\t\t");
-         DevPackage devPackage = DevPackage.FromXmlStream(File.OpenRead(manifestPath));
+         DevPackage devPackage = DevPackage.FromStreamXml(File.OpenRead(manifestPath));
+         devPackage.Validate();
          console.Write(true);
 
          //resolve dependencies

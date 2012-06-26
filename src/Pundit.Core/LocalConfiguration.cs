@@ -107,7 +107,7 @@ namespace Pundit.Core
          {
             long repoId = localRepo.GetClosestRepositoryId(pck);
             Repo downRepoMeta = _mgr.GetRepositoryById(repoId);
-            IRemoteRepository downRepo = RemoteRepositoryFactory.Create(downRepoMeta.Uri);
+            IRemoteRepository downRepo = RemoteRepositoryFactory.Create(downRepoMeta.Uri, downRepoMeta.Login, downRepoMeta.ApiKey);
 
             using (Stream pckStream = downRepo.Download(pck.Platform, pck.PackageId, pck.VersionString))
             {

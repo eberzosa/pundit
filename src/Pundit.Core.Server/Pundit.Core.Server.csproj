@@ -61,6 +61,7 @@
     <Compile Include="Application\LiquidSql.cs" />
     <Compile Include="Application\MySqlConfigurationRepository.cs" />
     <Compile Include="Application\MySqlPackageRepository.cs" />
+    <Compile Include="Application\MySqlUserRepository.cs" />
     <Compile Include="Ex.Designer.cs">
       <AutoGen>True</AutoGen>
       <DesignTime>True</DesignTime>

@@ -22,6 +22,9 @@ namespace Pundit.Core.Application
       /// <param name="localRepository"></param>
       public DependencyResolution(Package rootManifest, ILocalRepository localRepository)
       {
+         if (rootManifest == null) throw new ArgumentNullException("rootManifest");
+         if (localRepository == null) throw new ArgumentNullException("localRepository");
+
          _repo = localRepository;
          _root = new DependencyNode(null, rootManifest.PackageId, rootManifest.Platform,
                                     new VersionPattern(rootManifest.Version.ToString()));

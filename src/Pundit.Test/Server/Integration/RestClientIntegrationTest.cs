@@ -17,7 +17,7 @@ namespace Pundit.Test.Server.Integration
       [SetUp]
       public void SetUp()
       {
-         _client = RemoteRepositoryFactory.Create("http://localhost:81/repository/v1");
+         _client = RemoteRepositoryFactory.Create("http://localhost:81/repository/v1", null, null);
       }
 
       [Test]

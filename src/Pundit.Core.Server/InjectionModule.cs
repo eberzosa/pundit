@@ -11,17 +11,12 @@ namespace Pundit.Core.Server
 {
    public class InjectionModule : NinjectModule
    {
-      #region Overrides of NinjectModule
-
       public override void Load()
       {
          Bind<IConfigurationRepository>().To<MySqlConfigurationRepository>().InThreadScope();
-
          Bind<IPackageRepository>().To<MySqlPackageRepository>().InThreadScope();
-
+         Bind<IUserRepository>().To<MySqlUserRepository>().InThreadScope();
          Bind<IRemoteRepository>().To<RemoteRepository>().InSingletonScope();
       }
-
-      #endregion
    }
 }

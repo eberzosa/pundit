@@ -1,8 +1,8 @@
--- MySQL dump 10.13  Distrib 5.5.20, for Win64 (x86)
+-- MySQL dump 10.13  Distrib 5.5.25, for Win64 (x86)
 --
 -- Host: localhost    Database: pundit
 -- ------------------------------------------------------
--- Server version	5.5.20
+-- Server version	5.5.25
 
 /*!40101 SET @OLD_CHARACTER_SET_CLIENT=@@CHARACTER_SET_CLIENT */;
 /*!40101 SET @OLD_CHARACTER_SET_RESULTS=@@CHARACTER_SET_RESULTS */;
@@ -49,7 +49,7 @@ CREATE TABLE `packagedependency` (
   PRIMARY KEY (`PackageDependencyId`),
   KEY `FK_PackageDepenency_PackageManifest` (`PackageManifestId`),
   CONSTRAINT `FK_PackageDepenency_PackageManifest` FOREIGN KEY (`PackageManifestId`) REFERENCES `packagemanifest` (`PackageManifestId`) ON DELETE CASCADE
-) ENGINE=InnoDB AUTO_INCREMENT=8 DEFAULT CHARSET=latin1;
+) ENGINE=InnoDB AUTO_INCREMENT=11 DEFAULT CHARSET=latin1;
 /*!40101 SET character_set_client = @saved_cs_client */;
 
 --
@@ -70,8 +70,8 @@ CREATE TABLE `packagelog` (
   PRIMARY KEY (`PackageLogId`) USING BTREE,
   KEY `FK_manifesthistory_packagemanifest` (`PackageManifestId`) USING BTREE,
   KEY `PackageLog_Key` (`PackageId`,`Platform`,`Version`),
-  CONSTRAINT `FK_manifesthistory_packagemanifest` FOREIGN KEY (`PackageManifestid`) REFERENCES `packagemanifest` (`PackageManifestId`)
-) ENGINE=InnoDB AUTO_INCREMENT=11156 DEFAULT CHARSET=latin1;
+  CONSTRAINT `FK_manifesthistory_packagemanifest` FOREIGN KEY (`PackageManifestId`) REFERENCES `packagemanifest` (`PackageManifestId`)
+) ENGINE=InnoDB AUTO_INCREMENT=11173 DEFAULT CHARSET=latin1;
 /*!40101 SET character_set_client = @saved_cs_client */;
 
 --
@@ -100,7 +100,24 @@ CREATE TABLE `packagemanifest` (
   KEY `PackageManifest_Key` (`PackageId`,`Version`,`Platform`),
   KEY `PackageManifest_IsActive` (`IsActive`),
   KEY `PackageManifest_Revisions` (`PackageId`,`Platform`,`VersionShort`) USING BTREE
-) ENGINE=InnoDB AUTO_INCREMENT=11194 DEFAULT CHARSET=latin1;
+) ENGINE=InnoDB AUTO_INCREMENT=11211 DEFAULT CHARSET=latin1;
+/*!40101 SET character_set_client = @saved_cs_client */;
+
+--
+-- Table structure for table `user`
+--
+
+DROP TABLE IF EXISTS `user`;
+/*!40101 SET @saved_cs_client     = @@character_set_client */;
+/*!40101 SET character_set_client = utf8 */;
+CREATE TABLE `user` (
+  `UserId` int(10) unsigned NOT NULL AUTO_INCREMENT,
+  `Login` varchar(45) NOT NULL,
+  `Role` varchar(45) NOT NULL,
+  `PasswordHash` varchar(45) NOT NULL,
+  `ApiKey` varchar(255) NOT NULL,
+  PRIMARY KEY (`UserId`)
+) ENGINE=InnoDB AUTO_INCREMENT=2 DEFAULT CHARSET=latin1;
 /*!40101 SET character_set_client = @saved_cs_client */;
 /*!40103 SET TIME_ZONE=@OLD_TIME_ZONE */;
 
@@ -112,4 +129,4 @@ CREATE TABLE `packagemanifest` (
 /*!40101 SET COLLATION_CONNECTION=@OLD_COLLATION_CONNECTION */;
 /*!40111 SET SQL_NOTES=@OLD_SQL_NOTES */;
 
--- Dump completed on 2012-06-19 20:01:41
+-- Dump completed on 2012-06-26  2:59:15

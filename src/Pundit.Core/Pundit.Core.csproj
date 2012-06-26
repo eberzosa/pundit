@@ -72,6 +72,7 @@
     <Compile Include="Application\Console\Strings.Designer.cs" />
     <Compile Include="Application\DependencyResolution.cs" />
     <Compile Include="Application\DiskInstallTarget.cs" />
+    <Compile Include="Application\Encryption.cs" />
     <Compile Include="Application\Extensions\NumericExtensions.cs" />
     <Compile Include="Application\Extensions\ObjectExtensions.cs" />
     <Compile Include="Application\Extensions\StreamExtensions.cs" />
@@ -101,6 +102,7 @@
     </Compile>
     <Compile Include="Exceptions\RepositoryOfflineException.cs" />
     <Compile Include="LocalConfiguration.cs" />
+    <Compile Include="Model\ApiKey.cs" />
     <Compile Include="Model\EventArguments\PackageDownloadEventArgs.cs" />
     <Compile Include="Model\IInstallTarget.cs" />
     <Compile Include="Model\ILocalRepository.cs" />
@@ -136,6 +138,7 @@
     <Compile Include="Utils\FileSizeFormatProvider.cs" />
     <Compile Include="Utils\PackageUtils.cs" />
     <Compile Include="Utils\PathUtils.cs" />
+    <Compile Include="Utils\RequestSigning.cs" />
     <Compile Include="Utils\SqlHelper.cs" />
   </ItemGroup>
   <ItemGroup>
