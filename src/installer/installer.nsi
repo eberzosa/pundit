@@ -1,4 +1,7 @@
-;Pundit console tools installer for Windows
+;Pundit Installer for Windows
+;Installs:
+; - console tools (updates invironment vars as well)
+; - Visual Studio 2010 extension
 
 !include "configure.nsh"
 !include "EnvVarUpdate.nsh"

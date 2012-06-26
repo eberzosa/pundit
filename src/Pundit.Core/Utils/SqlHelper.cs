@@ -119,6 +119,14 @@ namespace Pundit.Core.Utils
 
       public IDataReader ExecuteReaderPage(string tableName, long offset, long count, string[] columns, string[] where, params object[] parameters)
       {
+         return ExecuteSortedReaderPage(tableName, offset, count, null, true, columns, where, parameters);
+      }
+
+      public IDataReader ExecuteSortedReaderPage(string tableName,
+         long offset, long count, string sortColumn, bool sortAscending,
+         string[] columns,
+         string[] where, params object[] parameters)
+      {
          if (tableName == null) throw new ArgumentNullException("tableName");
 
          var s = new StringBuilder();
@@ -148,6 +156,13 @@ namespace Pundit.Core.Utils
                if (i != 0) s.Append(" AND ");
                s.Append(where[i]);
             }
+         }
+
+         if(sortColumn != null)
+         {
+            s.Append(" ORDER BY ");
+            s.Append(sortColumn);
+            s.Append(sortAscending ? " ASC" : " DESC");
          }
 
          if(offset > -1 && count > -1)

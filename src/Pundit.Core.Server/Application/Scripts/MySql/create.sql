@@ -98,8 +98,8 @@ CREATE TABLE `packagemanifest` (
   `DownloadCount` int(10) unsigned NOT NULL DEFAULT '0',
   PRIMARY KEY (`PackageManifestId`),
   KEY `PackageManifest_Key` (`PackageId`,`Version`,`Platform`),
-  KEY `PackageManifest_IsActive` (`IsActive`),
-  KEY `PackageManifest_Revisions` (`PackageId`,`Platform`,`VersionShort`) USING BTREE
+  KEY `PackageManifest_Revisions` (`PackageId`,`Platform`,`VersionShort`) USING BTREE,
+  KEY `PackageManifest_IsActive` (`IsActive`,`CreatedDate`) USING BTREE
 ) ENGINE=InnoDB AUTO_INCREMENT=11211 DEFAULT CHARSET=latin1;
 /*!40101 SET character_set_client = @saved_cs_client */;
 
@@ -129,4 +129,4 @@ CREATE TABLE `user` (
 /*!40101 SET COLLATION_CONNECTION=@OLD_COLLATION_CONNECTION */;
 /*!40111 SET SQL_NOTES=@OLD_SQL_NOTES */;
 
--- Dump completed on 2012-06-26  2:59:15
+-- Dump completed on 2012-06-26 20:59:27

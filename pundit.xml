@@ -94,11 +94,12 @@ NO WARRANTY
 
 12. IN NO EVENT UNLESS REQUIRED BY APPLICABLE LAW OR AGREED TO IN WRITING WILL ANY COPYRIGHT HOLDER, OR ANY OTHER PARTY WHO MAY MODIFY AND/OR REDISTRIBUTE THE PROGRAM AS PERMITTED ABOVE, BE LIABLE TO YOU FOR DAMAGES, INCLUDING ANY GENERAL, SPECIAL, INCIDENTAL OR CONSEQUENTIAL DAMAGES ARISING OUT OF THE USE OR INABILITY TO USE THE PROGRAM (INCLUDING BUT NOT LIMITED TO LOSS OF DATA OR DATA BEING RENDERED INACCURATE OR LOSSES SUSTAINED BY YOU OR THIRD PARTIES OR A FAILURE OF THE PROGRAM TO OPERATE WITH ANY OTHER PROGRAMS), EVEN IF SUCH HOLDER OR OTHER PARTY HAS BEEN ADVISED OF THE POSSIBILITY OF SUCH DAMAGES.</license>
   <dependencies>
-    <package id="NUnit.Framework" version="2.5" platform="net20" devtime="true" scope="build" />
+    <!--<package id="NUnit.Framework" version="2.5" platform="net20" devtime="true" scope="build" />
     <package id="ILMerge" version="2.10" platform="net20" devtime="true" scope="build" />
     <package id="sharpziplib" version="0.86" platform="net20" />
     <package id="SQLite" version="1.0" platform="net40.x32" />
-    <package id="log4net" version="1.2" platform="net20" />
+    <package id="log4net" version="1.2" platform="net20" />-->
+    <package id="NSIS" version="2.46" platform="win32"/>
   </dependencies>
   <files>
     <file kind="bin" include="Pundit*.xml" flatten="false" basedir="src/Pundit.Core/bin/Debug" includeemptydirs="true" configuration="any" />

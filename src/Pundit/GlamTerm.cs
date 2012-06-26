@@ -151,7 +151,7 @@ namespace Pundit.Console
          if (word.Length > 4) word = word.Substring(0, 4);
          if (word.Length < 4) word = word.PadLeft(4);
 
-         MoveCursor(WindowWidth - 8, ConsoleS.CursorTop);
+         MoveCursor(WindowWidth - 8, CursorPosition.Y);
 
          Write(ConsoleColor.White, "[");
          Write(wordColor, word);

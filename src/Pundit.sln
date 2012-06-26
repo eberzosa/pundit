@@ -29,6 +29,12 @@ Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Pundit.Test.Server", "test\
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Pundit.Test.Core", "test\Pundit.Test.Core\Pundit.Test.Core.csproj", "{5BF2B578-7F5A-4604-B49A-DBDB53B7AA13}"
 EndProject
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "build", "build", "{A5BD694A-19AC-48A1-BAFC-86DEBAC74E5D}"
+	ProjectSection(SolutionItems) = preProject
+		..\build.proj = ..\build.proj
+		..\configure.proj = ..\configure.proj
+	EndProjectSection
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -124,6 +130,7 @@ Global
 		HideSolutionNode = FALSE
 	EndGlobalSection
 	GlobalSection(NestedProjects) = preSolution
+		{A5BD694A-19AC-48A1-BAFC-86DEBAC74E5D} = {3B681723-FAC7-435A-A3CD-954EC94E2A6D}
 		{BC546317-0061-4A87-8615-687FF5556D7D} = {989DA4BB-F48A-479E-A2A2-79DA0F53029C}
 		{5BF2B578-7F5A-4604-B49A-DBDB53B7AA13} = {989DA4BB-F48A-479E-A2A2-79DA0F53029C}
 	EndGlobalSection

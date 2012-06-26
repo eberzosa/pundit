@@ -21,11 +21,15 @@ namespace Pundit.Web.Controllers
 
       public ActionResult Index()
       {
-         long totalCount;
-         IEnumerable<DbPackage> list = _packages.GetPackages(0, 25, true, out totalCount);
+         PackagesResult result =
+            _packages.GetPackages(new PackagesQuery(0, 100)
+                                     {
+                                        SortOrder = PackageSortOrder.CreatedDate,
+                                        SortAscending = false
+                                     });
 
-         ViewBag.Count = totalCount;
-         return View(list);
+         ViewBag.Count = result.TotalCount;
+         return View(result.Packages ?? new DbPackage[0]);
       }
 
       [HttpGet]

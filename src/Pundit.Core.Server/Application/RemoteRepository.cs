@@ -126,9 +126,8 @@ namespace Pundit.Core.Server.Application
 
       private RemoteSnapshot GetNonDeltaSnapshot()
       {
-         long totalCount;
-         IEnumerable<DbPackage> packages = _pr.GetPackages(-1, -1, true, out totalCount);
-         return BuildSnapshot(packages, false);
+         PackagesResult result = _pr.GetPackages(new PackagesQuery(-1, -1));
+         return BuildSnapshot(result.Packages, false);
       }
 
       private RemoteSnapshot GetDeltaSnapshot(long firstRecordId)

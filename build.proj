@@ -1,0 +1,22 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<Project ToolsVersion="4.0" DefaultTargets="Build" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+
+   <Import Project="configure.proj"/>
+
+   <Target Name="UpdateVersions">
+      <Exec Command="pundit utils -u:asminfo -av:$(VMajor).$(VMinor).0.0 -fv:$(VMajor).$(VMinor).$(VBuild).$(VRevision)"/>
+   </Target>
+
+   <Target Name="BuildSolution" DependsOnTargets="UpdateVersions">
+      <MSBuild Projects="src/Pundit.sln" Properties="Configuration=Release"/>
+   </Target>
+
+   <Target Name="BuildInstaller" DependsOnTargets="BuildSolution">
+      
+   </Target>
+   
+   <Target Name="Build" DependsOnTargets="BuildInstaller">
+      
+   </Target>
+   
+</Project>

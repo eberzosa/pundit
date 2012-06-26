@@ -6,6 +6,37 @@ using Pundit.Core.Model;
 
 namespace Pundit.Core.Server.Model
 {
+   public enum PackageSortOrder
+   {
+      None,
+      CreatedDate
+   }
+
+   public class PackagesQuery
+   {
+      public long Offset { get; set; }
+      public long Count { get; set; }
+      public bool Active { get; set; }
+      public PackageSortOrder SortOrder { get; set; }
+      public bool SortAscending { get; set; }
+
+      public PackagesQuery(long offset, long count)
+      {
+         Offset = offset;
+         Count = count;
+         Active = true;
+         SortOrder = PackageSortOrder.None;
+         SortAscending = true;
+      }
+   }
+
+   public class PackagesResult
+   {
+      public IEnumerable<DbPackage> Packages { get; set; }
+      public long Count { get; set; }
+      public long TotalCount { get; set; }
+   }
+
    public interface IPackageRepository : IDisposable
    {
       /// <summary>
@@ -27,7 +58,7 @@ namespace Pundit.Core.Server.Model
 
       bool Exists(PackageKey key);
 
-      IEnumerable<DbPackage> GetPackages(long offset, long count, bool active, out long totalCount);
+      PackagesResult GetPackages(PackagesQuery query);
 
       IEnumerable<DbPackage> GetAllRevisions(PackageKey key);
 

@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Data;
+using System.Linq;
 using Pundit.Core.Model;
 using Pundit.Core.Server.Model;
 
@@ -224,20 +225,34 @@ namespace Pundit.Core.Server.Application
          return id != 0;
       }
 
-      public IEnumerable<DbPackage> GetPackages(long offset, long count, bool active, out long totalCount)
+      private string GetSortColumn(PackageSortOrder order)
       {
-         totalCount = ExecuteScalar<long>(ManifestTableName, "count(*)",
-                                          new[] {"IsActive=?P0"}, active);
-
-         if(totalCount > 0)
+         switch (order)
          {
-            IDataReader reader = ExecuteReaderPage(
-               ManifestTableName, offset, count,
-               null, new[] {"IsActive=?P0"}, active);
-            return ReadFullPackages(reader);
+            case PackageSortOrder.CreatedDate:
+               return "CreatedDate";
+            default:
+               return null;
+         }
+      }
+
+      public PackagesResult GetPackages(PackagesQuery query)
+      {
+         var result = new PackagesResult();
+         result.TotalCount = ExecuteScalar<long>(ManifestTableName, "count(*)", new[] {"IsActive=?P0"}, query.Active);
+
+         if(result.TotalCount > 0)
+         {
+            IDataReader reader = ExecuteSortedReaderPage(
+               ManifestTableName, query.Offset, query.Count,
+               GetSortColumn(query.SortOrder), query.SortAscending,
+               null, new[] {"IsActive=?P0"}, query.Active);
+
+            result.Packages = ReadFullPackages(reader);
+            result.Count = result.Packages.Count();
          }
 
-         return new DbPackage[0];
+         return result;
       }
 
       public IEnumerable<DbPackage> GetAllRevisions(PackageKey key)
