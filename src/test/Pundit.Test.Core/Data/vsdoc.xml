@@ -1,0 +1,489 @@
+<?xml version="1.0"?>
+<doc>
+    <assembly>
+        <name>Pundit.Core</name>
+    </assembly>
+    <members>
+        <member name="M:Pundit.Core.Application.PackageStreamer.GetRelativeUnixPath(Pundit.Core.Model.SourceFiles,System.String,System.String)">
+            <summary>
+            
+            </summary>
+            <param name="sourceFiles"></param>
+            <param name="baseDir">full path to base dir</param>
+            <param name="path">full path to file</param>
+            <returns></returns>
+        </member>
+        <member name="T:Pundit.Core.Model.SourceFiles">
+            <summary>
+            Files that represent a part of the compiled package.
+            </summary>
+        </member>
+        <member name="P:Pundit.Core.Model.SourceFiles.FileKind">
+            <summary>
+            Well-known file type. Default is <see cref="F:Pundit.Core.Model.PackageFileKind.Binary"/>
+            </summary>
+        </member>
+        <member name="P:Pundit.Core.Model.SourceFiles.Include">
+            <summary>
+            File pattern, relative to the location of the package manifest file.
+            Can be relative or absolute. Can include file masks.
+            </summary>
+        </member>
+        <member name="P:Pundit.Core.Model.SourceFiles.Exclude">
+            <summary>
+            File pattern, relative to the location of the package manifest file.
+            Can be relative or absolute. Can include file masks.
+            </summary>
+        </member>
+        <member name="P:Pundit.Core.Model.SourceFiles.Flatten">
+            <summary>
+            Ignore directory structure of source files, copy all files into a single directory.
+            The default is <see langword="false"/>
+            </summary>
+        </member>
+        <member name="P:Pundit.Core.Model.SourceFiles.BaseDirectory">
+            <summary>
+            Base directory of the source files to be copied. The default is null which 
+            means destination folder will replicate directory structure from the
+            beginning of the project file.
+            </summary>
+        </member>
+        <member name="P:Pundit.Core.Model.SourceFiles.TargetDirectory">
+            <summary>
+            Target directory to copy the source files to. By default they will be copied to root.
+            Ignored for binary files.
+            </summary>
+        </member>
+        <member name="P:Pundit.Core.Model.SourceFiles.IncludeEmptyDirs">
+            <summary>
+            Copy empty directories. The default is <see langword="true"/>
+            </summary>
+        </member>
+        <member name="P:Pundit.Core.Model.SourceFiles.Configuration">
+            <summary>
+            Configuration name (debug or release). Release is default.
+            </summary>
+        </member>
+        <member name="M:Pundit.Core.Application.PackageWriter.#ctor(System.String,Pundit.Core.Model.DevPackage,System.IO.Stream)">
+            <summary>
+            
+            </summary>
+            <param name="rootDirectory">Root directory of a project (base path for all the file patterns)</param>
+            <param name="packageInfo"></param>
+            <param name="outputStream"></param>
+        </member>
+        <member name="M:Pundit.Core.Application.PackageWriter.WriteFile(Pundit.Core.Model.SourceFiles,System.String,System.String)">
+            <summary>
+            
+            </summary>
+            <param name="info"></param>
+            <param name="baseDir">file base dir (full path)</param>
+            <param name="filePath">file to archive (full path)</param>
+        </member>
+        <member name="M:Pundit.Core.Application.PackageReader.InstallTo(System.String,Pundit.Core.Model.BuildConfiguration)">
+            <summary>
+            Installs the package to a specific location. If destination files exist
+            they will be silently overwritten.
+            </summary>
+            <param name="rootFolder">Solution's root folder</param>
+            <param name="configuration">Desired configuration name</param>
+        </member>
+        <member name="T:Pundit.Core.Model.PackageKey">
+            <summary>
+            Unique identifier for a package
+            </summary>
+        </member>
+        <member name="T:Pundit.Core.Model.IRepository">
+            <summary>
+            Repository contract
+            </summary>
+        </member>
+        <member name="M:Pundit.Core.Model.IRepository.Publish(System.IO.Stream)">
+            <summary>
+            Publishes package in the repository. Only package stream should be passes as
+            the rest of the info is alredy in the package's manifest.
+            All the builds are removed and only this one is kept.
+            </summary>
+            <param name="packageStream">Package stream</param>
+        </member>
+        <member name="M:Pundit.Core.Model.IRepository.Download(Pundit.Core.Model.PackageKey)">
+            <summary>
+            Downloads package
+            </summary>
+            <param name="key">Package unique identifier</param>
+            <returns>Package stream</returns>
+        </member>
+        <member name="M:Pundit.Core.Model.VersionResolutionTable.Intersect(Pundit.Core.Model.UnresolvedPackage,System.Collections.Generic.IEnumerable{System.Version})">
+            <summary>
+            
+            </summary>
+            <param name="package"></param>
+            <param name="versions"></param>
+            <returns>Indicates if this intersection caused a conflict</returns>
+        </member>
+        <member name="T:Pundit.Core.Model.DevPackage">
+            <summary>
+            Package definition existing only at the time of development
+            </summary>
+        </member>
+        <member name="M:Pundit.Core.Model.Package.#ctor">
+            <summary>
+            Creates an instance of empty package (the state is invalid)
+            </summary>
+        </member>
+        <member name="M:Pundit.Core.Model.Package.#ctor(Pundit.Core.Model.Package,System.Boolean)">
+            <summary>
+            Crates an instance of a package copying it from the source package
+            </summary>
+            <param name="copy">The package to copy from. Must be valid,
+            otherwise <see cref="T:Pundit.Core.Model.InvalidPackageException"/> is thrown</param>
+            <param name="includeDevTime"></param>
+        </member>
+        <member name="M:Pundit.Core.Model.Package.Validate">
+            <summary>
+            Validates the package. In case of invalid package throws <see cref="T:Pundit.Core.Model.InvalidPackageException"/>
+            </summary>
+        </member>
+        <member name="P:Pundit.Core.Model.DependencyNode.ActiveVersions">
+            <summary>
+            Versions from lowest to latest active (<see cref="P:Pundit.Core.Model.DependencyNode.ActiveVersion"/>)
+            </summary>
+        </member>
+        <member name="P:Pundit.Core.Model.PackageDependency.Platform">
+            <summary>
+            Dependency platform. If ommitted "noarch" assumed. If noarch is not found, no automatic
+            guess is performed
+            </summary>
+        </member>
+        <member name="P:Pundit.Core.Model.PackageDependency.DevTimeOnly">
+            <summary>
+            Set to true if the dependency must exist at dev time only.
+            Use it if and only if your package doesn't require the dependent package in the runtime.
+            This dependency won't be included in the compiled package manifest.
+            
+            Real World Examples:
+            
+            1) You reference the boost.org library, however your project output is a pure so/dll.
+            In this case your package's consumers won't need the boost libraries as they are linked in
+            statically.
+            
+            2) You reference a "resource dll" (images, strings etc) which is embedded as a resource
+            in your package output, i.e. files are not read from the disk, but from a so/dll instead.
+            
+            3) You write a .NET library, however you decide to merge-in the dependencies inside you
+            library (using ILMerge or custom AppDomain loader)
+            
+            ... (think carefully)
+            
+            </summary>
+        </member>
+        <member name="M:Pundit.Core.Application.DependencyResolution.Resolve">
+            <summary>
+            Resolution algorithm in V1 is fairly simple. Every dependency has a
+            version pattern and platform name. Steps:
+            
+            1) Starting from root, resolve version patterns to version array for every node
+            in the tree recursively (the whole structure is not known yet)
+            
+            2) Starting from root, resolve latest version's manifest to get dependencies of
+            dependencies.
+            
+            3) Repeat steps 1-2 until all the version patterns and manifests are resolved.
+            
+            4) Flatten the tree to array of (PackageId, Platform, Version[])
+            
+            5) Using (PackageId, Platform) as a key, merge array to a dictionary where
+            value is Version[] and is an intersection of all Version[] for the key from
+            array created in step 4.
+            
+            Data structure received in step 5 is the result of dependency resolution.
+            Empty Version[] indicates a conflict for that package which can be displayed
+            to a user using information from DependencyNode tree.
+            
+            </summary>
+            <returns></returns>
+        </member>
+        <member name="M:Pundit.Core.Application.DependencyResolution.Flatten(Pundit.Core.Model.DependencyNode)">
+            <summary>
+            Creates <see cref="T:Pundit.Core.Model.VersionResolutionTable"/> from <see cref="T:Pundit.Core.Model.DependencyNode"/>
+            tree
+            </summary>
+            <param name="rootNode"></param>
+            <returns></returns>
+        </member>
+        <member name="M:Pundit.Core.Application.PackageInstaller.InstallAll(Pundit.Core.Model.BuildConfiguration,System.Boolean)">
+            <summary>
+             Installs the package
+            </summary>
+            <param name="configuration"></param>
+            <param name="forceReset"></param>
+        </member>
+        <member name="P:Pundit.Core.Model.RegisteredRepository.UseForPublishing">
+            <summary>
+            If true, repository will be used for publishing.
+            Configuration may have more than one repository with this flag set to true,
+            in which case publishing will be performed to every of them.
+            </summary>
+        </member>
+        <member name="P:Pundit.Core.Model.RegisteredRepositories.Names">
+            <summary>
+            All names
+            </summary>
+        </member>
+        <member name="T:Pundit.Core.Model.BuildConfiguration">
+            <summary>
+            Build configuration (debug or release)
+            </summary>
+        </member>
+        <member name="F:Pundit.Core.Model.BuildConfiguration.Release">
+            <summary>
+            Release build files. This is a defalt configuration.
+            </summary>
+        </member>
+        <member name="F:Pundit.Core.Model.BuildConfiguration.Debug">
+            <summary>
+            Debug build files (optional)
+            </summary>
+        </member>
+        <member name="F:Pundit.Core.Model.PackageFileKind.Binary">
+            <summary>
+            Placed in project-root/lib
+            </summary>
+        </member>
+        <member name="F:Pundit.Core.Model.PackageFileKind.Include">
+            <summary>
+            Placed in project-root/include/package-id
+            </summary>
+        </member>
+        <member name="F:Pundit.Core.Model.PackageFileKind.Tools">
+            <summary>
+            Placed in project-root/tools/package-id
+            </summary>
+        </member>
+        <member name="F:Pundit.Core.Model.PackageFileKind.Other">
+            <summary>
+            placed in project-root/other/package-id
+            </summary>
+        </member>
+        <member name="T:NAnt.Core.DirectoryScanner">
+             <summary>
+             Used for searching filesystem based on given include/exclude rules.
+             </summary>
+             <example>
+                 <para>Simple client code for testing the class.</para>
+                 <code>
+                     while (true) {
+                         DirectoryScanner scanner = new DirectoryScanner();
+            
+                         Console.Write("Scan Basedirectory : ");
+                         string s = Console.ReadLine();
+                         if (s.Length == 0) break;
+                         scanner.BaseDirectory = s;
+            
+                         while(true) {
+                             Console.Write("Include pattern : ");
+                             s = Console.ReadLine();
+                             if (s.Length == 0) break;
+                             scanner.Includes.Add(s);
+                         }
+            
+                         while(true) {
+                             Console.Write("Exclude pattern : ");
+                             s = Console.ReadLine();
+                             if (s.Length == 0) break;
+                             scanner.Excludes.Add(s);
+                         }
+            
+                         foreach (string name in scanner.FileNames)
+                             Console.WriteLine("file:" + name);
+                         foreach (string name in scanner.DirectoryNames)
+                             Console.WriteLine("dir :" + name);
+            
+                         Console.WriteLine("");
+                     }
+                 </code>
+             </example>
+        </member>
+        <member name="M:NAnt.Core.DirectoryScanner.#ctor">
+            <summary>
+            Initializes a new instance of the <see cref="T:NAnt.Core.DirectoryScanner"/>.
+            </summary>
+            <remarks>
+            On unix, patterns are matching case-sensitively; otherwise, they
+            are matched case-insensitively.
+            </remarks>
+        </member>
+        <member name="M:NAnt.Core.DirectoryScanner.#ctor(System.Boolean)">
+            <summary>
+            Initializes a new instance of the <see cref="T:NAnt.Core.DirectoryScanner"/>
+            specifying whether patterns are to be match case-sensitively.
+            </summary>
+            <param name="caseSensitive">Specifies whether patterns are to be matched case-sensititely.</param>
+        </member>
+        <member name="M:NAnt.Core.DirectoryScanner.Clone">
+            <summary>
+            Creates a shallow copy of the <see cref="T:NAnt.Core.DirectoryScanner"/>.
+            </summary>
+            <returns>
+            A shallow copy of the <see cref="T:NAnt.Core.DirectoryScanner"/>.
+            </returns>
+        </member>
+        <member name="M:NAnt.Core.DirectoryScanner.Scan">
+            <summary>
+            Uses <see cref="P:NAnt.Core.DirectoryScanner.Includes"/> and <see cref="P:NAnt.Core.DirectoryScanner.Excludes"/> search criteria (relative to 
+            <see cref="P:NAnt.Core.DirectoryScanner.BaseDirectory"/> or absolute), to search for filesystem objects.
+            </summary>
+        </member>
+        <member name="M:NAnt.Core.DirectoryScanner.ConvertPatterns(System.Collections.Specialized.StringCollection,System.Collections.ArrayList,System.Collections.Specialized.StringCollection,System.Boolean)">
+            <summary>
+            Parses specified NAnt search patterns for search directories and 
+            corresponding regex patterns.
+            </summary>
+            <param name="nantPatterns">In. NAnt patterns. Absolute or relative paths.</param>
+            <param name="regexPatterns">Out. Regex patterns. Absolute canonical paths.</param>
+            <param name="nonRegexFiles">Out. Non-regex files. Absolute canonical paths.</param>
+            <param name="addSearchDirectories">In. Whether to allow a pattern to add search directories.</param>
+        </member>
+        <member name="M:NAnt.Core.DirectoryScanner.ParseSearchDirectoryAndPattern(System.Boolean,System.String,System.String@,System.Boolean@,System.Boolean@,System.String@)">
+            <summary>
+            Given a NAnt search pattern returns a search directory and an regex 
+            search pattern.
+            </summary>
+            <param name="isInclude">Whether this pattern is an include or exclude pattern</param>
+            <param name="originalNAntPattern">NAnt searh pattern (relative to the Basedirectory OR absolute, relative paths refering to parent directories ( ../ ) also supported)</param>
+            <param name="searchDirectory">Out. Absolute canonical path to the directory to be searched</param>
+            <param name="recursive">Out. Whether the pattern is potentially recursive or not</param>
+            <param name="isRegex">Out. Whether this is a regex pattern or not</param>
+            <param name="regexPattern">Out. Regex search pattern (absolute canonical path)</param>
+        </member>
+        <member name="M:NAnt.Core.DirectoryScanner.ScanDirectory(System.String,System.Boolean)">
+            <summary>
+            Searches a directory recursively for files and directories matching 
+            the search criteria.
+            </summary>
+            <param name="path">Directory in which to search (absolute canonical path)</param>
+            <param name="recursive">Whether to scan recursively or not</param>
+        </member>
+        <member name="M:NAnt.Core.DirectoryScanner.ToRegexPattern(System.String)">
+            <summary>
+            Converts search pattern to a regular expression pattern.
+            </summary>
+            <param name="nantPattern">Search pattern relative to the search directory.</param>
+            <returns>Regular expresssion</returns>
+        </member>
+        <member name="P:NAnt.Core.DirectoryScanner.CaseSensitive">
+            <summary>
+            Gets or set a value indicating whether or not to use case-sensitive
+            pattern matching.
+            </summary>
+        </member>
+        <member name="P:NAnt.Core.DirectoryScanner.Includes">
+            <summary>
+            Gets the collection of include patterns.
+            </summary>
+        </member>
+        <member name="P:NAnt.Core.DirectoryScanner.Excludes">
+            <summary>
+            Gets the collection of exclude patterns.
+            </summary>
+        </member>
+        <member name="P:NAnt.Core.DirectoryScanner.BaseDirectory">
+            <summary>
+            The base directory to scan. The default is the 
+            <see cref="P:System.Environment.CurrentDirectory">current directory</see>.
+            </summary>
+        </member>
+        <member name="P:NAnt.Core.DirectoryScanner.FileNames">
+            <summary>
+            Gets the list of files that match the given patterns.
+            </summary>
+        </member>
+        <member name="P:NAnt.Core.DirectoryScanner.DirectoryNames">
+            <summary>
+            Gets the list of directories that match the given patterns.
+            </summary>
+        </member>
+        <member name="P:NAnt.Core.DirectoryScanner.ScannedDirectories">
+            <summary>
+            Gets the list of directories that were scanned for files.
+            </summary>
+        </member>
+        <member name="M:NAnt.Core.StringCollectionWithGoodToString.Clone">
+            <summary>
+            Creates a shallow copy of the <see cref="T:NAnt.Core.StringCollectionWithGoodToString"/>.
+            </summary>
+            <returns>
+            A shallow copy of the <see cref="T:NAnt.Core.StringCollectionWithGoodToString"/>.
+            </returns>
+        </member>
+        <member name="M:NAnt.Core.StringCollectionWithGoodToString.ToString">
+            <summary>
+            Creates a string representing a list of the strings in the collection.
+            </summary>
+            <returns>
+            A string that represents the contents.
+            </returns>
+        </member>
+        <member name="M:NAnt.Core.DirScannerStringCollection.#ctor(System.Boolean)">
+            <summary>
+            Initialize a new instance of the <see cref="T:NAnt.Core.DirScannerStringCollection"/>
+            class specifying whether or not string comparison should be
+            case-sensitive.
+            </summary>
+            <param name="caseSensitive">Specifies whether or not string comparison should be case-sensitive.</param>
+        </member>
+        <member name="M:NAnt.Core.DirScannerStringCollection.Clone">
+            <summary>
+            Creates a shallow copy of the <see cref="T:NAnt.Core.DirScannerStringCollection"/>.
+            </summary>
+            <returns>
+            A shallow copy of the <see cref="T:NAnt.Core.DirScannerStringCollection"/>.
+            </returns>
+        </member>
+        <member name="M:NAnt.Core.DirScannerStringCollection.Contains(System.String)">
+            <summary>
+            Determines whether the specified string is in the 
+            <see cref="T:NAnt.Core.DirScannerStringCollection"/>.
+            </summary>
+            <param name="value">The string to locate in the <see cref="T:NAnt.Core.DirScannerStringCollection"/>. The value can be <see langword="null"/>.</param>
+            <returns>
+            <seee langword="true"/> if value is found in the <see cref="T:NAnt.Core.DirScannerStringCollection"/>; otherwise, <see langword="false"/>.
+            </returns>
+            <remarks>
+            String comparisons within the <see cref="T:NAnt.Core.DirScannerStringCollection"/>
+            are only case-sensitive if <see cref="P:NAnt.Core.DirScannerStringCollection.CaseSensitive"/> is
+            <see langword="true"/>
+            </remarks>
+        </member>
+        <member name="M:NAnt.Core.DirScannerStringCollection.IndexOf(System.String)">
+            <summary>
+            Searches for the specified string and returns the zero-based index 
+            of the first occurrence within the <see cref="T:NAnt.Core.DirScannerStringCollection"/>.
+            </summary>
+            <param name="value">The string to locate. The value can be <see langword="null"/>.</param>
+            <returns>
+            The zero-based index of the first occurrence of <paramref name="value"/> 
+            in the <see cref="T:NAnt.Core.DirScannerStringCollection"/>, if found; otherwise, -1.
+            </returns>
+            <remarks>
+            String comparisons within the <see cref="T:NAnt.Core.DirScannerStringCollection"/>
+            are only case-sensitive if <see cref="P:NAnt.Core.DirScannerStringCollection.CaseSensitive"/> is
+            <see langword="true"/>.
+            </remarks>
+        </member>
+        <member name="P:NAnt.Core.DirScannerStringCollection.CaseSensitive">
+            <summary>
+            Gets a value indicating whether string comparison is case-sensitive.
+            </summary>
+            <value>
+            A value indicating whether string comparison is case-sensitive.
+            </value>
+        </member>
+        <member name="M:Pundit.Core.Utils.PathUtils.EnsureDirectoryExists(System.String)">
+            <summary>
+            Ensures that the directory exists. Otherwise creates the directory (including all levels)
+            </summary>
+            <param name="fullPath"></param>
+        </member>
+    </members>
+</doc>
