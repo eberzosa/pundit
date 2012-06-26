@@ -47,6 +47,7 @@ VSIX:
  - Repo
  + Search
  + Utils
+- check for updates to VSIX in the background
 
 web site:
 - full support for api keys
