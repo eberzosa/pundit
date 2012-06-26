@@ -59,7 +59,8 @@ namespace Pundit.Core.Utils
       public static Version GetProductVersion(Assembly asm)
       {
          FileVersionInfo fvi = FileVersionInfo.GetVersionInfo(asm.Location);
-         string version = fvi.ProductVersion;
+		 //fvi.ProductVersion fails on Mac, use FileVersion instead
+         string version = fvi.FileVersion;
          return new Version(version);
       }
    }

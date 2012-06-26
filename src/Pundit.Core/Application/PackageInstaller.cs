@@ -99,7 +99,7 @@ namespace Pundit.Core.Application
             diff.AddRange(deleted);
 
             var other = from rr in rres
-                        let ip = _index.InstalledPackages.FirstOrDefault(ip => ip.LooseEquals(rr))
+                        let ip = _index.InstalledPackages.FirstOrDefault(ip1 => ip1.LooseEquals(rr))
                         let noChange = ip != null && rr.Equals(ip)
                         where ip != null
                         select new PackageKeyDiff(
