@@ -9,6 +9,7 @@
 - add nuget adapter as more and more opensource libs are now moving to nuget
 - improve conflict explanation
 - vsix: check for dependencies in background and notify the user in the toolbar
+- build: use svn revision as version revision
 
 1.1.0.0 (Bloody Duck)
 CORE:

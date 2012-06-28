@@ -9,8 +9,10 @@
 !define PRODUCT_UNINST_KEY "Software\Microsoft\Windows\CurrentVersion\Uninstall\${PRODUCT_DIR_NAME}"
 !define PRODUCT_UNINST_ROOT_KEY "HKLM"
 !define LICENSE_FILE "License.rtf"
+!define VSIX_INSTALLER_2010_64 "C:\Program Files (x86)\Microsoft Visual Studio 10.0\Common7\IDE\VSIXInstaller.exe"
+!define VSIX_INSTALLER_2010_32 "C:\Program Files\Microsoft Visual Studio 10.0\Common7\IDE\VSIXInstaller.exe"
 
-OutFile "..\..\pundit-setup-${PRODUCT_VERSION}.exe"
+OutFile "..\..\bin\pundit-setup-${PRODUCT_VERSION}.exe"
 
 ;zlib|bzip2|lzma (lowest -> highest)
 SetCompressor /SOLID lzma
@@ -23,8 +25,8 @@ Caption "${PRODUCT_NAME} ${PRODUCT_VERSION}"
 
 ; MUI Settings
 !define MUI_ABORTWARNING
-!define MUI_ICON "..\Pundit.WinForms.Core\app.ico"
-!define MUI_UNICON "..\Pundit.WinForms.Core\app.ico"
+;!define MUI_ICON "..\Pundit.WinForms.Core\app.ico"
+;!define MUI_UNICON "..\Pundit.WinForms.Core\app.ico"
 !define MUI_HEADERIMAGE
 !define MUI_HEADERIMAGE_RIGHT
 !define MUI_HEADERIMAGE_BITMAP "Banner.bmp"
@@ -68,7 +70,7 @@ Caption "${PRODUCT_NAME} ${PRODUCT_VERSION}"
 
 ;Name "${PRODUCT_NAME} ${PRODUCT_VERSION}"
 Name "${PRODUCT_SHORT_NAME}"
-InstallDir "C:\Program Files\${PRODUCT_PUBLISHER}\${PRODUCT_DIR_NAME}"
+InstallDir "C:\Program Files\${PRODUCT_DIR_NAME}"
 InstallDirRegKey HKLM "${PRODUCT_DIR_REGKEY}" ""
 ShowInstDetails show
 ShowUnInstDetails show
@@ -88,25 +90,44 @@ Section "!Core" SCCONSOLE
   SetOverwrite ifdiff
   SetShellVarContext all
 
-  SetOutPath "$INSTDIR"
+  SetOutPath "$INSTDIR\core"
 
   File "..\..\bin\core\*.exe"
   File "..\..\bin\core\*.dll"
   File ${LICENSE_FILE}
   
-  ${EnvVarUpdate} $0 "PATH" "A" "HKLM" "$INSTDIR" ; Append
+  ${EnvVarUpdate} $0 "PATH" "A" "HKLM" "$INSTDIR\core" ; Append
 
-  RMDir /r /REBOOTOK "$SMPROGRAMS\${PRODUCT_DIR_NAME}"
-  CreateDirectory "$SMPROGRAMS\${PRODUCT_DIR_NAME}"
+  ;RMDir /r /REBOOTOK "$SMPROGRAMS\${PRODUCT_DIR_NAME}"
+  ;CreateDirectory "$SMPROGRAMS\${PRODUCT_DIR_NAME}"
   ;createShortCut "$SMPROGRAMS\${PRODUCT_DIR_NAME}\Global Settings.lnk" "$INSTDIR\pundit-gui.exe" "--global" "$INSTDIR\pundit-gui.exe"
-  createShortCut "$SMPROGRAMS\${PRODUCT_DIR_NAME}\License Agreement.lnk" "$INSTDIR\License.rtf"
-  createShortCut "$SMPROGRAMS\${PRODUCT_DIR_NAME}\Documentation.lnk" "http://pundit.codeplex.com"
-  createShortCut "$SMPROGRAMS\${PRODUCT_DIR_NAME}\Uninstall.lnk" "$INSTDIR\uninstall.exe"
+  ;createShortCut "$SMPROGRAMS\${PRODUCT_DIR_NAME}\License Agreement.lnk" "$INSTDIR\License.rtf"
+  ;createShortCut "$SMPROGRAMS\${PRODUCT_DIR_NAME}\Documentation.lnk" "http://pundit.codeplex.com"
+  ;createShortCut "$SMPROGRAMS\${PRODUCT_DIR_NAME}\Uninstall.lnk" "$INSTDIR\uninstall.exe"
 
 SectionEnd
 
 Section "!VSIX" SCVSIX
   SectionIn 1
+
+  SetOutPath "$INSTDIR\vs2010"
+  File "..\..\bin\vsix\extension.vsixmanifest"
+  File "..\..\bin\vsix\*.dll"
+  File "..\..\bin\vsix\Pundit.pkgdef"
+
+  Var /GLOBAL installer_path
+  
+  IfFileExists "${VSIX_INSTALLER_2010_64}" 0 +4
+    StrCpy $installer_path "${VSIX_INSTALLER_2010_64}"
+  IfFileExists "${VSIX_INSTALLER_2010_32}" 0 +2
+    StrCpy $installer_path "${VSIX_INSTALLER_2010_32}"
+  DetailPrint "VS2010 installer: $installer_path"
+  
+  StrCmp "" "$installer_path" +4 0
+    ;ExecWait '"$installer_path" "$INSTDIR\Pundit.vsix"' $0
+    StrCpy $0 "0" ;stub
+    StrCmp "0" "$0" +2 0
+      Abort "failed to install Visual Studio 2010 extension, error code: $0"
 
 SectionEnd
 
@@ -128,7 +149,7 @@ SectionEnd
 Section Uninstall
   SetShellVarContext all
   
-  ${un.EnvVarUpdate} $0 "PATH" "R" "HKLM" "$INSTDIR" ; Append
+  ${un.EnvVarUpdate} $0 "PATH" "R" "HKLM" "$INSTDIR\core" ; Append
   
   ;delete all program files (don't set REBOOTOK flag!)
   ;MessageBox MB_ICONINFORMATION|MB_OK "removing: $INSTDIR"
