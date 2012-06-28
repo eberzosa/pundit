@@ -103,6 +103,7 @@ NO WARRANTY
     <package id="MySql.Data" version="6.4" platform="net40"/>
     <package id="Ninject.Web.Common" version="3.0" platform="net40"/>
     <package id="Ninject.Web.Mvc" version="3.0" platform="net40"/>
+		<package id="RestSharp" version="103.1.0.0" platform="net40"/>
     <!--<package id="NSIS" version="2.46" platform="win32"/>-->
   </dependencies>
   <files>
