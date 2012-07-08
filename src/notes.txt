@@ -10,3 +10,6 @@ http://msdn.microsoft.com/en-us/library/cc826118(VS.90).aspx
 
 VS settings:
 http://msdn.microsoft.com/en-us/library/ff460144.aspx
+
+installing raw VSIX:
+http://blogs.msdn.com/b/visualstudio/archive/2010/02/19/how-vsix-extensions-are-discovered-and-loaded-in-vs-2010.aspx
