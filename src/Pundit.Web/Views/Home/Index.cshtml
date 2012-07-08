@@ -11,3 +11,17 @@
    <a href="http://www.microsoft.com/visualstudio/en-us" target="_blank">Visual Studio 2010</a>
    extension is also available as a part of the default installer.
 </p>
+
+@if(ViewBag.LatestVersion != null)
+{
+<p>
+   The latest version is <strong>@ViewBag.LatestVersion</strong><br/>
+   @if (ViewBag.WindowsInstaller != null)
+   {
+      string linkName = string.Format("download Windows Installer ({0}, {1} downloads)",
+         ViewBag.WindowsInstaller.Length,
+         ViewBag.WindowsInstallerDownloads);
+      @Html.ActionLink(linkName, "DownloadWindowsInstaller")<br/>
+   }
+</p>
+}

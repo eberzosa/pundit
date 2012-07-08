@@ -5,7 +5,7 @@ namespace Pundit.Core.Server.Application
 {
    internal class MySqlConfigurationRepository : MySqlRepositoryBase, IConfigurationRepository
    {
-      private const string OptionTableName = "Option";
+      private const string OptionTableName = "`Option`";
 
       #region Implementation of IConfigurationRepository
 
@@ -36,7 +36,7 @@ namespace Pundit.Core.Server.Application
       public string Get(string key)
       {
          if (key == null) throw new ArgumentNullException("key");
-         return ExecuteScalar<string>(OptionTableName, "Value", new[] {"Name=?P0"}, key);
+         return ExecuteScalar<string>(OptionTableName, "`Value`", new[] {"Name=?P0"}, key);
       }
 
       #endregion
