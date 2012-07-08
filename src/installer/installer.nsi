@@ -5,6 +5,7 @@
 
 !include "configure.nsh"
 !include "EnvVarUpdate.nsh"
+!include "utils.nsh"
 
 !define PRODUCT_UNINST_KEY "Software\Microsoft\Windows\CurrentVersion\Uninstall\${PRODUCT_DIR_NAME}"
 !define PRODUCT_UNINST_ROOT_KEY "HKLM"
@@ -45,8 +46,10 @@ Caption "${PRODUCT_NAME} ${PRODUCT_VERSION}"
 ;!define MUI_LICENSEPAGE_TEXT_BOTTOM "If you accept the terms of the agreement, select the first option below. You must accept the agreement to install ${PRODUCT_SHORT_NAME}. Click Next to continue."
 !insertmacro MUI_PAGE_LICENSE ${LICENSE_FILE}
 
-; Directory page
-!insertmacro MUI_PAGE_DIRECTORY
+;Directory page
+;Don't give any choice, always install to the default location!
+;This will give less support headaches in the future.
+;!insertmacro MUI_PAGE_DIRECTORY
 
 ; Instfiles page
 !insertmacro MUI_PAGE_INSTFILES
@@ -95,8 +98,10 @@ Section "!Core" SCCONSOLE
   File "..\..\bin\core\*.exe"
   File "..\..\bin\core\*.dll"
   File ${LICENSE_FILE}
-  
+
+  DetailPrint "updating environment variables..."
   ${EnvVarUpdate} $0 "PATH" "A" "HKLM" "$INSTDIR\core" ; Append
+  DetailPrint "environment variables updated"
 
   ;RMDir /r /REBOOTOK "$SMPROGRAMS\${PRODUCT_DIR_NAME}"
   ;CreateDirectory "$SMPROGRAMS\${PRODUCT_DIR_NAME}"
@@ -110,30 +115,26 @@ SectionEnd
 Section "!VSIX" SCVSIX
   SectionIn 1
 
-  SetOutPath "$INSTDIR\vs2010"
-  File "..\..\bin\vsix\extension.vsixmanifest"
-  File "..\..\bin\vsix\*.dll"
-  File "..\..\bin\vsix\Pundit.pkgdef"
+  !insertmacro getVs2010ExFolder
+  StrCmp "" "$0" Install2010End Install2010
 
-  Var /GLOBAL installer_path
-  
-  IfFileExists "${VSIX_INSTALLER_2010_64}" 0 +4
-    StrCpy $installer_path "${VSIX_INSTALLER_2010_64}"
-  IfFileExists "${VSIX_INSTALLER_2010_32}" 0 +2
-    StrCpy $installer_path "${VSIX_INSTALLER_2010_32}"
-  DetailPrint "VS2010 installer: $installer_path"
-  
-  StrCmp "" "$installer_path" +4 0
-    ;ExecWait '"$installer_path" "$INSTDIR\Pundit.vsix"' $0
-    StrCpy $0 "0" ;stub
-    StrCmp "0" "$0" +2 0
-      Abort "failed to install Visual Studio 2010 extension, error code: $0"
+  Install2010:
+    StrCpy $0 "$0\Pundit"
+    ;MessageBox MB_OK $0
+    CreateDirectory $0
+    DetailPrint "installing VS2010 extension into $0..."
+    
+    SetOutPath "$0"
+    File "..\..\bin\vsix\extension.vsixmanifest"
+    File "..\..\bin\vsix\*.dll"
+    File "..\..\bin\vsix\Pundit.pkgdef"
+
+  Install2010End:
 
 SectionEnd
 
 Section -Post
   WriteUninstaller "$INSTDIR\uninstall.exe"
-  ;WriteRegStr HKLM "${PRODUCT_DIR_REGKEY}" "" "$INSTDIR\AppMainExe.exe"
 
   ;add uninstall info
   WriteRegStr ${PRODUCT_UNINST_ROOT_KEY} "${PRODUCT_UNINST_KEY}" "DisplayName" "$(^Name)"
@@ -142,19 +143,20 @@ Section -Post
   WriteRegStr ${PRODUCT_UNINST_ROOT_KEY} "${PRODUCT_UNINST_KEY}" "DisplayVersion" "${PRODUCT_VERSION}"
   WriteRegStr ${PRODUCT_UNINST_ROOT_KEY} "${PRODUCT_UNINST_KEY}" "URLInfoAbout" "${PRODUCT_WEB_SITE}"
   WriteRegStr ${PRODUCT_UNINST_ROOT_KEY} "${PRODUCT_UNINST_KEY}" "Publisher" "${PRODUCT_PUBLISHER}"
-  ;WriteRegStr ${PRODUCT_UNINST_ROOT_KEY} "${PRODUCT_UNINST_KEY}" "MseRegion" "${PRODUCT_REGION}"
 
 SectionEnd
 
 Section Uninstall
   SetShellVarContext all
   
-  ${un.EnvVarUpdate} $0 "PATH" "R" "HKLM" "$INSTDIR\core" ; Append
+  ${un.EnvVarUpdate} $0 "PATH" "R" "HKLM" "$INSTDIR\core" ;remove the variable
   
   ;delete all program files (don't set REBOOTOK flag!)
-  ;MessageBox MB_ICONINFORMATION|MB_OK "removing: $INSTDIR"
   RMDir /r "$INSTDIR"
-  
   RMDir /r /REBOOTOK "$SMPROGRAMS\${PRODUCT_DIR_NAME}"
+  
+  !insertmacro getVs2010ExFolder
+  StrCpy $0 "$0\Pundit"
+  RMDir /r $0
 
 SectionEnd
