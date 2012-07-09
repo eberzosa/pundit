@@ -73,7 +73,8 @@ namespace Pundit.Core.Utils
          {
             if (i > 0) b.Append(", ");
             b.Append(columns[i]);
-            b.Append("=(?)");
+            b.Append("=");
+            b.Append(GetParameterName(i));
          }
          if (where != null && where.Length > 0)
          {
@@ -88,17 +89,21 @@ namespace Pundit.Core.Utils
          using (IDbCommand cmd = Connection.CreateCommand())
          {
             cmd.CommandText = b.ToString();
-            foreach (object value in values)
+            int pi = 0;
+            foreach (object t in values)
             {
-               Add(cmd, value);
+               string name = "P" + (pi++);
+               Add(cmd, t, name);
             }
             if (whereValues != null)
             {
-               foreach (object value in whereValues)
+               foreach (object t in whereValues)
                {
-                  Add(cmd, value);
+                  string name = "P" + (pi++);
+                  Add(cmd, t, name);
                }
             }
+            cmd.ExecuteNonQuery();
          }
       }
 

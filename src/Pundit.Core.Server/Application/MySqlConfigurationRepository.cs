@@ -21,7 +21,7 @@ namespace Pundit.Core.Server.Application
       public void Set(string key, string value)
       {
          if (key == null) throw new ArgumentNullException("key");
-         long id = ExecuteScalar<long>(OptionTableName, "OptionId", new[] {"Name=?P0"}, key);
+         uint id = ExecuteScalar<uint>(OptionTableName, "OptionId", new[] {"Name=?P0"}, key);
 
          if(id == 0)
          {
@@ -29,7 +29,7 @@ namespace Pundit.Core.Server.Application
          }
          else
          {
-            Update(OptionTableName, new[] {"Value"}, new object[] {value}, new[] {"Name=?P0", value});
+            Update(OptionTableName, new[] {"Value"}, new object[] {value}, new[] {"Name=?P1"}, key);
          }
       }
 
@@ -37,6 +37,22 @@ namespace Pundit.Core.Server.Application
       {
          if (key == null) throw new ArgumentNullException("key");
          return ExecuteScalar<string>(OptionTableName, "`Value`", new[] {"Name=?P0"}, key);
+      }
+
+      public long IncrementCounter(string counterName)
+      {
+         long value = GetCounterValue(counterName);
+         Set(counterName, (value + 1).ToString());
+         return value + 1;
+      }
+
+      public long GetCounterValue(string counterName)
+      {
+         string s = ExecuteScalar<string>(OptionTableName, "Value",
+                                          new[] {"Name=?P0"}, counterName);
+         long l;
+         long.TryParse(s, out l);
+         return l;
       }
 
       #endregion

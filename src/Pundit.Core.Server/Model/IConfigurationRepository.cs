@@ -10,5 +10,9 @@ namespace Pundit.Core.Server.Model
       void Set(string key, string value);
 
       string Get(string key);
+
+      long IncrementCounter(string counterName);
+
+      long GetCounterValue(string counterName);
    }
 }

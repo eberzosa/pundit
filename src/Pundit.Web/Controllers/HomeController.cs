@@ -53,7 +53,7 @@ namespace Pundit.Web.Controllers
          {
             ViewBag.LatestVersion = v;
             ViewBag.WindowsInstaller = GetWindowsInstaller(v);
-            ViewBag.WindowsInstallerDownloads = _configuration.Get("WindowsInstallerDownloads") ?? "0";
+            ViewBag.WindowsInstallerDownloads = (ulong)_configuration.GetCounterValue("WindowsInstallerDownloads");
          }
 
          return View();
@@ -67,12 +67,7 @@ namespace Pundit.Web.Controllers
             FileInfo fi = GetWindowsInstaller(v);
             if (fi != null)
             {
-               string s = _configuration.Get("WindowsInstallerDownloads");
-               int n;
-               int.TryParse(s, out n);
-               n += 1;
-               _configuration.Set("WindowsInstallerDownloads", n.ToString());
-
+               _configuration.IncrementCounter("WindowsInstallerDownloads");
                return File(System.IO.File.OpenRead(fi.FullName), "application/x-msdownload", fi.Name);
             }
          }

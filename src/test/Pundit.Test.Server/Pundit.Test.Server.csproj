@@ -55,8 +55,10 @@
     <Compile Include="Import\NuGetImporterTest.cs" />
     <Compile Include="Integration\RestClientIntegrationTest.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
+    <Compile Include="Repositories\ConfigurationRepositoryTest.cs" />
+    <Compile Include="Repositories\RepositoryTestBase.cs" />
     <Compile Include="RepositoryServerTest.cs" />
-    <Compile Include="SqlPackageRepositoryTest.cs" />
+    <Compile Include="Repositories\SqlPackageRepositoryTest.cs" />
   </ItemGroup>
   <ItemGroup>
     <ProjectReference Include="..\..\Pundit.Core.Server\Pundit.Core.Server.csproj">

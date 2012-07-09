@@ -1,4 +1,5 @@
-﻿<p>
+﻿@using Pundit.Core
+<p>
    Pundit is a super lightweight and super simple binary dependency management system for .NET and C++.
 </p>
 
@@ -19,7 +20,7 @@
    @if (ViewBag.WindowsInstaller != null)
    {
       string linkName = string.Format("download Windows Installer ({0}, {1} downloads)",
-         ViewBag.WindowsInstaller.Length,
+         ByteFormat.ToString((ulong)ViewBag.WindowsInstaller.Length),
          ViewBag.WindowsInstallerDownloads);
       @Html.ActionLink(linkName, "DownloadWindowsInstaller")<br/>
    }
