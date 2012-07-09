@@ -139,6 +139,7 @@
     <Compile Include="Utils\PathUtils.cs" />
     <Compile Include="Utils\RequestSigning.cs" />
     <Compile Include="Utils\SqlHelper.cs" />
+    <Compile Include="Utils\ByteFomat.cs" />
   </ItemGroup>
   <ItemGroup>
     <EmbeddedResource Include="Application\Sqlite\pundit.db" />
