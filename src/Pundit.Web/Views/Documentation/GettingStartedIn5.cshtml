@@ -1,0 +1,45 @@
+﻿@{
+    ViewBag.Title = "getting started in 5 minutes";
+}
+
+<h2>Getting started in 5 minutes</h2>
+
+<p>
+   This short tutorial is for those needing to build a project using Pundit. First,
+   @Html.ActionLink("install Pundit", "Installation"). After that, open console window and type
+   <strong>pundit</strong> to check it's up and running:
+</p>
+
+<p>
+   <img src="@Url.Content("~/Content/Images/doc/installer-check.png")"/>
+</p>
+
+<p>
+   If you have just checked out a project using Pundit it won't build at all. This is because it's
+   <i>binary dependencies</i> have not been installed yet. Navigate console to the project root where
+   <strong>pundit.xml</strong> is located
+</p>
+
+<p>
+   <img src="@Url.Content("~/Content/Images/doc/intro5-filelist.png")"/>
+</p>
+
+<p>
+   then type <strong>pundit resolve</strong> in the terminal:
+</p>
+
+<p>
+   <img src="@Url.Content("~/Content/Images/doc/intro5-resolution.png")"/>
+</p>
+
+<p>
+   You executed <i>dependency resolution</i> process based on default project manifest (pundit.xml) and successfully
+   installed all the binary dependencies. The project is now ready to be built using the normal process (Visual Studio etc.)
+</p>
+
+<p>
+   We hope this quick overview has piqued your interest in the versitility of Pundit.
+   Note that this is a very truncated quick-start guide.
+   Now you are ready for more comprehensive details concerning the actions you have just performed.
+   Check out the @Html.ActionLink("getting started in 30 minutes", "GettingStartedIn30") guide.
+</p>

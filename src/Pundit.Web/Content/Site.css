@@ -68,3 +68,22 @@ nav.main ul a:hover {
    text-align: left;
    display: block;
 }
+
+a { text-decoration: none; }
+a:active, a:hover { color: #900; }
+a:visited, a:link { color: #68A; }
+
+h1, h2, h3 {
+   display: block;
+}
+
+h3 {
+   font-weight: bold;
+   font-size: 1.25em;
+}
+
+.doctitle {
+   font-weight: bold;
+   font-size: 1.25em;
+   display: block;   
+}

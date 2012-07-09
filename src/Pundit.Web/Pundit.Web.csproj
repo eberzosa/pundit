@@ -72,6 +72,11 @@
     <Compile Include="Properties\AssemblyInfo.cs" />
   </ItemGroup>
   <ItemGroup>
+    <Content Include="Content\Images\doc\installer-00.png" />
+    <Content Include="Content\Images\doc\installer-01.png" />
+    <Content Include="Content\Images\doc\installer-check.png" />
+    <Content Include="Content\Images\doc\intro5-filelist.png" />
+    <Content Include="Content\Images\doc\intro5-resolution.png" />
     <Content Include="Content\Images\headerbackground.png" />
     <Content Include="Content\Images\pundit-logo-big.png" />
     <Content Include="Global.asax" />
@@ -87,6 +92,9 @@
     <Content Include="Scripts\modernizr-1.7.min.js" />
     <Content Include="Views\Packages\Publish.cshtml" />
     <Content Include="Views\Documentation\Index.cshtml" />
+    <Content Include="Views\Documentation\GettingStartedIn5.cshtml" />
+    <Content Include="Views\Documentation\Installation.cshtml" />
+    <Content Include="Views\Documentation\GettingStartedIn30.cshtml" />
     <None Include="Web.config">
       <SubType>Designer</SubType>
     </None>
