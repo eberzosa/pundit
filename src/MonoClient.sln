@@ -5,8 +5,6 @@ Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Pundit.Core", "Pundit.Core\
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Pundit.Console", "Pundit\Pundit.Console.csproj", "{9296FDE6-2BE9-472B-9E82-FC023959CBA2}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Pundit.Test", "Pundit.Test\Pundit.Test.csproj", "{5BF2B578-7F5A-4604-B49A-DBDB53B7AA13}"
-EndProject
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Solution Items", "Solution Items", "{3B681723-FAC7-435A-A3CD-954EC94E2A6D}"
 	ProjectSection(SolutionItems) = preProject
 		mysql_dump.cmd = mysql_dump.cmd
@@ -18,6 +16,8 @@ Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Solution Items", "Solution 
 	EndProjectSection
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Pundit.Core.Server", "Pundit.Core.Server\Pundit.Core.Server.csproj", "{8E0C95D4-0081-44D5-9321-3EAE43E91BBF}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Pundit.Test.Core", "test\Pundit.Test.Core\Pundit.Test.Core.csproj", "{5BF2B578-7F5A-4604-B49A-DBDB53B7AA13}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
@@ -34,11 +34,13 @@ Global
 		{5BF2B578-7F5A-4604-B49A-DBDB53B7AA13}.Debug|Mixed Platforms.ActiveCfg = Debug|Any CPU
 		{5BF2B578-7F5A-4604-B49A-DBDB53B7AA13}.Debug|Mixed Platforms.Build.0 = Debug|Any CPU
 		{5BF2B578-7F5A-4604-B49A-DBDB53B7AA13}.Debug|x86.ActiveCfg = Debug|Any CPU
+		{5BF2B578-7F5A-4604-B49A-DBDB53B7AA13}.Debug|x86.Build.0 = Debug|Any CPU
 		{5BF2B578-7F5A-4604-B49A-DBDB53B7AA13}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{5BF2B578-7F5A-4604-B49A-DBDB53B7AA13}.Release|Any CPU.Build.0 = Release|Any CPU
 		{5BF2B578-7F5A-4604-B49A-DBDB53B7AA13}.Release|Mixed Platforms.ActiveCfg = Release|Any CPU
 		{5BF2B578-7F5A-4604-B49A-DBDB53B7AA13}.Release|Mixed Platforms.Build.0 = Release|Any CPU
 		{5BF2B578-7F5A-4604-B49A-DBDB53B7AA13}.Release|x86.ActiveCfg = Release|Any CPU
+		{5BF2B578-7F5A-4604-B49A-DBDB53B7AA13}.Release|x86.Build.0 = Release|Any CPU
 		{8E0C95D4-0081-44D5-9321-3EAE43E91BBF}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
 		{8E0C95D4-0081-44D5-9321-3EAE43E91BBF}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{8E0C95D4-0081-44D5-9321-3EAE43E91BBF}.Debug|Mixed Platforms.ActiveCfg = Debug|Any CPU
