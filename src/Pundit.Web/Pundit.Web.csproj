@@ -62,10 +62,12 @@
   <ItemGroup>
     <Compile Include="Controllers\AccountController.cs" />
     <Compile Include="Controllers\AuthenticatedController.cs" />
+    <Compile Include="Controllers\ConfigurationController.cs" />
     <Compile Include="Controllers\DocumentationController.cs" />
     <Compile Include="Controllers\HomeController.cs" />
     <Compile Include="Controllers\PackagesController.cs" />
     <Compile Include="Controllers\RemoteRepositoryController.cs" />
+    <Compile Include="Controllers\VersionController.cs" />
     <Compile Include="Global.asax.cs">
       <DependentUpon>Global.asax</DependentUpon>
     </Compile>
@@ -77,8 +79,8 @@
     <Content Include="Content\Images\doc\installer-check.png" />
     <Content Include="Content\Images\doc\intro5-filelist.png" />
     <Content Include="Content\Images\doc\intro5-resolution.png" />
-    <Content Include="Content\Images\headerbackground.png" />
-    <Content Include="Content\Images\pundit-logo-big.png" />
+    <Content Include="Content\Images\logo-300-56.png" />
+    <Content Include="favicon.ico" />
     <Content Include="Global.asax" />
     <Content Include="Scripts\jquery-1.5.1-vsdoc.js" />
     <Content Include="Scripts\jquery-1.5.1.js" />
@@ -95,6 +97,7 @@
     <Content Include="Views\Documentation\GettingStartedIn5.cshtml" />
     <Content Include="Views\Documentation\Installation.cshtml" />
     <Content Include="Views\Documentation\GettingStartedIn30.cshtml" />
+    <Content Include="Views\Configuration\Index.cshtml" />
     <None Include="Web.config">
       <SubType>Designer</SubType>
     </None>

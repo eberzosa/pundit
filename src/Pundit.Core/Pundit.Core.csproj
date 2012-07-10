@@ -100,6 +100,7 @@
       <DependentUpon>Ex.resx</DependentUpon>
     </Compile>
     <Compile Include="Exceptions\RepositoryOfflineException.cs" />
+    <Compile Include="Globals.cs" />
     <Compile Include="LocalConfiguration.cs" />
     <Compile Include="Model\ApiKey.cs" />
     <Compile Include="Model\EventArguments\PackageDownloadEventArgs.cs" />
@@ -131,6 +132,7 @@
     <Compile Include="Model\VersionResolutionTable.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="RemoteRepositoryFactory.cs" />
+    <Compile Include="Utils\AutoUpdateHelper.cs" />
     <Compile Include="Utils\DataReaderExtensions.cs" />
     <Compile Include="Utils\Exceptional.cs" />
     <Compile Include="Utils\FileSet.cs" />
