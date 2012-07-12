@@ -36,6 +36,9 @@
     <AssemblyOriginatorKeyFile>..\pundit.snk</AssemblyOriginatorKeyFile>
   </PropertyGroup>
   <ItemGroup>
+    <Reference Include="Community.CsharpSqlite.SQLiteClient">
+      <HintPath>..\..\lib\Community.CsharpSqlite.SQLiteClient.dll</HintPath>
+    </Reference>
     <Reference Include="ICSharpCode.SharpZipLib">
       <HintPath>..\..\lib\ICSharpCode.SharpZipLib.dll</HintPath>
     </Reference>
@@ -45,9 +48,6 @@
     <Reference Include="System" />
     <Reference Include="System.Configuration" />
     <Reference Include="System.Core" />
-    <Reference Include="System.Data.SQLite">
-      <HintPath>..\..\lib\System.Data.SQLite.dll</HintPath>
-    </Reference>
     <Reference Include="System.Xml.Linq" />
     <Reference Include="System.Data.DataSetExtensions" />
     <Reference Include="Microsoft.CSharp" />
@@ -85,7 +85,6 @@
     <Compile Include="Application\RepositoryUpdater.cs" />
     <Compile Include="Application\Repository\HttpRestRemoteRepository.cs" />
     <Compile Include="Application\Repository\RemoteFolderRepository.cs" />
-    <Compile Include="Application\Sqlite\SqliteExtensions.cs" />
     <Compile Include="Application\Repository\SqliteLocalRepository.cs" />
     <Compile Include="Application\Sqlite\SqliteHelper.cs" />
     <Compile Include="C.cs" />

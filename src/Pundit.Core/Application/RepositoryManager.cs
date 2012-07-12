@@ -1,7 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Data;
-using System.Data.SQLite;
 using System.IO;
 using System.Linq;
 using Pundit.Core.Application.Repository;
@@ -156,27 +155,20 @@ namespace Pundit.Core.Application
 
       public void Update(Repo repo)
       {
-         using(IDbCommand cmd = _sql.CreateCommand())
-         {
-            cmd.CommandText = "update " + RepositoryTableName + " set " +
-                              "RefreshIntervalHours=(?), IsEnabled=(?), Login=(?), ApiKey=(?) where RepositoryId=(?)";
-            cmd.Add(repo.RefreshIntervalInHours).Add(repo.IsEnabled);
-            cmd.Add(repo.Login).Add(repo.ApiKey);
-            cmd.Add(repo.Id);
-            cmd.ExecuteNonQuery();
-         }
+         _sql.Update(
+            RepositoryTableName,
+            new[] { "RefreshIntervalHours", "IsEnabled", "Login", "ApiKey"},
+            new object[] { repo.RefreshIntervalInHours, repo.IsEnabled, repo.Login, repo.ApiKey},
+            new[] { "RepositoryId=?P5"},
+            repo.Id);
       }
 
       private void DeleteManifest(long repoId, PackageKey key)
       {
-         using (IDbCommand cmd = _sql.CreateCommand())
-         {
-            cmd.CommandText = "delete from " + ManifestTableName + " where RepositoryId=(?) and " +
-                              "PackageId=(?) and Version=(?) and Platform=(?)";
-            cmd.Add(repoId);
-            cmd.Add(key.PackageId).Add(key.Version.ToString()).Add(key.Platform);
-            cmd.ExecuteNonQuery();
-         }
+         _sql.Delete(
+            ManifestTableName,
+            new[] { "RepositoryId=(?)", "PackageId=(?)", "Version=(?)", "Platform=(?)" },
+            repoId, key.PackageId, key.VersionString, key.Platform);
       }
 
       public void PlaySnapshot(Repo repo, RemoteSnapshot snapshot)
@@ -189,12 +181,7 @@ namespace Pundit.Core.Application
             {
                if(!snapshot.IsDelta)
                {
-                  using(IDbCommand cmd = _sql.CreateCommand())
-                  {
-                     cmd.CommandText = "delete from " + ManifestTableName + " where RepositoryId=(?)";
-                     cmd.Add(repo.Id);
-                     cmd.ExecuteNonQuery();
-                  }
+                  _sql.Delete(ManifestTableName, new[] { "RepositoryId=(?)" }, repo.Id);
                }
 
                foreach (PackageSnapshotKey entry in snapshot.Changes)
@@ -210,14 +197,10 @@ namespace Pundit.Core.Application
                   }
                }
 
-               using(IDbCommand cmd = _sql.CreateCommand())
-               {
-                  cmd.CommandText = "update " + RepositoryTableName + " set LastRefreshed=(?), LastChangeId=(?) " +
-                                    "where RepositoryId=(?)";
-                  cmd.Add(DateTime.Now).Add(snapshot.NextChangeId);
-                  cmd.Add(repo.Id);
-                  cmd.ExecuteNonQuery();
-               }
+               _sql.Update(RepositoryTableName,
+                  new[] { "LastRefreshed", "LastChangeId"},
+                  new object[] { DateTime.Now, snapshot.NextChangeId },
+                  new[] { "RepositoryId=(?)" }, repo.Id);
 
                tran.Commit();
             }

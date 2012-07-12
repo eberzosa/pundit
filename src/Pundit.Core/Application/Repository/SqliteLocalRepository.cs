@@ -3,11 +3,10 @@ using System.Collections.Generic;
 using System.Data;
 using System.IO;
 using System.Linq;
-using System.Data.SQLite;
 using System.Text;
+using Community.CsharpSqlite.SQLiteClient;
 using Pundit.Core.Application.Sqlite;
 using Pundit.Core.Model;
-using Pundit.Core.Utils;
 
 namespace Pundit.Core.Application.Repository
 {
@@ -26,9 +25,9 @@ namespace Pundit.Core.Application.Repository
 
       private long GetBinaryId(PackageKey key)
       {
-         return _sql.ExecuteScalar<long>("PackageBinary", "PackageBinaryId",
-                                         new[] {"PackageId=(?)", "Version=(?)", "Platform=(?)"},
-                                         key.PackageId, key.VersionString, key.Platform);
+         return _sql.ExecuteScalar<int>("PackageBinary", "PackageBinaryId",
+                                        new[] {"PackageId=(?)", "Version=(?)", "Platform=(?)"},
+                                        key.PackageId, key.VersionString, key.Platform);
       }
 
       private long WriteBinaryStream(string filePath, PackageKey key)
@@ -44,7 +43,7 @@ namespace Pundit.Core.Application.Repository
          } while (binaryId != 0);
          
 
-         var bin = new SQLiteParameter(DbType.Binary);
+         var bin = new SqliteParameter("Data", DbType.Binary);
          byte[] binBytes = File.ReadAllBytes(filePath);
          bin.Value = binBytes;
 
@@ -55,14 +54,14 @@ namespace Pundit.Core.Application.Repository
 
       private long GetLocalRepositoryId()
       {
-         long id = _sql.ExecuteScalar<long>("Repository", "RepositoryId", new[] {"Tag=(?)"},
+         int id = _sql.ExecuteScalar<int>("Repository", "RepositoryId", new[] {"Tag=(?)"},
                                             LocalConfiguration.LocalRepositoryTag);
 
          if (id == 0)
          {
-            id = _sql.Insert("Repository", new[] {"Tag", "Uri"},
-                             LocalConfiguration.LocalRepositoryTag,
-                             LocalConfiguration.LocalRepositoryUri);
+            id = (int) _sql.Insert("Repository", new[] {"Tag", "Uri"},
+                                   LocalConfiguration.LocalRepositoryTag,
+                                   LocalConfiguration.LocalRepositoryUri);
          }
 
          return id;
@@ -116,23 +115,14 @@ namespace Pundit.Core.Application.Repository
 
       public Stream Get(PackageKey key)
       {
-         using(IDbCommand cmd = _sql.CreateCommand())
-         {
-            cmd.CommandText = "select Data from PackageBinary where PackageId=(?) and Version=(?) and Platform=(?) LIMIT 1";
-            cmd
-               .Add(key.PackageId)
-               .Add(key.VersionString)
-               .Add(key.Platform);
+         object sdata = _sql.ExecuteScalar<object>(
+            "PackageBinary", "Data",
+            new[] { "PackageId=(?)", "Version=(?)", "Platform=(?)" },
+            key.PackageId, key.VersionString, key.Platform);
 
-            using(IDataReader reader = cmd.ExecuteReader())
-            {
-               if (!reader.Read()) throw new FileNotFoundException("package not found: " + key);
+         byte[] data = (byte[]) sdata;
 
-               byte[] data = (byte[])reader["Data"];
-
-               return new MemoryStream(data);
-            }
-         }
+         return new MemoryStream(data);
       }
 
       public ICollection<Version> GetVersions(UnresolvedPackage package, VersionPattern pattern)
@@ -176,22 +166,10 @@ namespace Pundit.Core.Application.Repository
 
       public long GetClosestRepositoryId(PackageKey key)
       {
-         var txt = new StringBuilder();
-         txt.Append("select RepositoryId from PackageManifest ");
-         txt.Append("where PackageId=(?) and Version=(?) and Platform=(?) ");
-         txt.Append("order by RepositoryId asc limit 0,1");
-
-         using(IDbCommand cmd = _sql.CreateCommand())
-         {
-            cmd.CommandText = txt.ToString();
-            cmd.Add(key.PackageId);
-            cmd.Add(key.VersionString);
-            cmd.Add(key.Platform);
-
-            object repoId = cmd.ExecuteScalar();
-
-            return (repoId is long) ? (long) repoId : 0;
-         }
+         return _sql.ExecuteScalar<int>(
+            "PackageManifest", "RepositoryId",
+            new[] { "PackageId=(?)", "Version=(?)", "Platform=(?)" },
+            key.PackageId, key.VersionString, key.Platform);
       }
 
       public ICollection<PackageKey> Search(string substring)

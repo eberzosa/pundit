@@ -8,9 +8,9 @@ using System.Xml.Serialization;
 namespace Pundit.Core.Model
 {
    /// <summary>
-   /// Base of Pundit package
+   /// Pundit manifest
    /// </summary>
-   [XmlRoot(ElementName = "package")]
+   [XmlRoot("package")]
    [XmlInclude(typeof(DevPackage))]
    public class Package : IEquatable<Package>, ICloneable
    {
@@ -46,7 +46,7 @@ namespace Pundit.Core.Model
       //public bool IsStable { get; set; }
 
       /// <summary>
-      /// Package ID
+      /// Globally unique package ID
       /// </summary>
       [XmlElement("packageId")]
       public string PackageId { get; set; }

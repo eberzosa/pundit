@@ -1,50 +1,106 @@
 ﻿<?xml version="1.0" encoding="utf-8"?>
 <xs:schema id="manifest"
-    targetNamespace="http://tempuri.org/manifest.xsd"
+    xmlns:pundit="http://pundit-dm.com/1/pundit.xsd"
+    targetNamespace="http://pundit-dm.com/1/pundit.xsd"
     elementFormDefault="qualified"
     xmlns="http://tempuri.org/manifest.xsd"
     xmlns:mstns="http://tempuri.org/manifest.xsd"
-    xmlns:xs="http://www.w3.org/2001/XMLSchema"
->
-  <xs:simpleType name="versionPattern">
-    <xs:restriction base="xs:string">
-      <xs:pattern value="[0-9\*]+(\.[0-9\*]+){0,3}"/>
-    </xs:restriction>
-  </xs:simpleType>
+    xmlns:xs="http://www.w3.org/2001/XMLSchema">
+   <xs:simpleType name="versionPattern">
+      <xs:restriction base="xs:string">
+         <xs:pattern value="[0-9\*]+(\.[0-9\*]+){0,3}"/>
+      </xs:restriction>
+   </xs:simpleType>
 
-  <xs:simpleType name="version">
-    <xs:restriction base="xs:string">
-      <xs:pattern value="[0-9]+(\.[0-9]+){3}"/>
-    </xs:restriction>
-  </xs:simpleType>
-  
-  <xs:complexType name="packageDependency">
-      <xs:attribute name="id" type="xs:string"/>
-      <xs:attribute name="version" type="versionPattern"/>
-  </xs:complexType>
+   <xs:simpleType name="version">
+      <xs:restriction base="xs:string">
+         <xs:pattern value="[0-9]+(\.[0-9]+){3}"/>
+      </xs:restriction>
+   </xs:simpleType>
 
-  <xs:complexType name="runtimeDependency">
-    <xs:attribute name="name" type="xs:string"/>
-    <xs:attribute name="version" type="versionPattern"/>
-  </xs:complexType>
+   <xs:simpleType name="scope">
+      <xs:restriction base="xs:string">
+         <xs:enumeration value="normal"/>
+         <xs:enumeration value="test"/>
+         <xs:enumeration value="build"/>
+      </xs:restriction>
+   </xs:simpleType>
 
-  <xs:complexType name="dependencies">
-    <xs:sequence>
-      <xs:element name="package" type="packageDependency" maxOccurs="unbounded"/>
-      <xs:element name="runtime" type="runtimeDependency" maxOccurs="unbounded"/>
-    </xs:sequence>
-  </xs:complexType>
+   <xs:simpleType name="kind">
+      <xs:restriction base="xs:string">
+         <xs:enumeration value="bin"/>
+         <xs:enumeration value="include"/>
+         <xs:enumeration value="tools"/>
+         <xs:enumeration value="other"/>
+      </xs:restriction>
+   </xs:simpleType>
 
-  <xs:element name="package">
-    <xs:complexType>
+   <xs:simpleType name="configuration">
+      <xs:restriction base="xs:string">
+         <xs:enumeration value="any"/>
+         <xs:enumeration value="release"/>
+         <xs:enumeration value="debug"/>
+      </xs:restriction>
+   </xs:simpleType>
+
+   <xs:complexType name="packageDependency">
+      <xs:attribute name="id" type="xs:string" use="required"/>
+      <xs:attribute name="version" type="pundit:versionPattern" use="required"/>
+      <xs:attribute name="platform" type="xs:string" use="required"/>
+      <xs:attribute name="scope" type="pundit:scope" use="optional"/>
+      <xs:attribute name="targetFolder" type="xs:string" use="optional"/>
+   </xs:complexType>
+
+   <xs:complexType name="dependencies">
       <xs:sequence>
-        <xs:element name="packageId" type="xs:string"/>
-        <xs:element name="version" type="version"/>
-        <xs:element name="author" type="xs:string"/>
-        <xs:element name="description" type="xs:string"/>
-        <xs:element name="release-notes" type="xs:string"/>
-        <xs:element name="dependencies" type="dependencies"/>
+         <xs:element name="package" type="pundit:packageDependency" maxOccurs="unbounded"/>
       </xs:sequence>
-    </xs:complexType>
-  </xs:element>
+   </xs:complexType>
+
+   <xs:complexType name="file">
+      <xs:attribute name="kind" type="pundit:kind" use="optional"/>
+      <xs:attribute name="include" type="xs:string" use="required"/>
+      <xs:attribute name="exclude" type="xs:string" use="optional"/>
+      <xs:attribute name="flatten" type="xs:boolean" use="optional"/>
+      <xs:attribute name="basedir" type="xs:string" use="required"/>
+      <xs:attribute name="targetdir" type="xs:string" use="optional"/>
+      <xs:attribute name="includeemptydirs" type="xs:boolean" use="optional"/>
+      <xs:attribute name="configuration" type="pundit:configuration" use="optional"/>
+   </xs:complexType>
+
+   <xs:complexType name="files">
+      <xs:sequence>
+         <xs:element name="file" type="pundit:file" maxOccurs="unbounded"/>
+      </xs:sequence>
+   </xs:complexType>
+
+   <xs:element name="package">
+      <xs:annotation>
+         <xs:documentation>
+            Manifest root
+         </xs:documentation>
+      </xs:annotation>
+      <xs:complexType>
+         <xs:all>
+            <xs:element name="packageId" type="xs:string" minOccurs="1" maxOccurs="1">
+               <xs:annotation>
+                  <xs:documentation>
+                     Globally unique package ID
+                  </xs:documentation>
+               </xs:annotation>
+            </xs:element>
+            <xs:element name="platform" type="xs:string" minOccurs="1" maxOccurs="1"/>
+            <xs:element name="version" type="pundit:version" minOccurs="1" maxOccurs="1"/>
+            
+            <xs:element name="projectUrl" type="xs:string" minOccurs="0" maxOccurs="1"/>
+            <xs:element name="author" type="xs:string" minOccurs="0" maxOccurs="1"/>
+            <xs:element name="description" type="xs:string" minOccurs="0" maxOccurs="1"/>
+            <xs:element name="releaseNotes" type="xs:string" minOccurs="0" maxOccurs="1"/>
+            <xs:element name="license" type="xs:string" minOccurs="0" maxOccurs="1"/>
+            
+            <xs:element name="dependencies" type="pundit:dependencies" minOccurs="0" maxOccurs="1"/>
+            <xs:element name="files" type="pundit:files" minOccurs="0" maxOccurs="1"/>
+         </xs:all>
+      </xs:complexType>
+   </xs:element>
 </xs:schema>

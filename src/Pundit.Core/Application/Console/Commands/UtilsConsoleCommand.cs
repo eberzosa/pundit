@@ -18,9 +18,7 @@ namespace Pundit.Core.Application.Console.Commands
 
       public override void Execute()
       {
-         string utilName = null;
-
-         new OptionSet().Add("u:|util:", u => utilName = u).Parse(GetCommandLine());
+         string utilName = GetParameter("u:|util:", 0);
 
          if(string.IsNullOrEmpty(utilName))
             throw new ArgumentException("util name not specified");

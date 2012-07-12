@@ -40,7 +40,7 @@ namespace Pundit.Core.Application.Console.Commands
 
       public override void Execute()
       {
-         System.Console.ReadKey();
+         //System.Console.ReadKey();
          string packagePath = GetPackageFullName();
          Repo repo = GetRepository();
 

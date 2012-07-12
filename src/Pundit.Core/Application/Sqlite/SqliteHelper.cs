@@ -1,8 +1,8 @@
 ﻿using System;
 using System.Data;
-using System.Data.SQLite;
 using System.IO;
 using System.Reflection;
+using Community.CsharpSqlite.SQLiteClient;
 using Pundit.Core.Model;
 using Pundit.Core.Utils;
 
@@ -16,7 +16,7 @@ namespace Pundit.Core.Application.Sqlite
       private readonly string _absolutePath;
       private readonly string _emptyDbResourceName;
       private readonly string _absoluteDir;
-      private SQLiteConnection _conn;
+      private SqliteConnection _conn;
 
       public SqliteHelper(string dbPath, string emptyDbResourceName)
       {
@@ -54,7 +54,7 @@ namespace Pundit.Core.Application.Sqlite
             }
          }
 
-         return "Data Source=" + _absolutePath;
+         return string.Format("Version=3,uri=file:{0}", _absolutePath);
       }
 
       protected override IDbConnection Connection
@@ -63,7 +63,7 @@ namespace Pundit.Core.Application.Sqlite
          {
             if (_conn == null)
             {
-               _conn = new SQLiteConnection(GetConnectionString());
+               _conn = new SqliteConnection(GetConnectionString());
                _conn.Open();
 
                using(IDbCommand cmd = _conn.CreateCommand())
@@ -82,16 +82,16 @@ namespace Pundit.Core.Application.Sqlite
       protected override void Add(IDbCommand cmd, object value, string name = null)
       {
          if (value is string)
-            cmd.Parameters.Add(new SQLiteParameter(DbType.String, value));
+            cmd.Parameters.Add(new SqliteParameter(name, DbType.String) { Value = value});
          else if (value is long)
-            cmd.Parameters.Add(new SQLiteParameter(DbType.Int32, value));
+            cmd.Parameters.Add(new SqliteParameter(name, DbType.Int32) { Value = value });
          else if (value is bool)
-            cmd.Parameters.Add(new SQLiteParameter(DbType.Boolean, value));
+            cmd.Parameters.Add(new SqliteParameter(name, DbType.Boolean) { Value = value });
          else if (value is DateTime)
-            cmd.Parameters.Add(new SQLiteParameter(DbType.DateTime, value));
+            cmd.Parameters.Add(new SqliteParameter(name, DbType.DateTime) { Value = value });
          else if (value == null)
-            cmd.Parameters.Add(new SQLiteParameter());
-         else if (value is SQLiteParameter)
+            cmd.Parameters.Add(new SqliteParameter());
+         else if (value is SqliteParameter)
             cmd.Parameters.Add(value);
          else throw new ArgumentException("type " + value.GetType() + " not supported");
       }

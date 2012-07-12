@@ -4,7 +4,8 @@
    <Import Project="configure.proj"/>
 
    <Target Name="UpdateVersions">
-      <Exec Command="pundit utils -u:asminfo -av:$(VMajor).$(VMinor).0.0 -fv:$(VMajor).$(VMinor).$(VBuild).$(VRevision)"/>
+      <Exec Command="pundit utils asminfo -av:$(VMajor).$(VMinor).0.0 -fv:$(VMajor).$(VMinor).$(VBuild).$(VRevision)"/>
+      <Exec Command="pundit utils regex -i:**/configure.nsh -s:PRODUCT_VERSION\s&quot;(.+)&quot; -r:&quot;PRODUCT_VERSION &quot;&quot;$(VMajor).$(VMinor).$(VBuild).$(VRevision)&quot;&quot;&quot;"/>
    </Target>
 
    <Target Name="BuildSolution" DependsOnTargets="UpdateVersions">
@@ -12,11 +13,11 @@
    </Target>
 
    <Target Name="BuildInstaller" DependsOnTargets="BuildSolution">
-      
+
    </Target>
-   
+
    <Target Name="Build" DependsOnTargets="BuildInstaller">
-      
+
    </Target>
-   
+
 </Project>

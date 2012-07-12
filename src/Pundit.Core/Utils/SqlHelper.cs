@@ -254,6 +254,37 @@ namespace Pundit.Core.Utils
          }
       }
 
+      public void Delete(string tableName, string[] where, params object[] parameters)
+      {
+         var b = new StringBuilder();
+         b.Append("delete from ");
+         b.Append(tableName);
+
+         if (where != null && where.Length > 0)
+         {
+            b.Append(" where ");
+            for (int i = 0; i < where.Length; i++)
+            {
+               if (i != 0) b.Append(" AND ");
+               b.Append(where[i]);
+            }
+         }
+
+         using (IDbCommand cmd = CreateCommand())
+         {
+            cmd.CommandText = b.ToString();
+            if (parameters != null && parameters.Length > 0)
+            {
+               for (int i = 0; i < parameters.Length; i++)
+               {
+                  Add(cmd, parameters[i], "P" + i);
+               }
+            }
+
+            cmd.ExecuteNonQuery();
+         }
+      }
+
       public void DeleteRecord(string tableName, long rowId)
       {
          using (IDbCommand cmd = CreateCommand())

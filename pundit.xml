@@ -1,5 +1,5 @@
 ﻿<?xml version="1.0" encoding="utf-8"?>
-<package>
+<package xmlns="http://pundit-dm.com/1/pundit.xsd">
   <packageId>Pundit</packageId>
   <platform>net40</platform>
   <version>1.1.0.0</version>
@@ -9,8 +9,7 @@
   <dependencies>
     <package id="NUnit.Framework" version="2.6" platform="net20" scope="test" />
     <package id="sharpziplib" version="0.86" platform="net20" />
-    <package id="SQLite" version="1.0" platform="net40.win32" />
-    <package id="SQLite" version="1.0" platform="net40.win64" targetFolder="win64"/>
+    <package id="Community.CsharpSqlite" version="3.7.7" platform="net35"/>
     <package id="log4net" version="1.2" platform="net20" />
     <package id="Json.NET" version="4.5" platform="net40"/>
     <package id="MySql.Data" version="6.4" platform="net40"/>

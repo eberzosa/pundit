@@ -128,6 +128,8 @@ Section "!VSIX" SCVSIX
     File "..\..\bin\vsix\extension.vsixmanifest"
     File "..\..\bin\vsix\*.dll"
     File "..\..\bin\vsix\Pundit.pkgdef"
+    
+    ;install XSD schema
 
   Install2010End:
 
