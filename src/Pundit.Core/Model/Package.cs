@@ -20,6 +20,11 @@ namespace Pundit.Core.Model
       public const string DefaultManifestFileName = "pundit.xml"; //package definition
 
       /// <summary>
+      /// MIME type of the package file (.pundit)
+      /// </summary>
+      public const string DefaultContentType = "application/octet-stream";
+
+      /// <summary>
       /// Default extension for packages
       /// </summary>
       public const string PackedExtension = ".pundit";

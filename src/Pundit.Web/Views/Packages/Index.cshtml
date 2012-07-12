@@ -16,6 +16,7 @@
       <th>Platform</th>
       <th>Created</th>
       <th>Size</th>
+      <th></th>
    </tr>
    @foreach (DbPackage p in Model)
    {
@@ -25,6 +26,7 @@
          <td>@p.Package.Platform</td>
          <td>@p.CreatedDate</td>
          <td>@ByteFormat.ToString((ulong)p.FileSize)</td>
+         <td>@Html.ActionLink("download", "DownloadPackage", new { id = p.Package.PackageId, v = p.Package.VersionString, p = p.Package.Platform })</td>
       </tr>
    }
 </table>

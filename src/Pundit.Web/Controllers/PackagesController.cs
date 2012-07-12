@@ -5,6 +5,7 @@ using System.Web;
 using System.Web.Mvc;
 using Pundit.Core.Model;
 using Pundit.Core.Server.Model;
+using Pundit.Core.Utils;
 
 namespace Pundit.Web.Controllers
 {
@@ -47,6 +48,15 @@ namespace Pundit.Web.Controllers
          }
 
          return View();
+      }
+
+      [HttpGet]
+      public FileResult DownloadPackage(string id, string v, string p)
+      {
+         var key = new PackageKey(id, new Version(v), p);
+         string fileName = PackageUtils.GetFileName(key);
+
+         return File(_repository.Download(p, id, v), PackageUtils.GetFileName(key), fileName);
       }
    }
 }
