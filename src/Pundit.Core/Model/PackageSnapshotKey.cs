@@ -34,6 +34,15 @@ namespace Pundit.Core.Model
       [XmlAttribute("diff")]
       public SnapshotPackageDiff Diff { get; set; }
 
+      /// <summary>
+      /// Change ID
+      /// </summary>
+      [XmlAttribute("changeId")]
+      public string ChangeId { get; set; }
+
+      /// <summary>
+      /// Manifest at the moment of this change
+      /// </summary>
       [XmlElement("manifest")]
       public Package Manifest { get; set; }
 
@@ -42,11 +51,12 @@ namespace Pundit.Core.Model
          
       }
 
-      public PackageSnapshotKey(Package manifest, SnapshotPackageDiff diff)
+      public PackageSnapshotKey(Package manifest, SnapshotPackageDiff diff, string changeId)
       {
          if (manifest == null) throw new ArgumentNullException("manifest");
 
          Diff = diff;
+         ChangeId = changeId;
          Manifest = manifest;
       }
 

@@ -105,7 +105,7 @@ namespace Pundit.Core.Server.Application
          return _streams.Read(key);
       }
 
-      private RemoteSnapshot BuildSnapshot(IEnumerable<DbPackage> packages, bool compress)
+      private RemoteSnapshot BuildSnapshot(IEnumerable<DbPackage> packages, string lastChangeId, bool isDelta, bool compress)
       {
          List<DbPackage> packagesList =
             packages == null
@@ -116,24 +116,27 @@ namespace Pundit.Core.Server.Application
          IEnumerable<PackageSnapshotKey> keys =
             packagesList == null
                ? null
-               : new List<PackageSnapshotKey>(packagesList.Select(p => new PackageSnapshotKey(p.Package, SnapshotPackageDiff.Add)));
+               : new List<PackageSnapshotKey>(packagesList.Select(p => new PackageSnapshotKey(p.Package, SnapshotPackageDiff.Add, p.Id.ToString())));
          string nextChangeId = (packagesList == null || packagesList.Count == 0)
                                   ? null
                                   : (packagesList[packagesList.Count - 1].Id + 1).ToString();
 
-         return new RemoteSnapshot(false, keys, nextChangeId) { Count = packagesList == null ? 0 : packagesList.Count };
+         return new RemoteSnapshot(isDelta, keys, nextChangeId ?? lastChangeId)
+                   {
+                      Count = packagesList == null ? 0 : packagesList.Count
+                   };
       }
 
       private RemoteSnapshot GetNonDeltaSnapshot()
       {
          PackagesResult result = _pr.GetPackages(new PackagesQuery(-1, -1));
-         return BuildSnapshot(result.Packages, false);
+         return BuildSnapshot(result.Packages, null, false, false);
       }
 
       private RemoteSnapshot GetDeltaSnapshot(long firstRecordId)
       {
          IEnumerable<DbPackage> packages = _pr.ReadLog(firstRecordId, 10, true);
-         return BuildSnapshot(packages, true);
+         return BuildSnapshot(packages, firstRecordId.ToString(), true, true);
       }
 
       public RemoteSnapshot GetSnapshot(string changeId)

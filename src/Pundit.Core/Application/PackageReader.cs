@@ -78,7 +78,7 @@ namespace Pundit.Core.Application
          var path = new List<string>();
          path.Add(kindName);
          path.Add(packageId);
-         path.Add(shortName);
+         path.AddRange(shortName.Split('/'));
 
          if(InstallingResolvedFile != null)
             InstallingResolvedFile(this, new ResolvedFileEventArgs(packageId, kind, BuildConfiguration.Any, fullName));

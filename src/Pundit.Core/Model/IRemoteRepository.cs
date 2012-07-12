@@ -26,7 +26,8 @@ namespace Pundit.Core.Model
       /// <summary>
       /// Gets the snapshot of repository
       /// </summary>
-      /// <param name="changeId">current change id or null for the full snapshot</param>
+      /// <param name="changeId">Change ID returned by this repository after last sync or null for the full snapshot.
+      /// Do not attempt to perform any arithmetics on this parameter by yourself.</param>
       /// <returns></returns>
       RemoteSnapshot GetSnapshot(string changeId);
    }

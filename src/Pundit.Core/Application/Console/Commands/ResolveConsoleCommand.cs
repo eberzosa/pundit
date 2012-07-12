@@ -77,6 +77,7 @@ namespace Pundit.Core.Application.Console.Commands
 
       public override void Execute()
       {
+         System.Console.ReadKey();
          Initialize();
 
          new RepoConsoleCommand(console, CurrentDirectory, null).UpdateSnapshots(_forceResolve);

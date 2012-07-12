@@ -16,7 +16,7 @@
     <package id="Ninject.Web.Common" version="3.0" platform="net40"/>
     <package id="Ninject.Web.Mvc" version="3.0" platform="net40"/>
 	 <package id="RestSharp" version="103.1" platform="net40"/>
-    <!--<package id="NSIS" version="2.46" platform="win32"/>-->
+    <package id="NSIS" version="2.46" platform="win32"/>
   </dependencies>
   <files>
     <file kind="bin" include="Pundit*.xml" flatten="false" basedir="src/Pundit.Core/bin/Debug" includeemptydirs="true" configuration="any" />

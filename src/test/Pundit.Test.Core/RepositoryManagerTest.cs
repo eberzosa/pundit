@@ -68,8 +68,8 @@ namespace Pundit.Test
       [Test]
       public void PlaySimpleAddSnaphotTest()
       {
-         var key1 = new PackageSnapshotKey(_p1, SnapshotPackageDiff.Add);
-         var key2 = new PackageSnapshotKey(_p2, SnapshotPackageDiff.Add);
+         var key1 = new PackageSnapshotKey(_p1, SnapshotPackageDiff.Add, null);
+         var key2 = new PackageSnapshotKey(_p2, SnapshotPackageDiff.Add, null);
          var snapshot = new RemoteSnapshot(false, new[] {key1, key2}, "delta1");
 
          var r1 = _manager.LocalRepository.Search("log4net");

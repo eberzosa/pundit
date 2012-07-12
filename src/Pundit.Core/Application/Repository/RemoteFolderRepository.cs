@@ -104,7 +104,7 @@ namespace Pundit.Core.Application.Repository
                using (var rdr = new PackageReader(s))
                {
                   //because it's a full snapshot all the time, only "add" is effective
-                  r.Add(new PackageSnapshotKey(rdr.Manifest, SnapshotPackageDiff.Add));
+                  r.Add(new PackageSnapshotKey(rdr.Manifest, SnapshotPackageDiff.Add, null));
                }
             }
          }
