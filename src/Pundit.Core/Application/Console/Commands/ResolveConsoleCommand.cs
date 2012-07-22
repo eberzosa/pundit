@@ -40,7 +40,7 @@ namespace Pundit.Core.Application.Console.Commands
       {
          foreach(UnresolvedPackage conflict in tbl.GetConflictedPackages())
          {
-            console.WriteLine(ConsoleColor.Red, dr.DescribeConflict(rootNode, conflict));
+            console.WriteLine(ConsoleColor.Red, DependencyResolution.DescribeConflict(rootNode, conflict));
          }
       }
 
@@ -77,10 +77,10 @@ namespace Pundit.Core.Application.Console.Commands
 
       public override void Execute()
       {
-         System.Console.ReadKey();
          Initialize();
 
          new RepoConsoleCommand(console, CurrentDirectory, null).UpdateSnapshots(_forceResolve);
+         console.WriteLine(null);
 
          //parse command and read manifest
          string manifestPath = GetLocalManifest();
@@ -108,13 +108,12 @@ namespace Pundit.Core.Application.Console.Commands
          console.WriteLine("");
 
 
-         console.Write("reading manifest...\t\t");
+         console.Write("reading... ");
          DevPackage devPackage = DevPackage.FromStreamXml(File.OpenRead(manifestPath));
          devPackage.Validate();
-         console.Write(true);
 
          //resolve dependencies
-         console.Write("resolving...\t\t\t");
+         console.Write("resolving... ");
 
          //System.Console.ReadKey();
          var dr = new DependencyResolution(devPackage, LocalConfiguration.RepositoryManager.LocalRepository);

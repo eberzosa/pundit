@@ -9,7 +9,7 @@ using Pundit.Core.Model;
 
 namespace Pundit.Core.Application
 {
-   class RepositoryManager : IRepositoryManager
+   class SqlRepositoryManager : IRepositoryManager
    {
       private const string RepositoryTableName = "Repository";
       private const string ManifestTableName = "PackageManifest";
@@ -17,7 +17,7 @@ namespace Pundit.Core.Application
       private readonly SqliteHelper _sql;
       private ILocalRepository _localRepo;
 
-      public RepositoryManager(SqliteHelper sql)
+      public SqlRepositoryManager(SqliteHelper sql)
       {
          if (sql == null) throw new ArgumentNullException("sql");
 
@@ -26,7 +26,7 @@ namespace Pundit.Core.Application
          Initialize();
       }
 
-      public RepositoryManager(string dbPath)
+      public SqlRepositoryManager(string dbPath)
       {
          _sql = new SqliteHelper(dbPath, "pundit");
 
@@ -175,13 +175,13 @@ namespace Pundit.Core.Application
       {
          if (repo == null) throw new ArgumentNullException("repo");
 
-         if(snapshot != null)
+         using (IDbTransaction tran = _sql.BeginTransaction())
          {
-            using (IDbTransaction tran = _sql.BeginTransaction())
+            if (snapshot != null && snapshot.Changes != null && snapshot.Changes.Length > 0)
             {
-               if(!snapshot.IsDelta)
+               if (!snapshot.IsDelta)
                {
-                  _sql.Delete(ManifestTableName, new[] { "RepositoryId=(?)" }, repo.Id);
+                  _sql.Delete(ManifestTableName, new[] {"RepositoryId=(?)"}, repo.Id);
                }
 
                foreach (PackageSnapshotKey entry in snapshot.Changes)
@@ -196,14 +196,18 @@ namespace Pundit.Core.Application
                         break;
                   }
                }
-
-               _sql.Update(RepositoryTableName,
-                  new[] { "LastRefreshed", "LastChangeId"},
-                  new object[] { DateTime.Now, snapshot.NextChangeId },
-                  new[] { "RepositoryId=(?)" }, repo.Id);
-
-               tran.Commit();
             }
+
+            string nextChangeId = (snapshot != null && snapshot.NextChangeId != null)
+                                     ? snapshot.NextChangeId
+                                     : repo.LastChangeId;
+
+            _sql.Update(RepositoryTableName,
+                        new[] {"LastRefreshed", "LastChangeId"},
+                        new object[] {DateTime.UtcNow, nextChangeId},
+                        new[] {"RepositoryId=(?)"}, repo.Id);
+
+            tran.Commit();
          }
       }
 

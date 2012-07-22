@@ -178,7 +178,13 @@ namespace Pundit.Core.Application
             FindNodes(child, package, collector);
       }
 
-      public string DescribeConflict(DependencyNode rootNode, UnresolvedPackage package)
+      /// <summary>
+      /// Returns string representation of the conflict
+      /// </summary>
+      /// <param name="rootNode"></param>
+      /// <param name="package"></param>
+      /// <returns></returns>
+      public static string DescribeConflict(DependencyNode rootNode, UnresolvedPackage package)
       {
          var b = new StringBuilder();
          var found = new List<DependencyNode>();
@@ -191,28 +197,29 @@ namespace Pundit.Core.Application
             {
                if (b.Length != 0) b.AppendLine();
 
-               b.Append("dependency: [");
-               b.Append(node.Path);
-               b.Append("], version: [");
-               b.Append(node.VersionPattern);
-               b.Append("], resolved to: [");
-
-               bool isFirst = true;
-               foreach (Version v in node.AllVersions)
+               if(node.AllVersions.Count == 0)
                {
-                  if (!isFirst)
-                  {
-                     b.Append(", ");
-                  }
-                  else
-                  {
-                     isFirst = false;
-                  }
-
-                  b.Append(v.ToString());
+                  b.AppendFormat("dependency {0} ({1}) not found", node.Path, node.VersionPattern);
                }
+               else
+               {
+                  b.AppendFormat("dependency {0} ({1}) resolved to versions: ", node.Path, node.VersionPattern);
 
-               b.Append("]");
+                  bool isFirst = true;
+                  foreach (Version v in node.AllVersions)
+                  {
+                     if (!isFirst)
+                     {
+                        b.Append(", ");
+                     }
+                     else
+                     {
+                        isFirst = false;
+                     }
+
+                     b.Append(v.ToString());
+                  }
+               }
             }
          }
 

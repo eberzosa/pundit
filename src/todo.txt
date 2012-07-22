@@ -11,6 +11,9 @@
 - vsix: check for dependencies in background and notify the user in the toolbar
 - build: use svn revision as version revision
 
+1.1.0.1
+- check for updates in background
+
 1.1.0.0 (Bloody Duck)
 CORE:
 + create sqlite-based local repository
@@ -41,14 +44,8 @@ VSIX:
 + ask to upgrade manifest to a new version
 + colored search (XML)
 + creating empty manifest from sratch
-- add manifest IntelliSense support
-- simple progress support in the console
-= analyze and test every command
- - Pack & Resolve
- - Repo
- + Search
- + Utils
-- check for updates to VSIX in the background
++ create pundit.xsd manifest file
++ add pundit.xsd to the installer
 
 web site:
 - full support for api keys

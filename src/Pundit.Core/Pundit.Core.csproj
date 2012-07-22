@@ -81,7 +81,7 @@
     <Compile Include="Application\PackageReader.cs" />
     <Compile Include="Application\PackageStreamer.cs" />
     <Compile Include="Application\PackageWriter.cs" />
-    <Compile Include="Application\RepositoryManager.cs" />
+    <Compile Include="Application\SqlRepositoryManager.cs" />
     <Compile Include="Application\RepositoryUpdater.cs" />
     <Compile Include="Application\Repository\HttpRestRemoteRepository.cs" />
     <Compile Include="Application\Repository\RemoteFolderRepository.cs" />

@@ -120,7 +120,6 @@ Section "!VSIX" SCVSIX
 
   Install2010:
     StrCpy $0 "$0\Pundit"
-    ;MessageBox MB_OK $0
     CreateDirectory $0
     DetailPrint "installing VS2010 extension into $0..."
     
@@ -130,6 +129,11 @@ Section "!VSIX" SCVSIX
     File "..\..\bin\vsix\Pundit.pkgdef"
     
     ;install XSD schema
+    ;usual location: "C:\Program Files\Microsoft Visual Studio 10.0\Xml\Schemas\"
+    !insertmacro getVs2010SchemasFolder ""
+    DetailPrint "Installing XSD schema to $0..."
+    SetOutPath "$0"
+    File /oname=pundit.xsd "..\Pundit.Core\manifest.xsd"
 
   Install2010End:
 
@@ -157,8 +161,13 @@ Section Uninstall
   RMDir /r "$INSTDIR"
   RMDir /r /REBOOTOK "$SMPROGRAMS\${PRODUCT_DIR_NAME}"
   
+  ;delete VSIX extension (VS2010)
   !insertmacro getVs2010ExFolder
   StrCpy $0 "$0\Pundit"
   RMDir /r $0
+  
+  ;delete XSD schema from VS2010
+  !insertmacro getVs2010SchemasFolder "un."
+  Delete "$0pundit.xsd"
 
 SectionEnd

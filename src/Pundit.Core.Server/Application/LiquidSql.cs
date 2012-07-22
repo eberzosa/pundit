@@ -1,10 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
-using System.Data;
 using System.IO;
-using System.Linq;
 using System.Reflection;
-using System.Text;
 using Pundit.Core.Utils;
 
 namespace Pundit.Core.Server.Application
@@ -16,6 +13,10 @@ namespace Pundit.Core.Server.Application
    class LiquidSql
    {
       private const string CreateScriptName = "create.sql";
+      private const string OptionTableName = "`Option`";
+      private const string KeyColumnName = "`Name`";
+      private const string ValueColumnName = "`Value`";
+      private const string ParameterName = "version";
 
       private readonly SqlHelper _sql;
       private readonly string _resourceFolder;
@@ -70,18 +71,43 @@ namespace Pundit.Core.Server.Application
          }
       }
 
+      private int DbVersion
+      {
+         get
+         {
+            string sver = _sql.ExecuteScalar<string>(OptionTableName, ValueColumnName, new[] {KeyColumnName + "=?P0"}, ParameterName);
+            int v;
+            int.TryParse(sver, out v);
+            return v;
+         }
+         set
+         {
+            if(DbVersion == 0)
+            {
+               _sql.Insert(OptionTableName,
+                           new[] {KeyColumnName, ValueColumnName}, ParameterName, value.ToString());
+            }
+            else
+            {
+               _sql.Update(OptionTableName, new[] {ValueColumnName}, new object[] {value.ToString()},
+                           new[] {KeyColumnName + "=?P0"}, ParameterName);
+            }
+         }
+      }
+
       public void Execute()
       {
-         if(IsDbEmpty)
+         if(DbVersion == 0)
          {
             if(_createScriptPath == null) throw new ApplicationException("database is empty but create script was not found");
 
             string script = GetScriptText(_createScriptPath);
             _sql.Execute(script);
+            DbVersion = 1;
          }
          else
          {
-            //...
+            //todo: has to be fixed only by the next DB upgrade
          }
       }
    }

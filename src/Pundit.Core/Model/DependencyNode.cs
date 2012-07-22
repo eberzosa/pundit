@@ -146,7 +146,10 @@ namespace Pundit.Core.Model
          }
       }
 
-      public IEnumerable<Version> AllVersions
+      /// <summary>
+      /// All versions satisfying the current dependency
+      /// </summary>
+      public ICollection<Version> AllVersions
       {
          get { return _versions; }
       }
@@ -162,6 +165,9 @@ namespace Pundit.Core.Model
          }
       }
 
+      /// <summary>
+      /// No matter if the package is resolved or not provides a short version of the package key without any version info
+      /// </summary>
       public UnresolvedPackage UnresolvedPackage
       {
          get

@@ -149,7 +149,7 @@ namespace Pundit.Test
          pkg.Dependencies.Add(new PackageDependency("Company.Logging", "3.0"));
          pkg.Dependencies.Add(new PackageDependency("log4net", "1.1"));
 
-         var dr = new DependencyResolution(pkg, _repo );
+         var dr = new DependencyResolution(pkg, _repo);
          var result = dr.Resolve();
          VersionResolutionTable table = result.Item1;
 
@@ -162,7 +162,7 @@ namespace Pundit.Test
          Assert.AreEqual(1, resolved.Count());
          Assert.AreEqual(1, unresolved.Count());
 
-         string cd = dr.DescribeConflict(result.Item2, unresolved.First());
+         string cd = DependencyResolution.DescribeConflict(result.Item2, unresolved.First());
       }
    }
 }

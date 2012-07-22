@@ -223,7 +223,7 @@ namespace Pundit.Core.Application.Console.Commands
          //get changes
          try
          {
-            console.Write("fetching snapshot... ");
+            console.Write("checking... ");
 
             try
             {
@@ -254,19 +254,16 @@ namespace Pundit.Core.Application.Console.Commands
 
       private void PlaySnapshot(Repo repo, RemoteSnapshot snapshot)
       {
-         if (snapshot != null && snapshot.Changes != null && snapshot.Changes.Length > 0)
+         try
          {
-            try
-            {
-               console.Write("applying snapshot...");
-               LocalConfiguration.RepositoryManager.PlaySnapshot(repo, snapshot);
-               console.Write(true);
-            }
-            catch
-            {
-               console.Write(false);
-               throw;
-            }
+            console.Write("applying...");
+            LocalConfiguration.RepositoryManager.PlaySnapshot(repo, snapshot);
+            console.Write(true);
+         }
+         catch
+         {
+            console.Write(false);
+            throw;
          }
       }
 
@@ -274,7 +271,7 @@ namespace Pundit.Core.Application.Console.Commands
       {
          foreach(Repo repo in LocalConfiguration.RepositoryManager.ActiveRepositories)
          {
-            DateTime now = DateTime.Now;
+            DateTime now = DateTime.UtcNow;
             TimeSpan elapsed = now - repo.LastRefreshed;
             bool old = force | (elapsed >= TimeSpan.FromHours(repo.RefreshIntervalInHours));
 
@@ -285,18 +282,12 @@ namespace Pundit.Core.Application.Console.Commands
 
             if(old)
             {
-               string nextChangeId;
                var snapshot = GetSnapshot(repo);
 
-               //write to db
-               if (snapshot != null && snapshot.Changes != null && snapshot.Changes.Length > 0)
-               {
-                  PlaySnapshot(repo, snapshot);
-               }
+               //write to db even if no changes detected, the call will update timings
+               PlaySnapshot(repo, snapshot);
             }
          }
-
-         console.WriteLine(ConsoleColor.Green, "update succeeded");
       }
    }
 }

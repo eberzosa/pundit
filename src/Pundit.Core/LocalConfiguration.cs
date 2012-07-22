@@ -66,7 +66,7 @@ namespace Pundit.Core
          }
 
          _localFile = Path.Combine(_localDir, LocalRepositoryFileName);
-         _mgr = new RepositoryManager(_localFile);
+         _mgr = new SqlRepositoryManager(_localFile);
       }
 
       /// <summary>

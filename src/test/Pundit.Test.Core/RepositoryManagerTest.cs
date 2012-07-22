@@ -22,7 +22,7 @@ namespace Pundit.Test
          if (Directory.Exists(_rootDir)) Directory.Delete(_rootDir, true);
          Directory.CreateDirectory(_rootDir);
 
-         _manager = new RepositoryManager(Path.Combine(_rootDir, "localrp"));
+         _manager = new SqlRepositoryManager(Path.Combine(_rootDir, "localrp"));
 
          _repo = new Repo("primary", "http://primary.com");
          _repo = _manager.Register(_repo);
