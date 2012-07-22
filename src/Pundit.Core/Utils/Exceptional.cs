@@ -1,12 +1,9 @@
 ﻿using System;
-using System.Collections.Generic;
 using System.IO;
-using System.Linq;
-using System.Text;
 
 namespace Pundit.Core.Utils
 {
-   public static class Exceptional
+   static class Exceptional
    {
       public static bool IsVsDocFile(string fullPath)
       {

@@ -4,18 +4,17 @@
   - user management 
 
 1.1.0.2
-
-1.1.0.1
 - add nuget adapter as more and more opensource libs are now moving to nuget
 - improve conflict explanation
 - vsix: check for dependencies in background and notify the user in the toolbar
 - build: use svn revision as version revision
 
 1.1.0.1
-- check for updates in background
+- web site authentication
 
 1.1.0.0 (Bloody Duck)
-CORE:
+= check for updates in background once a day
+
 + create sqlite-based local repository
   + all the cached binaries must reside in the local sqlite db file
   + repository cache (local or remote one) must be in the local db
@@ -37,8 +36,6 @@ CORE:
  + LocalRepository accepting add and del changes
  + Search
  + Utils
-
-VSIX:
 + all commands executing in background and not hanging main VS window
 + support new console output (RTF based)
 + ask to upgrade manifest to a new version
@@ -46,13 +43,6 @@ VSIX:
 + creating empty manifest from sratch
 + create pundit.xsd manifest file
 + add pundit.xsd to the installer
-
-web site:
-- full support for api keys
-- sequential database upgrade scripts
-- simplest package listing
-- home page
-- documentation
 
 ----------------------------------------------------------------------------------------------------------------------------
 
