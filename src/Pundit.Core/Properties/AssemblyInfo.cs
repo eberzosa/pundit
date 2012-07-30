@@ -33,7 +33,7 @@ using System.Runtime.InteropServices;
 // by using the '*' as shown below:
 // [assembly: AssemblyVersion("1.1.0.0")]
 [assembly: AssemblyVersion("1.1.0.0")]
-[assembly: AssemblyFileVersion("1.1.0.1")]
+[assembly: AssemblyFileVersion("1.1.0.2")]
 
 [assembly: InternalsVisibleTo("Pundit.Test, PublicKey=00240000048000009400000006020000002400005253413100040000010001002d5f19e24cf6ea" +
 "f98b39d8d45906224f972e32dae3cce36308f21a7e6e7110a66d6b8420c16ec23ac1040589f849" +

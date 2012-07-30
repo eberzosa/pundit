@@ -159,7 +159,7 @@ namespace Pundit.Core.Application
             RepositoryTableName,
             new[] { "RefreshIntervalHours", "IsEnabled", "Login", "ApiKey"},
             new object[] { repo.RefreshIntervalInHours, repo.IsEnabled, repo.Login, repo.ApiKey},
-            new[] { "RepositoryId=?P5"},
+            new[] { "RepositoryId=(?)"},
             repo.Id);
       }
 

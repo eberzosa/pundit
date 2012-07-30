@@ -1,5 +1,6 @@
 ﻿@using Pundit.Core
 @using Pundit.Core.Server.Model
+@using Pundit.Core.Utils
 @model IEnumerable<DbPackage>
 @{
     ViewBag.Title = "Packages";
@@ -20,13 +21,14 @@
    @foreach (DbPackage p in Model)
    {
       string size = ByteFormat.ToString((ulong) p.FileSize);
+      string fileName = PackageUtils.GetFileName(p.Package.Key);
       <tr>
          <td>@p.Package.PackageId</td>
          <td>@p.Package.Version</td>
          <td>@p.Package.Platform</td>
          <td>@p.CreatedDate</td>
          <td>
-            @Html.ActionLink("download", "DownloadPackage", new { id = p.Package.PackageId, v = p.Package.VersionString, p = p.Package.Platform })
+            @Html.ActionLink("download", "DownloadPackage", new { id = fileName })
             (@size)
          </td>
       </tr>

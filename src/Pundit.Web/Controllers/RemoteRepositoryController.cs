@@ -42,7 +42,7 @@ namespace Pundit.Web.Controllers
             if (_user == null)
             {
                Response.StatusCode = (int)HttpStatusCode.NotFound;
-               Response.StatusDescription = "user " + _cred.UserName + " not found";
+               Response.StatusDescription = "user '" + _cred.UserName + "' not found";
             }
             else
             {

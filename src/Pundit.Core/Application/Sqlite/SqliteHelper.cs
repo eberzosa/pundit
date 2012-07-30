@@ -83,7 +83,7 @@ namespace Pundit.Core.Application.Sqlite
       {
          if (value is string)
             cmd.Parameters.Add(new SqliteParameter(name, DbType.String) { Value = value});
-         else if (value is long)
+         else if (value is long || value is int)
             cmd.Parameters.Add(new SqliteParameter(name, DbType.Int32) { Value = value });
          else if (value is bool)
             cmd.Parameters.Add(new SqliteParameter(name, DbType.Boolean) { Value = value });

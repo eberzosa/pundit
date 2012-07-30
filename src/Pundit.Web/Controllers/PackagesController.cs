@@ -51,12 +51,10 @@ namespace Pundit.Web.Controllers
       }
 
       [HttpGet]
-      public FileResult DownloadPackage(string id, string v, string p)
+      public FileResult DownloadPackage(string id)
       {
-         var key = new PackageKey(id, new Version(v), p);
-         string fileName = PackageUtils.GetFileName(key);
-
-         return File(_repository.Download(p, id, v), PackageUtils.GetFileName(key), fileName);
+         PackageKey key = PackageUtils.GetPackageKeyFromFileName(id);
+         return File(_repository.Download(key.Platform, key.PackageId, key.VersionString), Package.DefaultContentType, id);
       }
    }
 }

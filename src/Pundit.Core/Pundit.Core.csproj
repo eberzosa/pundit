@@ -98,6 +98,7 @@
       <DesignTime>True</DesignTime>
       <DependentUpon>Ex.resx</DependentUpon>
     </Compile>
+    <Compile Include="Exceptions\RemoteRepositoryException.cs" />
     <Compile Include="Exceptions\RepositoryOfflineException.cs" />
     <Compile Include="Globals.cs" />
     <Compile Include="LocalConfiguration.cs" />

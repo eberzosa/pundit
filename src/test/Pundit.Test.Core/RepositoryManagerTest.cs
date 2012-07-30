@@ -84,10 +84,16 @@ namespace Pundit.Test
          Assert.AreEqual(1, r2.Count);
       }
 
-      [Test, Ignore]
-      public void PlayAddsAndDeletesTest()
+      [Test]
+      public void SetApiKeyTest()
       {
-         
+         Repo r = new Repo("test1", "fake://fake");
+         Repo rc = _manager.Register(r);
+
+         rc.Login = "admin";
+         rc.ApiKey = "fake-key";
+
+         _manager.Update(rc);
       }
    }
 }
