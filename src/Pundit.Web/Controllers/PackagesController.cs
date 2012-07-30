@@ -51,7 +51,7 @@ namespace Pundit.Web.Controllers
       }
 
       [HttpGet]
-      public FileResult DownloadPackage(string id)
+      public FileResult Binary(string id)
       {
          PackageKey key = PackageUtils.GetPackageKeyFromFileName(id);
          return File(_repository.Download(key.Platform, key.PackageId, key.VersionString), Package.DefaultContentType, id);
