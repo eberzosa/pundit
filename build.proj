@@ -12,11 +12,11 @@
       <MSBuild Projects="src/Pundit.sln" Properties="Configuration=Release"/>
    </Target>
 
-   <Target Name="BuildInstaller" DependsOnTargets="BuildSolution">
-
+   <Target Name="BuildInstaller">
+      <Exec Command="&quot;c:\Program Files (x86)\NSIS\makensis.exe&quot; src\installer\installer.nsi"/>
    </Target>
 
-   <Target Name="Build" DependsOnTargets="BuildInstaller">
+   <Target Name="Build" DependsOnTargets="BuildSolution;BuildInstaller">
 
    </Target>
 

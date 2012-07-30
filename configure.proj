@@ -4,6 +4,6 @@
       <VMajor>1</VMajor>
       <VMinor>1</VMinor>
       <VBuild>0</VBuild>
-      <VRevision>0</VRevision>
+      <VRevision>1</VRevision>
    </PropertyGroup>
 </Project>
