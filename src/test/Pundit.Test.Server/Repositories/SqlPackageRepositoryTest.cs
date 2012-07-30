@@ -1,13 +1,11 @@
 ﻿using System;
-using System.Collections.Generic;
 using System.Linq;
-/*using System.Text;
 using NUnit.Framework;
 using Pundit.Core.Model;
 using Pundit.Core.Server.Application;
 using Pundit.Core.Server.Model;
 
-namespace Pundit.Test.Server
+namespace Pundit.Test.Server.Repositories
 {
    [TestFixture]
    public class SqlPackageRepositoryTest
@@ -21,10 +19,14 @@ namespace Pundit.Test.Server
       {
          _repo = new MySqlPackageRepository(TestConnectionString);
 
-         long totalCount;
-         foreach (DbPackage dbp in _repo.GetPackages(-1, -1, true, out totalCount))
+         var qry = new PackagesQuery(0, 10000);
+         PackagesResult res = _repo.GetPackages(qry);
+         if (res != null && res.Packages != null)
          {
-            _repo.DeletePackage(dbp.Package.Key);
+            foreach (DbPackage dbp in res.Packages)
+            {
+               _repo.DeletePackage(dbp.Package.Key);
+            }
          }
       }
 
@@ -41,8 +43,8 @@ namespace Pundit.Test.Server
       public void NoPackagesTest()
       {
          long count;
-         var packages = _repo.GetPackages(-1, -1, true, out count);
-         Assert.AreEqual(0, packages.Count());
+         var packages = _repo.GetPackages(new PackagesQuery(0, 10));
+         Assert.AreEqual(0, packages.Count);
       }
 
       [Test]
@@ -88,4 +90,3 @@ namespace Pundit.Test.Server
       }
    }
 }
-*/

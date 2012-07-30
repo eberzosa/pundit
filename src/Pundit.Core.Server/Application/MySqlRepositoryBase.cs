@@ -68,7 +68,7 @@ namespace Pundit.Core.Server.Application
          {
             cmd.Parameters.Add(new MySqlParameter(name, DBNull.Value));
          }
-         else if (value is string || value is long || value is bool || value is DateTime)
+         else if (value is string || value is long || value is bool || value is DateTime || value is int)
          {
             var p = new MySqlParameter(name, value);
             cmd.Parameters.Add(p);

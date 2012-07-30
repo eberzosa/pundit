@@ -13,7 +13,7 @@ namespace Pundit.Core.Server.Application
       private const string DependencyTableName = "PackageDependency";
       private const string LogTableName = "PackageLog";
       private static readonly string[] KeyColumns = new[] {"PackageId", "Version", "Platform"};
-      private static readonly string[] KeyRestriction = new[] { "PackageId=?P0", "Version=?P1", "Platform=?P2" };
+      private static readonly string[] KeyRestriction = new[] { "PackageId=?P0", "Platform=?P1", "VMaj=?P2", "VMin=?P3", "VBld=?P4", "VRev=?P5" };
 
       public MySqlPackageRepository() : this(null)
       {
@@ -32,14 +32,6 @@ namespace Pundit.Core.Server.Application
             Math.Max(0, v.Minor),
             Math.Max(0, v.Build),
             Math.Max(0, v.Revision));
-      }
-
-      private string FormatShortVersion(Version v)
-      {
-         return string.Format("{0}.{1}.{2}",
-            Math.Max(0, v.Major),
-            Math.Max(0, v.Minor),
-            Math.Max(0, v.Build));
       }
 
       private void RecordHistory(long recordId, Package p)
@@ -66,13 +58,18 @@ namespace Pundit.Core.Server.Application
                ManifestTableName,
                new[]
                   {
-                     "PackageId", "Version", "VersionShort", "Platform",
+                     "PackageId", "Platform",
                      "ProjectUrl", "Author", "Description", "ReleaseNotes", "License",
-                     "IsActive", "CreatedDate", "FileSize"
+                     "IsActive", "CreatedDate", "FileSize",
+                     "VMaj", "VMin", "VBld", "VRev"
                   },
-               p.PackageId, FormatVersion(p.Version), FormatShortVersion(p.Version), p.Platform,
+               p.PackageId, p.Platform,
                p.ProjectUrl, p.Author, p.Description, p.ReleaseNotes, p.License,
-               true, DateTime.UtcNow, fileSize);
+               true, DateTime.UtcNow, fileSize,
+               Math.Max(0, p.Version.Major),
+               Math.Max(0, p.Version.Minor),
+               Math.Max(0, p.Version.Build),
+               Math.Max(0, p.Version.Revision));
 
             //insert dependencies
             foreach(PackageDependency pd in p.Dependencies)
@@ -120,8 +117,12 @@ namespace Pundit.Core.Server.Application
          using(IDataReader reader = ExecuteReader(
             ManifestTableName,
             new[] { "PackageManifestId"},
-            new[] { "PackageId=?P0", "Platform=?P1", "Version=?P2"},
-            key.PackageId, key.Platform, FormatVersion(key.Version)))
+            new[] { "PackageId=?P0", "Platform=?P1", "VMaj=?P2", "VMin=?P3", "VBld=?P4", "VRev=?P5"},
+            key.PackageId, key.Platform,
+            Math.Max(0, key.Version.Major),
+            Math.Max(0, key.Version.Minor),
+            Math.Max(0, key.Version.Build),
+            Math.Max(0, key.Version.Revision)))
          {
             while (reader.Read())
             {
@@ -150,7 +151,13 @@ namespace Pundit.Core.Server.Application
 
       private DbPackage ReadPackage(IDataReader reader)
       {
-         Package p = new Package(reader.AsString("PackageId"), new Version(reader.AsString("Version")));
+         long major = reader.AsLong("VMaj");
+         long minor = reader.AsLong("VMin");
+         long build = reader.AsLong("VBld");
+         long revision = reader.AsLong("VRev");
+         var v = new Version((int)major, (int)minor, (int)build, (int)revision);
+
+         Package p = new Package(reader.AsString("PackageId"), v);
          p.Platform = reader.AsString("Platform");
          p.ProjectUrl = reader.AsString("ProjectUrl");
          p.Author = reader.AsString("Author");
@@ -213,15 +220,23 @@ namespace Pundit.Core.Server.Application
       public DbPackage GetPackage(PackageKey key)
       {
          IDataReader reader = ExecuteReader(ManifestTableName, null,
-            new[] { "PackageId=?P0", "Version=?P1", "Platform=?P2" },
-            key.PackageId, FormatVersion(key.Version), key.Platform);
+            new[] { "PackageId=?P0", "Platform=?P1", "VMaj=?P2", "VMin=?P3", "VBld=?P4", "VRev=?P5" },
+            key.PackageId, key.Platform,
+            Math.Max(0, key.Version.Major),
+            Math.Max(0, key.Version.Minor),
+            Math.Max(0, key.Version.Build),
+            Math.Max(0, key.Version.Revision));
          return ReadFullPackage(reader);
       }
 
       public bool Exists(PackageKey key)
       {
          uint id = ExecuteScalar<uint>(ManifestTableName, "PackageManifestId",
-                                       KeyRestriction, key.PackageId, FormatVersion(key.Version), key.Platform);
+                                       KeyRestriction, key.PackageId, key.Platform,
+                                       Math.Max(0, key.Version.Major),
+                                       Math.Max(0, key.Version.Minor),
+                                       Math.Max(0, key.Version.Build),
+                                       Math.Max(0, key.Version.Revision));
          return id != 0;
       }
 
@@ -259,8 +274,11 @@ namespace Pundit.Core.Server.Application
       {
          using(IDataReader reader = ExecuteReader(ManifestTableName,
             null,
-            new[] { "PackageId=?P0", "Platform=?P1", "VersionShort=?P2" },
-            key.PackageId, key.Platform, FormatShortVersion(key.Version)))
+            new[] { "PackageId=?P0", "Platform=?P1", "VMaj=?P2", "VMin=?P3", "VBld=?P4" },
+            key.PackageId, key.Platform,
+            Math.Max(0, key.Version.Major),
+            Math.Max(0, key.Version.Minor),
+            Math.Max(0, key.Version.Build)))
          {
             return ReadFullPackages(reader);
          }
