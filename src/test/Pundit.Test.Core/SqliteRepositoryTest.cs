@@ -2,10 +2,7 @@
 using System.Collections.Generic;
 using System.IO;
 using System.Linq;
-using System.Reflection;
-using System.Text;
 using NUnit.Framework;
-using Pundit.Core;
 using Pundit.Core.Application;
 using Pundit.Core.Application.Repository;
 using Pundit.Core.Model;
@@ -42,7 +39,7 @@ namespace Pundit.Test
 
          using (Stream s = File.OpenRead(path))
          {
-            _repo.Put(s);
+            _repo.Put(s, null);
          }
       }
 
@@ -53,7 +50,7 @@ namespace Pundit.Test
 
          using (Stream s = File.OpenRead(path))
          {
-            _repo.Put(s);
+            _repo.Put(s, null);
          }
 
          Stream ps = _repo.Get(new PackageKey("stateless", new Version("2.3.1.1"), "net35"));
@@ -67,7 +64,7 @@ namespace Pundit.Test
          string path = Path.Combine(_dataPath, "stateless-2.3.1-1-net35.pundit");
          using (Stream s = File.OpenRead(path))
          {
-            _repo.Put(s);
+            _repo.Put(s, null);
          }
 
          var v1 = _repo.GetVersions(new UnresolvedPackage("stateless", "net35"), new VersionPattern("2.3"));
@@ -90,7 +87,7 @@ namespace Pundit.Test
          }
          using (Stream s = File.OpenRead(path))
          {
-            _repo.Put(s);
+            _repo.Put(s, null);
          }
 
          Package p2 = _repo.GetManifest(p.Key);

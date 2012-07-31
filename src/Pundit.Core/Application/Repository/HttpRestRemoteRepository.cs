@@ -3,6 +3,7 @@ using System.IO;
 using System.Net;
 using System.Security.Cryptography;
 using System.Text;
+using Pundit.Core.Application.Streaming;
 using Pundit.Core.Exceptions;
 using Pundit.Core.Model;
 using Pundit.Core.Utils;
@@ -36,6 +37,7 @@ namespace Pundit.Core.Application.Repository
          {
             var request = (HttpWebRequest) WebRequest.Create(new Uri(_absoluteUri, "publish"));
             request.Method = "POST";
+            request.AllowWriteStreamBuffering = false;
             RequestSigning.Sign(request, _login, _apiKey);
             using (var rs = request.GetRequestStream())
             {
@@ -57,7 +59,13 @@ namespace Pundit.Core.Application.Repository
                new Uri(_absoluteUri, string.Format("download/{0}/{1}/{2}", platform, packageId, version)));
             request.Method = "GET";
             var response = (HttpWebResponse) request.GetResponse();
-            return response.GetResponseStream();
+
+            Stream masterStream = response.GetResponseStream();
+            long totalLength = response.ContentLength;
+
+            var result = new WrappedStream(masterStream);
+            result.OverridenLength = totalLength;
+            return result;
          }
          catch(Exception ex)
          {

@@ -58,7 +58,7 @@ namespace Pundit.Test.Mocks
          throw new NotImplementedException();
       }
 
-      public void Put(Stream packageStream)
+      public void Put(Stream packageStream, Action<long> readCallback)
       {
          throw new NotImplementedException();
       }

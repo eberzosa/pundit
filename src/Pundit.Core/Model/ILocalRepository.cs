@@ -51,7 +51,8 @@ namespace Pundit.Core.Model
       /// Saves package stream to local cache
       /// </summary>
       /// <param name="packageStream"></param>
-      void Put(Stream packageStream);
+      /// <param name="readCallback">Called back to update read counter if non null value passed</param>
+      void Put(Stream packageStream, Action<long> readCallback);
 
       /// <summary>
       /// Gets the stream of local cached binary

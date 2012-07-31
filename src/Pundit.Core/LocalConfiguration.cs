@@ -107,19 +107,54 @@ namespace Pundit.Core
          {
             long repoId = localRepo.GetClosestRepositoryId(pck);
             Repo downRepoMeta = _mgr.GetRepositoryById(repoId);
+            if(downRepoMeta == null)
+            {
+               throw new InvalidOperationException("can't find repository #" + repoId + " for key " + pck);
+            }
             IRemoteRepository downRepo = RemoteRepositoryFactory.Create(downRepoMeta.Uri, downRepoMeta.Login, downRepoMeta.ApiKey);
 
             using (Stream pckStream = downRepo.Download(pck.Platform, pck.PackageId, pck.VersionString))
             {
-               if (PackageDownloadToLocalRepository != null)
-                  PackageDownloadToLocalRepository(null, new PackageDownloadEventArgs(pck, true, 1, 0));
-
-               localRepo.Put(pckStream);
+               long sourceLen = pckStream.Length;
+               var closure = new DownloadProgressClosure(pck, sourceLen, Raise);
+               localRepo.Put(pckStream, closure.PutCallback);
             }
-
-            if (PackageDownloadToLocalRepository != null)
-               PackageDownloadToLocalRepository(null, new PackageDownloadEventArgs(pck, true, 1, 1));
          }
+      }
+
+      private static void Raise(PackageDownloadEventArgs args)
+      {
+         if(PackageDownloadToLocalRepository != null && args != null)
+         {
+            PackageDownloadToLocalRepository(null, args);
+         }
+      }
+   }
+
+   class DownloadProgressClosure
+   {
+      private readonly PackageKey _key;
+      private readonly long _totalSize;
+      private readonly Action<PackageDownloadEventArgs> _eventForwarder;
+      private long _readBefore;
+      private readonly AvgSpeedMeasure _speed = new AvgSpeedMeasure();
+
+      public DownloadProgressClosure(PackageKey key, long totalSize, Action<PackageDownloadEventArgs> eventForwarder)
+      {
+         if (key == null) throw new ArgumentNullException("key");
+         if (eventForwarder == null) throw new ArgumentNullException("eventForwarder");
+
+         _key = key;
+         _totalSize = totalSize;
+         _eventForwarder = eventForwarder;
+      }
+
+      public void PutCallback(long read)
+      {
+         _speed.Slice(read - _readBefore);
+         _readBefore = read;
+         var args = new PackageDownloadEventArgs(_key, true, _totalSize, read, _speed.BytesPerSecond);
+         _eventForwarder(args);
       }
    }
 }

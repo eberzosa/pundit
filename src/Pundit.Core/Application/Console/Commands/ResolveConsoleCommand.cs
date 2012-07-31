@@ -12,7 +12,6 @@ namespace Pundit.Core.Application.Console.Commands
       private BuildConfiguration _buildConfiguration;
       private bool _forceResolve;
       private bool _pingOnly;
-      private int _packagesDownloaded;
       private int _packagesInstalled;
 
       public ResolveConsoleCommand(IConsoleOutput console, string currentDirectory, string[] args)
@@ -135,10 +134,8 @@ namespace Pundit.Core.Application.Console.Commands
          if (forDownload.Count > 0)
          {
             console.WriteLine("downloading {0} packages...", forDownload.Count);
-            console.StartProgress(forDownload.Count);
             LocalConfiguration.PackageDownloadToLocalRepository += LocalRepository_PackageDownloadToLocalRepository;
             LocalConfiguration.DownloadLocally(forDownload);
-            console.FinishProgress();
          }
 
          //install all packages
@@ -188,8 +185,15 @@ namespace Pundit.Core.Application.Console.Commands
 
       void LocalRepository_PackageDownloadToLocalRepository(object sender, PackageDownloadEventArgs e)
       {
-         string hint = string.Format("downloading {0}...", e.PackageKey.PackageId);
-         console.UpdateProgress(_packagesDownloaded++, hint);
+         console.ReturnCarriage();
+         console.Write(ConsoleColor.White, "{0} {1} ({2}): ", e.PackageKey.PackageId, e.PackageKey.Version, e.PackageKey.Platform);
+         console.Write(ConsoleColor.Yellow, ByteFormat.ToString((ulong)e.DownloadedSize));
+         console.Write(ConsoleColor.White, " of ");
+         console.Write(ConsoleColor.Yellow, ByteFormat.ToString((ulong)e.TotalSize));
+         console.Write(ConsoleColor.White, " - {0:0.00}% - {1}/sec",
+            (e.DownloadedSize * 100.0 / e.TotalSize),
+            ByteFormat.ToString((ulong)e.AvgSpeed));
+         console.Write("   ");
       }
    }
 }

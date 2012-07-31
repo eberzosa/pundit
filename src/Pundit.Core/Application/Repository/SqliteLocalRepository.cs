@@ -67,7 +67,7 @@ namespace Pundit.Core.Application.Repository
          return id;
       }
 
-      public void Put(Stream packageStream)
+      public void Put(Stream packageStream, Action<long> readCallback)
       {
          string tempFile = Path.Combine(Path.GetTempPath(), TempFilePrefix + Guid.NewGuid());
 
@@ -78,7 +78,15 @@ namespace Pundit.Core.Application.Repository
                //download file
                using (Stream ts = File.Create(tempFile))
                {
-                  packageStream.CopyTo(ts);
+                  int read;
+                  int readTotal = 0;
+                  byte[] buffer = new byte[8000];
+                  while((read = packageStream.Read(buffer, 0, buffer.Length)) != 0)
+                  {
+                     readTotal += read;
+                     if (readCallback != null) readCallback(readTotal);
+                     ts.Write(buffer, 0, read);
+                  }
                }
 
                //validate manifest

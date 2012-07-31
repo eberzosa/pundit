@@ -81,6 +81,11 @@ namespace Pundit.Vsix.Forms.Console
                      });
       }
 
+      public void ReturnCarriage()
+      {
+         
+      }
+
       private Color TranslateColor(ConsoleColor color)
       {
          switch(color)
@@ -116,6 +121,11 @@ namespace Pundit.Vsix.Forms.Console
       }
 
       #region Implementation of IConsoleOutput
+
+      public bool CanUpdate
+      {
+         get { return true; }
+      }
 
       public void Write(string format, params object[] args)
       {

@@ -8,6 +8,7 @@ namespace Pundit.Console
    class GlamTerm : IConsoleOutput
    {
       private readonly bool _supportsCursor;
+      private bool? _canUpdate;
 
       private class ForeColorProtector : IDisposable
       {
@@ -65,6 +66,27 @@ namespace Pundit.Console
       public void WriteLine(ConsoleColor defaultColor, string format, params object[] args)
       {
          Write(defaultColor, true, format, args);
+      }
+
+      public bool CanUpdate
+      {
+         get
+         {
+            if(_canUpdate == null)
+            {
+               try
+               {
+                  var w = ConsoleS.WindowWidth;
+                  _canUpdate = true;
+               }
+               catch
+               {
+                  _canUpdate = false;
+               }
+            }
+
+            return _canUpdate.Value;
+         }
       }
 
       public void Write(string format, params object[] args)
@@ -257,6 +279,11 @@ namespace Pundit.Console
 
       public void FixPrompt()
       {
+      }
+
+      public void ReturnCarriage()
+      {
+         MoveCursor(0);
       }
 
       #endregion

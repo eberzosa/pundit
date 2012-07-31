@@ -1,20 +1,21 @@
-1.2.0.0 (roadmap)
+1.2.0 (roadmap)
 - http://pundit.codeplex.com/workitem/13528 (stable/unstable packages)
 - asp.net website:
   - user management 
 
-1.1.0.2
+1.1.2
 - add nuget adapter as more and more opensource libs are now moving to nuget
 - improve conflict explanation
 - vsix: check for dependencies in background and notify the user in the toolbar
 - build: use svn revision as version revision
 
-1.1.0.1
+1.1.1
 - web site authentication
 
-1.1.0.0 (Bloody Duck)
+1.1.0 (Bloody Duck)
 = check for updates in background once a day
-
+= resolve progress should look normal
+= resolve progress should look normal in VSIX too
 + create sqlite-based local repository
   + all the cached binaries must reside in the local sqlite db file
   + repository cache (local or remote one) must be in the local db

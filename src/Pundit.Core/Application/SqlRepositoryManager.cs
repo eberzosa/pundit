@@ -104,22 +104,26 @@ namespace Pundit.Core.Application
 
       public void ZapCache()
       {
-         using(IDbCommand cmd = _sql.CreateCommand())
+         Repo local = GetRepositoryByTag(LocalConfiguration.LocalRepositoryTag);
+         if (local != null)
          {
-            cmd.CommandText = "delete from PackageManifest where RepositoryId=1";
-            cmd.ExecuteNonQuery();
-         }
+            using (IDbCommand cmd = _sql.CreateCommand())
+            {
+               cmd.CommandText = "delete from PackageManifest where RepositoryId=" + local.Id;
+               cmd.ExecuteNonQuery();
+            }
 
-         using(IDbCommand cmd = _sql.CreateCommand())
-         {
-            cmd.CommandText = "delete from PackageBinary";
-            cmd.ExecuteNonQuery();
-         }
+            using (IDbCommand cmd = _sql.CreateCommand())
+            {
+               cmd.CommandText = "delete from PackageBinary";
+               cmd.ExecuteNonQuery();
+            }
 
-         using(IDbCommand cmd = _sql.CreateCommand())
-         {
-            cmd.CommandText = "VACUUM;";
-            cmd.ExecuteNonQuery();
+            using (IDbCommand cmd = _sql.CreateCommand())
+            {
+               cmd.CommandText = "VACUUM;";
+               cmd.ExecuteNonQuery();
+            }
          }
       }
 

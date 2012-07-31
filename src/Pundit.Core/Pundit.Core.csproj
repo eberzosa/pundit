@@ -57,6 +57,7 @@
   <ItemGroup>
     <Compile Include="3rdparty\DirectoryScanner.cs" />
     <Compile Include="3rdparty\Options.cs" />
+    <Compile Include="Application\AvgSpeedMeasure.cs" />
     <Compile Include="Application\Console\CommandFactory.cs" />
     <Compile Include="Application\Console\Commands\BaseConsoleCommand.cs" />
     <Compile Include="Application\Console\Commands\HelpConsoleCommand.cs" />
@@ -87,6 +88,7 @@
     <Compile Include="Application\Repository\RemoteFolderRepository.cs" />
     <Compile Include="Application\Repository\SqliteLocalRepository.cs" />
     <Compile Include="Application\Sqlite\SqliteHelper.cs" />
+    <Compile Include="Application\Streaming\WrappedStream.cs" />
     <Compile Include="C.cs" />
     <Compile Include="Errors.Designer.cs">
       <AutoGen>True</AutoGen>

@@ -135,7 +135,7 @@ namespace Pundit.Core.Server.Application
 
       private RemoteSnapshot GetDeltaSnapshot(long firstRecordId)
       {
-         IEnumerable<DbPackage> packages = _pr.ReadLog(firstRecordId, 10, true);
+         IEnumerable<DbPackage> packages = _pr.ReadLog(firstRecordId, int.MaxValue, true);
          return BuildSnapshot(packages, firstRecordId.ToString(), true, true);
       }
 

@@ -8,6 +8,11 @@ namespace Pundit.Core.Model
    public interface IConsoleOutput
    {
       /// <summary>
+      /// Returns true if console supports screen updates
+      /// </summary>
+      bool CanUpdate { get; }
+
+      /// <summary>
       /// 
       /// </summary>
       /// <param name="format"></param>
@@ -63,5 +68,10 @@ namespace Pundit.Core.Model
       void FinishCommand();
 
       void FixPrompt();
+
+      /// <summary>
+      /// Move cursor to the beginning of the line
+      /// </summary>
+      void ReturnCarriage();
    }
 }
