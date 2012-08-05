@@ -28,7 +28,7 @@ CREATE TABLE `option` (
   `Value` text,
   PRIMARY KEY (`OptionId`),
   UNIQUE KEY `Option_Key` (`Name`)
-) ENGINE=InnoDB DEFAULT CHARSET=latin1;
+) ENGINE=InnoDB AUTO_INCREMENT=4 DEFAULT CHARSET=latin1;
 /*!40101 SET character_set_client = @saved_cs_client */;
 
 --
@@ -49,7 +49,7 @@ CREATE TABLE `packagedependency` (
   PRIMARY KEY (`PackageDependencyId`),
   KEY `FK_PackageDepenency_PackageManifest` (`PackageManifestId`),
   CONSTRAINT `FK_PackageDepenency_PackageManifest` FOREIGN KEY (`PackageManifestId`) REFERENCES `packagemanifest` (`PackageManifestId`) ON DELETE CASCADE
-) ENGINE=InnoDB AUTO_INCREMENT=11 DEFAULT CHARSET=latin1;
+) ENGINE=InnoDB AUTO_INCREMENT=17 DEFAULT CHARSET=latin1;
 /*!40101 SET character_set_client = @saved_cs_client */;
 
 --
@@ -71,7 +71,7 @@ CREATE TABLE `packagelog` (
   KEY `FK_manifesthistory_packagemanifest` (`PackageManifestId`) USING BTREE,
   KEY `PackageLog_Key` (`PackageId`,`Platform`,`Version`),
   CONSTRAINT `FK_manifesthistory_packagemanifest` FOREIGN KEY (`PackageManifestId`) REFERENCES `packagemanifest` (`PackageManifestId`)
-) ENGINE=InnoDB AUTO_INCREMENT=11173 DEFAULT CHARSET=latin1;
+) ENGINE=InnoDB AUTO_INCREMENT=11224 DEFAULT CHARSET=latin1;
 /*!40101 SET character_set_client = @saved_cs_client */;
 
 --
@@ -84,7 +84,6 @@ DROP TABLE IF EXISTS `packagemanifest`;
 CREATE TABLE `packagemanifest` (
   `PackageManifestId` int(10) unsigned NOT NULL AUTO_INCREMENT,
   `PackageId` varchar(255) NOT NULL,
-  `Version` varchar(45) NOT NULL,
   `Platform` varchar(45) NOT NULL,
   `ProjectUrl` varchar(255) DEFAULT NULL,
   `Author` varchar(45) DEFAULT NULL,
@@ -94,13 +93,16 @@ CREATE TABLE `packagemanifest` (
   `IsActive` tinyint(1) DEFAULT NULL,
   `CreatedDate` datetime DEFAULT NULL,
   `FileSize` int(10) unsigned DEFAULT NULL,
-  `VersionShort` varchar(45) DEFAULT NULL,
   `DownloadCount` int(10) unsigned NOT NULL DEFAULT '0',
+  `VMaj` int(10) unsigned DEFAULT NULL,
+  `VMin` int(10) unsigned DEFAULT NULL,
+  `VBld` int(10) unsigned DEFAULT NULL,
+  `VRev` int(10) unsigned DEFAULT NULL,
   PRIMARY KEY (`PackageManifestId`),
-  KEY `PackageManifest_Key` (`PackageId`,`Version`,`Platform`),
-  KEY `PackageManifest_Revisions` (`PackageId`,`Platform`,`VersionShort`) USING BTREE,
-  KEY `PackageManifest_IsActive` (`IsActive`,`CreatedDate`) USING BTREE
-) ENGINE=InnoDB AUTO_INCREMENT=11211 DEFAULT CHARSET=latin1;
+  KEY `PackageManifest_IsActive` (`IsActive`,`CreatedDate`) USING BTREE,
+  KEY `PackageManifest_Key` (`PackageId`,`Platform`) USING BTREE,
+  KEY `PackageManifest_Revisions` (`PackageId`,`Platform`) USING BTREE
+) ENGINE=InnoDB AUTO_INCREMENT=11262 DEFAULT CHARSET=latin1;
 /*!40101 SET character_set_client = @saved_cs_client */;
 
 --
@@ -129,4 +131,4 @@ CREATE TABLE `user` (
 /*!40101 SET COLLATION_CONNECTION=@OLD_COLLATION_CONNECTION */;
 /*!40111 SET SQL_NOTES=@OLD_SQL_NOTES */;
 
--- Dump completed on 2012-06-26 20:59:27
+-- Dump completed on 2012-08-05  3:20:35
