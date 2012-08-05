@@ -77,7 +77,7 @@ namespace Pundit.Core.Application.Console.Commands
             console.WriteLine(ConsoleColor.Red, string.Format("package exists at [{0}], deleting", destinationFile));
          }
 
-         console.WriteLine("creating package at [" + destinationFile + "]");
+         console.Write("creating package at " + destinationFile + "...");
 
          long bytesWritten;
 
@@ -85,12 +85,10 @@ namespace Pundit.Core.Application.Console.Commands
          {
             using (var pw = new PackageWriter(solutionRoot, devPack, writeStream))
             {
-               pw.BeginPackingFile += PackageWriterBeginWritePackage;
-               pw.EndPackingFile += PackageWriterEndWritePackage;
                bytesWritten = pw.WriteAll();
             }
          }
-         console.FinishProgress();
+         console.Write(true);
 
          long packageSize = new FileInfo(destinationFile).Length;
 
@@ -98,22 +96,6 @@ namespace Pundit.Core.Application.Console.Commands
             PathUtils.FileSizeToString(bytesWritten),
             PathUtils.FileSizeToString(packageSize),
             packageSize * 100 / bytesWritten));
-      }
-
-      void PackageWriterEndWritePackage(object sender, Core.Model.EventArguments.PackageFileEventArgs e)
-      {
-         console.UpdateProgress(e.FileIndex + 1);
-      }
-
-      private bool _progressStarted;
-
-      void PackageWriterBeginWritePackage(object sender, Core.Model.EventArguments.PackageFileEventArgs e)
-      {
-         if(!_progressStarted)
-         {
-            console.StartProgress(e.FilesTotal);
-            _progressStarted = true;
-         }
       }
    }
 }

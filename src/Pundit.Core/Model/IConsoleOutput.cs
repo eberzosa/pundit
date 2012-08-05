@@ -57,22 +57,23 @@ namespace Pundit.Core.Model
       /// <summary>
       /// Draws a progress bar starting from 0%
       /// </summary>
-      void StartProgress(int maxValue);
+      //void StartProgress(int maxValue);
 
       /// <summary>
       /// Updates current progress bar value
       /// </summary>
       /// <param name="value">0-maxValue set in StartProgress</param>
-      void UpdateProgress(int value, string hint = null);
+      //void UpdateProgress(int value, string hint = null);
 
       /// <summary>
       /// Complete progress bar and dispose any objects involved in drawing the progress
       /// </summary>
-      void FinishProgress();
+      //void FinishProgress();
 
+      /// <summary>
+      /// Prints "all done"
+      /// </summary>
       void FinishCommand();
-
-      void FixPrompt();
 
       /// <summary>
       /// Move cursor to the beginning of the line
