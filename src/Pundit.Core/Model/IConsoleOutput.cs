@@ -20,6 +20,11 @@ namespace Pundit.Core.Model
       void Write(string format, params object[] args);
 
       /// <summary>
+      /// Writes new line
+      /// </summary>
+      void WriteLine();
+
+      /// <summary>
       /// 
       /// </summary>
       /// <param name="format"></param>
@@ -73,5 +78,10 @@ namespace Pundit.Core.Model
       /// Move cursor to the beginning of the line
       /// </summary>
       void ReturnCarriage();
+
+      /// <summary>
+      /// Writes spaces to the end of the line
+      /// </summary>
+      void ClearToEnd();
    }
 }

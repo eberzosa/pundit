@@ -5,6 +5,19 @@ using System.Text;
 
 namespace Pundit.Core.Model
 {
+   public class ZapStats
+   {
+      public ZapStats(long bytesDeleted, long packagesDeleted)
+      {
+         BytesDeleted = bytesDeleted;
+         PackagesDeleted = packagesDeleted;
+      }
+
+      public long BytesDeleted { get; private set; }
+
+      public long PackagesDeleted { get; private set; }
+   }
+
    /// <summary>
    /// Sets of methods to work with local configuration
    /// </summary>
@@ -30,7 +43,7 @@ namespace Pundit.Core.Model
       /// <summary>
       /// Deletes all binaries from the local cache
       /// </summary>
-      void ZapCache();
+      ZapStats ZapCache();
 
       Repo Register(Repo newRepo);
 

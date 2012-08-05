@@ -31,12 +31,12 @@ namespace Pundit.Core.Application.Console.Commands
             UpdateCaps();
          else if(action == "update")
             Update();
-         else if(action == "purgelocal")
-            PurgeLocalRepository();
+         else if(action == "vacuum")
+            VacuumRepository();
          else throw new ArgumentException("unknown action " + action);
       }
 
-      private void PurgeLocalRepository()
+      private void VacuumRepository()
       {
          console.WriteLine("purging local repository data...");
          LocalConfiguration.RepositoryManager.ZapCache();

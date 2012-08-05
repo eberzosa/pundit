@@ -1,13 +1,12 @@
 ﻿using System;
 using System.Drawing;
 using Pundit.Core.Model;
-using ConsoleS = System.Console;
+using SC = System.Console;
 
 namespace Pundit.Console
 {
    class GlamTerm : IConsoleOutput
    {
-      private readonly bool _supportsCursor;
       private bool? _canUpdate;
 
       private class ForeColorProtector : IDisposable
@@ -16,14 +15,14 @@ namespace Pundit.Console
 
          public ForeColorProtector(ConsoleColor color)
          {
-            _oldColour = ConsoleS.ForegroundColor;
+            _oldColour = SC.ForegroundColor;
 
-            ConsoleS.ForegroundColor = color;
+            SC.ForegroundColor = color;
          }
 
          public void Dispose()
          {
-            ConsoleS.ForegroundColor = _oldColour;
+            SC.ForegroundColor = _oldColour;
          }
       }
 
@@ -33,29 +32,19 @@ namespace Pundit.Console
 
       public GlamTerm()
       {
-         ForeNormalColor = ConsoleS.ForegroundColor;
+         ForeNormalColor = SC.ForegroundColor;
          ForeWarnColor = ConsoleColor.Yellow;
          ForeErrorColor = ConsoleColor.Red;
-
-         try
-         {
-            int left = ConsoleS.CursorLeft;
-            _supportsCursor = true;
-         }
-         catch
-         {
-            
-         }
       }
 
       private void Write(ConsoleColor defaultColor, bool newLine, string format, params object[] args)
       {
          using(new ForeColorProtector(defaultColor))
          {
-            if(format != null) ConsoleS.Out.Write(format, args);
+            if(format != null) SC.Out.Write(format, args);
          }
          
-         if(newLine) ConsoleS.Out.WriteLine();
+         if(newLine) SC.Out.WriteLine();
       }
 
       public void Write(ConsoleColor color, string format, params object[] args)
@@ -76,7 +65,7 @@ namespace Pundit.Console
             {
                try
                {
-                  var w = ConsoleS.WindowWidth;
+                  var w = SC.WindowWidth;
                   _canUpdate = true;
                }
                catch
@@ -99,7 +88,7 @@ namespace Pundit.Console
          Write(ForeNormalColor, true, format, args);
       }
 
-      private void WriteLine()
+      public void WriteLine()
       {
          Write(ForeNormalColor, true, null);
       }
@@ -108,30 +97,13 @@ namespace Pundit.Console
       {
          get
          {
-            int width = 80;
-
-            try
-            {
-               width = ConsoleS.WindowWidth;
-            }
-            catch
-            {
-            }
-
-            return width;
+            return CanUpdate ? SC.WindowWidth : 80;
          }
       }
 
       private void MoveCursor(int left, int top)
       {
-         try
-         {
-            ConsoleS.SetCursorPosition(left, top);
-         }
-         catch
-         {
-            
-         }
+         if(CanUpdate) SC.SetCursorPosition(left, top);
       }
 
       private void MoveCursor(int left)
@@ -143,27 +115,8 @@ namespace Pundit.Console
       {
          get
          {
-            int left = 0;
-            int top = 0;
-
-            try
-            {
-               left = ConsoleS.CursorLeft;
-            }
-            catch
-            {
-               
-            }
-
-            try
-            {
-               top = ConsoleS.CursorTop;
-            }
-            catch
-            {
-               
-            }
-
+            int left = CanUpdate ? SC.CursorLeft : 0;
+            int top = CanUpdate ? SC.CursorTop : 0;
             return new Point(left, top);
          }
       }
@@ -269,7 +222,7 @@ namespace Pundit.Console
       public void FinishProgress()
       {
          if(_progressMaxValue != 0) UpdateProgress(_progressMaxValue);
-         ConsoleS.WriteLine();
+         SC.WriteLine();
       }
 
       public void FinishCommand()
@@ -281,12 +234,28 @@ namespace Pundit.Console
       {
       }
 
-      public void ReturnCarriage()
-      {
-         MoveCursor(0);
-      }
-
       #endregion
 
+      public void ReturnCarriage()
+      {
+         if (CanUpdate)
+         {
+            MoveCursor(0);
+         }
+      }
+
+      public void ClearToEnd()
+      {
+         if(CanUpdate)
+         {
+            int spaces = WindowWidth - CursorPosition.X - 1;
+            if (spaces > 0)
+            {
+               string s = "";
+               for (int i = 0; i < spaces; i++) s += " ";
+               Write(s);
+            }
+         }
+      }
    }
 }

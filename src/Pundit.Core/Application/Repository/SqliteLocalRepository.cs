@@ -87,6 +87,7 @@ namespace Pundit.Core.Application.Repository
                      if (readCallback != null) readCallback(readTotal);
                      ts.Write(buffer, 0, read);
                   }
+                  if (readCallback != null) readCallback(readTotal);
                }
 
                //validate manifest

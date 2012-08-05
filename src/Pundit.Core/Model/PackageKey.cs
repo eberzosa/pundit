@@ -112,8 +112,7 @@ namespace Pundit.Core.Model
 
       public override string ToString()
       {
-         return string.Format("package id: [{0}], platform: [{1}], exact version: [{2}]",
-                              PackageId, Platform, Version);
+         return string.Format("{0} v{1} ({2})", PackageId, VersionString, Platform);
       }
    }
 }

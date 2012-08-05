@@ -12,7 +12,6 @@ namespace Pundit.Core.Application.Console.Commands
       private BuildConfiguration _buildConfiguration;
       private bool _forceResolve;
       private bool _pingOnly;
-      private int _packagesInstalled;
 
       public ResolveConsoleCommand(IConsoleOutput console, string currentDirectory, string[] args)
          : base(console, currentDirectory, args)
@@ -134,7 +133,7 @@ namespace Pundit.Core.Application.Console.Commands
          if (forDownload.Count > 0)
          {
             console.WriteLine("downloading {0} packages...", forDownload.Count);
-            LocalConfiguration.PackageDownloadToLocalRepository += LocalRepository_PackageDownloadToLocalRepository;
+            LocalConfiguration.PackageDownloadToLocalRepository += PackageDownloadProgress;
             LocalConfiguration.DownloadLocally(forDownload);
          }
 
@@ -144,15 +143,13 @@ namespace Pundit.Core.Application.Console.Commands
             devPackage,
             LocalConfiguration.RepositoryManager.LocalRepository))
          {
-            installer.BeginInstallPackage += installer_BeginInstallPackage;
-            installer.FinishInstallPackage += installer_FinishInstallPackage;
+            installer.BeginInstallPackage += BeginInstallPackage;
+            installer.FinishInstallPackage += FinishInstallPackage;
 
             if (_forceResolve)
             {
                int n = resolutionResult.Item1.GetPackages().Count();
                console.WriteLine("reinstalling {0} packages...", n);
-               console.StartProgress(n);
-
                installer.Reinstall(_buildConfiguration);
             }
             else
@@ -161,7 +158,6 @@ namespace Pundit.Core.Application.Console.Commands
                int changed = PrintSuccess(diff);
                if (changed > 0)
                {
-                  console.StartProgress(changed);
                   installer.Upgrade(_buildConfiguration, diff);
                }
                else
@@ -169,31 +165,49 @@ namespace Pundit.Core.Application.Console.Commands
                   console.WriteLine(ConsoleColor.Green, "no changes detected");
                }
             }
-            console.FinishProgress();
          }
       }
 
-      void installer_FinishInstallPackage(object sender, PackageKeyDiffEventArgs e)
+      void FinishInstallPackage(object sender, PackageKeyDiffEventArgs e)
       {
-         console.UpdateProgress(_packagesInstalled++);
+         console.Write(true);
       }
 
-      void installer_BeginInstallPackage(object sender, PackageKeyDiffEventArgs e)
+      void BeginInstallPackage(object sender, PackageKeyDiffEventArgs e)
       {
-         console.UpdateProgress(_packagesInstalled, string.Format("installing {0} v{1} ({2})...", e.PackageKeyDiff.PackageId, e.PackageKeyDiff.Version, e.PackageKeyDiff.Platform));
+         console.Write("installing {0}...", e.PackageKeyDiff);
       }
 
-      void LocalRepository_PackageDownloadToLocalRepository(object sender, PackageDownloadEventArgs e)
+      private string _lastDownloadBytes;
+      private int _lastDownloadPerc;
+      void PackageDownloadProgress(object sender, PackageDownloadEventArgs e)
       {
-         console.ReturnCarriage();
-         console.Write(ConsoleColor.White, "{0} {1} ({2}): ", e.PackageKey.PackageId, e.PackageKey.Version, e.PackageKey.Platform);
-         console.Write(ConsoleColor.Yellow, ByteFormat.ToString((ulong)e.DownloadedSize));
-         console.Write(ConsoleColor.White, " of ");
-         console.Write(ConsoleColor.Yellow, ByteFormat.ToString((ulong)e.TotalSize));
-         console.Write(ConsoleColor.White, " - {0:0.00}% - {1}/sec",
-            (e.DownloadedSize * 100.0 / e.TotalSize),
-            ByteFormat.ToString((ulong)e.AvgSpeed));
-         console.Write("   ");
+         string progress = ByteFormat.ToString((ulong) e.DownloadedSize);
+         double perc = (e.DownloadedSize * 100.0 / e.TotalSize);
+         int iperc = e.DownloadedSize == e.TotalSize ? 100 : (int)perc;
+
+         if (progress != _lastDownloadBytes || iperc != _lastDownloadPerc)
+         {
+            _lastDownloadBytes = progress;
+            _lastDownloadPerc = iperc;
+            console.ReturnCarriage();
+            console.Write(ConsoleColor.White, e.PackageKey.ToString());
+            console.Write(": ");
+            console.Write(ConsoleColor.Yellow, progress);
+            console.Write(ConsoleColor.White, " of ");
+            console.Write(ConsoleColor.Yellow, ByteFormat.ToString((ulong) e.TotalSize));
+            console.Write(ConsoleColor.White, " - {0}% - {1}/sec",
+                           iperc,
+                           ByteFormat.ToString((ulong) e.AvgSpeed));
+            if (iperc == 100)
+            {
+               console.Write(true);
+            }
+            else
+            {
+               console.ClearToEnd();
+            }
+         }
       }
    }
 }

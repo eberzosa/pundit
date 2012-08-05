@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Data;
+using System.Diagnostics;
 using System.IO;
 using System.Linq;
 using Pundit.Core.Application.Repository;
@@ -61,7 +62,7 @@ namespace Pundit.Core.Application
          get
          {
             var r = new List<Repo>();
-            using (IDataReader reader = _sql.ExecuteReader("Repository", null, null))
+            using (IDataReader reader = _sql.ExecuteReader(RepositoryTableName, null, null))
             {
                while (reader.Read())
                {
@@ -72,6 +73,19 @@ namespace Pundit.Core.Application
                }
             }
             return r;
+         }
+      }
+
+      private Repo LocalRepo
+      {
+         get
+         {
+            using(IDataReader reader = _sql.ExecuteReader(RepositoryTableName, null,
+               new[] { "Tag=(?)"}, LocalConfiguration.LocalRepositoryTag))
+            {
+               if (reader.Read()) return ReadRepository(reader);
+            }
+            return null;
          }
       }
 
@@ -102,9 +116,9 @@ namespace Pundit.Core.Application
          }
       }
 
-      public void ZapCache()
+      public ZapStats ZapCache()
       {
-         Repo local = GetRepositoryByTag(LocalConfiguration.LocalRepositoryTag);
+         Repo local = LocalRepo;
          if (local != null)
          {
             using (IDbCommand cmd = _sql.CreateCommand())
@@ -125,6 +139,7 @@ namespace Pundit.Core.Application
                cmd.ExecuteNonQuery();
             }
          }
+         return null;
       }
 
       public Repo Register(Repo newRepo)
