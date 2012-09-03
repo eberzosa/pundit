@@ -19,12 +19,5 @@
 {
 <p>
    The latest version is <strong>@ViewBag.LatestVersion</strong><br/>
-   @if (ViewBag.WindowsInstaller != null)
-   {
-      string linkName = string.Format("download Windows Installer ({0}, {1} downloads)",
-         ByteFormat.ToString((ulong)ViewBag.WindowsInstaller.Length),
-         ViewBag.WindowsInstallerDownloads);
-      @Html.ActionLink(linkName, "DownloadWindowsInstaller")<br/>
-   }
 </p>
 }

@@ -293,5 +293,7 @@ namespace Pundit.Core.Utils
             cmd.ExecuteNonQuery();
          }
       }
+      
+      public abstract bool TableExists(string tableName);
    }
 }

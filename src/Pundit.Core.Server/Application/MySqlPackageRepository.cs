@@ -9,9 +9,9 @@ namespace Pundit.Core.Server.Application
 {
    class MySqlPackageRepository : MySqlRepositoryBase, IPackageRepository
    {
-      private const string ManifestTableName = "PackageManifest";
-      private const string DependencyTableName = "PackageDependency";
-      private const string LogTableName = "PackageLog";
+      private const string ManifestTableName = "packagemanifest";
+      private const string DependencyTableName = "packagedependency";
+      private const string LogTableName = "packagelog";
       private static readonly string[] KeyColumns = new[] {"PackageId", "Version", "Platform"};
       private static readonly string[] KeyRestriction = new[] { "PackageId=?P0", "Platform=?P1", "VMaj=?P2", "VMin=?P3", "VBld=?P4", "VRev=?P5" };
 

@@ -38,7 +38,7 @@
       <HintPath>..\..\lib\log4net.dll</HintPath>
     </Reference>
     <Reference Include="Ninject">
-      <HintPath>..\..\lib\Ninject.dll</HintPath>
+      <HintPath>..\..\lib\mono\Ninject.dll</HintPath>
     </Reference>
     <Reference Include="System" />
     <Reference Include="System.Configuration" />
@@ -78,12 +78,6 @@
     <Compile Include="Application\StreamsProvider.cs" />
   </ItemGroup>
   <ItemGroup>
-    <ProjectReference Include="..\Pundit.Core\Pundit.Core.csproj">
-      <Project>{BEEA1FD6-D6DB-44BC-A4C4-F42321A6796F}</Project>
-      <Name>Pundit.Core</Name>
-    </ProjectReference>
-  </ItemGroup>
-  <ItemGroup>
     <EmbeddedResource Include="Ex.resx">
       <Generator>ResXFileCodeGenerator</Generator>
       <LastGenOutput>Ex.Designer.cs</LastGenOutput>
@@ -101,4 +95,10 @@
   <Target Name="AfterBuild">
   </Target>
   -->
+  <ItemGroup>
+    <ProjectReference Include="..\Pundit.Core\Pundit.Core.csproj">
+      <Project>{BEEA1FD6-D6DB-44BC-A4C4-F42321A6796F}</Project>
+      <Name>Pundit.Core</Name>
+    </ProjectReference>
+  </ItemGroup>
 </Project>

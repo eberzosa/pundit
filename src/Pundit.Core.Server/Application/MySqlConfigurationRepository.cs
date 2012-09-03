@@ -5,7 +5,7 @@ namespace Pundit.Core.Server.Application
 {
    internal class MySqlConfigurationRepository : MySqlRepositoryBase, IConfigurationRepository
    {
-      private const string OptionTableName = "`Option`";
+      private const string OptionTableName = "`option`";
 
       #region Implementation of IConfigurationRepository
 

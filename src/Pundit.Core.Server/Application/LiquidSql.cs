@@ -13,7 +13,7 @@ namespace Pundit.Core.Server.Application
    class LiquidSql
    {
       private const string CreateScriptName = "create.sql";
-      private const string OptionTableName = "`Option`";
+      private const string OptionTableName = "`option`";
       private const string KeyColumnName = "`Name`";
       private const string ValueColumnName = "`Value`";
       private const string ParameterName = "version";
@@ -75,9 +75,16 @@ namespace Pundit.Core.Server.Application
       {
          get
          {
-            string sver = _sql.ExecuteScalar<string>(OptionTableName, ValueColumnName, new[] {KeyColumnName + "=?P0"}, ParameterName);
             int v;
-            int.TryParse(sver, out v);
+            if(_sql.TableExists(OptionTableName))
+            {
+               string sver = _sql.ExecuteScalar<string>(OptionTableName, ValueColumnName, new[] {KeyColumnName + "=?P0"}, ParameterName);
+               int.TryParse(sver, out v);
+            }
+            else
+            {
+               v = 0;
+            }
             return v;
          }
          set

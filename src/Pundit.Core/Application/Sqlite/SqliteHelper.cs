@@ -254,6 +254,11 @@ namespace Pundit.Core.Application.Sqlite
       {
          return "(?)";
       }
+      
+      public override bool TableExists(string tableName)
+      {
+         throw new NotImplementedException();
+      }                                
 
       public override void Dispose()
       {

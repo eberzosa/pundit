@@ -48,13 +48,13 @@ namespace Pundit.Web.Controllers
 
       public ActionResult Index()
       {
-         Version v = GetLatestVersion();
+         /*Version v = GetLatestVersion();
          if (v != null)
          {
             ViewBag.LatestVersion = v;
             ViewBag.WindowsInstaller = GetWindowsInstaller(v);
             ViewBag.WindowsInstallerDownloads = (ulong)_configuration.GetCounterValue("WindowsInstallerDownloads");
-         }
+         }*/
 
          return View();
       }

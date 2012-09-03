@@ -99,6 +99,13 @@ namespace Pundit.Core.Server.Application
       {
          return "?P" + idx;
       }
+      
+      public override bool TableExists(string tableName)
+      {
+         string tn = ExecuteScalar<string>(
+            string.Format("show tables like '{0}'", tableName));
+         return tn != null;
+      }
 
       #endregion
    }

@@ -9,7 +9,7 @@ namespace Pundit.Core.Server.Application
 {
    class MySqlUserRepository : MySqlRepositoryBase, IUserRepository
    {
-      private const string UserTableName = "User";
+      private const string UserTableName = "user";
 
       public MySqlUserRepository() : this(null)
       {

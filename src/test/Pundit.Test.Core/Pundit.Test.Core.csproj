@@ -78,10 +78,6 @@
       <Project>{BEEA1FD6-D6DB-44BC-A4C4-F42321A6796F}</Project>
       <Name>Pundit.Core</Name>
     </ProjectReference>
-    <ProjectReference Include="..\..\Pundit\Pundit.Console.csproj">
-      <Project>{9296FDE6-2BE9-472B-9E82-FC023959CBA2}</Project>
-      <Name>Pundit.Console</Name>
-    </ProjectReference>
   </ItemGroup>
   <ItemGroup>
     <Content Include="Data\nodoc.xml">
