@@ -48,7 +48,7 @@ namespace Pundit.Test.Mocks
          throw new NotImplementedException();
       }
 
-      public long GetClosestRepositoryId(PackageKey key)
+      public Repo FindOnlineRepository(PackageKey key)
       {
          throw new NotImplementedException();
       }

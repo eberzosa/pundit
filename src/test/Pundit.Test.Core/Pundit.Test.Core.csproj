@@ -1,4 +1,4 @@
-<?xml version="1.0" encoding="utf-8"?>
+﻿<?xml version="1.0" encoding="utf-8"?>
 <Project ToolsVersion="4.0" DefaultTargets="Build" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
   <PropertyGroup>
     <Configuration Condition=" '$(Configuration)' == '' ">Debug</Configuration>
@@ -42,9 +42,7 @@
     <Reference Include="System" />
     <Reference Include="System.Core" />
     <Reference Include="System.Xml.Linq" />
-    <Reference Include="System.Data.DataSetExtensions" />
     <Reference Include="Microsoft.CSharp" />
-    <Reference Include="System.Data" />
     <Reference Include="System.Xml" />
     <Reference Include="Newtonsoft.Json">
       <HintPath>..\..\..\lib\Newtonsoft.Json.dll</HintPath>
@@ -64,16 +62,12 @@
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="DependencyResolutionTest.cs" />
     <Compile Include="RepositoryManagerTest.cs" />
-    <Compile Include="SqliteRepositoryTest.cs" />
+    <Compile Include="LocalDiskRepositoryTest.cs" />
     <Compile Include="NAntDirectoryScannerTest.cs" />
     <Compile Include="Utils.cs" />
     <Compile Include="VersionPatternTest.cs" />
   </ItemGroup>
   <ItemGroup>
-    <ProjectReference Include="..\..\Pundit.Core.Server\Pundit.Core.Server.csproj">
-      <Project>{8E0C95D4-0081-44D5-9321-3EAE43E91BBF}</Project>
-      <Name>Pundit.Core.Server</Name>
-    </ProjectReference>
     <ProjectReference Include="..\..\Pundit.Core\Pundit.Core.csproj">
       <Project>{BEEA1FD6-D6DB-44BC-A4C4-F42321A6796F}</Project>
       <Name>Pundit.Core</Name>

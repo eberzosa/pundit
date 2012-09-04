@@ -2,7 +2,7 @@
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
-using Pundit.Core.Application.Repository;
+using Pundit.Core.Application.Repositories;
 using Pundit.Core.Model;
 
 namespace Pundit.Core

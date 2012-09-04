@@ -36,8 +36,6 @@ namespace Pundit.Core.Model
       /// <returns>Found repository or null if not found</returns>
       Repo GetRepositoryByTag(string tag);
 
-      Repo GetRepositoryById(long id);
-
       LocalStats Stats { get; }
 
       /// <summary>

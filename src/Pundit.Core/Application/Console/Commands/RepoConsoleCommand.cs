@@ -53,8 +53,6 @@ namespace Pundit.Core.Application.Console.Commands
          console.Write(" (");
          console.Write(LocalConfiguration.LocalRepositoryRootVar);
          console.WriteLine(")");
-         console.Write("location:".PadRight(20));
-         console.WriteLine(LocalConfiguration.DbLocation);
          console.Write("occupied space:".PadRight(20));
          console.WriteLine(PathUtils.FileSizeToString(stats.OccupiedSpaceTotal));
          console.Write("binary cache:".PadRight(20));

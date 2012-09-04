@@ -4,16 +4,16 @@ using System.IO;
 using System.Linq;
 using NUnit.Framework;
 using Pundit.Core.Application;
-using Pundit.Core.Application.Repository;
+using Pundit.Core.Application.Repositories;
 using Pundit.Core.Model;
 
 namespace Pundit.Test
 {
    [TestFixture]
-   public class SqliteRepositoryTest
+   public class LocalDiskRepositoryTest
    {
       private string _localFile;
-      private SqliteLocalRepository _repo;
+      private LocalDiskRepository _repo;
       private string _dataPath;
 
       [SetUp]
@@ -22,7 +22,7 @@ namespace Pundit.Test
          _localFile = Path.GetTempFileName();
          File.Delete(_localFile);
 
-         _repo = new SqliteLocalRepository(_localFile);
+         _repo = new LocalDiskRepository(_localFile);
          _dataPath = Path.Combine(AppDomain.CurrentDomain.BaseDirectory, "Data");
       }
 

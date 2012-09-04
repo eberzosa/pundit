@@ -38,7 +38,7 @@ namespace Pundit.Core.Model
       /// </summary>
       /// <param name="key"></param>
       /// <returns></returns>
-      long GetClosestRepositoryId(PackageKey key);
+      Repo FindOnlineRepository(PackageKey key);
 
       /// <summary>
       /// Performs search in the repository

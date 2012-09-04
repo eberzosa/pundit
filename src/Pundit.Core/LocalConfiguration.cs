@@ -24,7 +24,6 @@ namespace Pundit.Core
       internal const string LocalRepositoryUri = "local";
 
       private static string _localDir;
-      private static string _localFile;
       private static IRepositoryManager _mgr;
 
       /// <summary>
@@ -35,14 +34,6 @@ namespace Pundit.Core
       static LocalConfiguration()
       {
          Initialize();
-      }
-
-      /// <summary>
-      /// Gets local database location string. Use only for display purposes, never rely on it in logic
-      /// </summary>
-      public static string DbLocation
-      {
-         get { return _localFile; }
       }
 
       /// <summary>
@@ -65,8 +56,7 @@ namespace Pundit.Core
             _localDir = Environment.GetFolderPath(Environment.SpecialFolder.UserProfile);
          }
 
-         _localFile = Path.Combine(_localDir, LocalRepositoryFileName);
-         _mgr = new SqlRepositoryManager(_localFile);
+         _mgr = new DiskRepositoryManager(_localDir);
       }
 
       /// <summary>
@@ -105,11 +95,10 @@ namespace Pundit.Core
 
          foreach (PackageKey pck in packages)
          {
-            long repoId = localRepo.GetClosestRepositoryId(pck);
-            Repo downRepoMeta = _mgr.GetRepositoryById(repoId);
+            Repo downRepoMeta = localRepo.FindOnlineRepository(pck);
             if(downRepoMeta == null)
             {
-               throw new InvalidOperationException("can't find repository #" + repoId + " for key " + pck);
+               throw new InvalidOperationException("can't find repository for key " + pck);
             }
             IRemoteRepository downRepo = RemoteRepositoryFactory.Create(downRepoMeta.Uri, downRepoMeta.Login, downRepoMeta.ApiKey);
 

@@ -36,9 +36,6 @@
     <AssemblyOriginatorKeyFile>..\pundit.snk</AssemblyOriginatorKeyFile>
   </PropertyGroup>
   <ItemGroup>
-    <Reference Include="Community.CsharpSqlite.SQLiteClient">
-      <HintPath>..\..\lib\Community.CsharpSqlite.SQLiteClient.dll</HintPath>
-    </Reference>
     <Reference Include="ICSharpCode.SharpZipLib">
       <HintPath>..\..\lib\ICSharpCode.SharpZipLib.dll</HintPath>
     </Reference>
@@ -82,12 +79,11 @@
     <Compile Include="Application\PackageReader.cs" />
     <Compile Include="Application\PackageStreamer.cs" />
     <Compile Include="Application\PackageWriter.cs" />
-    <Compile Include="Application\SqlRepositoryManager.cs" />
+    <Compile Include="Application\DiskRepositoryManager.cs" />
     <Compile Include="Application\RepositoryUpdater.cs" />
-    <Compile Include="Application\Repository\HttpRestRemoteRepository.cs" />
-    <Compile Include="Application\Repository\RemoteFolderRepository.cs" />
-    <Compile Include="Application\Repository\SqliteLocalRepository.cs" />
-    <Compile Include="Application\Sqlite\SqliteHelper.cs" />
+    <Compile Include="Application\Repositories\HttpRestRemoteRepository.cs" />
+    <Compile Include="Application\Repositories\RemoteFolderRepository.cs" />
+    <Compile Include="Application\Repositories\LocalDiskRepository.cs" />
     <Compile Include="Application\Streaming\WrappedStream.cs" />
     <Compile Include="C.cs" />
     <Compile Include="Errors.Designer.cs">
@@ -146,7 +142,6 @@
     <Compile Include="Utils\ByteFomat.cs" />
   </ItemGroup>
   <ItemGroup>
-    <EmbeddedResource Include="Application\Sqlite\pundit.db" />
     <EmbeddedResource Include="Errors.resx">
       <Generator>ResXFileCodeGenerator</Generator>
       <LastGenOutput>Errors.Designer.cs</LastGenOutput>
