@@ -101,13 +101,15 @@
     <Compile Include="Globals.cs" />
     <Compile Include="LocalConfiguration.cs" />
     <Compile Include="Model\ApiKey.cs" />
+    <Compile Include="Model\DependencyScope.cs" />
+    <Compile Include="Model\DiffType.cs" />
     <Compile Include="Model\EventArguments\PackageDownloadEventArgs.cs" />
     <Compile Include="Model\IInstallTarget.cs" />
     <Compile Include="Model\ILocalRepository.cs" />
     <Compile Include="Model\IRemoteRepository.cs" />
     <Compile Include="Model\DependencyNode.cs" />
     <Compile Include="Model\DevPackage.cs" />
-    <Compile Include="Model\Enums.cs" />
+    <Compile Include="Model\BuildConfiguration.cs" />
     <Compile Include="Model\EventArguments\PackageKeyDiffEventArgs.cs" />
     <Compile Include="Model\EventArguments\PackageFileEventArgs.cs" />
     <Compile Include="Model\EventArguments\ResolvedFileEventArgs.cs" />
@@ -119,6 +121,7 @@
     <Compile Include="Model\ManifestPackage.cs" />
     <Compile Include="Model\PackageDependency.cs" />
     <Compile Include="Model\Package.cs" />
+    <Compile Include="Model\PackageFileKind.cs" />
     <Compile Include="Model\PackageKey.cs" />
     <Compile Include="Model\PackageKeyDiff.cs" />
     <Compile Include="Model\PackageSnapshotKey.cs" />
