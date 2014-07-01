@@ -1,10 +1,8 @@
 ﻿
-Microsoft Visual Studio Solution File, Format Version 11.00
-# Visual Studio 2010
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Pundit.Core", "Pundit.Core\Pundit.Core.csproj", "{BEEA1FD6-D6DB-44BC-A4C4-F42321A6796F}"
-EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Pundit.Console", "Pundit\Pundit.Console.csproj", "{9296FDE6-2BE9-472B-9E82-FC023959CBA2}"
-EndProject
+Microsoft Visual Studio Solution File, Format Version 12.00
+# Visual Studio 2013
+VisualStudioVersion = 12.0.30501.0
+MinimumVisualStudioVersion = 10.0.40219.1
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Solution Items", "Solution Items", "{3B681723-FAC7-435A-A3CD-954EC94E2A6D}"
 	ProjectSection(SolutionItems) = preProject
 		mysql_dump.cmd = mysql_dump.cmd
@@ -15,6 +13,18 @@ Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Solution Items", "Solution 
 		todo.txt = todo.txt
 	EndProjectSection
 EndProject
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "test", "test", "{989DA4BB-F48A-479E-A2A2-79DA0F53029C}"
+EndProject
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "build", "build", "{A5BD694A-19AC-48A1-BAFC-86DEBAC74E5D}"
+	ProjectSection(SolutionItems) = preProject
+		..\build.proj = ..\build.proj
+		..\configure.proj = ..\configure.proj
+	EndProjectSection
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Pundit.Core", "Pundit.Core\Pundit.Core.csproj", "{BEEA1FD6-D6DB-44BC-A4C4-F42321A6796F}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Pundit.Console", "Pundit\Pundit.Console.csproj", "{9296FDE6-2BE9-472B-9E82-FC023959CBA2}"
+EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Pundit.WinForms.Core", "Pundit.WinForms.Core\Pundit.WinForms.Core.csproj", "{6EAB50C9-B099-4811-A609-636F0A5F0893}"
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Pundit.Vsix", "Pundit.Vsix\Pundit.Vsix.csproj", "{58922993-9830-4A40-B462-0326342F69ED}"
@@ -23,17 +33,9 @@ Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Pundit.Web", "Pundit.Web\Pu
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Pundit.Core.Server", "Pundit.Core.Server\Pundit.Core.Server.csproj", "{8E0C95D4-0081-44D5-9321-3EAE43E91BBF}"
 EndProject
-Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "test", "test", "{989DA4BB-F48A-479E-A2A2-79DA0F53029C}"
-EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Pundit.Test.Server", "test\Pundit.Test.Server\Pundit.Test.Server.csproj", "{BC546317-0061-4A87-8615-687FF5556D7D}"
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Pundit.Test.Core", "test\Pundit.Test.Core\Pundit.Test.Core.csproj", "{5BF2B578-7F5A-4604-B49A-DBDB53B7AA13}"
-EndProject
-Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "build", "build", "{A5BD694A-19AC-48A1-BAFC-86DEBAC74E5D}"
-	ProjectSection(SolutionItems) = preProject
-		..\build.proj = ..\build.proj
-		..\configure.proj = ..\configure.proj
-	EndProjectSection
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
