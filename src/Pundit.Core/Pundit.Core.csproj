@@ -79,13 +79,8 @@
     <Compile Include="Application\PackageReader.cs" />
     <Compile Include="Application\PackageStreamer.cs" />
     <Compile Include="Application\PackageWriter.cs" />
-    <Compile Include="Application\DiskRepositoryManager.cs" />
     <Compile Include="Application\RepositoryUpdater.cs" />
-    <Compile Include="Application\Repositories\HttpRestRemoteRepository.cs" />
-    <Compile Include="Application\Repositories\RemoteFolderRepository.cs" />
-    <Compile Include="Application\Repositories\LocalDiskRepository.cs" />
     <Compile Include="Application\Streaming\WrappedStream.cs" />
-    <Compile Include="C.cs" />
     <Compile Include="Errors.Designer.cs">
       <AutoGen>True</AutoGen>
       <DesignTime>True</DesignTime>
@@ -163,11 +158,8 @@
   <ItemGroup />
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
   <PropertyGroup>
-    <PreBuildEvent>if exist "$(TargetPath).locked" del "$(TargetPath).locked"
-if exist "$(TargetPath)" if not exist "$(TargetPath).locked" move "$(TargetPath)" "$(TargetPath).locked"
-
-copy /Y ..\..\..\..\db\pundit.db ..\..\Application\sqlite\pundit.db
-copy /Y ..\..\..\..\db\server.db ..\..\Application\sqlite\server.db</PreBuildEvent>
+    <PreBuildEvent>
+    </PreBuildEvent>
   </PropertyGroup>
   <PropertyGroup>
     <PostBuildEvent>

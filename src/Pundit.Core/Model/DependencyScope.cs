@@ -5,6 +5,7 @@ namespace Pundit.Core.Model
    /// <summary>
    /// Package dependency scope
    /// </summary>
+   [XmlRoot("scope")]
    public enum DependencyScope
    {
       /// <summary>
