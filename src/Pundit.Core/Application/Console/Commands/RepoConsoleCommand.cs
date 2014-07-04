@@ -1,7 +1,5 @@
 ﻿using System;
-using System.Collections.Generic;
 using System.Linq;
-using System.Text;
 using Pundit.Core.Exceptions;
 using Pundit.Core.Model;
 using Pundit.Core.Utils;
@@ -49,9 +47,9 @@ namespace Pundit.Core.Application.Console.Commands
 
          console.WriteLine("local repository");
          console.Write("env:".PadRight(20));
-         console.Write(Environment.GetEnvironmentVariable(LocalConfiguration.LocalRepositoryRootVar) ?? "<not set>");
+         //console.Write(Environment.GetEnvironmentVariable(LocalConfiguration.LocalRepositoryRootVar) ?? "<not set>");
          console.Write(" (");
-         console.Write(LocalConfiguration.LocalRepositoryRootVar);
+         //console.Write(LocalConfiguration.LocalRepositoryRootVar);
          console.WriteLine(")");
          console.Write("occupied space:".PadRight(20));
          console.WriteLine(PathUtils.FileSizeToString(stats.OccupiedSpaceTotal));

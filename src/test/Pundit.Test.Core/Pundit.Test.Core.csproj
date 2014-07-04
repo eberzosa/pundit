@@ -51,7 +51,6 @@
   <ItemGroup>
     <Compile Include="ApiKeyTest.cs" />
     <Compile Include="ExceptionalTest.cs" />
-    <Compile Include="LocalConfigurationTest.cs" />
     <Compile Include="Mocks\MockedRepository.cs" />
     <Compile Include="Mocks\StatCollectorInstallTarget.cs" />
     <Compile Include="Model\UnresolvedPackageTest.cs" />
@@ -61,8 +60,6 @@
     <Compile Include="PackageWriterTest.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="DependencyResolutionTest.cs" />
-    <Compile Include="RepositoryManagerTest.cs" />
-    <Compile Include="LocalDiskRepositoryTest.cs" />
     <Compile Include="NAntDirectoryScannerTest.cs" />
     <Compile Include="Utils.cs" />
     <Compile Include="VersionPatternTest.cs" />

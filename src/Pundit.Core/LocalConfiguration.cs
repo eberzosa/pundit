@@ -13,18 +13,12 @@ namespace Pundit.Core
    /// </summary>
    public static class LocalConfiguration
    {
-      /// <summary>
-      /// Environment variable storing absolute directory path to local database (excluding file name).
-      /// If set, pundit will prefer this directory
-      /// </summary>
-      public const string LocalRepositoryRootVar = "PUNDIT_ROOT";
-
-      private const string LocalRepositoryFileName = ".punditdb";
-      internal const string LocalRepositoryTag = "local";
-      internal const string LocalRepositoryUri = "local";
+      //private const string LocalRepositoryFileName = ".punditdb";
+      //internal const string LocalRepositoryTag = "local";
+      //internal const string LocalRepositoryUri = "local";
 
       private static string _localDir;
-      private static IRepositoryManager _mgr;
+      //private static IRepositoryManager _mgr;
 
       /// <summary>
       /// Occurs on various events when a package is downloading to local repository
@@ -41,22 +35,14 @@ namespace Pundit.Core
       /// </summary>
       public static IRepositoryManager RepositoryManager
       {
-         get { return _mgr; }
+         get { return null; }
       }
 
       private static void Initialize()
       {
-         _localDir = Environment.GetEnvironmentVariable(LocalRepositoryRootVar);
+         _localDir = Environment.GetFolderPath(Environment.SpecialFolder.UserProfile);
 
-         if(!string.IsNullOrEmpty(_localDir) && Directory.Exists(_localDir))
-         {
-         }
-         else
-         {
-            _localDir = Environment.GetFolderPath(Environment.SpecialFolder.UserProfile);
-         }
-
-         _mgr = new DiskRepositoryManager(_localDir);
+         //_mgr = new DiskRepositoryManager(_localDir);
       }
 
       /// <summary>
@@ -67,7 +53,9 @@ namespace Pundit.Core
       /// <exception cref="ArgumentNullException"></exception>
       public static ICollection<PackageKey> GetForDownload(IEnumerable<PackageKey> packages)
       {
-         if (packages == null) throw new ArgumentNullException("packages");
+         return null;
+
+         /*if (packages == null) throw new ArgumentNullException("packages");
 
          ILocalRepository localRepo = _mgr.LocalRepository;
 
@@ -81,7 +69,7 @@ namespace Pundit.Core
             if(!existance[i]) r.Add(pck);
          }
 
-         return r;
+         return r;*/
       }
 
       /// <summary>
@@ -90,7 +78,7 @@ namespace Pundit.Core
       /// <param name="packages"></param>
       public static void DownloadLocally(IEnumerable<PackageKey> packages)
       {
-         if (packages == null) throw new ArgumentNullException("packages");
+         /*if (packages == null) throw new ArgumentNullException("packages");
          ILocalRepository localRepo = _mgr.LocalRepository;
 
          foreach (PackageKey pck in packages)
@@ -108,7 +96,7 @@ namespace Pundit.Core
                var closure = new DownloadProgressClosure(pck, sourceLen, Raise);
                localRepo.Put(pckStream, closure.PutCallback);
             }
-         }
+         }*/
       }
 
       private static void Raise(PackageDownloadEventArgs args)

@@ -27,8 +27,6 @@ Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Pundit.Console", "Pundit\Pu
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Pundit.WinForms.Core", "Pundit.WinForms.Core\Pundit.WinForms.Core.csproj", "{6EAB50C9-B099-4811-A609-636F0A5F0893}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Pundit.Vsix", "Pundit.Vsix\Pundit.Vsix.csproj", "{58922993-9830-4A40-B462-0326342F69ED}"
-EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Pundit.Web", "Pundit.Web\Pundit.Web.csproj", "{CA5FD3DD-565A-4910-8FF0-BFCDCC237CA8}"
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Pundit.Core.Server", "Pundit.Core.Server\Pundit.Core.Server.csproj", "{8E0C95D4-0081-44D5-9321-3EAE43E91BBF}"
@@ -69,14 +67,6 @@ Global
 		{6EAB50C9-B099-4811-A609-636F0A5F0893}.Release|Any CPU.Build.0 = Release|Any CPU
 		{6EAB50C9-B099-4811-A609-636F0A5F0893}.Release|Mixed Platforms.ActiveCfg = Release|Any CPU
 		{6EAB50C9-B099-4811-A609-636F0A5F0893}.Release|Mixed Platforms.Build.0 = Release|Any CPU
-		{58922993-9830-4A40-B462-0326342F69ED}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
-		{58922993-9830-4A40-B462-0326342F69ED}.Debug|Any CPU.Build.0 = Debug|Any CPU
-		{58922993-9830-4A40-B462-0326342F69ED}.Debug|Mixed Platforms.ActiveCfg = Debug|Any CPU
-		{58922993-9830-4A40-B462-0326342F69ED}.Debug|Mixed Platforms.Build.0 = Debug|Any CPU
-		{58922993-9830-4A40-B462-0326342F69ED}.Release|Any CPU.ActiveCfg = Release|Any CPU
-		{58922993-9830-4A40-B462-0326342F69ED}.Release|Any CPU.Build.0 = Release|Any CPU
-		{58922993-9830-4A40-B462-0326342F69ED}.Release|Mixed Platforms.ActiveCfg = Release|Any CPU
-		{58922993-9830-4A40-B462-0326342F69ED}.Release|Mixed Platforms.Build.0 = Release|Any CPU
 		{CA5FD3DD-565A-4910-8FF0-BFCDCC237CA8}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
 		{CA5FD3DD-565A-4910-8FF0-BFCDCC237CA8}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{CA5FD3DD-565A-4910-8FF0-BFCDCC237CA8}.Debug|Mixed Platforms.ActiveCfg = Debug|Any CPU

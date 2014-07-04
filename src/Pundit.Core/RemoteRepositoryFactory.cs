@@ -1,8 +1,4 @@
 ﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using Pundit.Core.Application.Repositories;
 using Pundit.Core.Model;
 
 namespace Pundit.Core
@@ -28,11 +24,11 @@ namespace Pundit.Core
       {
          if (uri == null) throw new ArgumentNullException("uri");
 
-         if(uri.StartsWith(DirRepoPrefix))
+         /*if(uri.StartsWith(DirRepoPrefix))
             return new RemoteFolderRepository(uri.Substring(DirRepoPrefix.Length));
 
          if(uri.StartsWith(HttpRepoPrefix))
-            return new HttpRestRemoteRepository(uri, login, apiKey);
+            return new HttpRestRemoteRepository(uri, login, apiKey);*/
 
          throw new NotSupportedException("repository " + uri + " not supported (typo?)");
       }
