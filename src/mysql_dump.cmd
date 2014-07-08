@@ -1,1 +1,0 @@
-mysqldump -u pundit --password="nopassword" pundit --no-data >Pundit.Core.Server\Application\Scripts\MySql\create.sql

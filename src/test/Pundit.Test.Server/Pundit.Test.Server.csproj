@@ -1,4 +1,4 @@
-<?xml version="1.0" encoding="utf-8"?>
+﻿<?xml version="1.0" encoding="utf-8"?>
 <Project ToolsVersion="4.0" DefaultTargets="Build" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
   <PropertyGroup>
     <Configuration Condition=" '$(Configuration)' == '' ">Debug</Configuration>
@@ -53,16 +53,8 @@
     <Compile Include="Import\NuGetImporterTest.cs" />
     <Compile Include="Integration\RestClientIntegrationTest.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
-    <Compile Include="Repositories\ConfigurationRepositoryTest.cs" />
-    <Compile Include="Repositories\RepositoryTestBase.cs" />
-    <Compile Include="RepositoryServerTest.cs" />
-    <Compile Include="Repositories\SqlPackageRepositoryTest.cs" />
   </ItemGroup>
   <ItemGroup>
-    <ProjectReference Include="..\..\Pundit.Core.Server\Pundit.Core.Server.csproj">
-      <Project>{8E0C95D4-0081-44D5-9321-3EAE43E91BBF}</Project>
-      <Name>Pundit.Core.Server</Name>
-    </ProjectReference>
     <ProjectReference Include="..\..\Pundit.Core\Pundit.Core.csproj">
       <Project>{BEEA1FD6-D6DB-44BC-A4C4-F42321A6796F}</Project>
       <Name>Pundit.Core</Name>
