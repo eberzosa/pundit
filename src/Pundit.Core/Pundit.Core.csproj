@@ -42,6 +42,9 @@
     <Reference Include="log4net">
       <HintPath>..\..\lib\log4net.dll</HintPath>
     </Reference>
+    <Reference Include="RestSharp">
+      <HintPath>..\..\lib\RestSharp.dll</HintPath>
+    </Reference>
     <Reference Include="System" />
     <Reference Include="System.Configuration" />
     <Reference Include="System.Core" />
@@ -79,6 +82,7 @@
     <Compile Include="Application\PackageReader.cs" />
     <Compile Include="Application\PackageStreamer.cs" />
     <Compile Include="Application\PackageWriter.cs" />
+    <Compile Include="Application\Repositories\NugetRepository.cs" />
     <Compile Include="Application\RepositoryUpdater.cs" />
     <Compile Include="Application\Streaming\WrappedStream.cs" />
     <Compile Include="Errors.Designer.cs">
