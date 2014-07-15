@@ -51,7 +51,8 @@ Accept: application/atom+xml,application/xml
 Accept-Charset: UTF-8
 Host: www.nuget.org
 Accept-Encoding: gzip, deflate
-Connection: Keep-Alive
+Connection: Keep-Alive
+
           * 
           * 
           * 
