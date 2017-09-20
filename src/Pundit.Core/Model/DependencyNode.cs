@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
+using EBerzosa.Pundit.Core.Model.Package;
 
 namespace Pundit.Core.Model
 {
@@ -52,7 +53,7 @@ namespace Pundit.Core.Model
          }
       }
 
-      public void MarkAsRoot(Package rootManifest)
+      public void MarkAsRoot(PackageManifest rootManifest)
       {
          SetVersions(new[] {rootManifest.Version});
          SetManifest(rootManifest);
@@ -73,7 +74,7 @@ namespace Pundit.Core.Model
          _hasManifest = (versions.Length == 0); //if there are no versions, no point to fetch manifest
       }
 
-      public void SetManifest(Package thisManifest)
+      public void SetManifest(PackageManifest thisManifest)
       {
          if (thisManifest == null) throw new ArgumentNullException("thisManifest");
 

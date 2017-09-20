@@ -1,0 +1,26 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<package xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:xsd="http://www.w3.org/2001/XMLSchema" xsi:type="DevPackage" coreVersion="1.0.0.0">
+  <packageId>Pundit</packageId>
+  <platform>net40</platform>
+  <version>1.1.0.0</version>
+  <author>Ivan Gavryliuk</author>
+  <description>Free, fast, opensource dependency management system</description>
+  <license>GNU General Public License version 2 (GPLv2)</license>
+  <dependencies>
+    <package id="NUnit.Framework" version="2.6" platform="net20" scope="test" />
+    <package id="sharpziplib" version="0.86" platform="net20" />
+    <package id="Community.CsharpSqlite" version="3.7.7" platform="net35"/>
+    <package id="log4net" version="1.2" platform="net20" />
+    <package id="Json.NET" version="4.5" platform="net40"/>
+    <package id="MySql.Data" version="6.4" platform="net40"/>
+    <package id="Ninject.Web.Common" version="3.0" platform="net40"/>
+    <package id="Ninject.Web.Mvc" version="3.0" platform="net40"/>
+	 <package id="RestSharp" version="103.1" platform="net40"/>
+    <package id="NSIS" version="2.46" platform="win32"/>
+  </dependencies>
+  <files>
+    <file kind="bin" include="Pundit*.xml" flatten="false" basedir="src/Pundit.Core/bin/Debug" includeemptydirs="true" configuration="any" />
+    <file kind="bin" include="Pundit*.dll;Pundit*.pdb" flatten="false" basedir="src/Pundit.Core/bin/Debug" includeemptydirs="true" configuration="debug" />
+    <file kind="bin" include="Pundit*.dll" flatten="false" basedir="src/Pundit.Core/bin/Release" includeemptydirs="true" configuration="release" />
+  </files>
+</package>

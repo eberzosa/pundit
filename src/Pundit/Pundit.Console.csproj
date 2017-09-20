@@ -8,15 +8,15 @@
     <ProjectGuid>{9296FDE6-2BE9-472B-9E82-FC023959CBA2}</ProjectGuid>
     <OutputType>Exe</OutputType>
     <AppDesignerFolder>Properties</AppDesignerFolder>
-    <RootNamespace>Pundit.Console</RootNamespace>
+    <RootNamespace>EBerzosa.Pundit.CommandLine</RootNamespace>
     <AssemblyName>pundit</AssemblyName>
-    <TargetFrameworkVersion>v4.6.1</TargetFrameworkVersion>
+    <TargetFrameworkVersion>v4.6</TargetFrameworkVersion>
     <TargetFrameworkProfile>
     </TargetFrameworkProfile>
     <FileAlignment>512</FileAlignment>
   </PropertyGroup>
   <PropertyGroup>
-    <SignAssembly>true</SignAssembly>
+    <SignAssembly>false</SignAssembly>
     <AssemblyOriginatorKeyFile>..\pundit.snk</AssemblyOriginatorKeyFile>
   </PropertyGroup>
   <PropertyGroup Condition="'$(Configuration)|$(Platform)' == 'Debug|AnyCPU'">
@@ -38,6 +38,15 @@
     <CodeAnalysisRuleSet>MinimumRecommendedRules.ruleset</CodeAnalysisRuleSet>
   </PropertyGroup>
   <ItemGroup>
+    <Reference Include="EBerzosa.CommandLineProcess">
+      <HintPath>..\..\lib\EBerzosa.CommandLineProcess.dll</HintPath>
+    </Reference>
+    <Reference Include="EBerzosa.Utils">
+      <HintPath>..\..\lib\EBerzosa.Utils.dll</HintPath>
+    </Reference>
+    <Reference Include="LightInject, Version=4.0.11.0, Culture=neutral, processorArchitecture=MSIL">
+      <HintPath>..\packages\LightInject.4.0.11\lib\net46\LightInject.dll</HintPath>
+    </Reference>
     <Reference Include="System" />
     <Reference Include="System.Core" />
     <Reference Include="System.Xml.Linq" />
@@ -47,26 +56,42 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
-    <Compile Include="CommandFactory.cs" />
-    <Compile Include="Commands\BaseCommand.cs" />
-    <Compile Include="Commands\ICommand.cs" />
-    <Compile Include="Commands\PackCommand.cs" />
-    <Compile Include="Commands\PublishCommand.cs" />
-    <Compile Include="Commands\ResolveCommand.cs" />
-    <Compile Include="Commands\SearchCommand.cs" />
-    <Compile Include="Commands\TemplateCommand.cs" />
-    <Compile Include="Commands\UpdateCommand.cs" />
-    <Compile Include="Commands\UtilsCommand.cs" />
+    <Compile Include="Builders\Builder.cs" />
+    <Compile Include="Builders\SourcesBuilder.cs" />
+    <Compile Include="Builders\PackBuilder.cs" />
+    <Compile Include="Builders\PublishBuilder.cs" />
+    <Compile Include="Builders\ResolveBuilder.cs" />
+    <Compile Include="Builders\SearchBuilder.cs" />
+    <Compile Include="Builders\SpecBuilder.cs" />
+    <Compile Include="Builders\UpdateBuilder.cs" />
+    <Compile Include="_Commands\CommandFactory.cs" />
+    <Compile Include="_Commands\BaseCommand.cs" />
+    <Compile Include="_Commands\GlamTerm.cs" />
+    <Compile Include="_Commands\ICommand.cs" />
+    <Compile Include="_Commands\UpdateCommand.cs" />
+    <Compile Include="_Commands\UtilsCommand.cs" />
+    <Compile Include="Controllers\Controller.cs" />
+    <Compile Include="Controllers\IController.cs" />
+    <Compile Include="Controllers\SourcesController.cs" />
+    <Compile Include="Controllers\PackController.cs" />
+    <Compile Include="Controllers\PublishController.cs" />
+    <Compile Include="Controllers\ResolveController.cs" />
+    <Compile Include="Controllers\SearchController.cs" />
+    <Compile Include="Controllers\SpecController.cs" />
+    <Compile Include="Controllers\UpdateController.cs" />
     <Compile Include="Program.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
-    <Compile Include="Strings.Designer.cs">
+    <Compile Include="Startup.cs" />
+    <Compile Include="_Commands\Strings.Designer.cs">
       <AutoGen>True</AutoGen>
       <DesignTime>True</DesignTime>
       <DependentUpon>Strings.resx</DependentUpon>
     </Compile>
+    <Compile Include="Utils\ConsoleWriter.cs" />
+    <Compile Include="WiringModule.cs" />
   </ItemGroup>
   <ItemGroup>
-    <EmbeddedResource Include="Strings.resx">
+    <EmbeddedResource Include="_Commands\Strings.resx">
       <Generator>ResXFileCodeGenerator</Generator>
       <LastGenOutput>Strings.Designer.cs</LastGenOutput>
     </EmbeddedResource>
@@ -79,7 +104,9 @@
   </ItemGroup>
   <ItemGroup>
     <None Include="App.config" />
+    <None Include="packages.config" />
   </ItemGroup>
+  <ItemGroup />
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
   <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 
        Other similar extension points exist, see Microsoft.Common.targets.

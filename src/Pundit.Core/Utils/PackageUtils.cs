@@ -15,9 +15,9 @@ namespace Pundit.Core.Utils
       public const string PackageFileNamePattern = "{0}-{1}.{2}.{3}-{4}-{5}{6}";
       public const string NoArchName = "noarch";
       private static Regex _packageNameRgx = new Regex("^(.*)-(\\d+)\\.(\\d+)\\.(\\d+)-(\\d+)-(.*)" +
-         Package.PackedExtension.Replace(".", "\\.") + "$");
+         PackageManifest.PackedExtension.Replace(".", "\\.") + "$");
 
-      public static string GetFileName(Package pkg)
+      public static string GetFileName(PackageManifest pkg)
       {
          pkg.Validate();
 
@@ -26,7 +26,7 @@ namespace Pundit.Core.Utils
             pkg.Version.Major, pkg.Version.Minor, pkg.Version.Build,
             pkg.Version.Revision,
             TrimPlatformName(pkg.Platform),
-            Package.PackedExtension);
+            PackageManifest.PackedExtension);
       }
 
       public static string GetFileName(PackageKey key)
@@ -36,7 +36,7 @@ namespace Pundit.Core.Utils
                               key.Version.Major, key.Version.Minor,
                               key.Version.Build, key.Version.Revision,
                               TrimPlatformName(key.Platform),
-                              Package.PackedExtension);
+                              PackageManifest.PackedExtension);
       }
 
       public static string GetSearchPattern(UnresolvedPackage pkg, VersionPattern pattern)
@@ -49,10 +49,10 @@ namespace Pundit.Core.Utils
                        v.Build == -1 ? "*" : v.Build.ToString(),
                        v.Revision == -1 ? "*" : v.Revision.ToString(),
                        TrimPlatformName(pkg.Platform),
-                       Package.PackedExtension);
+                       PackageManifest.PackedExtension);
       }
 
-      public static string GetBuildsSearchFilePattern(Package pkg)
+      public static string GetBuildsSearchFilePattern(PackageManifest pkg)
       {
          pkg.Validate();
 
@@ -61,7 +61,7 @@ namespace Pundit.Core.Utils
             pkg.Version.Major, pkg.Version.Minor, pkg.Version.Build,
             "*",
             string.IsNullOrEmpty(pkg.Platform) ? "noarch" : pkg.Platform,
-            Package.PackedExtension);         
+            PackageManifest.PackedExtension);         
       }
 
       public static PackageKey GetPackageKeyFromFileName(string fileName)
@@ -82,7 +82,7 @@ namespace Pundit.Core.Utils
          return new PackageKey(packageId, v, platform);
       }
 
-      public static string[] SearchAllRelatedBuilds(string sourceDirectory, Package pkg)
+      public static string[] SearchAllRelatedBuilds(string sourceDirectory, PackageManifest pkg)
       {
          return Directory.GetFiles(sourceDirectory, GetBuildsSearchFilePattern(pkg));
       }

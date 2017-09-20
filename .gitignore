@@ -3,3 +3,5 @@ lib/
 src/.vs/
 src/**/obj
 *.user
+src/packages/
+.pundit-install-index
