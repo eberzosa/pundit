@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
+using EBerzosa.Pundit.Core.Model;
 using EBerzosa.Pundit.Core.Model.Package;
 
 namespace Pundit.Core.Model
@@ -11,13 +12,12 @@ namespace Pundit.Core.Model
       private readonly DependencyNode _parentNode;
       private readonly string _packageId;
       private readonly string _platform;
+
       private readonly VersionPattern _versionPattern;
-      private bool _hasVersions;   //if true _versions are populated from _versionPattern
-      private Version[] _versions; //versions satisfying version pattern
+      private PunditVersion[] _versions; //versions satisfying version pattern
       private int _activeVersionIndex = -1;  //active version index in _versions
 
       //node's dependencies
-      private bool _hasManifest;
       private readonly List<DependencyNode> _children = new List<DependencyNode>();
 
       public DependencyNode(DependencyNode parentNode,
@@ -30,8 +30,13 @@ namespace Pundit.Core.Model
       }
 
       public string PackageId { get { return _packageId; } }
+
       public string Platform { get { return _platform; } }
+
+      public bool? IsDeveloper { get; set; }
+
       public VersionPattern VersionPattern { get { return _versionPattern; } }
+
       public IEnumerable<DependencyNode> Children { get { return _children; } }
 
       public string Path
@@ -59,7 +64,7 @@ namespace Pundit.Core.Model
          SetManifest(rootManifest);
       }
 
-      public void SetVersions(Version[] versions)
+      public void SetVersions(PunditVersion[] versions)
       {
          if (versions == null) throw new ArgumentNullException("versions");
 
@@ -68,10 +73,10 @@ namespace Pundit.Core.Model
 
          if(_versions.Length > 0) _activeVersionIndex = _versions.Length - 1;
 
-         _hasVersions = true;
+         HasVersions = true;
 
          _children.Clear();
-         _hasManifest = (versions.Length == 0); //if there are no versions, no point to fetch manifest
+         HasManifest = (versions.Length == 0); //if there are no versions, no point to fetch manifest
       }
 
       public void SetManifest(PackageManifest thisManifest)
@@ -85,23 +90,14 @@ namespace Pundit.Core.Model
             _children.Add(new DependencyNode(this, pd.PackageId, pd.Platform, new VersionPattern(pd.VersionPattern)));
          }
 
-         _hasManifest = true;
+         HasManifest = true;
       }
 
-      public bool HasVersions
-      {
-         get { return _hasVersions; }
-      }
+      public bool HasVersions { get; private set; }
 
-      public bool HasManifest
-      {
-         get { return _hasManifest; }
-      }
+      public bool HasManifest { get; private set; }
 
-      public bool IsFull
-      {
-         get { return _hasVersions && _hasManifest; }
-      }
+      public bool IsFull => HasVersions && HasManifest;
 
       public bool IsRecursivelyFull
       {
@@ -119,7 +115,7 @@ namespace Pundit.Core.Model
          }
       }
 
-      public Version ActiveVersion
+      public PunditVersion ActiveVersion
       {
          get
          {
@@ -132,11 +128,11 @@ namespace Pundit.Core.Model
       /// <summary>
       /// Versions from lowest to latest active (<see cref="ActiveVersion"/>)
       /// </summary>
-      public IEnumerable<Version> ActiveVersions
+      public IEnumerable<PunditVersion> ActiveVersions
       {
          get
          {
-            var active = new List<Version>();
+            var active = new List<PunditVersion>();
 
             for (int i = 0; i <= _activeVersionIndex; i++ )
             {
@@ -147,10 +143,7 @@ namespace Pundit.Core.Model
          }
       }
 
-      public IEnumerable<Version> AllVersions
-      {
-         get { return _versions; }
-      }
+      public IEnumerable<PunditVersion> AllVersions => _versions;
 
       public PackageKey ActiveVersionKey
       {
@@ -163,30 +156,22 @@ namespace Pundit.Core.Model
          }
       }
 
-      public UnresolvedPackage UnresolvedPackage
-      {
-         get
-         {
-            return new UnresolvedPackage(_packageId, _platform);
-         }
-      }
+      public UnresolvedPackage UnresolvedPackage => new UnresolvedPackage(_packageId, _platform) {IsDeveloper = IsDeveloper ?? false};
+      
+      public bool CanDowngrade => _activeVersionIndex > 0;
 
-      public bool CanDowngrade
-      {
-         get { return _activeVersionIndex > 0; }
-      }
 
       public object Clone()
       {
-         DependencyNode node = new DependencyNode(_parentNode, _packageId, _platform, _versionPattern);
-
-         //versions
-
-         node._hasVersions = _hasVersions;
+         var node = new DependencyNode(_parentNode, _packageId, _platform, _versionPattern)
+         {
+            IsDeveloper = IsDeveloper,
+            HasVersions = HasVersions
+         };
 
          if(_versions != null)
          {
-            node._versions = new Version[_versions.Length];
+            node._versions = new PunditVersion[_versions.Length];
 
             if(_versions.Length > 0)
             {
@@ -198,7 +183,7 @@ namespace Pundit.Core.Model
 
          //manifest
 
-         node._hasManifest = _hasManifest;
+         node.HasManifest = HasManifest;
 
          foreach(DependencyNode child in _children)
          {

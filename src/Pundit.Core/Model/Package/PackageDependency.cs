@@ -32,7 +32,7 @@ namespace EBerzosa.Pundit.Core.Model.Package
       /// guess is performed
       /// </summary>
       public string Platform { get; set; }
-
+      
       /// <summary>
       /// Set to true if the dependency must exist at dev time only.
       /// Use it if and only if your package doesn't require the dependent package in the runtime.

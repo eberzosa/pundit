@@ -38,7 +38,7 @@ namespace EBerzosa.Pundit.Core.Repository
          if (Path.IsPathRooted(fileOrPath))
             return fileOrPath;
 
-         switch (Path.PathSeparator)
+         switch (Path.DirectorySeparatorChar)
          {
             case '\\':
                fileOrPath = fileOrPath.Replace('/', '\\');

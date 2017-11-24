@@ -45,5 +45,7 @@ namespace EBerzosa.Pundit.Core.Services
       public SearchService GetSearchService() => new SearchService(_localRepository, _repositoryFactory, _writer);
 
       public PublishService GetPublishService() => new PublishService(_localRepository, _repositoryFactory, _writer);
+
+      public UpdateService GetUpdateService() => new UpdateService(_localRepository, _repositoryFactory, _packageReaderFactory, _writer);
    }
 }

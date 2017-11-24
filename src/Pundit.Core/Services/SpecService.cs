@@ -1,6 +1,7 @@
 ﻿using System;
 using System.IO;
 using System.Reflection;
+using EBerzosa.Pundit.Core.Model;
 using EBerzosa.Pundit.Core.Model.Enums;
 using EBerzosa.Pundit.Core.Model.Package;
 using EBerzosa.Pundit.Core.Serializers;
@@ -32,7 +33,7 @@ namespace EBerzosa.Pundit.Core.Services
             License = "MIT license (or anything you want)",
             ProjectUrl = "http://myapplication.myweb.com",
             ReleaseNotes = "Initial version of this imaginary tool with lots of features.",
-            Version = Assembly.GetExecutingAssembly().GetName().Version,
+            Version = new PunditVersion(Assembly.GetExecutingAssembly().GetName().Version),
             Files =
             {
                new SourceFiles("*.dll")

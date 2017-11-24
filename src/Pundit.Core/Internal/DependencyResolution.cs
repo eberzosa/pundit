@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.IO;
 using System.Linq;
 using System.Text;
+using EBerzosa.Pundit.Core.Model;
 using Pundit.Core.Model;
 
 namespace Pundit.Core.Application
@@ -11,10 +12,12 @@ namespace Pundit.Core.Application
    {
       private readonly IRepository[] _activeRepositories;
       private readonly DependencyNode _root;
+      private readonly bool _includeDeveloperPackages;
 
-      public DependencyResolution(PackageManifest rootManifest, IRepository[] activeRepositories)
+      public DependencyResolution(PackageManifest rootManifest, IRepository[] activeRepositories, bool includeDeveloperPackages)
       {
          _activeRepositories = activeRepositories;
+         _includeDeveloperPackages = includeDeveloperPackages;
 
          _root = new DependencyNode(null, rootManifest.PackageId, rootManifest.Platform,
                                     new VersionPattern(rootManifest.Version.ToString()));
@@ -73,15 +76,15 @@ namespace Pundit.Core.Application
 
          if(!node.HasVersions)
          {
-            var versions = new HashSet<Version>();
+            var versions = new HashSet<PunditVersion>();
 
             foreach(IRepository repo in _activeRepositories)
             {
-               Version[] vs = repo.GetVersions(node.UnresolvedPackage, node.VersionPattern);
+               PunditVersion[] vs = repo.GetVersions(node.UnresolvedPackage, node.VersionPattern, _includeDeveloperPackages);
 
                if(vs != null)
                {
-                  foreach(Version v in vs)
+                  foreach(PunditVersion v in vs)
                   {
                      versions.Add(v);
                   }
@@ -199,7 +202,7 @@ namespace Pundit.Core.Application
                b.Append("], resolved to: [");
 
                bool isFirst = true;
-               foreach (Version v in node.AllVersions)
+               foreach (PunditVersion v in node.AllVersions)
                {
                   if (!isFirst)
                   {

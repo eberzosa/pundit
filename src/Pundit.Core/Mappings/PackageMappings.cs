@@ -1,4 +1,5 @@
 ﻿using System;
+using EBerzosa.Pundit.Core.Model;
 using EBerzosa.Pundit.Core.Model.Enums;
 using EBerzosa.Pundit.Core.Model.Package;
 using EBerzosa.Pundit.Core.Model.Xml;
@@ -21,14 +22,14 @@ namespace EBerzosa.Pundit.Core.Mappings
          Mapper.Register<PackageSpec, XmlPackageSpec>()
             .Member(dst => dst.Version, src => src.Version.ToString());
          Mapper.Register<XmlPackageSpec, PackageSpec>()
-            .Member(dst => dst.Version, src => new Version(src.Version));
+            .Member(dst => dst.Version, src => new PunditVersion(src.Version));
 
 
          Mapper.Register<PackageManifest, XmlPackageManifest>()
             .Member(dst => dst.Version, src => src.Version.ToString());
 
          Mapper.Register<XmlPackageManifest, PackageManifest>()
-            .Member(dst => dst.Version, src => new Version(src.Version));
+            .Member(dst => dst.Version, src => new PunditVersion(src.Version));
 
 
          Mapper.Register<PackageDependency, XmlPackageDependency>();

@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.IO;
 using System.ServiceModel;
 using System.ServiceModel.Web;
+using EBerzosa.Pundit.Core.Model;
 
 namespace Pundit.Core.Model
 {
@@ -35,7 +36,7 @@ namespace Pundit.Core.Model
       [OperationContract]
       [FaultContract(typeof(FileNotFoundException))]
       [WebGet(UriTemplate = "/versions")]
-      Version[] GetVersions(UnresolvedPackage package, VersionPattern pattern);
+      PunditVersion[] GetVersions(UnresolvedPackage package, VersionPattern pattern, bool includeDeveloperPackages);
 
       [OperationContract]
       [FaultContract(typeof(FileNotFoundException))]

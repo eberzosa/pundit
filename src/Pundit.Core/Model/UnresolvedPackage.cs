@@ -1,8 +1,5 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Runtime.Serialization;
-using System.Text;
+﻿using System.Runtime.Serialization;
+using EBerzosa.Utils;
 using Pundit.Core.Utils;
 
 namespace Pundit.Core.Model
@@ -15,10 +12,13 @@ namespace Pundit.Core.Model
 
       [DataMember]
       public string Platform { get; set; }
+      
+      [DataMember]
+      public bool IsDeveloper { get; set; }
 
       public UnresolvedPackage(string packageId, string platform)
       {
-         if (packageId == null) throw new ArgumentNullException("packageId");
+         Guard.NotNull(packageId, nameof(packageId));
 
          PackageId = packageId;
          Platform = PackageUtils.TrimPlatformName(platform);
@@ -26,26 +26,20 @@ namespace Pundit.Core.Model
 
       public override bool Equals(object obj)
       {
-         if(obj is UnresolvedPackage)
+         if (obj is UnresolvedPackage that)
          {
-            UnresolvedPackage that = (UnresolvedPackage) obj;
-
-            return that.PackageId == this.PackageId &&
-                   PackageUtils.ArePlatformsEqual(this.Platform, that.Platform);
+            return that.PackageId == PackageId &&
+                   PackageUtils.ArePlatformsEqual(Platform, that.Platform) &&
+                   IsDeveloper == that.IsDeveloper;
          }
 
          return false;
       }
 
-      public override int GetHashCode()
-      {
-         return PackageId.GetHashCode()*Platform.GetHashCode();
-      }
+      public override int GetHashCode() 
+         => PackageId.GetHashCode() * Platform.GetHashCode() * IsDeveloper.GetHashCode();
 
       public override string ToString()
-      {
-         return string.Format("package id: [{0}], platform: [{1}]",
-                              PackageId, Platform);
-      }
+         => $"package id: [{PackageId}], platform: [{Platform}], developer: [{IsDeveloper}]";
    }
 }

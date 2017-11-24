@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Runtime.Serialization;
 using System.Xml.Serialization;
+using EBerzosa.Pundit.Core.Model;
 using EBerzosa.Utils;
 using Pundit.Core.Utils;
 
@@ -14,10 +15,9 @@ namespace Pundit.Core.Model
    {
       public PackageKey()
       {
-         
       }
 
-      public PackageKey(string packageId, Version version, string platform)
+      public PackageKey(string packageId, PunditVersion version, string platform)
       {
          Guard.NotNull(packageId, nameof(packageId));
 
@@ -33,20 +33,20 @@ namespace Pundit.Core.Model
       //[XmlAttribute("version")]
       [XmlIgnore]
       [DataMember]
-      public Version Version { get; set; }
+      public PunditVersion Version { get; set; }
 
       [XmlAttribute("version")]
       [DataMember]
       public string VersionString
       {
          get => Version.ToString();
-         set => Version = new Version(value);
+         set => Version = new PunditVersion(value);
       }
 
       [XmlAttribute("platform")]
       [DataMember]
       public string Platform { get; set; }
-
+      
       public override bool Equals(object obj)
       {
          if (obj is PackageKey packageKey)
@@ -67,7 +67,7 @@ namespace Pundit.Core.Model
 
       public override int GetHashCode()
       {
-         return PackageId.GetHashCode()*Version.GetHashCode()*Platform.GetHashCode();
+         return PackageId.GetHashCode() * Version.GetHashCode() * Platform.GetHashCode();
       }
 
       public object Clone()

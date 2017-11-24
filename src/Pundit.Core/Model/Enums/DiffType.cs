@@ -1,18 +1,11 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-
-namespace Pundit.Core.Model
+﻿namespace EBerzosa.Pundit.Core.Model.Enums
 {
    public enum DiffType
    {
       NoChange,
-
       Add,
-
-      Mod,
-
-      Del
+      Upgrade,
+      Downgrade,
+      Delete
    }
 }

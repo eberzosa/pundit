@@ -1,5 +1,7 @@
 ﻿using System;
+using System.Diagnostics;
 using System.IO;
+using EBerzosa.Pundit.Core.Model;
 using EBerzosa.Pundit.Core.Repository;
 using EBerzosa.Pundit.Core.Serializers;
 using EBerzosa.Utils;
@@ -23,7 +25,10 @@ namespace EBerzosa.Pundit.Core.Services
 
       public string OutputPath { get; set; }
 
-      public Version Version { get; set; }
+      public PunditVersion Version { get; set; }
+
+      public bool IsDeveloperPackage { get; set; }
+
 
       public PackService(PackageSerializerFactory packageSerializerFactory, ManifestResolver manifestResolver, IWriter writer)
       {
@@ -64,6 +69,10 @@ namespace EBerzosa.Pundit.Core.Services
             _writer.Info($"Overriding package version '{packageSpec.Version}' from spec with '{Version}'");
             packageSpec.Version = Version;
          }
+
+         Debugger.Launch();
+
+         packageSpec.Version.IsDeveloper = IsDeveloperPackage;
 
          var packageName = PackageUtils.GetFileName(packageSpec);
 

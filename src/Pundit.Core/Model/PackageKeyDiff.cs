@@ -1,7 +1,6 @@
 ﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
+using EBerzosa.Pundit.Core.Model;
+using EBerzosa.Pundit.Core.Model.Enums;
 
 namespace Pundit.Core.Model
 {
@@ -20,20 +19,20 @@ namespace Pundit.Core.Model
          
       }
 
-      public PackageKeyDiff(DiffType diffType, string packageId, Version version, string platform) :
-         base(packageId, version, platform)
+      public PackageKeyDiff(DiffType diffType, string packageId, PunditVersion version, string platform, bool isDeveloper) 
+         : base(packageId, version, platform)
       {
          DiffType = diffType;
       }
 
-      public PackageKeyDiff(DiffType diffType, PackageKey key) :
-         base(key.PackageId, key.Version, key.Platform)
+      public PackageKeyDiff(DiffType diffType, PackageKey key) 
+         : base(key.PackageId, key.Version, key.Platform)
       {
          DiffType = diffType;
       }
 
-      public PackageKeyDiff(DiffType diffType, PackageKey newPackageKey, PackageKey oldPackageKey) :
-         base(newPackageKey.PackageId, newPackageKey.Version, newPackageKey.Platform)
+      public PackageKeyDiff(DiffType diffType, PackageKey newPackageKey, PackageKey oldPackageKey) 
+         : base(newPackageKey.PackageId, newPackageKey.Version, newPackageKey.Platform)
       {
          DiffType = diffType;
          OldPackageKey = oldPackageKey;

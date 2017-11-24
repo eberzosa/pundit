@@ -1,4 +1,6 @@
-﻿using EBerzosa.CommandLineProcess;
+﻿using System;
+using System.Collections.Generic;
+using EBerzosa.CommandLineProcess;
 using EBerzosa.Pundit.CommandLine.Controllers;
 using EBerzosa.Utils;
 
@@ -26,6 +28,24 @@ namespace EBerzosa.Pundit.CommandLine.Builders
                repository = opt.SingleValue("r", "repo", "name", "Specifies repository to publish to. Note that you have to have publishing permissions in that repo.");
             })
             .OnExecute(() => _controller.Execute(package.Value, repository.Value).ToInteger());
+      }
+
+      public override void ReplaceLegacy(ref string[] args)
+      {
+         if (args == null || args.Length < 2 || !"publish".Equals(args[0], StringComparison.OrdinalIgnoreCase))
+            return;
+
+         ReorderArgs(ref args, "p");
+
+         var newArgs = new List<string> {args[0]};
+         for (int i = 1; i < args.Length; i++)
+            newArgs.AddRange(ProcessArgsAndReplaceOldColonOption(args[i], new[]
+            {
+               new ProcessAndReplace {Search = "p", Transform = s => s},
+               new ProcessAndReplace {Search = "r", Replace = "r"}
+            }));
+
+         args = newArgs.ToArray();
       }
 
       /*

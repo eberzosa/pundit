@@ -23,17 +23,19 @@ namespace EBerzosa.Pundit.CommandLine.Builders
          IOption local = null;
          IOption force = null;
          IOption ping = null;
+         IOption includeDeveloperPackages = null;
 
          var command = root.NewSubCommand("resolve", "Resolves dependencies and refresh project packages specifiend in the manifest")
             .Build((cmd, arg, opt) =>
             {
                manifest = BuildManifestOption(opt);
-               configuration = opt.SingleValue("c", "configuration", "value", "Build configuration (debug or release). Default release. If a dependency doesn't include debug build release will be used");
+               configuration = BuildConfigurationOption(opt);
                local = BuildLocalOption(opt);
-               force = opt.NoValue("f", "force", "All dependencies must be deleted and reinstalled from scratch even if none changed since the last time");
-               ping = opt.NoValue("r", "dryrun", "Dependencies must be checked but no changes to the local repository should be made; use it to check for changes without updating to latest versions");
+               force = BuildForceOption(opt);
+               ping = BuildDryRunOption(opt);
+               includeDeveloperPackages = BuildIncludeDeveloperOption(opt);
             })
-            .OnExecute(() => _controller.Execute(manifest.Value, configuration.Value, local.HasValue, force.HasValue, ping.HasValue).ToInteger());
+            .OnExecute(() => _controller.Execute(manifest.Value, configuration.Value, local.HasValue, force.HasValue, ping.HasValue, includeDeveloperPackages.HasValue).ToInteger());
       }
 
       public override void ReplaceLegacy(ref string[] args)

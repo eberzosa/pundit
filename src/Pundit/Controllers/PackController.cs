@@ -1,6 +1,7 @@
 ﻿using System;
 using EBerzosa.CommandLineProcess;
 using EBerzosa.CommandLineProcess.Utils;
+using EBerzosa.Pundit.Core.Model;
 using EBerzosa.Pundit.Core.Services;
 using EBerzosa.Utils;
 
@@ -18,7 +19,7 @@ namespace EBerzosa.Pundit.CommandLine.Controllers
          _serviceFactory = serviceFactory;
       }
 
-      public ExitCode Execute(string manifest, string outputPath, string versionString)
+      public ExitCode Execute(string manifest, string outputPath, string versionString, bool isDeveloperPackage)
       {
          SafeExecute(() =>
          {
@@ -26,7 +27,7 @@ namespace EBerzosa.Pundit.CommandLine.Controllers
 
             if (versionString != null)
             {
-               if (!Version.TryParse(versionString, out var version))
+               if (!PunditVersion.TryParse(versionString, out var version))
                   throw new ArgumentException($"Invalid version '{versionString}' format");
 
                service.Version = version;
@@ -34,6 +35,7 @@ namespace EBerzosa.Pundit.CommandLine.Controllers
 
             service.ManifestFileOrPath = manifest;
             service.OutputPath = outputPath;
+            service.IsDeveloperPackage = isDeveloperPackage;
 
             service.Pack();
          });

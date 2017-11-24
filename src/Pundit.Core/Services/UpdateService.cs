@@ -1,11 +1,15 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Diagnostics;
 using System.IO;
 using System.Linq;
+using System.Reflection;
+using System.Threading;
 using EBerzosa.Pundit.Core.Application;
+using EBerzosa.Pundit.Core.Model;
 using EBerzosa.Pundit.Core.Model.Enums;
+using EBerzosa.Pundit.Core.Model.Package;
 using EBerzosa.Pundit.Core.Repository;
-using EBerzosa.Pundit.Core.Serializers;
 using EBerzosa.Utils;
 using Pundit.Core;
 using Pundit.Core.Application;
@@ -14,25 +18,17 @@ using Pundit.Core.Model.EventArguments;
 
 namespace EBerzosa.Pundit.Core.Services
 {
-   public class ResolveService
+   public class UpdateService
    {
       private readonly LocalRepository _localRepository;
-
-      private readonly ManifestResolver _manifestResolver;
+      
       private readonly PackageReaderFactory _packageReaderFactory;
-      private readonly PackageSerializerFactory _packageSerializerFactory;
 
       private readonly RepositoryFactory _repositoryFactory;
 
       //private readonly IRepositoryManager _repositoryManager;
       private readonly IWriter _writer;
-
-      private string _resolvedManifestPath;
-
-      public string ManifestFileOrPath { get; set; }
-
-      public BuildConfiguration Configuration { get; set; } = BuildConfiguration.Release;
-
+      
       public bool Force { get; set; }
 
       public bool DryRun { get; set; }
@@ -42,41 +38,49 @@ namespace EBerzosa.Pundit.Core.Services
       public bool IncludeDeveloperPackages { get; set; }
 
 
-      public ResolveService(LocalRepository localRepository, ManifestResolver manifestResolver, RepositoryFactory repositoryFactory, PackageReaderFactory packageReaderFactory,
-         PackageSerializerFactory packageSerializerFactory, IWriter writer) //IRepositoryManager repositoryManager,  IWriter writer)
+      public UpdateService(LocalRepository localRepository, RepositoryFactory repositoryFactory, PackageReaderFactory packageReaderFactory,
+         IWriter writer)
       {
          Guard.NotNull(localRepository, nameof(localRepository));
-         Guard.NotNull(manifestResolver, nameof(manifestResolver));
          Guard.NotNull(repositoryFactory, nameof(repositoryFactory));
          Guard.NotNull(packageReaderFactory, nameof(packageReaderFactory));
-         Guard.NotNull(packageSerializerFactory, nameof(packageSerializerFactory));
          Guard.NotNull(writer, nameof(writer));
 
          _localRepository = localRepository;
-         _manifestResolver = manifestResolver;
          _packageReaderFactory = packageReaderFactory;
-         _packageSerializerFactory = packageSerializerFactory;
          _repositoryFactory = repositoryFactory;
-         //_repositoryManager = repositoryManager;
          _writer = writer;
       }
 
-      public bool Resolve()
+      public bool Execute()
       {
-         if (_resolvedManifestPath == null)
-            _resolvedManifestPath = _manifestResolver.GetManifest(ManifestFileOrPath);
+         var assembly = Assembly.GetEntryAssembly();
 
-         PrintSettings();
+         var packageId = "EBerzosa.Pundit";
+         var assemblyVersion = assembly.GetName().Version;
+         var netFramework = "net46";
 
-         _writer.BeginWrite().Text("Reading manifest... ");
-         var packageSpecs = _packageSerializerFactory.GetPundit().DeserializePackageSpec(File.OpenRead(_resolvedManifestPath));
-         packageSpecs.Validate();
-         _writer.Success("ok").EndWrite();
+         var packageSpec = new PackageSpec
+         {
+            PackageId = packageId,
+            Platform = netFramework,
+            Version = new PunditVersion(1, 0, 0, 0, false),
+            Dependencies =
+            {
+               new PackageDependency(packageId, $"{assemblyVersion.Major}.{assemblyVersion.Minor}")
+               {
+                  Scope = DependencyScope.Normal,
+                  Platform = netFramework
+               }
+            }
+         };
+         
+         packageSpec.Validate();
 
          var repos = GetRepositories(LocalReposOnly ? 0 : int.MaxValue).ToArray();
 
          _writer.BeginWrite().Text("Resolving... ");
-         var dependencyResolution = new DependencyResolution(packageSpecs, repos, IncludeDeveloperPackages);
+         var dependencyResolution = new DependencyResolution(packageSpec, repos, IncludeDeveloperPackages);
          var resolutionResult = dependencyResolution.Resolve();
 
          if (resolutionResult.Item1.HasConflicts)
@@ -95,12 +99,49 @@ namespace EBerzosa.Pundit.Core.Services
          if (DryRun)
             return true;
 
-         Install(resolutionResult, repos, packageSpecs);
+         Install(resolutionResult, repos, packageSpec, Path.GetPathRoot(assembly.CodeBase));
+
+         // TODO: Temp hack
+         if (File.Exists(@"lib\Pundit.exe"))
+         {
+            new Process
+            {
+               StartInfo = new ProcessStartInfo
+               {
+                  FileName = @"lib\Pundit.exe",
+                  Arguments = "update --finalise " + Process.GetCurrentProcess().Id,
+                  //CreateNoWindow = true
+               }
+            }.Start();
+         }
 
          return true;
       }
 
-      private void Install(Tuple<VersionResolutionTable, DependencyNode> resolutionResult, IRepository[] repos, PackageSpec packageSpecSpecs)
+      public void FinaliseUpdate(int processId)
+      {
+         Debugger.Launch();
+
+         try
+         {
+            while (true)
+            {
+               var process = Process.GetProcessById(processId);
+               Thread.Sleep(1000);
+            }
+         }
+         catch (ArgumentException) { }
+
+         var path = Path.GetDirectoryName(typeof(UpdateService).Assembly.Location);
+         foreach (var source in Directory.EnumerateFiles(path))
+         {
+            var destination = Path.Combine(Path.GetDirectoryName(Path.GetDirectoryName(source)), Path.GetFileName(source));
+
+            File.Copy(source, destination, true);
+         }
+      }
+
+      private void Install(Tuple<VersionResolutionTable, DependencyNode> resolutionResult, IRepository[] repos, PackageSpec packageSpecSpecs, string folder)
       {
          _localRepository.PackageDownloadToLocalRepositoryStarted += LocalRepository_PackageDownloadToLocalRepositoryStarted;
          _localRepository.PackageDownloadToLocalRepositoryFinished += LocalRepositoryOnPackageDownloadToLocalRepositoryFinished;
@@ -110,7 +151,7 @@ namespace EBerzosa.Pundit.Core.Services
          _localRepository.PackageDownloadToLocalRepositoryStarted -= LocalRepository_PackageDownloadToLocalRepositoryStarted;
          _localRepository.PackageDownloadToLocalRepositoryFinished -= LocalRepositoryOnPackageDownloadToLocalRepositoryFinished;
 
-         using (var installer = new PackageInstaller(_packageReaderFactory, _manifestResolver.CurrentDirectory, resolutionResult.Item1, packageSpecSpecs, repos.First()))
+         using (var installer = new PackageInstaller(_packageReaderFactory, folder, resolutionResult.Item1, packageSpecSpecs, repos.First()))
          {
             installer.BeginInstallPackage += BeginInstallPackage;
             installer.FinishInstallPackage += FinishInstallPackage;
@@ -118,7 +159,7 @@ namespace EBerzosa.Pundit.Core.Services
             if (Force)
             {
                _writer.Text($"Reinstalling {resolutionResult.Item1.GetPackages().Count()} packages... ");
-               installer.Reinstall(Configuration);
+               installer.Reinstall(BuildConfiguration.Release);
             }
             else
             {
@@ -126,7 +167,7 @@ namespace EBerzosa.Pundit.Core.Services
 
                int changed = PrintSuccess(diff);
                if (changed > 0)
-                  installer.Upgrade(Configuration, diff);
+                  installer.Upgrade(BuildConfiguration.Release, diff);
                else
                   _writer.Success("No changes detected");
             }
@@ -152,15 +193,8 @@ namespace EBerzosa.Pundit.Core.Services
       private void PrintSettings()
       {
          _writer.BeginColumns(new int?[] {18, null})
-            .Reserved("Manifest:")
-            .Text(_resolvedManifestPath);
-
-         _writer.Reserved("Configuration:");
-         if (Configuration == BuildConfiguration.Debug)
-            _writer.Warning(Configuration.ToString());
-         else
-            _writer.Success(Configuration.ToString());
-
+            .Reserved("Configuration:");
+         
          _writer.Reserved("Local Repos Only:");
          if (LocalReposOnly)
             _writer.Warning("yes");

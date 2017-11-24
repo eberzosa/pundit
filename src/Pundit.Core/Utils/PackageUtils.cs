@@ -6,16 +6,19 @@ using System.Linq;
 using System.Reflection;
 using System.Text;
 using System.Text.RegularExpressions;
+using EBerzosa.Pundit.Core.Model;
 using Pundit.Core.Model;
 
 namespace Pundit.Core.Utils
 {
    public static class PackageUtils
    {
-      public const string PackageFileNamePattern = "{0}-{1}.{2}.{3}-{4}-{5}{6}";
+      public const string PackageFileNamePattern = "{0}-{1}.{2}.{3}-{4}{5}-{6}{7}";
       public const string NoArchName = "noarch";
-      private static Regex _packageNameRgx = new Regex("^(.*)-(\\d+)\\.(\\d+)\\.(\\d+)-(\\d+)-(.*)" +
-         PackageManifest.PackedExtension.Replace(".", "\\.") + "$");
+
+      private const string DevMarker = "dev";
+
+      private static readonly Regex PackageNameRgx = new Regex("^(.*)-(\\d+)\\.(\\d+)\\.(\\d+)-(" + DevMarker + "){0,1}(\\d+)-(net.*)" + PackageManifest.PackedExtension.Replace(".", "\\.") + "$");
 
       public static string GetFileName(PackageManifest pkg)
       {
@@ -23,7 +26,10 @@ namespace Pundit.Core.Utils
 
          return string.Format(PackageFileNamePattern,
             pkg.PackageId,
-            pkg.Version.Major, pkg.Version.Minor, pkg.Version.Build,
+            pkg.Version.Major, 
+            pkg.Version.Minor, 
+            pkg.Version.Build, 
+            pkg.Version.IsDeveloper ? DevMarker : "", 
             pkg.Version.Revision,
             TrimPlatformName(pkg.Platform),
             PackageManifest.PackedExtension);
@@ -33,8 +39,11 @@ namespace Pundit.Core.Utils
       {
          return string.Format(PackageFileNamePattern,
                               key.PackageId,
-                              key.Version.Major, key.Version.Minor,
-                              key.Version.Build, key.Version.Revision,
+                              key.Version.Major, 
+                              key.Version.Minor,
+                              key.Version.Build, 
+                              key.Version.IsDeveloper ? DevMarker : "",
+                              key.Version.Revision,
                               TrimPlatformName(key.Platform),
                               PackageManifest.PackedExtension);
       }
@@ -42,12 +51,13 @@ namespace Pundit.Core.Utils
       public static string GetSearchPattern(UnresolvedPackage pkg, VersionPattern pattern)
       {
          Version v = pattern.ToVersion();
-
+         
          return string.Format(PackageFileNamePattern,
                        pkg.PackageId,
                        v.Major, v.Minor,
                        v.Build == -1 ? "*" : v.Build.ToString(),
-                       v.Revision == -1 ? "*" : v.Revision.ToString(),
+                       "*",
+                       v.Revision == -1 ? "" : v.Revision.ToString(),
                        TrimPlatformName(pkg.Platform),
                        PackageManifest.PackedExtension);
       }
@@ -60,24 +70,28 @@ namespace Pundit.Core.Utils
             pkg.PackageId,
             pkg.Version.Major, pkg.Version.Minor, pkg.Version.Build,
             "*",
+            "",
             string.IsNullOrEmpty(pkg.Platform) ? "noarch" : pkg.Platform,
             PackageManifest.PackedExtension);         
       }
 
       public static PackageKey GetPackageKeyFromFileName(string fileName)
       {
-         Match mtch = _packageNameRgx.Match(fileName);
+         Match mtch = PackageNameRgx.Match(fileName);
 
          if(!mtch.Success)
             throw new ArgumentException("Invalid package name (" + fileName + ")", "fileName");
 
          string packageId = mtch.Groups[1].Value;
-         var v = new Version(
+
+         var v = new PunditVersion(
             int.Parse(mtch.Groups[2].Value),
             int.Parse(mtch.Groups[3].Value),
             int.Parse(mtch.Groups[4].Value),
-            int.Parse(mtch.Groups[5].Value));
-         string platform = mtch.Groups[6].Value;
+            int.Parse(mtch.Groups[6].Value),
+            mtch.Groups[5].Success);
+         
+         string platform = mtch.Groups[7].Value;
 
          return new PackageKey(packageId, v, platform);
       }

@@ -16,7 +16,7 @@ namespace EBerzosa.Pundit.CommandLine.Controllers
          _serviceFactory = serviceFactory;
       }
 
-      public ExitCode Execute(string manifest, string configuration, bool localOnly, bool force, bool dryRun)
+      public ExitCode Execute(string manifest, string configuration, bool localOnly, bool force, bool dryRun, bool includeDeveloperPackages)
       {
          SafeExecute(() =>
          {
@@ -39,6 +39,7 @@ namespace EBerzosa.Pundit.CommandLine.Controllers
             service.LocalReposOnly = localOnly;
             service.Force = force;
             service.DryRun = dryRun;
+            service.IncludeDeveloperPackages = includeDeveloperPackages;
 
             service.Resolve();
          });

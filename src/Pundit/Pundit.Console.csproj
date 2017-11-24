@@ -9,7 +9,7 @@
     <OutputType>Exe</OutputType>
     <AppDesignerFolder>Properties</AppDesignerFolder>
     <RootNamespace>EBerzosa.Pundit.CommandLine</RootNamespace>
-    <AssemblyName>pundit</AssemblyName>
+    <AssemblyName>Pundit</AssemblyName>
     <TargetFrameworkVersion>v4.6</TargetFrameworkVersion>
     <TargetFrameworkProfile>
     </TargetFrameworkProfile>

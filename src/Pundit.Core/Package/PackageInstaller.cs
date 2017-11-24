@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.IO;
 using System.Linq;
 using EBerzosa.Pundit.Core.Application;
+using EBerzosa.Pundit.Core.Model.Enums;
 using EBerzosa.Pundit.Core.Model.Package;
 using Pundit.Core.Model;
 using Pundit.Core.Model.EventArguments;
@@ -69,28 +70,28 @@ namespace Pundit.Core.Application
          }
          else
          {
-            var added = from rr in resolutionResult
-                        where _index.InstalledPackages.FirstOrDefault(ip => ip.LooseEquals(rr)) == null
-                        select new PackageKeyDiff(DiffType.Add, rr);
+            foreach (var rr in resolutionResult)
+            {
+               var pi = _index.InstalledPackages.FirstOrDefault(p => p.LooseEquals(rr));
 
-            diff.AddRange(added);
+               if (pi == null)
+                  diff.Add(new PackageKeyDiff(DiffType.Add, rr));
 
-            var deleted = from ip in _index.InstalledPackages
-                          where resolutionResult.FirstOrDefault(rr => rr.LooseEquals(ip)) == null
-                          select new PackageKeyDiff(DiffType.Del, ip);
+               else if (rr.Equals(pi))
+                  diff.Add(new PackageKeyDiff(DiffType.NoChange, rr, null));
+
+               else if (rr.Version > pi.Version)
+                  diff.Add(new PackageKeyDiff(DiffType.Upgrade, rr, pi));
+
+               else if (rr.Version < pi.Version)
+                  diff.Add(new PackageKeyDiff(DiffType.Downgrade, rr, pi));
+            }
+
+            var deleted = _index.InstalledPackages
+               .Where(ip => resolutionResult.FirstOrDefault(rr => rr.LooseEquals(ip)) == null)
+               .Select(ip => new PackageKeyDiff(DiffType.Delete, ip));
 
             diff.AddRange(deleted);
-
-            var other = from rr in resolutionResult
-                        let ip = _index.InstalledPackages.FirstOrDefault(ip => ip.LooseEquals(rr))
-                        let noChange = ip != null && rr.Equals(ip)
-                        where ip != null
-                        select new PackageKeyDiff(
-                           noChange ? DiffType.NoChange : DiffType.Mod,
-                           rr,
-                           noChange ? null : ip);
-
-            diff.AddRange(other);
          }
 
          return diff;
@@ -187,7 +188,7 @@ namespace Pundit.Core.Application
       /// <param name="diffs"></param>
       public void Upgrade(BuildConfiguration configuration, IEnumerable<PackageKeyDiff> diffs)
       {
-         bool hasDeletes = diffs.FirstOrDefault(d => d.DiffType == DiffType.Del) != null;
+         bool hasDeletes = diffs.FirstOrDefault(d => d.DiffType == DiffType.Delete) != null;
 
          if(hasDeletes)
          {
@@ -195,7 +196,7 @@ namespace Pundit.Core.Application
          }
          else
          {
-            var installs = diffs.Where(d => (d.DiffType == DiffType.Add || d.DiffType == DiffType.Mod));
+            var installs = diffs.Where(d => d.DiffType == DiffType.Add || d.DiffType == DiffType.Upgrade || d.DiffType == DiffType.Downgrade);
 
             foreach(PackageKeyDiff diff in installs)
             {

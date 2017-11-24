@@ -4,6 +4,7 @@ using System.IO;
 using System.Linq;
 using System.Text;
 using EBerzosa.Pundit.Core.Application;
+using EBerzosa.Pundit.Core.Model;
 using Pundit.Core.Model;
 using Pundit.Core.Utils;
 
@@ -72,15 +73,18 @@ namespace Pundit.Core.Application.Repository
          return File.OpenRead(fullPath);
       }
 
-      public Version[] GetVersions(UnresolvedPackage package, VersionPattern pattern)
+      public PunditVersion[] GetVersions(UnresolvedPackage package, VersionPattern pattern, bool includeDeveloperPackages)
       {
-         var versions = new List<Version>();
+         var versions = new List<PunditVersion>();
 
          string filePattern = PackageUtils.GetSearchPattern(package, pattern);
          
          foreach(FileInfo file in new DirectoryInfo(_rootPath).GetFiles(filePattern))
          {
             PackageKey key = PackageUtils.GetPackageKeyFromFileName(file.Name);
+
+            if (!includeDeveloperPackages && key.Version.IsDeveloper)
+               continue;
 
             versions.Add(key.Version);
          }

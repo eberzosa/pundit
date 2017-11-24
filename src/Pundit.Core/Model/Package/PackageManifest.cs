@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Reflection;
 using System.Text.RegularExpressions;
+using EBerzosa.Pundit.Core.Model;
 using EBerzosa.Pundit.Core.Model.Enums;
 using EBerzosa.Pundit.Core.Model.Package;
 using EBerzosa.Utils;
@@ -17,7 +18,7 @@ namespace Pundit.Core.Model
       private const string PackageStringDescr = "allowed characters: letters (A-Z, a-z), numbers, underscore (_) and dot sign (.)";
 
       private static readonly Regex PackageStringRgx = new Regex("^[0-9a-zA-Z\\._]+$");
-      private static readonly Regex PackageVersionRgx = new Regex("^[0-9\\*]+(\\.[0-9\\*]+){3}$");
+      private static readonly Regex PackageVersionRgx = new Regex("^[0-9\\*]+(\\.[0-9\\*]+){3}(-dev){0,1}$");
       
 
       private List<PackageDependency> _dependencies = new List<PackageDependency>();
@@ -32,7 +33,7 @@ namespace Pundit.Core.Model
 
       public string ProjectUrl { get; set; }
 
-      public Version Version { get; set; }
+      public PunditVersion Version { get; set; }
 
       public string Author { get; set; }
 
