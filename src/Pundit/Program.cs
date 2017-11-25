@@ -1,4 +1,5 @@
 ﻿using EBerzosa.Pundit.CommandLine.Builders;
+using LightInject;
 
 namespace EBerzosa.Pundit.CommandLine
 {

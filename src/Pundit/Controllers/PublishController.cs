@@ -28,7 +28,7 @@ namespace EBerzosa.Pundit.CommandLine.Controllers
 
          });
 
-         return ExitCode.NotSupported;
+         return ExitCode.Success;
       }
    }
 }

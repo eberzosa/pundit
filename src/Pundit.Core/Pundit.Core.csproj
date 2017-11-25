@@ -37,49 +37,46 @@
     <Prefer32Bit>false</Prefer32Bit>
   </PropertyGroup>
   <PropertyGroup>
-    <SignAssembly>false</SignAssembly>
-    <AssemblyOriginatorKeyFile>..\pundit.snk</AssemblyOriginatorKeyFile>
+    <SignAssembly>true</SignAssembly>
+    <AssemblyOriginatorKeyFile>..\..\..\eberzosagh.snk</AssemblyOriginatorKeyFile>
   </PropertyGroup>
   <ItemGroup>
-    <Reference Include="EBerzosa.Utils">
-      <HintPath>..\..\lib\EBerzosa.Utils.dll</HintPath>
+    <Reference Include="EBerzosa.Common, Version=1.1.6538.21567, Culture=neutral, PublicKeyToken=cdc6b3c7115622fb, processorArchitecture=MSIL">
+      <HintPath>..\..\..\..\packages\EBerzosa.Common.1.1.6538.21567\lib\net46\EBerzosa.Common.dll</HintPath>
+    </Reference>
+    <Reference Include="EBerzosa.Utils, Version=1.1.6538.21967, Culture=neutral, PublicKeyToken=cdc6b3c7115622fb, processorArchitecture=MSIL">
+      <HintPath>..\..\..\..\packages\EBerzosa.Utils.1.1.6538.21967\lib\net46\EBerzosa.Utils.dll</HintPath>
     </Reference>
     <Reference Include="ExpressMapper, Version=1.9.1.0, Culture=neutral, PublicKeyToken=ac363faa09311ba0, processorArchitecture=MSIL">
-      <SpecificVersion>False</SpecificVersion>
-      <HintPath>..\..\..\..\..\DevGit\_external\ExpressMapper\ExpressMapper Net46\bin\Debug\ExpressMapper.dll</HintPath>
+      <HintPath>..\..\..\..\packages\Expressmapper.1.9.1\lib\net46\ExpressMapper.dll</HintPath>
     </Reference>
-    <Reference Include="ICSharpCode.SharpZipLib">
-      <HintPath>..\..\lib\ICSharpCode.SharpZipLib.dll</HintPath>
+    <Reference Include="ICSharpCode.SharpZipLib, Version=0.86.0.518, Culture=neutral, PublicKeyToken=1b03e6acf1164f73, processorArchitecture=MSIL">
+      <HintPath>..\..\..\..\packages\SharpZipLib.0.86.0\lib\20\ICSharpCode.SharpZipLib.dll</HintPath>
     </Reference>
-    <Reference Include="LightInject, Version=4.0.11.0, Culture=neutral, PublicKeyToken=6bcc61dacb062332, processorArchitecture=MSIL">
-      <HintPath>..\packages\LightInject.4.0.11\lib\net46\LightInject.dll</HintPath>
+    <Reference Include="LightInject, Version=4.0.0.0, Culture=neutral, PublicKeyToken=3176f7f42fdb7007, processorArchitecture=MSIL">
+      <HintPath>..\..\..\..\packages\LightInject.Signed.5.1.1\lib\net46\LightInject.dll</HintPath>
     </Reference>
-    <Reference Include="Microsoft.Web.XmlTransform, Version=2.1.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a, processorArchitecture=MSIL">
-      <HintPath>..\packages\Microsoft.Web.Xdt.2.1.1\lib\net40\Microsoft.Web.XmlTransform.dll</HintPath>
+    <Reference Include="Newtonsoft.Json, Version=10.0.0.0, Culture=neutral, PublicKeyToken=30ad4fe6b2a6aeed, processorArchitecture=MSIL">
+      <HintPath>..\..\..\..\packages\Newtonsoft.Json.10.0.3\lib\net45\Newtonsoft.Json.dll</HintPath>
     </Reference>
-    <Reference Include="Newtonsoft.Json, Version=9.0.0.0, Culture=neutral, PublicKeyToken=30ad4fe6b2a6aeed, processorArchitecture=MSIL">
-      <HintPath>..\packages\Newtonsoft.Json.9.0.1\lib\net45\Newtonsoft.Json.dll</HintPath>
+    <Reference Include="NuGet.Common, Version=4.4.0.3, Culture=neutral, PublicKeyToken=31bf3856ad364e35, processorArchitecture=MSIL">
+      <HintPath>..\..\..\..\packages\NuGet.Common.4.4.0\lib\net45\NuGet.Common.dll</HintPath>
     </Reference>
-    <Reference Include="NuGet.Common, Version=4.3.0.5, Culture=neutral, PublicKeyToken=31bf3856ad364e35, processorArchitecture=MSIL">
-      <HintPath>..\packages\NuGet.Common.4.3.0\lib\net45\NuGet.Common.dll</HintPath>
+    <Reference Include="NuGet.Frameworks, Version=4.4.0.3, Culture=neutral, PublicKeyToken=31bf3856ad364e35, processorArchitecture=MSIL">
+      <HintPath>..\..\..\..\packages\NuGet.Frameworks.4.4.0\lib\net45\NuGet.Frameworks.dll</HintPath>
     </Reference>
-    <Reference Include="NuGet.Core, Version=2.14.0.832, Culture=neutral, PublicKeyToken=31bf3856ad364e35, processorArchitecture=MSIL">
-      <HintPath>..\packages\NuGet.Core.2.14.0\lib\net40-Client\NuGet.Core.dll</HintPath>
+    <Reference Include="NuGet.Packaging, Version=4.4.0.3, Culture=neutral, PublicKeyToken=31bf3856ad364e35, processorArchitecture=MSIL">
+      <HintPath>..\..\..\..\packages\NuGet.Packaging.4.4.0\lib\net45\NuGet.Packaging.dll</HintPath>
     </Reference>
-    <Reference Include="NuGet.Frameworks, Version=4.3.0.5, Culture=neutral, PublicKeyToken=31bf3856ad364e35, processorArchitecture=MSIL">
-      <HintPath>..\packages\NuGet.Frameworks.4.3.0\lib\net45\NuGet.Frameworks.dll</HintPath>
+    <Reference Include="NuGet.Packaging.Core, Version=4.4.0.3, Culture=neutral, PublicKeyToken=31bf3856ad364e35, processorArchitecture=MSIL">
+      <HintPath>..\..\..\..\packages\NuGet.Packaging.Core.4.4.0\lib\net45\NuGet.Packaging.Core.dll</HintPath>
     </Reference>
-    <Reference Include="NuGet.Packaging, Version=4.3.0.5, Culture=neutral, PublicKeyToken=31bf3856ad364e35, processorArchitecture=MSIL">
-      <HintPath>..\packages\NuGet.Packaging.4.3.0\lib\net45\NuGet.Packaging.dll</HintPath>
-    </Reference>
-    <Reference Include="NuGet.Packaging.Core, Version=4.3.0.5, Culture=neutral, PublicKeyToken=31bf3856ad364e35, processorArchitecture=MSIL">
-      <HintPath>..\packages\NuGet.Packaging.Core.4.3.0\lib\net45\NuGet.Packaging.Core.dll</HintPath>
-    </Reference>
-    <Reference Include="NuGet.Versioning, Version=4.3.0.5, Culture=neutral, PublicKeyToken=31bf3856ad364e35, processorArchitecture=MSIL">
-      <HintPath>..\packages\NuGet.Versioning.4.3.0\lib\net45\NuGet.Versioning.dll</HintPath>
+    <Reference Include="NuGet.Versioning, Version=4.4.0.3, Culture=neutral, PublicKeyToken=31bf3856ad364e35, processorArchitecture=MSIL">
+      <HintPath>..\..\..\..\packages\NuGet.Versioning.4.4.0\lib\net45\NuGet.Versioning.dll</HintPath>
     </Reference>
     <Reference Include="System" />
     <Reference Include="System.Core" />
+    <Reference Include="System.IO.Compression" />
     <Reference Include="System.Runtime.Serialization" />
     <Reference Include="System.ServiceModel" />
     <Reference Include="System.ServiceModel.Web" />
@@ -102,7 +99,7 @@
     <Compile Include="Package\PackageReaderFactory.cs" />
     <Compile Include="Package\PackageStreamer.cs" />
     <Compile Include="Package\PackageWriter.cs" />
-    <Compile Include="Repository\FileRepository.cs" />
+    <Compile Include="Repository\FileSystemRepository.cs" />
     <Compile Include="Serializers\IPackageSerializer.cs" />
     <Compile Include="Serializers\NuGetv3PackageSerializer.cs" />
     <Compile Include="Serializers\PackageSerializerFactory.cs" />
@@ -163,6 +160,7 @@
     <Compile Include="WiringModule.cs" />
   </ItemGroup>
   <ItemGroup>
+    <None Include="app.config" />
     <None Include="manifest.xsd">
       <SubType>Designer</SubType>
     </None>

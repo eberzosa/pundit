@@ -69,9 +69,7 @@ namespace EBerzosa.Pundit.Core.Services
             _writer.Info($"Overriding package version '{packageSpec.Version}' from spec with '{Version}'");
             packageSpec.Version = Version;
          }
-
-         Debugger.Launch();
-
+         
          packageSpec.Version.IsDeveloper = IsDeveloperPackage;
 
          var packageName = PackageUtils.GetFileName(packageSpec);

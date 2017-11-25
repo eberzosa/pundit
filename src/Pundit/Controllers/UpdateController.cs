@@ -17,18 +17,6 @@ namespace EBerzosa.Pundit.CommandLine.Controllers
          _serviceFactory = serviceFactory;
       }
 
-      public ExitCode FinaliseUpdate(int processId)
-      {
-         SafeExecute(() =>
-         {
-            var service = _serviceFactory.GetUpdateService();
-            
-            service.FinaliseUpdate(processId);
-         });
-
-         return ExitCode.Success;
-      }
-
       public ExitCode Execute(string configuration, bool localOnly, bool force, bool dryRun, bool includeDeveloperPackages)
       {
          SafeExecute(() =>

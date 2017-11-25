@@ -1,6 +1,5 @@
 ﻿using EBerzosa.Pundit.Core.Application;
 using EBerzosa.Utils;
-using Pundit.Core.Application.Repository;
 using Pundit.Core.Model;
 
 namespace EBerzosa.Pundit.Core.Repository
@@ -18,7 +17,7 @@ namespace EBerzosa.Pundit.Core.Repository
 
       public IRepository CreateFromUri(string uri)
       {
-         return new FileRepository(_packageReaderFactory, uri);
+         return new FileSystemRepository(_packageReaderFactory, uri);
       }
    }
 }

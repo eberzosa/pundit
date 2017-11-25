@@ -99,48 +99,39 @@ namespace EBerzosa.Pundit.Core.Services
          if (DryRun)
             return true;
 
-         Install(resolutionResult, repos, packageSpec, Path.GetPathRoot(assembly.CodeBase));
+         var currentPath = Path.GetDirectoryName(assembly.Location);
 
-         // TODO: Temp hack
-         if (File.Exists(@"lib\Pundit.exe"))
+         Install(resolutionResult, repos, packageSpec, currentPath);
+
+         var oldPath = Path.Combine(currentPath, "old");
+         var updatePath = Path.Combine(currentPath, "lib");
+
+         if (Directory.Exists(oldPath))
          {
-            new Process
-            {
-               StartInfo = new ProcessStartInfo
-               {
-                  FileName = @"lib\Pundit.exe",
-                  Arguments = "update --finalise " + Process.GetCurrentProcess().Id,
-                  //CreateNoWindow = true
-               }
-            }.Start();
+            foreach (var file in Directory.EnumerateFiles(oldPath))
+               File.Delete(file);
          }
+         else
+         {
+            Directory.CreateDirectory(oldPath);
+         }
+
+         foreach (var originalFile in Directory.EnumerateFiles(currentPath))
+         {
+            if (Path.GetFileNameWithoutExtension(originalFile) == string.Empty)
+               continue;
+
+            File.Move(originalFile, Path.Combine(oldPath, Path.GetFileName(originalFile)));
+         }
+
+         foreach (var newFile in Directory.EnumerateFiles(updatePath))
+            File.Move(newFile, Path.Combine(currentPath, Path.GetFileName(newFile)));
+
+         Directory.Delete(updatePath, false);
 
          return true;
       }
-
-      public void FinaliseUpdate(int processId)
-      {
-         Debugger.Launch();
-
-         try
-         {
-            while (true)
-            {
-               var process = Process.GetProcessById(processId);
-               Thread.Sleep(1000);
-            }
-         }
-         catch (ArgumentException) { }
-
-         var path = Path.GetDirectoryName(typeof(UpdateService).Assembly.Location);
-         foreach (var source in Directory.EnumerateFiles(path))
-         {
-            var destination = Path.Combine(Path.GetDirectoryName(Path.GetDirectoryName(source)), Path.GetFileName(source));
-
-            File.Copy(source, destination, true);
-         }
-      }
-
+      
       private void Install(Tuple<VersionResolutionTable, DependencyNode> resolutionResult, IRepository[] repos, PackageSpec packageSpecSpecs, string folder)
       {
          _localRepository.PackageDownloadToLocalRepositoryStarted += LocalRepository_PackageDownloadToLocalRepositoryStarted;

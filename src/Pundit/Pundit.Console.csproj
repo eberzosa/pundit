@@ -15,39 +15,55 @@
     </TargetFrameworkProfile>
     <FileAlignment>512</FileAlignment>
   </PropertyGroup>
-  <PropertyGroup>
-    <SignAssembly>false</SignAssembly>
-    <AssemblyOriginatorKeyFile>..\pundit.snk</AssemblyOriginatorKeyFile>
-  </PropertyGroup>
   <PropertyGroup Condition="'$(Configuration)|$(Platform)' == 'Debug|AnyCPU'">
     <DebugSymbols>true</DebugSymbols>
-    <OutputPath>bin\Debug\</OutputPath>
-    <DefineConstants>DEBUG;TRACE</DefineConstants>
     <DebugType>full</DebugType>
-    <PlatformTarget>AnyCPU</PlatformTarget>
+    <Optimize>false</Optimize>
+    <BaseIntermediateOutputPath>..\..\out\obj\</BaseIntermediateOutputPath>
+    <OutputPath>..\..\out\Debug\</OutputPath>
+    <DefineConstants>DEBUG;TRACE</DefineConstants>
     <ErrorReport>prompt</ErrorReport>
-    <CodeAnalysisRuleSet>MinimumRecommendedRules.ruleset</CodeAnalysisRuleSet>
+    <WarningLevel>4</WarningLevel>
   </PropertyGroup>
   <PropertyGroup Condition="'$(Configuration)|$(Platform)' == 'Release|AnyCPU'">
-    <OutputPath>bin\Release\</OutputPath>
-    <DefineConstants>TRACE</DefineConstants>
-    <Optimize>true</Optimize>
     <DebugType>pdbonly</DebugType>
-    <PlatformTarget>AnyCPU</PlatformTarget>
+    <Optimize>true</Optimize>
+    <BaseIntermediateOutputPath>..\..\out\obj\</BaseIntermediateOutputPath>
+    <OutputPath>..\..\out\Release\</OutputPath>
+    <DefineConstants>TRACE</DefineConstants>
     <ErrorReport>prompt</ErrorReport>
-    <CodeAnalysisRuleSet>MinimumRecommendedRules.ruleset</CodeAnalysisRuleSet>
+    <WarningLevel>4</WarningLevel>
+  </PropertyGroup>
+  <PropertyGroup>
+    <SignAssembly>true</SignAssembly>
+  </PropertyGroup>
+  <PropertyGroup>
+    <AssemblyOriginatorKeyFile>..\..\..\eberzosagh.snk</AssemblyOriginatorKeyFile>
+  </PropertyGroup>
+  <PropertyGroup />
+  <PropertyGroup>
+    <StartupObject>EBerzosa.Pundit.CommandLine.Program</StartupObject>
   </PropertyGroup>
   <ItemGroup>
-    <Reference Include="EBerzosa.CommandLineProcess">
-      <HintPath>..\..\lib\EBerzosa.CommandLineProcess.dll</HintPath>
+    <Reference Include="EBerzosa.CommandLineProcess, Version=1.0.6538.27237, Culture=neutral, PublicKeyToken=cdc6b3c7115622fb, processorArchitecture=MSIL">
+      <HintPath>..\..\..\..\packages\EBerzosa.CommandLineProcess.1.0.6538.27237\lib\net46\EBerzosa.CommandLineProcess.dll</HintPath>
     </Reference>
-    <Reference Include="EBerzosa.Utils">
-      <HintPath>..\..\lib\EBerzosa.Utils.dll</HintPath>
+    <Reference Include="EBerzosa.Common, Version=1.1.6538.21567, Culture=neutral, PublicKeyToken=cdc6b3c7115622fb, processorArchitecture=MSIL">
+      <HintPath>..\..\..\..\packages\EBerzosa.Common.1.1.6538.21567\lib\net46\EBerzosa.Common.dll</HintPath>
     </Reference>
-    <Reference Include="LightInject, Version=4.0.11.0, Culture=neutral, processorArchitecture=MSIL">
-      <HintPath>..\packages\LightInject.4.0.11\lib\net46\LightInject.dll</HintPath>
+    <Reference Include="EBerzosa.Utils, Version=1.1.6538.21967, Culture=neutral, PublicKeyToken=cdc6b3c7115622fb, processorArchitecture=MSIL">
+      <HintPath>..\..\..\..\packages\EBerzosa.Utils.1.1.6538.21967\lib\net46\EBerzosa.Utils.dll</HintPath>
+    </Reference>
+    <Reference Include="LightInject, Version=4.0.0.0, Culture=neutral, PublicKeyToken=3176f7f42fdb7007, processorArchitecture=MSIL">
+      <HintPath>..\..\..\..\packages\LightInject.Signed.5.1.1\lib\net46\LightInject.dll</HintPath>
+    </Reference>
+    <Reference Include="Microsoft.Extensions.CommandLineUtils, Version=1.1.1.0, Culture=neutral, PublicKeyToken=adb9793829ddae60, processorArchitecture=MSIL">
+      <HintPath>..\..\..\..\packages\Microsoft.Extensions.CommandLineUtils.1.1.1\lib\net451\Microsoft.Extensions.CommandLineUtils.dll</HintPath>
     </Reference>
     <Reference Include="System" />
+    <Reference Include="System.Console, Version=4.0.1.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a, processorArchitecture=MSIL">
+      <HintPath>..\..\..\..\packages\System.Console.4.3.0\lib\net46\System.Console.dll</HintPath>
+    </Reference>
     <Reference Include="System.Core" />
     <Reference Include="System.Xml.Linq" />
     <Reference Include="System.Data.DataSetExtensions" />

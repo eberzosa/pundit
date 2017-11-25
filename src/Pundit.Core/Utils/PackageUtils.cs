@@ -18,7 +18,7 @@ namespace Pundit.Core.Utils
 
       private const string DevMarker = "dev";
 
-      private static readonly Regex PackageNameRgx = new Regex("^(.*)-(\\d+)\\.(\\d+)\\.(\\d+)-(" + DevMarker + "){0,1}(\\d+)-(net.*)" + PackageManifest.PackedExtension.Replace(".", "\\.") + "$");
+      private static readonly Regex PackageNameRgx = new Regex("^(.*)-(\\d+)\\.(\\d+)\\.(\\d+)-(" + DevMarker + "){0,1}(\\d+)-(.*)" + PackageManifest.PackedExtension.Replace(".", "\\.") + "$");
 
       public static string GetFileName(PackageManifest pkg)
       {
