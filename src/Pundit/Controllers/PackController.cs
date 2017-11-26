@@ -24,7 +24,7 @@ namespace EBerzosa.Pundit.CommandLine.Controllers
          SafeExecute(() =>
          {
             var service = _serviceFactory.GetPackService();
-
+            
             if (versionString != null)
             {
                if (!PunditVersion.TryParse(versionString, out var version))

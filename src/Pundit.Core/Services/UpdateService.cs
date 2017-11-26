@@ -101,7 +101,8 @@ namespace EBerzosa.Pundit.Core.Services
 
          var currentPath = Path.GetDirectoryName(assembly.Location);
 
-         Install(resolutionResult, repos, packageSpec, currentPath);
+         if (!Install(resolutionResult, repos, packageSpec, currentPath))
+            return true;
 
          var oldPath = Path.Combine(currentPath, "old");
          var updatePath = Path.Combine(currentPath, "lib");
@@ -132,8 +133,10 @@ namespace EBerzosa.Pundit.Core.Services
          return true;
       }
       
-      private void Install(Tuple<VersionResolutionTable, DependencyNode> resolutionResult, IRepository[] repos, PackageSpec packageSpecSpecs, string folder)
+      private bool Install(Tuple<VersionResolutionTable, DependencyNode> resolutionResult, IRepository[] repos, PackageSpec packageSpecSpecs, string folder)
       {
+         var installed = false;
+
          _localRepository.PackageDownloadToLocalRepositoryStarted += LocalRepository_PackageDownloadToLocalRepositoryStarted;
          _localRepository.PackageDownloadToLocalRepositoryFinished += LocalRepositoryOnPackageDownloadToLocalRepositoryFinished;
 
@@ -151,6 +154,7 @@ namespace EBerzosa.Pundit.Core.Services
             {
                _writer.Text($"Reinstalling {resolutionResult.Item1.GetPackages().Count()} packages... ");
                installer.Reinstall(BuildConfiguration.Release);
+               installed = true;
             }
             else
             {
@@ -158,7 +162,10 @@ namespace EBerzosa.Pundit.Core.Services
 
                int changed = PrintSuccess(diff);
                if (changed > 0)
+               {
                   installer.Upgrade(BuildConfiguration.Release, diff);
+                  installed = true;
+               }
                else
                   _writer.Success("No changes detected");
             }
@@ -166,6 +173,8 @@ namespace EBerzosa.Pundit.Core.Services
             installer.BeginInstallPackage -= BeginInstallPackage;
             installer.FinishInstallPackage -= FinishInstallPackage;
          }
+
+         return installed;
       }
       
       private void LocalRepository_PackageDownloadToLocalRepositoryStarted(object sender, PackageKeyEventArgs e)
