@@ -1,5 +1,7 @@
 ﻿using System;
+using System.Collections.Generic;
 using System.IO;
+using System.Linq;
 using EBerzosa.Pundit.Core.Repository;
 using EBerzosa.Utils;
 using Pundit.Core;
@@ -31,17 +33,23 @@ namespace EBerzosa.Pundit.Core.Services
             throw new FileNotFoundException($"Package Manifest '{packagePath}' not found");
 
          var publishTo = Repository != null
-            ? new[] {Repository}
-            : _localRepository.Registered.PublishingNames;
+            ? new List<string> {Repository}
+            : _localRepository.Registered.PublishingNames.ToList();
 
-
+         var toRemove = new List<string>();
          foreach (string repo in publishTo)
          {
             if (!_localRepository.IsValidRepositoryName(repo))
                throw new NotSupportedException($"Repository '{repo}' does not exist");
+
+            if (!_localRepository.CanPublish(repo))
+               toRemove.Add(repo);
          }
 
-         _writer.Text($"Publishing package '{packagePath}' to {publishTo.Length} repositor{(publishTo.Length == 1 ? "y" : "ies")}");
+         foreach (var repo in toRemove)
+            publishTo.Remove(repo);
+
+         _writer.Text($"Publishing package '{packagePath}' to {publishTo.Count} repositor{(publishTo.Count == 1 ? "y" : "ies")}");
 
          foreach (var repoName in publishTo)
          {

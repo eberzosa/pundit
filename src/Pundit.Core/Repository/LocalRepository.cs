@@ -125,6 +125,11 @@ namespace Pundit.Core
          return name != null && (name == RegisteredRepositories.LocalRepositoryName || Repos.ContainsRepository(name));
       }
 
+      public bool CanPublish(string name)
+      {
+         return Repos.RepositoriesArray.First(r => r.Name.Equals(name, StringComparison.OrdinalIgnoreCase))?.UseForPublishing ?? false;
+      }
+
       public string GetRepositoryUriFromName(string name)
       {
          if(!IsValidRepositoryName(name))
