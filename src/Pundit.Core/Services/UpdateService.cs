@@ -271,7 +271,7 @@ namespace EBerzosa.Pundit.Core.Services
 
       void FinishInstallPackage(object sender, PackageKeyDiffEventArgs e)
       {
-         _writer.Text(" Done").EndWrite();
+         _writer.Text(" done").EndWrite();
       }
 
    }

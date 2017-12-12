@@ -1,0 +1,16 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<package xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:xsd="http://www.w3.org/2001/XMLSchema" coreVersion="2.0.6555.11467">
+  <packageId>MyApplication.Common</packageId>
+  <platform>net46</platform>
+  <project-url>http://myapplication.myweb.com</project-url>
+  <version>1.0.0.0</version>
+  <author>Enrique</author>
+  <description>This is a sample package for a imaginaty tool.</description>
+  <release-notes>Initial version of this imaginary tool with lots of features.</release-notes>
+  <license>MIT license (or anything you want)</license>
+  <dependencies>
+  </dependencies>
+  <files>
+    <file kind="bin" include="*.dll" flatten="false" basedir="src" targetdir="libs" includeemptydirs="true" />
+  </files>
+</package>

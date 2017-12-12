@@ -19,8 +19,7 @@ namespace Pundit.Core.Application
          _activeRepositories = activeRepositories;
          _includeDeveloperPackages = includeDeveloperPackages;
 
-         _root = new DependencyNode(null, rootManifest.PackageId, rootManifest.Platform,
-                                    new VersionPattern(rootManifest.Version.ToString()));
+         _root = new DependencyNode(null, rootManifest.PackageId, rootManifest.Platform, new VersionPattern(rootManifest.Version.ToString()));
          _root.MarkAsRoot(rootManifest);
       }
 
