@@ -6,3 +6,4 @@ src/**/obj
 src/packages/
 .pundit-install-index
 out/
+packages/
