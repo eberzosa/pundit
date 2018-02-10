@@ -46,19 +46,16 @@
   </PropertyGroup>
   <ItemGroup>
     <Reference Include="EBerzosa.CommandLineProcess, Version=1.0.6538.27237, Culture=neutral, PublicKeyToken=cdc6b3c7115622fb, processorArchitecture=MSIL">
-      <HintPath>..\..\..\..\packages\EBerzosa.CommandLineProcess.1.0.6538.27237\lib\net46\EBerzosa.CommandLineProcess.dll</HintPath>
-    </Reference>
-    <Reference Include="EBerzosa.Common, Version=1.1.6538.21567, Culture=neutral, PublicKeyToken=cdc6b3c7115622fb, processorArchitecture=MSIL">
-      <HintPath>..\..\..\..\packages\EBerzosa.Common.1.1.6538.21567\lib\net46\EBerzosa.Common.dll</HintPath>
+      <SpecificVersion>False</SpecificVersion>
+      <HintPath>..\..\packages\EBerzosa.CommandLineProcess.1.0.6538.27237\lib\net46\EBerzosa.CommandLineProcess.dll</HintPath>
     </Reference>
     <Reference Include="EBerzosa.Utils, Version=1.1.6538.21967, Culture=neutral, PublicKeyToken=cdc6b3c7115622fb, processorArchitecture=MSIL">
-      <HintPath>..\..\..\..\packages\EBerzosa.Utils.1.1.6538.21967\lib\net46\EBerzosa.Utils.dll</HintPath>
+      <SpecificVersion>False</SpecificVersion>
+      <HintPath>..\..\packages\EBerzosa.Utils.1.1.6538.21967\lib\net46\EBerzosa.Utils.dll</HintPath>
     </Reference>
     <Reference Include="LightInject, Version=4.0.0.0, Culture=neutral, PublicKeyToken=3176f7f42fdb7007, processorArchitecture=MSIL">
-      <HintPath>..\..\..\..\packages\LightInject.Signed.5.1.1\lib\net46\LightInject.dll</HintPath>
-    </Reference>
-    <Reference Include="Microsoft.Extensions.CommandLineUtils, Version=1.1.1.0, Culture=neutral, PublicKeyToken=adb9793829ddae60, processorArchitecture=MSIL">
-      <HintPath>..\..\..\..\packages\Microsoft.Extensions.CommandLineUtils.1.1.1\lib\net451\Microsoft.Extensions.CommandLineUtils.dll</HintPath>
+      <SpecificVersion>False</SpecificVersion>
+      <HintPath>..\..\packages\LightInject.Signed.5.1.1\lib\net46\LightInject.dll</HintPath>
     </Reference>
     <Reference Include="System" />
     <Reference Include="System.Console, Version=4.0.1.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a, processorArchitecture=MSIL">
