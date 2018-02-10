@@ -4,6 +4,7 @@ using System.IO;
 using System.Linq;
 using System.Reflection;
 using System.Text;
+using EBerzosa.Pundit.Core.Utils;
 using NAnt.Core;
 
 namespace Pundit.Core.Utils
@@ -54,7 +55,8 @@ namespace Pundit.Core.Utils
 
       public static string FileSizeToString(long size)
       {
-         return String.Format(new FileSizeFormatProvider(), "{0:fs}", size);
+         size.ToString();
+         return String.Format(new ByteFormatProvider(), "{0:fs}", size);
       }
 
       public static string GetOSPath(string path)

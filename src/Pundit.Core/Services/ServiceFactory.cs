@@ -1,6 +1,7 @@
 ﻿using EBerzosa.Pundit.Core.Application;
 using EBerzosa.Pundit.Core.Repository;
 using EBerzosa.Pundit.Core.Serializers;
+using EBerzosa.Pundit.Core.Utils;
 using EBerzosa.Utils;
 using Pundit.Core;
 
@@ -36,16 +37,25 @@ namespace EBerzosa.Pundit.Core.Services
          _writer = writer;
       }
 
-      public ResolveService GetResolveService() => new ResolveService(_localRepository, _manifestResolver, _repositoryFactory, _packageReaderFactory, _packageSerializerFactory, _writer);
+      public ResolveService GetResolveService() 
+         => new ResolveService(_localRepository, _manifestResolver, _repositoryFactory, _packageReaderFactory, _packageSerializerFactory, _writer);
 
-      public SpecService GetSpecService() => new SpecService(_manifestResolver.CurrentDirectory, _packageSerializerFactory, _writer);
+      public SpecService GetSpecService()
+         => new SpecService(_manifestResolver.CurrentDirectory, _packageSerializerFactory, _writer);
 
-      public PackService GetPackService() => new PackService(_packageSerializerFactory, _manifestResolver, _writer);
+      public PackService GetPackService() 
+         => new PackService(_packageSerializerFactory, _manifestResolver, _writer);
 
-      public SearchService GetSearchService() => new SearchService(_localRepository, _repositoryFactory, _writer);
+      public SearchService GetSearchService() 
+         => new SearchService(_localRepository, _repositoryFactory, _writer);
 
-      public PublishService GetPublishService() => new PublishService(_localRepository, _repositoryFactory, _writer);
+      public PublishService GetPublishService() 
+         => new PublishService(_localRepository, _repositoryFactory, _writer);
 
-      public UpdateService GetUpdateService() => new UpdateService(_localRepository, _repositoryFactory, _packageReaderFactory, _writer);
+      public UpdateService GetUpdateService() 
+         => new UpdateService(_localRepository, _repositoryFactory, _packageReaderFactory, _writer);
+
+      public ConvertService GetConvertService() 
+         => new ConvertService(new PackService(_packageSerializerFactory, _manifestResolver, new NullWriter()), _packageSerializerFactory, _writer);
    }
 }
