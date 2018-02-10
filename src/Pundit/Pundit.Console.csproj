@@ -73,6 +73,7 @@
   </ItemGroup>
   <ItemGroup>
     <Compile Include="Builders\Builder.cs" />
+    <Compile Include="Builders\ConvertBuilder.cs" />
     <Compile Include="Builders\SourcesBuilder.cs" />
     <Compile Include="Builders\PackBuilder.cs" />
     <Compile Include="Builders\PublishBuilder.cs" />
@@ -80,6 +81,7 @@
     <Compile Include="Builders\SearchBuilder.cs" />
     <Compile Include="Builders\SpecBuilder.cs" />
     <Compile Include="Builders\UpdateBuilder.cs" />
+    <Compile Include="Controllers\ConvertController.cs" />
     <Compile Include="_Commands\CommandFactory.cs" />
     <Compile Include="_Commands\BaseCommand.cs" />
     <Compile Include="_Commands\GlamTerm.cs" />

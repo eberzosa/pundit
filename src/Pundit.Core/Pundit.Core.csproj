@@ -91,6 +91,7 @@
     <Compile Include="3rdparty\Options.cs" />
     <Compile Include="Internal\DependencyResolution.cs" />
     <Compile Include="Internal\InstalledPackagesIndex.cs" />
+    <Compile Include="Mappings\FrameworkMappings.cs" />
     <Compile Include="Mappings\NuGetv3PackageMappings.cs" />
     <Compile Include="Mappings\NugetPackageMappings.cs" />
     <Compile Include="Model\PunditVersion.cs" />
@@ -104,6 +105,7 @@
     <Compile Include="Serializers\NuGetv3PackageSerializer.cs" />
     <Compile Include="Serializers\PackageSerializerFactory.cs" />
     <Compile Include="Serializers\NuGetv3Serializer.cs" />
+    <Compile Include="Services\ConvertService.cs" />
     <Compile Include="Services\UpdateService.cs" />
     <Compile Include="Utils\AutoUpdate.cs" />
     <Compile Include="Utils\IWriter.cs" />
@@ -154,7 +156,8 @@
     <Compile Include="Services\SpecService.cs" />
     <Compile Include="Utils\Exceptional.cs" />
     <Compile Include="Utils\FileSet.cs" />
-    <Compile Include="Utils\FileSizeFormatProvider.cs" />
+    <Compile Include="Utils\ByteFormatProvider.cs" />
+    <Compile Include="Utils\NullWriter.cs" />
     <Compile Include="Utils\PackageUtils.cs" />
     <Compile Include="Utils\PathUtils.cs" />
     <Compile Include="WiringModule.cs" />
@@ -166,9 +169,7 @@
     </None>
     <None Include="packages.config" />
   </ItemGroup>
-  <ItemGroup>
-    <Folder Include="Internal\NewFolder1\" />
-  </ItemGroup>
+  <ItemGroup />
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
   <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 
        Other similar extension points exist, see Microsoft.Common.targets.

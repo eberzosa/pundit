@@ -1,6 +1,4 @@
-﻿using System;
-using System.Diagnostics;
-using System.IO;
+﻿using System.IO;
 using EBerzosa.Pundit.Core.Model;
 using EBerzosa.Pundit.Core.Repository;
 using EBerzosa.Pundit.Core.Serializers;
@@ -28,6 +26,8 @@ namespace EBerzosa.Pundit.Core.Services
       public PunditVersion Version { get; set; }
 
       public bool IsDeveloperPackage { get; set; }
+
+      public string DestinationFile { get; private set; }
 
 
       public PackService(PackageSerializerFactory packageSerializerFactory, ManifestResolver manifestResolver, IWriter writer)
@@ -71,19 +71,19 @@ namespace EBerzosa.Pundit.Core.Services
          }
          
          packageSpec.Version.IsDeveloper = IsDeveloperPackage;
-
+         
          var packageName = PackageUtils.GetFileName(packageSpec);
 
-         var destinationFile = Path.Combine(_resolvedOutputPath, packageName);
+         DestinationFile = Path.Combine(_resolvedOutputPath, packageName);
 
-         if (File.Exists(destinationFile))
+         if (File.Exists(DestinationFile))
             _writer.Warning($"Package '{packageName}' already exists, it will be overwritted");
 
          _writer.Text($"Creating package '{packageName}'...");
 
          long bytesWritten;
 
-         using (Stream writeStream = File.Create(destinationFile))
+         using (Stream writeStream = File.Create(DestinationFile))
          using (var packageWriter = new PackageWriter(_packageSerializerFactory, solutionDirectory, packageSpec, writeStream))
          {
             packageWriter.BeginPackingFile += PackageWriterOnBeginPackingFile;
@@ -91,7 +91,7 @@ namespace EBerzosa.Pundit.Core.Services
             bytesWritten = packageWriter.WriteAll();
          }
 
-         var packageSize = new FileInfo(destinationFile).Length;
+         var packageSize = new FileInfo(DestinationFile).Length;
 
          _writer.Text($"Packed {PathUtils.FileSizeToString(bytesWritten)} to {PathUtils.FileSizeToString(packageSize)} (ratio: {packageSize * 100 / bytesWritten:D2}%)");
       }

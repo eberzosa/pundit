@@ -1,6 +1,5 @@
 ﻿using EBerzosa.Pundit.Core.Application;
 using EBerzosa.Pundit.Core.Mappings;
-using EBerzosa.Pundit.Core.Model.Xml;
 using EBerzosa.Pundit.Core.Repository;
 using EBerzosa.Pundit.Core.Serializers;
 using ExpressMapper;
@@ -19,6 +18,8 @@ namespace EBerzosa.Pundit.Core
          serviceRegistry.Register<PackageReaderFactory>(new PerContainerLifetime());
 
          serviceRegistry.Register<PackageSerializerFactory>(new PerContainerLifetime());
+
+         FrameworkMappings.Initialise();
 
          PackageMappings.XmlMappings();
          NuGetv3PackageMappings.Initialise();
