@@ -138,7 +138,7 @@ namespace EBerzosa.Pundit.Core.Services
       
       private void LocalRepository_PackageDownloadToLocalRepositoryStarted(object sender, PackageKeyEventArgs e)
       {
-         _writer.Text($"Downloading {e.PackageKey.PackageId}... ");
+         _writer.BeginWrite().Text($"Downloading {e.PackageKey.PackageId}... ");
       }
 
       private void LocalRepositoryOnPackageDownloadToLocalRepositoryFinished(object sender, PackageKeyEventArgs e)
@@ -147,6 +147,8 @@ namespace EBerzosa.Pundit.Core.Services
             _writer.Success("ok");
          else
             _writer.Error("failed");
+
+         _writer.EndWrite();
       }
 
       private void PrintSettings()
@@ -237,7 +239,7 @@ namespace EBerzosa.Pundit.Core.Services
 
       void FinishInstallPackage(object sender, PackageKeyDiffEventArgs e)
       {
-         _writer.Text(" Done").EndWrite();
+         _writer.Text(" done").EndWrite();
       }
 
    }
