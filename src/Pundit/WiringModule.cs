@@ -1,5 +1,4 @@
 ﻿using System;
-using EBerzosa.CommandLineProcess.Utils;
 using EBerzosa.Pundit.CommandLine.Builders;
 using EBerzosa.Pundit.CommandLine.Controllers;
 using EBerzosa.Pundit.CommandLine.Utils;
@@ -32,10 +31,6 @@ namespace EBerzosa.Pundit.CommandLine
 
          // Others
          serviceRegistry.Register(factory => new ManifestResolver(Environment.CurrentDirectory));
-
-         // IO
-         serviceRegistry.Register<IOutput, Output>();
-         serviceRegistry.Register<IInput, Input>();
 
          serviceRegistry.Register<IWriter, ConsoleWriter>(new PerContainerLifetime());
       }

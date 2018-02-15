@@ -18,16 +18,14 @@ namespace EBerzosa.Pundit.CommandLine.Builders
 
       public override void Build(IRootCommandMultiple root)
       {
-         IArgument package = null;
-         IOption repository = null;
-
          var command = root.NewSubCommand("publish", "Publishes package to a repository(ies)")
             .Build((cmd, arg, opt) =>
             {
-               package = arg.SingleValue("package", "Specificies the package to publish");
-               repository = opt.SingleValue("r", "repo", "name", "Specifies repository to publish to. Note that you have to have publishing permissions in that repo.");
-            })
-            .OnExecute(() => _controller.Execute(package.Value, repository.Value).ToInteger());
+               var package = arg.SingleValue("package", "Specificies the package to publish");
+               var repository = opt.SingleValue("r", "repo", "name", "Specifies repository to publish to. Note that you have to have publishing permissions in that repo.");
+
+               cmd.OnExecute(() => _controller.Execute(package.Value, repository.Value).ToInteger());
+            });
       }
 
       public override void ReplaceLegacy(ref string[] args)

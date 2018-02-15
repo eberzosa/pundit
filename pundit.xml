@@ -10,6 +10,6 @@
    <dependencies />
    <files>
       <file kind="bin" include="Pundit.exe*" flatten="false" basedir="tmp" includeemptydirs="true" configuration="release" />
-      <file kind="bin" include="Pundit.exe.config" flatten="false" basedir="out/Release" includeemptydirs="true" configuration="release" />
+      <file kind="bin" include="Pundit.exe.config" flatten="false" basedir="src\Pundit\bin\Release" includeemptydirs="true" configuration="release" />
    </files>
 </package>

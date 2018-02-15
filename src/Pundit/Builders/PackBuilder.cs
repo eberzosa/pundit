@@ -18,21 +18,17 @@ namespace EBerzosa.Pundit.CommandLine.Builders
 
       public override void Build(IRootCommandMultiple root)
       {
-         IArgument manifest = null;
-         IOption output = null;
-         IOption version = null;
-         IOption isDeveloperPackage = null;
-
-         var command = root.NewSubCommand("pack", "Creates package based on manifest definition")
+         root.NewSubCommand("pack", "Creates package based on manifest definition")
             .Build((cmd, arg, opt) =>
             {
-               manifest = BuildManifestArgument(arg);
+               var manifest = BuildManifestArgument(arg);
                //manifest = BuildManifestOption(opt);
-               output = opt.SingleValue("o", "output", "directory", "Specifies the output directory for the package");
-               version = opt.SingleValue("v", "version", "versionNumber", "Overrides the version number inside the manifest");
-               isDeveloperPackage = opt.NoValue("p", "isDeveloperPackage", "Specifies if the package should be built as a developer package");
-            })
-            .OnExecute(() => _controller.Execute(manifest.Value, output.Value, version.Value, isDeveloperPackage.HasValue).ToInteger());
+               var output = opt.SingleValue("o", "output", "directory", "Specifies the output directory for the package");
+               var version = opt.SingleValue("v", "packageVersion", "versionNumber", "Overrides the version number inside the manifest");
+               var isDeveloperPackage = opt.NoValue("p", "isDeveloperPackage", "Specifies if the package should be built as a developer package");
+
+               cmd.OnExecute(() => _controller.Execute(manifest.Value, output.Value, version.Value, isDeveloperPackage.HasValue).ToInteger());
+            });
       }
 
       public override void ReplaceLegacy(ref string[] args)

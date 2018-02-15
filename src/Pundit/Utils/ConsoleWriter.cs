@@ -1,5 +1,5 @@
 ﻿using System;
-using EBerzosa.CommandLineProcess.Utils;
+using EBerzosa.CommandLineProcess;
 using EBerzosa.Pundit.Core;
 
 namespace EBerzosa.Pundit.CommandLine.Utils

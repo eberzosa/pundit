@@ -18,24 +18,19 @@ namespace EBerzosa.Pundit.CommandLine.Builders
 
       public override void Build(IRootCommandMultiple root)
       {
-         IOption manifest = null;
-         IOption configuration = null;
-         IOption local = null;
-         IOption force = null;
-         IOption ping = null;
-         IOption includeDeveloperPackages = null;
-
-         var command = root.NewSubCommand("resolve", "Resolves dependencies and refresh project packages specifiend in the manifest")
+         root.NewSubCommand("resolve", "Resolves dependencies and refresh project packages specifiend in the manifest")
             .Build((cmd, arg, opt) =>
             {
-               manifest = BuildManifestOption(opt);
-               configuration = BuildConfigurationOption(opt);
-               local = BuildLocalOption(opt);
-               force = BuildForceOption(opt);
-               ping = BuildDryRunOption(opt);
-               includeDeveloperPackages = BuildIncludeDeveloperOption(opt);
-            })
-            .OnExecute(() => _controller.Execute(manifest.Value, configuration.Value, local.HasValue, force.HasValue, ping.HasValue, includeDeveloperPackages.HasValue).ToInteger());
+               var manifest = BuildManifestOption(opt);
+               var configuration = BuildConfigurationOption(opt);
+               var local = BuildLocalOption(opt);
+               var force = BuildForceOption(opt);
+               var ping = BuildDryRunOption(opt);
+               var includeDeveloperPackages = BuildIncludeDeveloperOption(opt);
+
+               cmd.OnExecute(() => _controller.Execute(manifest.Value, configuration.Value, local.HasValue, force.HasValue,
+                  ping.HasValue, includeDeveloperPackages.HasValue).ToInteger());
+            });
       }
 
       public override void ReplaceLegacy(ref string[] args)

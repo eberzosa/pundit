@@ -20,7 +20,7 @@
     <DebugType>full</DebugType>
     <Optimize>false</Optimize>
     <BaseIntermediateOutputPath>..\..\out\obj\</BaseIntermediateOutputPath>
-    <OutputPath>..\..\out\Debug\</OutputPath>
+    <OutputPath>bin\Debug\</OutputPath>
     <DefineConstants>DEBUG;TRACE</DefineConstants>
     <ErrorReport>prompt</ErrorReport>
     <WarningLevel>4</WarningLevel>
@@ -29,7 +29,7 @@
     <DebugType>pdbonly</DebugType>
     <Optimize>true</Optimize>
     <BaseIntermediateOutputPath>..\..\out\obj\</BaseIntermediateOutputPath>
-    <OutputPath>..\..\out\Release\</OutputPath>
+    <OutputPath>bin\Release\</OutputPath>
     <DefineConstants>TRACE</DefineConstants>
     <ErrorReport>prompt</ErrorReport>
     <WarningLevel>4</WarningLevel>
@@ -47,20 +47,20 @@
   <ItemGroup>
     <Reference Include="EBerzosa.CommandLineProcess, Version=1.0.6538.27237, Culture=neutral, PublicKeyToken=cdc6b3c7115622fb, processorArchitecture=MSIL">
       <SpecificVersion>False</SpecificVersion>
-      <HintPath>..\..\packages\EBerzosa.CommandLineProcess.1.0.6538.27237\lib\net46\EBerzosa.CommandLineProcess.dll</HintPath>
+      <HintPath>..\..\packages\EBerzosa.CommandLineProcess.2.0.6615.30109\lib\net46\EBerzosa.CommandLineProcess.dll</HintPath>
+    </Reference>
+    <Reference Include="EBerzosa.Common">
+      <HintPath>..\..\packages\EBerzosa.Common.1.1.6601.34981\lib\net46\EBerzosa.Common.dll</HintPath>
     </Reference>
     <Reference Include="EBerzosa.Utils, Version=1.1.6538.21967, Culture=neutral, PublicKeyToken=cdc6b3c7115622fb, processorArchitecture=MSIL">
       <SpecificVersion>False</SpecificVersion>
-      <HintPath>..\..\packages\EBerzosa.Utils.1.1.6538.21967\lib\net46\EBerzosa.Utils.dll</HintPath>
+      <HintPath>..\..\packages\EBerzosa.Utils.1.1.6603.38765\lib\net46\EBerzosa.Utils.dll</HintPath>
     </Reference>
     <Reference Include="LightInject, Version=4.0.0.0, Culture=neutral, PublicKeyToken=3176f7f42fdb7007, processorArchitecture=MSIL">
       <SpecificVersion>False</SpecificVersion>
       <HintPath>..\..\packages\LightInject.Signed.5.1.1\lib\net46\LightInject.dll</HintPath>
     </Reference>
     <Reference Include="System" />
-    <Reference Include="System.Console, Version=4.0.1.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a, processorArchitecture=MSIL">
-      <HintPath>..\..\..\..\packages\System.Console.4.3.0\lib\net46\System.Console.dll</HintPath>
-    </Reference>
     <Reference Include="System.Core" />
     <Reference Include="System.Xml.Linq" />
     <Reference Include="System.Data.DataSetExtensions" />

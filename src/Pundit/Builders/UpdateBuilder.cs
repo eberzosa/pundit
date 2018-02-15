@@ -17,22 +17,18 @@ namespace EBerzosa.Pundit.CommandLine.Builders
 
       public override void Build(IRootCommandMultiple root)
       {
-         IOption configuration = null;
-         IOption local = null;
-         IOption force = null;
-         IOption ping = null;
-         IOption includeDeveloperPackages = null;
-
-         var command = root.NewSubCommand("update", "Checks for updates and if there is a new version performs the actual update")
+         root.NewSubCommand("update", "Checks for updates and if there is a new version performs the actual update")
             .Build((cmd, arg, opt) =>
             {
-               configuration = BuildConfigurationOption(opt);
-               local = BuildLocalOption(opt);
-               force = BuildForceOption(opt);
-               ping = BuildDryRunOption(opt);
-               includeDeveloperPackages = BuildIncludeDeveloperOption(opt);
-            })
-            .OnExecute(() => _controller.Execute(configuration.Value, local.HasValue, force.HasValue, ping.HasValue, includeDeveloperPackages.HasValue).ToInteger());
+               var configuration = BuildConfigurationOption(opt);
+               var local = BuildLocalOption(opt);
+               var force = BuildForceOption(opt);
+               var ping = BuildDryRunOption(opt);
+               var includeDeveloperPackages = BuildIncludeDeveloperOption(opt);
+
+               cmd.OnExecute(() =>
+                  _controller.Execute(configuration.Value, local.HasValue, force.HasValue, ping.HasValue, includeDeveloperPackages.HasValue).ToInteger());
+            });
       }
    }
 }

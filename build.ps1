@@ -2,7 +2,7 @@ $Root="X:\"
 $ILMerge=$Root + "tools\ilmerge.exe"
 
 $Solution = "src\Pundit.sln"
-$ReleaseFolder = "out\Release"
+$ReleaseFolder = "src\Pundit\bin\Release"
 
 $TempFolder = "tmp"
 $MergedName = "$TempFolder\Pundit.exe"
@@ -20,4 +20,5 @@ $punditExe = $(Get-Item $MergedName).FullName
 
 $version = [System.Diagnostics.FileVersionInfo]::GetVersionInfo($punditExe).FileVersion
 
+Write-Host "Packing $version to $TempFolder"
 pundit pack pundit.xml --version $version --output $TempFolder

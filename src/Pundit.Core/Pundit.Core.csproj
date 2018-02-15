@@ -22,8 +22,7 @@
     <DefineConstants>DEBUG;TRACE</DefineConstants>
     <ErrorReport>prompt</ErrorReport>
     <WarningLevel>4</WarningLevel>
-    <DocumentationFile>
-    </DocumentationFile>
+    <DocumentationFile>bin\Debug\EBerzosa.Pundit.Core.xml</DocumentationFile>
     <Prefer32Bit>false</Prefer32Bit>
   </PropertyGroup>
   <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Release|AnyCPU' ">
@@ -42,10 +41,12 @@
   </PropertyGroup>
   <ItemGroup>
     <Reference Include="EBerzosa.Common, Version=1.1.6538.21567, Culture=neutral, PublicKeyToken=cdc6b3c7115622fb, processorArchitecture=MSIL">
-      <HintPath>..\..\..\..\packages\EBerzosa.Common.1.1.6538.21567\lib\net46\EBerzosa.Common.dll</HintPath>
+      <SpecificVersion>False</SpecificVersion>
+      <HintPath>..\..\packages\EBerzosa.Common.1.1.6601.34981\lib\net46\EBerzosa.Common.dll</HintPath>
     </Reference>
     <Reference Include="EBerzosa.Utils, Version=1.1.6538.21967, Culture=neutral, PublicKeyToken=cdc6b3c7115622fb, processorArchitecture=MSIL">
-      <HintPath>..\..\..\..\packages\EBerzosa.Utils.1.1.6538.21967\lib\net46\EBerzosa.Utils.dll</HintPath>
+      <SpecificVersion>False</SpecificVersion>
+      <HintPath>..\..\packages\EBerzosa.Utils.1.1.6603.38765\lib\net46\EBerzosa.Utils.dll</HintPath>
     </Reference>
     <Reference Include="ExpressMapper, Version=1.9.1.0, Culture=neutral, PublicKeyToken=ac363faa09311ba0, processorArchitecture=MSIL">
       <HintPath>..\..\..\..\packages\Expressmapper.1.9.1\lib\net46\ExpressMapper.dll</HintPath>
@@ -56,6 +57,7 @@
     <Reference Include="LightInject, Version=4.0.0.0, Culture=neutral, PublicKeyToken=3176f7f42fdb7007, processorArchitecture=MSIL">
       <HintPath>..\..\..\..\packages\LightInject.Signed.5.1.1\lib\net46\LightInject.dll</HintPath>
     </Reference>
+    <Reference Include="Microsoft.JScript" />
     <Reference Include="Newtonsoft.Json, Version=10.0.0.0, Culture=neutral, PublicKeyToken=30ad4fe6b2a6aeed, processorArchitecture=MSIL">
       <HintPath>..\..\..\..\packages\Newtonsoft.Json.10.0.3\lib\net45\Newtonsoft.Json.dll</HintPath>
     </Reference>

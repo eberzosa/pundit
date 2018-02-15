@@ -18,18 +18,15 @@ namespace EBerzosa.Pundit.CommandLine.Builders
 
       public override void Build(IRootCommandMultiple root)
       {
-         IArgument search = null;
-         IOption localOnly = null;
-         IOption xml = null;
-
-         var command = root.NewSubCommand("search", "Search for packages in repositories")
+         root.NewSubCommand("search", "Search for packages in repositories")
             .Build((cmd, arg, opt) =>
             {
-               search = arg.SingleValue("search", "Package name or name part (case insensitive)");
-               localOnly = BuildLocalOption(opt);
-               xml = opt.NoValue("x", "xml", "Search will be formatted in XML allowing to copy-paste it as in in a manifest");
-            })
-            .OnExecute(() => _controller.Execute(search.Value, localOnly.HasValue, xml.HasValue).ToInteger());
+               var search = arg.SingleValue("search", "Package name or name part (case insensitive)");
+               var localOnly = BuildLocalOption(opt);
+               var xml = opt.NoValue("x", "xml", "Search will be formatted in XML allowing to copy-paste it as in in a manifest");
+
+               cmd.OnExecute(() => _controller.Execute(search.Value, localOnly.HasValue, xml.HasValue).ToInteger());
+            });
       }
 
       public override void ReplaceLegacy(ref string[] args)
