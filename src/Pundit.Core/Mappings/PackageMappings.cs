@@ -1,9 +1,7 @@
-﻿using System;
-using EBerzosa.Pundit.Core.Model;
-using EBerzosa.Pundit.Core.Model.Enums;
+﻿using EBerzosa.Pundit.Core.Model.Enums;
 using EBerzosa.Pundit.Core.Model.Package;
 using EBerzosa.Pundit.Core.Model.Xml;
-using ExpressMapper;
+using NuGet.Versioning;
 using Pundit.Core.Model;
 
 namespace EBerzosa.Pundit.Core.Mappings
@@ -19,23 +17,27 @@ namespace EBerzosa.Pundit.Core.Mappings
 
          _registered = true;
 
-         Mapper.Register<PackageSpec, XmlPackageSpec>()
-            .Member(dst => dst.Version, src => src.Version.ToString());
-         Mapper.Register<XmlPackageSpec, PackageSpec>()
-            .Member(dst => dst.Version, src => new PunditVersion(src.Version));
+         Mapster.TypeAdapterConfig<PackageSpec, XmlPackageSpec>.NewConfig()
+            .Map(dst => dst.Version, src => src.Version.ToString());
+
+         Mapster.TypeAdapterConfig<XmlPackageSpec, PackageSpec>.NewConfig()
+            .Map(dst => dst.Version, src => new NuGetVersion(src.Version));
 
 
-         Mapper.Register<PackageManifest, XmlPackageManifest>()
-            .Member(dst => dst.Version, src => src.Version.ToString());
+         Mapster.TypeAdapterConfig<PackageManifest, XmlPackageManifest>.NewConfig()
+            .Map(dst => dst.Version, src => src.Version.ToString());
 
-         Mapper.Register<XmlPackageManifest, PackageManifest>()
-            .Member(dst => dst.Version, src => new PunditVersion(src.Version));
+         Mapster.TypeAdapterConfig<XmlPackageManifest, PackageManifest>.NewConfig()
+            .Map(dst => dst.Version, src => new NuGetVersion(src.Version));
 
 
-         Mapper.Register<PackageDependency, XmlPackageDependency>();
-         Mapper.Register<XmlPackageDependency, PackageDependency>()
+         Mapster.TypeAdapterConfig<PackageDependency, XmlPackageDependency>.NewConfig()
+            .Map(dst => dst.VersionPattern, src => src.VersionPattern.OriginalString.TrimEnd('*', '.'));
 
-            .After((src, dst) =>
+         Mapster.TypeAdapterConfig<XmlPackageDependency, PackageDependency>.NewConfig()
+            .ConstructUsing(xml => new PackageDependency(xml.PackageId, VersionRange.Parse(VersionUtils.MakeFloatVersionString(xml.VersionPattern))))
+            .Ignore(src => src.PackageId, src => src.VersionPattern)
+            .AfterMapping((src, dst) =>
             {
                if (src.DevTimeOnly)
                {
@@ -49,8 +51,8 @@ namespace EBerzosa.Pundit.Core.Mappings
                }
             });
 
-         Mapper.Register<SourceFiles, XmlSourceFiles>();
-         Mapper.Register<XmlSourceFiles, SourceFiles>();
+         Mapster.TypeAdapterConfig<SourceFiles, XmlSourceFiles>.NewConfig();
+         Mapster.TypeAdapterConfig<XmlSourceFiles, SourceFiles>.NewConfig();
 
          //Mapper.Register<BuildConfiguration, XmlBuildConfiguration>()
          //   .Function(dst => dst, src => (XmlBuildConfiguration)src);

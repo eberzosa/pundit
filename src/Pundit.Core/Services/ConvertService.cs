@@ -8,7 +8,7 @@ using EBerzosa.Pundit.Core.Model.Enums;
 using EBerzosa.Pundit.Core.Model.Package;
 using EBerzosa.Pundit.Core.Serializers;
 using EBerzosa.Utils;
-using ExpressMapper;
+using Mapster;
 using NuGet.Common;
 using NuGet.Frameworks;
 using NuGet.Packaging;
@@ -76,7 +76,7 @@ namespace EBerzosa.Pundit.Core.Services
                }
 
                punditSpec.Dependencies = new List<PackageDependency>();
-               punditSpec.Platform = Mapper.Map<NuGetFramework, string>(framework);
+               punditSpec.Platform = framework.Adapt<NuGetFramework, string>();
                punditSpec.Files = new List<SourceFiles>();
 
                var dependencies = reader.GetPackageDependencies().FirstOrDefault(d => d.TargetFramework == framework);

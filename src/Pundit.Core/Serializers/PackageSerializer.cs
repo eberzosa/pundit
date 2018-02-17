@@ -1,5 +1,5 @@
 ﻿using System.IO;
-using ExpressMapper.Extensions;
+using Mapster;
 using Pundit.Core.Model;
 
 namespace EBerzosa.Pundit.Core.Serializers
@@ -15,24 +15,24 @@ namespace EBerzosa.Pundit.Core.Serializers
 
       public void SerializePackageManifest(PackageManifest package, Stream stream)
       {
-         _serializer.Write(package.Map<PackageManifest, TManifest>(), stream);
+         _serializer.Write(package.Adapt<PackageManifest, TManifest>(), stream);
       }
 
       public void SerializePackageSpec(PackageSpec packageSpec, Stream stream)
       {
-         _serializer.Write(packageSpec.Map<PackageSpec, TSpec>(), stream);
+         _serializer.Write(packageSpec.Adapt<PackageSpec, TSpec>(), stream);
       }
 
       public PackageManifest DeserializePackageManifest(Stream stream)
       {
          var deserializedPackage = _serializer.Read<TManifest>(stream);
-         return deserializedPackage.Map<TManifest, PackageManifest>();
+         return deserializedPackage.Adapt<TManifest, PackageManifest>();
       }
 
       public PackageSpec DeserializePackageSpec(Stream stream)
       {
          var deserializedPackage = _serializer.Read<TSpec>(stream);
-         return deserializedPackage.Map<TSpec, PackageSpec>();
+         return deserializedPackage.Adapt<TSpec, PackageSpec>();
       }
    }
 }

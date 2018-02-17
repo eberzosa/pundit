@@ -1,10 +1,12 @@
-﻿using EBerzosa.Pundit.Core.Application;
+﻿using System.Linq.Expressions;
+using EBerzosa.Pundit.Core.Application;
 using EBerzosa.Pundit.Core.Mappings;
 using EBerzosa.Pundit.Core.Repository;
 using EBerzosa.Pundit.Core.Serializers;
-using ExpressMapper;
 using LightInject;
+using Mapster;
 using Pundit.Core;
+using Pundit.Core.Model;
 
 namespace EBerzosa.Pundit.Core
 {
@@ -23,7 +25,7 @@ namespace EBerzosa.Pundit.Core
 
          PackageMappings.XmlMappings();
          NuGetv3PackageMappings.Initialise();
-         Mapper.Compile();
+         TypeAdapterConfig.GlobalSettings.Compile();
       }
    }
 }

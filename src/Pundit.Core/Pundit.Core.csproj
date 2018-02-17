@@ -48,14 +48,15 @@
       <SpecificVersion>False</SpecificVersion>
       <HintPath>..\..\packages\EBerzosa.Utils.1.1.6603.38765\lib\net46\EBerzosa.Utils.dll</HintPath>
     </Reference>
-    <Reference Include="ExpressMapper, Version=1.9.1.0, Culture=neutral, PublicKeyToken=ac363faa09311ba0, processorArchitecture=MSIL">
-      <HintPath>..\..\..\..\packages\Expressmapper.1.9.1\lib\net46\ExpressMapper.dll</HintPath>
-    </Reference>
     <Reference Include="ICSharpCode.SharpZipLib, Version=0.86.0.518, Culture=neutral, PublicKeyToken=1b03e6acf1164f73, processorArchitecture=MSIL">
       <HintPath>..\..\..\..\packages\SharpZipLib.0.86.0\lib\20\ICSharpCode.SharpZipLib.dll</HintPath>
     </Reference>
     <Reference Include="LightInject, Version=4.0.0.0, Culture=neutral, PublicKeyToken=3176f7f42fdb7007, processorArchitecture=MSIL">
       <HintPath>..\..\..\..\packages\LightInject.Signed.5.1.1\lib\net46\LightInject.dll</HintPath>
+    </Reference>
+    <Reference Include="Mapster, Version=1.0.6621.40110, Culture=neutral, PublicKeyToken=2f39883af23c29a8, processorArchitecture=MSIL">
+      <SpecificVersion>False</SpecificVersion>
+      <HintPath>..\..\packages\Mapster.3.1.8\lib\net45\Mapster.dll</HintPath>
     </Reference>
     <Reference Include="Microsoft.JScript" />
     <Reference Include="Newtonsoft.Json, Version=10.0.0.0, Culture=neutral, PublicKeyToken=30ad4fe6b2a6aeed, processorArchitecture=MSIL">
@@ -171,7 +172,6 @@
     </None>
     <None Include="packages.config" />
   </ItemGroup>
-  <ItemGroup />
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
   <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 
        Other similar extension points exist, see Microsoft.Common.targets.

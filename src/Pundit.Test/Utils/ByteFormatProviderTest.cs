@@ -7,7 +7,7 @@ namespace Pundit.Test.Utils
 {
    public class ByteFormatProviderTest
    {
-      private static IEnumerable<object[]> GetBase10Numbers()
+      public static IEnumerable<object[]> GetBase10Numbers()
       {
          yield return new object[] {                            1,       "1 B",         "1 B"};
          yield return new object[] {                          999,     "999 B",       "999 B"};
@@ -29,8 +29,8 @@ namespace Pundit.Test.Utils
          yield return new object[] { 999450000000000000000000000f,    "999 YB",   "999,45 YB"};
          yield return new object[] {1000000000000000000000000000f,  "1.000 YB", "1.000,00 YB"};
       }
-      
-      private static IEnumerable<object[]> GetBase2Numbers()
+
+      public static IEnumerable<object[]> GetBase2Numbers()
       {
          yield return new object[] {                            1,       "1 B",         "1 B"};
          yield return new object[] {                         1023,   "1.023 B",     "1.023 B"};

@@ -1,5 +1,4 @@
-﻿using ExpressMapper;
-using NuGet.Frameworks;
+﻿using NuGet.Frameworks;
 
 namespace EBerzosa.Pundit.Core.Mappings
 {
@@ -14,7 +13,8 @@ namespace EBerzosa.Pundit.Core.Mappings
 
          _registered = true;
 
-         Mapper.RegisterCustom<NuGetFramework, string>(fmwk => fmwk.GetShortFolderName());
+         Mapster.TypeAdapterConfig<NuGetFramework, string>.NewConfig()
+            .ConstructUsing(fmwk => fmwk.GetShortFolderName());
       }
    }
 }
