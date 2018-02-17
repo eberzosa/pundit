@@ -4,6 +4,7 @@ using System.IO;
 using System.Linq;
 using System.Text;
 using EBerzosa.Pundit.Core.Model;
+using NuGet.Versioning;
 using Pundit.Core.Model;
 
 namespace Pundit.Core.Application
@@ -12,14 +13,13 @@ namespace Pundit.Core.Application
    {
       private readonly IRepository[] _activeRepositories;
       private readonly DependencyNode _root;
-      private readonly bool _includeDeveloperPackages;
 
       public DependencyResolution(PackageManifest rootManifest, IRepository[] activeRepositories, bool includeDeveloperPackages)
       {
          _activeRepositories = activeRepositories;
-         _includeDeveloperPackages = includeDeveloperPackages;
 
-         _root = new DependencyNode(null, rootManifest.PackageId, rootManifest.Platform, new VersionPattern(rootManifest.Version.ToString()));
+         var versionRange = VersionRange.Parse(rootManifest.Version.OriginalVersion);
+         _root = new DependencyNode(null, rootManifest.PackageId, rootManifest.Platform, versionRange, includeDeveloperPackages);
          _root.MarkAsRoot(rootManifest);
       }
 
@@ -75,15 +75,15 @@ namespace Pundit.Core.Application
 
          if(!node.HasVersions)
          {
-            var versions = new HashSet<PunditVersion>();
+            var versions = new HashSet<NuGetVersion>();
 
             foreach(IRepository repo in _activeRepositories)
             {
-               PunditVersion[] vs = repo.GetVersions(node.UnresolvedPackage, node.VersionPattern, _includeDeveloperPackages);
+               NuGetVersion[] vs = repo.GetVersions(node.UnresolvedPackage);
 
                if(vs != null)
                {
-                  foreach(PunditVersion v in vs)
+                  foreach(NuGetVersion v in vs)
                   {
                      versions.Add(v);
                   }
@@ -201,7 +201,7 @@ namespace Pundit.Core.Application
                b.Append("], resolved to: [");
 
                bool isFirst = true;
-               foreach (PunditVersion v in node.AllVersions)
+               foreach (NuGetVersion v in node.AllVersions)
                {
                   if (!isFirst)
                   {

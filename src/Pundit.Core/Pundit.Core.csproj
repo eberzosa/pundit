@@ -97,7 +97,6 @@
     <Compile Include="Mappings\FrameworkMappings.cs" />
     <Compile Include="Mappings\NuGetv3PackageMappings.cs" />
     <Compile Include="Mappings\NugetPackageMappings.cs" />
-    <Compile Include="Model\PunditVersion.cs" />
     <Compile Include="Package\PackageInstaller.cs" />
     <Compile Include="Package\PackageReader.cs" />
     <Compile Include="Package\PackageReaderFactory.cs" />
@@ -163,6 +162,7 @@
     <Compile Include="Utils\NullWriter.cs" />
     <Compile Include="Utils\PackageUtils.cs" />
     <Compile Include="Utils\PathUtils.cs" />
+    <Compile Include="Utils\VersionUtils.cs" />
     <Compile Include="WiringModule.cs" />
   </ItemGroup>
   <ItemGroup>

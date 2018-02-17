@@ -4,11 +4,12 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 using EBerzosa.Pundit.Core.Model;
+using NuGet.Versioning;
 using Xunit;
 
 namespace Pundit.Test.Core
 {
-   public class PunditVersionTest
+   public class NuGetVersionTest
    {
       [Theory]
       [InlineData("1.0.0.1", "1.0.0.0")]
@@ -24,8 +25,8 @@ namespace Pundit.Test.Core
       [InlineData("1.0.0.1-dev", "1.0.0.0-dev")]
       public void VersionIsGreaterThanValue_Test(string versionStr, string valueStr)
       {
-         var version = new PunditVersion(versionStr);
-         var value = new PunditVersion(valueStr);
+         var version = new NuGetVersion(versionStr);
+         var value = new NuGetVersion(valueStr);
 
          Assert.True(version.CompareTo(value) == 1);
       }
@@ -39,8 +40,8 @@ namespace Pundit.Test.Core
       [InlineData("1.0.0.1-dev", "1.0.0.1-dev")]
       public void VersionIsEqualToValue_Test(string versionStr, string valueStr)
       {
-         var version = new PunditVersion(versionStr);
-         var value = new PunditVersion(valueStr);
+         var version = new NuGetVersion(versionStr);
+         var value = new NuGetVersion(valueStr);
 
          Assert.True(version.CompareTo(value) == 0);
       }
@@ -59,8 +60,8 @@ namespace Pundit.Test.Core
       [InlineData("1.0.0.0-dev", "1.0.0.1-dev")]
       public void VersionIsLowerThanValue_Test(string versionStr, string valueStr)
       {
-         var version = new PunditVersion(versionStr);
-         var value = new PunditVersion(valueStr);
+         var version = new NuGetVersion(versionStr);
+         var value = new NuGetVersion(valueStr);
 
          Assert.True(version.CompareTo(value) == -1);
       }

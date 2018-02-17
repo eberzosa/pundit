@@ -1,8 +1,10 @@
-﻿using System.IO;
+﻿using System;
+using System.IO;
 using EBerzosa.Pundit.Core.Model;
 using EBerzosa.Pundit.Core.Repository;
 using EBerzosa.Pundit.Core.Serializers;
 using EBerzosa.Utils;
+using NuGet.Versioning;
 using Pundit.Core.Application;
 using Pundit.Core.Model;
 using Pundit.Core.Model.EventArguments;
@@ -23,7 +25,7 @@ namespace EBerzosa.Pundit.Core.Services
 
       public string OutputPath { get; set; }
 
-      public PunditVersion Version { get; set; }
+      public string Version { get; set; }
 
       public bool IsDeveloperPackage { get; set; }
 
@@ -67,10 +69,19 @@ namespace EBerzosa.Pundit.Core.Services
          if (Version != null)
          {
             _writer.Info($"Overriding package version '{packageSpec.Version}' from spec with '{Version}'");
-            packageSpec.Version = Version;
+
+            if (!IsDeveloperPackage)
+               packageSpec.Version = NuGetVersion.Parse(Version);
+            else
+            {
+               if (Version.Split('.').Length > 4)
+                  throw new ApplicationException($"Version format for '{Version}' not supported");
+
+               var versionChunks = Version.Split('.');
+               packageSpec.Version = new NuGetVersion(int.Parse(versionChunks[0]), 
+                  int.Parse(versionChunks[1]), int.Parse(versionChunks[2]), int.Parse(versionChunks[3]), VersionUtils.DevMarker, null);
+            }
          }
-         
-         packageSpec.Version.IsDeveloper = IsDeveloperPackage;
          
          var packageName = PackageUtils.GetFileName(packageSpec);
 

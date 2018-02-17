@@ -4,6 +4,7 @@ using System.IO;
 using System.ServiceModel;
 using System.ServiceModel.Web;
 using EBerzosa.Pundit.Core.Model;
+using NuGet.Versioning;
 
 namespace Pundit.Core.Model
 {
@@ -36,7 +37,7 @@ namespace Pundit.Core.Model
       [OperationContract]
       [FaultContract(typeof(FileNotFoundException))]
       [WebGet(UriTemplate = "/versions")]
-      PunditVersion[] GetVersions(UnresolvedPackage package, VersionPattern pattern, bool includeDeveloperPackages);
+      NuGetVersion[] GetVersions(UnresolvedPackage package);
 
       [OperationContract]
       [FaultContract(typeof(FileNotFoundException))]

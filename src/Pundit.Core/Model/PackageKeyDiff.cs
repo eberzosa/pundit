@@ -1,6 +1,7 @@
 ﻿using System;
 using EBerzosa.Pundit.Core.Model;
 using EBerzosa.Pundit.Core.Model.Enums;
+using NuGet.Versioning;
 
 namespace Pundit.Core.Model
 {
@@ -19,7 +20,7 @@ namespace Pundit.Core.Model
          
       }
 
-      public PackageKeyDiff(DiffType diffType, string packageId, PunditVersion version, string platform, bool isDeveloper) 
+      public PackageKeyDiff(DiffType diffType, string packageId, NuGetVersion version, string platform, bool isDeveloper) 
          : base(packageId, version, platform)
       {
          DiffType = diffType;

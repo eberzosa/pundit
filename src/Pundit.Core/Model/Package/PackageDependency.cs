@@ -1,6 +1,6 @@
 ﻿using EBerzosa.Pundit.Core.Model.Enums;
 using EBerzosa.Utils;
-using Pundit.Core.Model;
+using NuGet.Versioning;
 
 namespace EBerzosa.Pundit.Core.Model.Package
 {
@@ -9,12 +9,7 @@ namespace EBerzosa.Pundit.Core.Model.Package
    ///</summary>
    public class PackageDependency
    {
-      // Used in the mapper
-      internal PackageDependency()
-      {
-      }
-
-      public PackageDependency(string packageId, string versionPattern)
+      public PackageDependency(string packageId, VersionRange versionPattern)
       {
          Guard.NotNull(packageId, nameof(packageId));
          Guard.NotNull(versionPattern, nameof(versionPattern));
@@ -25,7 +20,7 @@ namespace EBerzosa.Pundit.Core.Model.Package
 
       public string PackageId { get; set; }
 
-      public string VersionPattern { get; set; }
+      public VersionRange VersionPattern { get; set; }
 
       /// <summary>
       /// Dependency platform. If ommitted "noarch" assumed. If noarch is not found, no automatic

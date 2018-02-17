@@ -9,6 +9,7 @@ using EBerzosa.Pundit.Core.Model.Enums;
 using EBerzosa.Pundit.Core.Model.Package;
 using EBerzosa.Pundit.Core.Repository;
 using EBerzosa.Utils;
+using NuGet.Versioning;
 using Pundit.Core;
 using Pundit.Core.Application;
 using Pundit.Core.Model;
@@ -62,10 +63,10 @@ namespace EBerzosa.Pundit.Core.Services
          {
             PackageId = packageId,
             Platform = netFramework,
-            Version = new PunditVersion(1, 0, 0, 0, false),
+            Version = new NuGetVersion(1, 0, 0, 0),
             Dependencies =
             {
-               new PackageDependency(packageId, $"{assemblyVersion.Major}.{assemblyVersion.Minor}")
+               new PackageDependency(packageId, VersionRange.Parse($"{assemblyVersion.Major}.*"))
                {
                   Scope = DependencyScope.Normal,
                   Platform = netFramework

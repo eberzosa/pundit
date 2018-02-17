@@ -3,6 +3,7 @@ using System.Runtime.Serialization;
 using System.Xml.Serialization;
 using EBerzosa.Pundit.Core.Model;
 using EBerzosa.Utils;
+using NuGet.Versioning;
 using Pundit.Core.Utils;
 
 namespace Pundit.Core.Model
@@ -17,7 +18,7 @@ namespace Pundit.Core.Model
       {
       }
 
-      public PackageKey(string packageId, PunditVersion version, string platform)
+      public PackageKey(string packageId, NuGetVersion version, string platform)
       {
          Guard.NotNull(packageId, nameof(packageId));
 
@@ -33,14 +34,14 @@ namespace Pundit.Core.Model
       //[XmlAttribute("version")]
       [XmlIgnore]
       [DataMember]
-      public PunditVersion Version { get; set; }
+      public NuGetVersion Version { get; set; }
 
       [XmlAttribute("version")]
       [DataMember]
       public string VersionString
       {
          get => Version.ToString();
-         set => Version = new PunditVersion(value);
+         set => Version = new NuGetVersion(value);
       }
 
       [XmlAttribute("platform")]

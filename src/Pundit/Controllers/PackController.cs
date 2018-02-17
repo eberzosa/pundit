@@ -25,17 +25,11 @@ namespace EBerzosa.Pundit.CommandLine.Controllers
          {
             var service = _serviceFactory.GetPackService();
             
-            if (versionString != null)
-            {
-               if (!PunditVersion.TryParse(versionString, out var version))
-                  throw new ArgumentException($"Invalid version '{versionString}' format");
-
-               service.Version = version;
-            }
+            service.Version = versionString;
+            service.IsDeveloperPackage = isDeveloperPackage;
 
             service.ManifestFileOrPath = manifest;
             service.OutputPath = outputPath;
-            service.IsDeveloperPackage = isDeveloperPackage;
 
             service.Pack();
          });
