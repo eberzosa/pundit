@@ -92,7 +92,7 @@
   <ItemGroup>
     <Compile Include="3rdparty\DirectoryScanner.cs" />
     <Compile Include="3rdparty\Options.cs" />
-    <Compile Include="Internal\DependencyResolution.cs" />
+    <Compile Include="Resolvers\DependencyResolution.cs" />
     <Compile Include="Internal\InstalledPackagesIndex.cs" />
     <Compile Include="Mappings\FrameworkMappings.cs" />
     <Compile Include="Mappings\NuGetv3PackageMappings.cs" />
@@ -114,7 +114,7 @@
     <Compile Include="Repository\LocalRepository.cs" />
     <Compile Include="Mappings\PackageMappings.cs" />
     <Compile Include="Model\Enums\BuildConfiguration.cs" />
-    <Compile Include="Model\DependencyNode.cs" />
+    <Compile Include="Resolvers\DependencyNode.cs" />
     <Compile Include="Model\Enums\DependencyScope.cs" />
     <Compile Include="Model\Enums\PackageFileKind.cs" />
     <Compile Include="Model\Package\PackageSpec.cs" />

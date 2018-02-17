@@ -3,11 +3,10 @@ using System.Collections.Generic;
 using System.IO;
 using System.Linq;
 using System.Text;
-using EBerzosa.Pundit.Core.Model;
 using NuGet.Versioning;
 using Pundit.Core.Model;
 
-namespace Pundit.Core.Application
+namespace EBerzosa.Pundit.Core.Resolvers
 {
    public class DependencyResolution
    {
