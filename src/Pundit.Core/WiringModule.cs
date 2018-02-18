@@ -1,12 +1,11 @@
-﻿using System.Linq.Expressions;
-using EBerzosa.Pundit.Core.Application;
+﻿using EBerzosa.Pundit.Core.Application;
 using EBerzosa.Pundit.Core.Mappings;
 using EBerzosa.Pundit.Core.Repository;
+using EBerzosa.Pundit.Core.Repository.Mappings;
 using EBerzosa.Pundit.Core.Resolvers;
 using EBerzosa.Pundit.Core.Serializers;
 using LightInject;
 using Mapster;
-using Pundit.Core;
 
 namespace EBerzosa.Pundit.Core
 {
@@ -14,6 +13,7 @@ namespace EBerzosa.Pundit.Core
    {
       public void Compose(IServiceRegistry serviceRegistry)
       {
+         serviceRegistry.Register<ISerializer, XmlSerializer>(new PerRequestLifeTime());
          serviceRegistry.Register<LocalRepository>(new PerContainerLifetime());
 
          serviceRegistry.Register<RepositoryFactory>(new PerContainerLifetime());
@@ -29,6 +29,7 @@ namespace EBerzosa.Pundit.Core
 
          PackageMappings.XmlMappings();
          NuGetv3PackageMappings.Initialise();
+         RepositoryMappings.Initalise();
          TypeAdapterConfig.GlobalSettings.Compile();
       }
    }

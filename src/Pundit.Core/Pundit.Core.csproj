@@ -24,6 +24,7 @@
     <WarningLevel>4</WarningLevel>
     <DocumentationFile>bin\Debug\EBerzosa.Pundit.Core.xml</DocumentationFile>
     <Prefer32Bit>false</Prefer32Bit>
+    <NoWarn>CS1591</NoWarn>
   </PropertyGroup>
   <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Release|AnyCPU' ">
     <DebugType>pdbonly</DebugType>
@@ -111,6 +112,10 @@
   <ItemGroup>
     <Compile Include="3rdparty\DirectoryScanner.cs" />
     <Compile Include="3rdparty\Options.cs" />
+    <Compile Include="Repository\Mappings\RepositoryMappings.cs" />
+    <Compile Include="Repository\RegisteredRepository.cs" />
+    <Compile Include="Repository\Xml\XmlRegisteredRepository.cs" />
+    <Compile Include="Repository\Xml\XmlRegisteredRepositories.cs" />
     <Compile Include="Resolvers\DependencyResolution.cs" />
     <Compile Include="Internal\InstalledPackagesIndex.cs" />
     <Compile Include="Mappings\FrameworkMappings.cs" />

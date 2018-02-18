@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using System.Linq;
 using EBerzosa.Pundit.Core.Model.Package;
+using EBerzosa.Pundit.Core.Repository;
 using NuGet.Versioning;
 using Pundit.Core.Model;
 

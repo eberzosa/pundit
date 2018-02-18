@@ -1,7 +1,6 @@
 ﻿using System;
 using System.Runtime.Serialization;
 using System.Xml.Serialization;
-using EBerzosa.Pundit.Core.Model;
 using EBerzosa.Utils;
 using NuGet.Versioning;
 using Pundit.Core.Utils;

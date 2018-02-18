@@ -1,8 +1,6 @@
 ﻿using System.IO;
 using System.Text;
 using System.Xml;
-using System.Xml.Serialization;
-using Pundit.Core.Model;
 
 namespace EBerzosa.Pundit.Core.Serializers
 {

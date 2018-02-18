@@ -5,6 +5,7 @@ using System.Linq;
 using EBerzosa.Pundit.Core.Application;
 using EBerzosa.Pundit.Core.Model.Enums;
 using EBerzosa.Pundit.Core.Model.Package;
+using EBerzosa.Pundit.Core.Repository;
 using Pundit.Core.Model;
 using Pundit.Core.Model.EventArguments;
 

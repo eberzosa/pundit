@@ -3,6 +3,7 @@ using EBerzosa.CommandLineProcess;
 using EBerzosa.CommandLineProcess.Utils;
 using Pundit.Core;
 using System.Linq;
+using EBerzosa.Pundit.Core.Repository;
 using EBerzosa.Utils;
 
 namespace EBerzosa.Pundit.CommandLine.Controllers

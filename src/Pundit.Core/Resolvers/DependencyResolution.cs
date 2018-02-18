@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.IO;
 using System.Linq;
 using System.Text;
+using EBerzosa.Pundit.Core.Repository;
 using NuGet.Versioning;
 using Pundit.Core.Model;
 

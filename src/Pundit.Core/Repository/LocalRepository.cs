@@ -2,12 +2,13 @@
 using System.Collections.Generic;
 using System.IO;
 using System.Linq;
-using EBerzosa.Pundit.Core;
-using EBerzosa.Pundit.Core.Repository;
+using EBerzosa.Pundit.Core.Repository.Xml;
+using EBerzosa.Pundit.Core.Serializers;
+using Mapster;
 using Pundit.Core.Model;
 using Pundit.Core.Model.EventArguments;
 
-namespace Pundit.Core
+namespace EBerzosa.Pundit.Core.Repository
 {
    /// <summary>
    /// Represents local repository and utility methods to work with it
@@ -15,6 +16,7 @@ namespace Pundit.Core
    public class LocalRepository
    {
       private readonly RepositoryFactory _repositoryFactory;
+      private readonly ISerializer _serializer;
       private const string LocalRepositoryRootEnv = "PUNDIT_ROOT";
       private const string LocalRepositoryDirName = ".pundit";
       private const string LocalRepositoryDataDirName = "repository";
@@ -34,28 +36,20 @@ namespace Pundit.Core
       /// </summary>
       public event EventHandler<PackageKeyEventArgs> PackageDownloadToLocalRepositoryFinished;
 
-      public LocalRepository(RepositoryFactory repositoryFactory)
+      public LocalRepository(RepositoryFactory repositoryFactory, ISerializer serializer)
       {
          _repositoryFactory = repositoryFactory;
+         _serializer = serializer;
          ResolveRootPath(out LocalRepoRoot, out LocalRepoFileRoot);
 
          Repos = LoadRegisteredRepositories();
       }
 
-      public string GlobalRootPath
-      {
-         get { return LocalRepoRoot; }
-      }
+      public string GlobalRootPath => LocalRepoRoot;
 
-      public string GlobalRootFilePath
-      {
-         get { return LocalRepoFileRoot; }
-      }
+      public string GlobalRootFilePath => LocalRepoFileRoot;
 
-      public string GlobalSettingsFilePath
-      {
-         get { return Path.Combine(LocalRepoRoot, RepoXmlFileName); }
-      }
+      public string GlobalSettingsFilePath => Path.Combine(LocalRepoRoot, RepoXmlFileName);
 
       public long OccupiedSpace
       {
@@ -63,98 +57,46 @@ namespace Pundit.Core
          {
             long space = 0;
 
-            string repoTxtPath = Path.Combine(LocalRepoRoot, RepoXmlFileName);
+            var repoTxtPath = Path.Combine(LocalRepoRoot, RepoXmlFileName);
 
-            if (File.Exists(repoTxtPath)) space += new FileInfo(repoTxtPath).Length;
+            if (File.Exists(repoTxtPath))
+               space += new FileInfo(repoTxtPath).Length;
 
-            foreach(FileInfo fi in new DirectoryInfo(GlobalRootFilePath).GetFiles("*", SearchOption.AllDirectories))
-            {
-               space += fi.Length;
-            }
+            space += new DirectoryInfo(GlobalRootFilePath).GetFiles("*", SearchOption.AllDirectories).Sum(fi => fi.Length);
 
             return space;
          }
       }
 
-      public RegisteredRepositories Registered { get { return Repos; } }
+      public RegisteredRepositories Registered => Repos;
 
-      private void ResolveRootPath(out string localRepoRoot, out string localRepoFileRoot)
-      {
-         string path = Environment.GetEnvironmentVariable(LocalRepositoryRootEnv);
 
-         if(!string.IsNullOrEmpty(path) && Directory.Exists(path))
-         {
-         }
-         else
-         {
-            path = Path.Combine(Environment.GetFolderPath(Environment.SpecialFolder.UserProfile), LocalRepositoryDirName);
+      public bool IsValidRepositoryName(string name) 
+         => name != null && (name == RegisteredRepositories.LocalRepositoryName || Repos.ContainsRepository(name));
 
-            if(!Directory.Exists(path))
-            {
-               DirectoryInfo dir1 = Directory.CreateDirectory(path);
-               dir1.Attributes |= (FileAttributes.System | FileAttributes.Hidden);
-            }
-         }
-
-         localRepoRoot = path;
-
-         path = Path.Combine(path, LocalRepositoryDataDirName);
-
-         if (!Directory.Exists(path))
-         {
-            Directory.CreateDirectory(path);
-         }
-
-         localRepoFileRoot = path;
-      }
-
-      private RegisteredRepositories LoadRegisteredRepositories()
-      {
-         string repoTxtPath = Path.Combine(LocalRepoRoot, RepoXmlFileName);
-
-         if (File.Exists(repoTxtPath))
-         {
-            return RegisteredRepositories.LoadFrom(repoTxtPath);
-         }
-
-         return new RegisteredRepositories();
-      }
-
-      public bool IsValidRepositoryName(string name)
-      {
-         return name != null && (name == RegisteredRepositories.LocalRepositoryName || Repos.ContainsRepository(name));
-      }
-
-      public bool CanPublish(string name)
-      {
-         return Repos.RepositoriesArray.First(r => r.Name.Equals(name, StringComparison.OrdinalIgnoreCase))?.UseForPublishing ?? false;
-      }
+      public bool CanPublish(string name) 
+         => Repos.RepositoriesArray.First(r => r.Name.Equals(name, StringComparison.OrdinalIgnoreCase))?.UseForPublishing ?? false;
 
       public string GetRepositoryUriFromName(string name)
       {
          if(!IsValidRepositoryName(name))
-            throw new ArgumentException("Invalid repository name [" + name + "]", "name");
+            throw new ArgumentException("Invalid repository name [" + name + "]", nameof(name));
 
-         if (RegisteredRepositories.LocalRepositoryName == name)
-            return LocalRepoFileRoot;
-
-         return Repos[name];
+         return RegisteredRepositories.LocalRepositoryName == name ? LocalRepoFileRoot : Repos[name];
       }
 
       public IEnumerable<string> TakeFirstRegisteredNames(int reposToTake, bool includeLocal)
       {
          var names = new List<string>();
 
-         if(includeLocal)
+         if (includeLocal)
          {
             names.Add(RegisteredRepositories.LocalRepositoryName);
             reposToTake--;
          }
 
-         for(int i = 0; i < Math.Min(reposToTake, Registered.TotalCount); i++)
-         {
+         for (int i = 0; i < Math.Min(reposToTake, Registered.TotalCount); i++)
             names.Add(Registered[i]);
-         }
 
          return names;
       }
@@ -176,40 +118,74 @@ namespace Pundit.Core
          {
             PackageKey pck = packagesArray[i];
 
-            if(existance[i])
-            {
-               //package already here
-               //Log.InfoFormat("[+] {0}", pck);
-            }
-            else
-            {
-               bool downloaded = false;
+            if (existance[i])
+               continue;
 
-               foreach(IRepository activeRepository in activeRepositories)
+            bool downloaded = false;
+
+            foreach (var activeRepository in activeRepositories)
+            {
+               try
                {
-                  try
+                  using (Stream pckStream = activeRepository.Download(pck))
                   {
-                     using (Stream pckStream = activeRepository.Download(pck))
-                     {
-                        if(PackageDownloadToLocalRepositoryStarted != null)
-                           PackageDownloadToLocalRepositoryStarted(null, new PackageKeyEventArgs(pck, true));
-
-                        localRepo.Publish(pckStream);
-                     }
-
-                     downloaded = true;
-
-                     break;
+                     PackageDownloadToLocalRepositoryStarted?.Invoke(null, new PackageKeyEventArgs(pck, true));
+                     localRepo.Publish(pckStream);
                   }
-                  catch(FileNotFoundException)
-                  {
-                     
-                  }
+
+                  downloaded = true;
+                  break;
                }
-
-               if (PackageDownloadToLocalRepositoryFinished != null)
-                  PackageDownloadToLocalRepositoryFinished(null, new PackageKeyEventArgs(pck, downloaded));
+               catch (FileNotFoundException)
+               {
+               }
             }
+
+            PackageDownloadToLocalRepositoryFinished?.Invoke(null, new PackageKeyEventArgs(pck, downloaded));
+         }
+      }
+
+      private void ResolveRootPath(out string localRepoRoot, out string localRepoFileRoot)
+      {
+         string path = Environment.GetEnvironmentVariable(LocalRepositoryRootEnv);
+
+         if (!string.IsNullOrEmpty(path) && Directory.Exists(path))
+         {
+         }
+         else
+         {
+            path = Path.Combine(Environment.GetFolderPath(Environment.SpecialFolder.UserProfile), LocalRepositoryDirName);
+
+            if (!Directory.Exists(path))
+            {
+               DirectoryInfo dir1 = Directory.CreateDirectory(path);
+               dir1.Attributes |= (FileAttributes.System | FileAttributes.Hidden);
+            }
+         }
+
+         localRepoRoot = path;
+
+         path = Path.Combine(path, LocalRepositoryDataDirName);
+
+         if (!Directory.Exists(path))
+         {
+            Directory.CreateDirectory(path);
+         }
+
+         localRepoFileRoot = path;
+      }
+
+      private RegisteredRepositories LoadRegisteredRepositories()
+      {
+         var repoTxtPath = Path.Combine(LocalRepoRoot, RepoXmlFileName);
+
+         if (!File.Exists(repoTxtPath))
+            return new RegisteredRepositories();
+
+         using (var stream = File.OpenRead(repoTxtPath))
+         {
+            var repos = _serializer.Read<XmlRegisteredRepositories>(stream);
+            return repos.Adapt<XmlRegisteredRepositories, RegisteredRepositories>();
          }
       }
    }
