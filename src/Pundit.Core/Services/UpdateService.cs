@@ -8,6 +8,7 @@ using EBerzosa.Pundit.Core.Model;
 using EBerzosa.Pundit.Core.Model.Enums;
 using EBerzosa.Pundit.Core.Model.Package;
 using EBerzosa.Pundit.Core.Repository;
+using EBerzosa.Pundit.Core.Resolvers;
 using EBerzosa.Utils;
 using NuGet.Versioning;
 using Pundit.Core;
@@ -22,6 +23,7 @@ namespace EBerzosa.Pundit.Core.Services
       private readonly LocalRepository _localRepository;
       
       private readonly PackageReaderFactory _packageReaderFactory;
+      private readonly DependencyResolution _dependencyResolution;
 
       private readonly RepositoryFactory _repositoryFactory;
 
@@ -38,15 +40,17 @@ namespace EBerzosa.Pundit.Core.Services
 
 
       public UpdateService(LocalRepository localRepository, RepositoryFactory repositoryFactory, PackageReaderFactory packageReaderFactory,
-         IWriter writer)
+         DependencyResolution dependencyResolution, IWriter writer)
       {
          Guard.NotNull(localRepository, nameof(localRepository));
          Guard.NotNull(repositoryFactory, nameof(repositoryFactory));
          Guard.NotNull(packageReaderFactory, nameof(packageReaderFactory));
+         Guard.NotNull(dependencyResolution, nameof(dependencyResolution));
          Guard.NotNull(writer, nameof(writer));
 
          _localRepository = localRepository;
          _packageReaderFactory = packageReaderFactory;
+         _dependencyResolution = dependencyResolution;
          _repositoryFactory = repositoryFactory;
          _writer = writer;
       }
@@ -78,22 +82,21 @@ namespace EBerzosa.Pundit.Core.Services
 
          var repos = GetRepositories(LocalReposOnly ? 0 : int.MaxValue).ToArray();
 
-         _writer.BeginWrite().Text("Resolving... ");
-         var dependencyResolution = new DependencyResolution(packageSpec, repos, IncludeDeveloperPackages);
-         var resolutionResult = dependencyResolution.Resolve();
+         _writer.BeginWrite().Text("Resolving...");
+         var resolutionResult = _dependencyResolution.Resolve(packageSpec, repos, IncludeDeveloperPackages);
 
          if (resolutionResult.Item1.HasConflicts)
          {
-            _writer.Error("failed").EndWrite()
+            _writer.Error(" failed").EndWrite()
                .Empty()
                .BeginWrite().Error("Could not resolve manifest due to conflicts...").EndWrite();
 
-            PrintConflicts(dependencyResolution, resolutionResult.Item1, resolutionResult.Item2);
+            PrintConflicts(_dependencyResolution, resolutionResult.Item1, resolutionResult.Item2);
 
             return false;
          }
 
-         _writer.Success("ok").EndWrite();
+         _writer.Success(" ok").EndWrite();
 
          if (DryRun)
             return true;

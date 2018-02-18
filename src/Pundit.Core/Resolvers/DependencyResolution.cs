@@ -10,16 +10,35 @@ namespace EBerzosa.Pundit.Core.Resolvers
 {
    public class DependencyResolution
    {
+      private readonly IEnumerable<IDependencyResolver> _resolvers;
+      private readonly IWriter _writer;
+      
       private readonly IRepository[] _activeRepositories;
-      private readonly DependencyNode _root;
+      private readonly bool _includeDeveloperPackages;
+      private readonly DependencyNode _rootDependencyNode;
 
-      public DependencyResolution(PackageManifest rootManifest, IRepository[] activeRepositories, bool includeDeveloperPackages)
+      public DependencyResolution(IEnumerable<IDependencyResolver> resolvers, IWriter writer)
       {
-         _activeRepositories = activeRepositories;
+         _resolvers = resolvers;
+         _writer = writer;
+      }
 
+      private DependencyResolution(IEnumerable<IDependencyResolver> resolvers, IWriter writer,
+         PackageManifest rootManifest, IRepository[] activeRepositories, bool includeDeveloperPackages)
+      {
+         _resolvers = resolvers;
+         _writer = writer;
+         _activeRepositories = activeRepositories;
+         _includeDeveloperPackages = includeDeveloperPackages;
+         
          var versionRange = VersionRange.Parse(rootManifest.Version.OriginalVersion);
-         _root = new DependencyNode(null, rootManifest.PackageId, rootManifest.Platform, versionRange, includeDeveloperPackages);
-         _root.MarkAsRoot(rootManifest);
+         _rootDependencyNode = new DependencyNode(null, rootManifest.PackageId, rootManifest.Platform, versionRange, _includeDeveloperPackages);
+         _rootDependencyNode.MarkAsRoot(rootManifest);
+      }
+
+      public Tuple<VersionResolutionTable, DependencyNode> Resolve(PackageManifest rootManifest, IRepository[] activeRepositories, bool includeDeveloperPackages)
+      {
+         return new DependencyResolution(_resolvers, _writer, rootManifest, activeRepositories, includeDeveloperPackages).Resolve();
       }
 
       /// <summary>
@@ -46,126 +65,112 @@ namespace EBerzosa.Pundit.Core.Resolvers
       /// 
       /// </summary>
       /// <returns></returns>
-      public Tuple<VersionResolutionTable, DependencyNode> Resolve()
+      private Tuple<VersionResolutionTable, DependencyNode> Resolve()
       {
          //steps 1-2-3
-         ResolveAll(_root);
+         ResolveAll();
 
          //steps 4-5
-         return Tuple.Create(Flatten(_root), _root);
+         return Tuple.Create(Flatten(), _rootDependencyNode);
       }
 
-      private void ResolveAll(DependencyNode node)
+      private void ResolveAll()
       {
-         while (!node.IsRecursivelyFull)
+         while (!_rootDependencyNode.IsRecursivelyFull)
          {
             //first step: resolve version patterns
             //(at least root must have all the dependencies populated already)
-            ResolveVersions(node);
+            ResolveVersions(_rootDependencyNode);
 
             //second step: resolve manifests
-            ResolveManifests(node);
+            ResolveManifests(_rootDependencyNode);
          }
       }
 
       private void ResolveVersions(DependencyNode node)
       {
-         //if(_log.IsDebugEnabled) _log.Debug("resolving " + node.Path);
-
-         if(!node.HasVersions)
+         if (!node.HasVersions)
          {
-            var versions = new HashSet<NuGetVersion>();
+            var punditVersions = new Dictionary<NuGetVersion, LocationInfo>();
 
-            foreach(IRepository repo in _activeRepositories)
+            foreach (var repo in _activeRepositories)
+            foreach (var resolver in _resolvers)
             {
-               NuGetVersion[] vs = repo.GetVersions(node.UnresolvedPackage);
+               var versions = resolver.GetVersions(repo, node);
 
-               if(vs != null)
-               {
-                  foreach(NuGetVersion v in vs)
-                  {
-                     versions.Add(v);
-                  }
-               }
+               if (versions == null)
+                  continue;
+
+               foreach (var version in versions)
+                  if (!punditVersions.ContainsKey(version))
+                     punditVersions.Add(version, new LocationInfo(version, repo, resolver));
             }
 
-            node.SetVersions(versions.ToArray());
-         }
-         else
-         {
-            //if(_log.IsDebugEnabled) _log.Debug("node already has versions resolved");
+            node.SetVersions(punditVersions.Values);
          }
 
-         if(node.HasManifest)
-         {
-            foreach(DependencyNode child in node.Children)
-            {
-               ResolveVersions(child);
-            }
-         }
+         if (!node.HasManifest)
+            return;
+
+         foreach (var child in node.Children)
+            ResolveVersions(child);
       }
 
       private void ResolveManifests(DependencyNode node)
       {
-         if(node.HasVersions && !node.HasManifest)
+         if (node.HasVersions && !node.HasManifest)
          {
             PackageManifest manifest = null;
 
-            foreach(var repo in _activeRepositories)
+            while (manifest == null && node.HasVersions)
             {
                try
                {
-                  manifest = repo.GetManifest(node.ActiveVersionKey);
+                  manifest = node.ActiveResolver.GetManifest(node.ActiveRepository, node);
+
+                  if (manifest != null)
+                  {
+                     node.SetManifest(manifest);
+                     break;
+                  }
+
+                  if (node.ActiveVersions.Any())
+                     node.RemoveActiveVersion();
+                  else
+                     throw new ApplicationException("could not find manifest for node " + node.Path);
                }
-               catch(FileNotFoundException)
+               catch
                {
-                  
                }
-
-               if (manifest != null) break;
-            }
-
-            if(manifest == null)
-               throw new ApplicationException("could not find manifest for node " + node.Path);
-
-            node.SetManifest(manifest);
-         }
-
-         if(node.HasVersions)
-         {
-            foreach(var child in node.Children)
-            {
-               ResolveManifests(child);
             }
          }
+
+         if (!node.HasVersions)
+            return;
+
+         foreach (var child in node.Children)
+            ResolveManifests(child);
       }
 
       private static void FlattenNode(DependencyNode node, VersionResolutionTable collector)
       {
-         if(node != null)
-         {
-            if(!node.IsFull) throw new InvalidOperationException("Cannot flatten unresolved node");
+         if (node == null)
+            return;
 
-            collector.Intersect(node.UnresolvedPackage, node.ActiveVersions);
+         if (!node.IsFull)
+            throw new InvalidOperationException("Cannot flatten unresolved node");
 
-            foreach(DependencyNode child in node.Children)
-            {
-               FlattenNode(child, collector);
-            }
-         }
+         collector.Intersect(node.UnresolvedPackage, node.ActiveVersions);
+
+         foreach (var child in node.Children)
+            FlattenNode(child, collector);
       }
 
-      /// <summary>
-      /// Creates <see cref="VersionResolutionTable"/> from <see cref="DependencyNode"/>
-      /// tree
-      /// </summary>
-      /// <param name="rootNode"></param>
-      /// <returns></returns>
-      private static VersionResolutionTable Flatten(DependencyNode rootNode)
+      private VersionResolutionTable Flatten()
       {
          var table = new VersionResolutionTable();
 
-         foreach(var node in rootNode.Children)
+         foreach (var node in _rootDependencyNode.Children)
             FlattenNode(node, table);
 
          return table;
@@ -182,43 +187,39 @@ namespace EBerzosa.Pundit.Core.Resolvers
 
       public string DescribeConflict(DependencyNode rootNode, UnresolvedPackage package)
       {
-         var b = new StringBuilder();
+         var sb = new StringBuilder();
          var found = new List<DependencyNode>();
 
          FindNodes(rootNode, package, found);
 
-         if(found.Count > 0)
+         if (found.Count <= 0)
+            return null;
+
+         foreach (DependencyNode node in found)
          {
-            foreach (DependencyNode node in found)
+            if (sb.Length != 0) sb.AppendLine();
+
+            sb.Append("dependency: [");
+            sb.Append(node.Path);
+            sb.Append("], version: [");
+            sb.Append(node.VersionPattern);
+            sb.Append("], resolved to: [");
+
+            bool isFirst = true;
+            foreach (NuGetVersion version in node.AllVersions)
             {
-               if (b.Length != 0) b.AppendLine();
+               if (!isFirst)
+                  sb.Append(", ");
+               else
+                  isFirst = false;
 
-               b.Append("dependency: [");
-               b.Append(node.Path);
-               b.Append("], version: [");
-               b.Append(node.VersionPattern);
-               b.Append("], resolved to: [");
-
-               bool isFirst = true;
-               foreach (NuGetVersion v in node.AllVersions)
-               {
-                  if (!isFirst)
-                  {
-                     b.Append(", ");
-                  }
-                  else
-                  {
-                     isFirst = false;
-                  }
-
-                  b.Append(v.ToString());
-               }
-
-               b.Append("]");
+               sb.Append(version);
             }
+
+            sb.Append("]");
          }
 
-         return b.ToString();
+         return sb.ToString();
       }
    }
 }

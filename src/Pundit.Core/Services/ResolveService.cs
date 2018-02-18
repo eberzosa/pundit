@@ -5,6 +5,7 @@ using System.Linq;
 using EBerzosa.Pundit.Core.Application;
 using EBerzosa.Pundit.Core.Model.Enums;
 using EBerzosa.Pundit.Core.Repository;
+using EBerzosa.Pundit.Core.Resolvers;
 using EBerzosa.Pundit.Core.Serializers;
 using EBerzosa.Utils;
 using Pundit.Core;
@@ -21,6 +22,7 @@ namespace EBerzosa.Pundit.Core.Services
       private readonly ManifestResolver _manifestResolver;
       private readonly PackageReaderFactory _packageReaderFactory;
       private readonly PackageSerializerFactory _packageSerializerFactory;
+      private readonly DependencyResolution _dependencyResolution;
 
       private readonly RepositoryFactory _repositoryFactory;
 
@@ -43,13 +45,14 @@ namespace EBerzosa.Pundit.Core.Services
 
 
       public ResolveService(LocalRepository localRepository, ManifestResolver manifestResolver, RepositoryFactory repositoryFactory, PackageReaderFactory packageReaderFactory,
-         PackageSerializerFactory packageSerializerFactory, IWriter writer) //IRepositoryManager repositoryManager,  IWriter writer)
+         PackageSerializerFactory packageSerializerFactory, DependencyResolution dependencyResolution, IWriter writer) //IRepositoryManager repositoryManager,  IWriter writer)
       {
          Guard.NotNull(localRepository, nameof(localRepository));
          Guard.NotNull(manifestResolver, nameof(manifestResolver));
          Guard.NotNull(repositoryFactory, nameof(repositoryFactory));
          Guard.NotNull(packageReaderFactory, nameof(packageReaderFactory));
          Guard.NotNull(packageSerializerFactory, nameof(packageSerializerFactory));
+         Guard.NotNull(dependencyResolution, nameof(dependencyResolution));
          Guard.NotNull(writer, nameof(writer));
 
          _localRepository = localRepository;
@@ -57,6 +60,7 @@ namespace EBerzosa.Pundit.Core.Services
          _packageReaderFactory = packageReaderFactory;
          _packageSerializerFactory = packageSerializerFactory;
          _repositoryFactory = repositoryFactory;
+         _dependencyResolution = dependencyResolution;
          //_repositoryManager = repositoryManager;
          _writer = writer;
       }
@@ -68,32 +72,53 @@ namespace EBerzosa.Pundit.Core.Services
 
          PrintSettings();
 
-         _writer.BeginWrite().Text("Reading manifest... ");
+         _writer.BeginWrite().Text("Reading manifest...");
          var packageSpecs = _packageSerializerFactory.GetPundit().DeserializePackageSpec(File.OpenRead(_resolvedManifestPath));
          packageSpecs.Validate();
-         _writer.Success("ok").EndWrite();
+         _writer.Success(" ok").EndWrite();
 
+         _writer.BeginWrite().Text("Getting repositories...");
          var repos = GetRepositories(LocalReposOnly ? 0 : int.MaxValue).ToArray();
+         _writer.Success(" ok").EndWrite();
 
-         _writer.BeginWrite().Text("Resolving... ");
-         var dependencyResolution = new DependencyResolution(packageSpecs, repos, IncludeDeveloperPackages);
-         var resolutionResult = dependencyResolution.Resolve();
+         _writer.BeginWrite().Text("Resolving...");
+         var resolutionResult = _dependencyResolution.Resolve(packageSpecs, repos, IncludeDeveloperPackages);
 
          if (resolutionResult.Item1.HasConflicts)
          {
-            _writer.Error("failed").EndWrite()
+            _writer.Error(" failed").EndWrite()
                .Empty()
                .BeginWrite().Error("Could not resolve manifest due to conflicts...").EndWrite();
 
-            PrintConflicts(dependencyResolution, resolutionResult.Item1, resolutionResult.Item2);
+            PrintConflicts(_dependencyResolution, resolutionResult.Item1, resolutionResult.Item2);
 
             return false;
          }
 
-         _writer.Success("ok").EndWrite();
+         _writer.Success(" ok").EndWrite();
 
          if (DryRun)
+         {
+            var packageIds = new List<string>();
+            var versions = new List<string>();
+            var platforms = new List<string>();
+            foreach (var package in resolutionResult.Item1.GetPackages())
+            {
+               packageIds.Add(package.PackageId);
+               versions.Add(package.VersionString);
+               platforms.Add(package.Platform);
+            }
+
+            _writer.Title("Resolved packages")
+               .BeginColumns(new int?[] { packageIds.Max(p => p.Length + 2), versions.Max(v => v.Length + 2), null });
+
+            for (int i = 0; i < packageIds.Count; i++)
+               _writer.Text(packageIds[i]).Text(versions[i]).Text(platforms[i]);
+
+            _writer.EndColumns();
+
             return true;
+         }
 
          Install(resolutionResult, repos, packageSpecs);
 
@@ -153,35 +178,39 @@ namespace EBerzosa.Pundit.Core.Services
 
       private void PrintSettings()
       {
-         _writer.BeginColumns(new int?[] {18, null})
-            .Reserved("Manifest:")
-            .Text(_resolvedManifestPath);
+         var names = new[] { " Manifest:", " Configuration:", " Local Repos Only:", " Force:", " Dry Run:" };
 
-         _writer.Reserved("Configuration:");
+         _writer.BeginColumns(new int?[] { names.Max(n => n.Length) + 1, null });
+
+         _writer.Reserved(names[0]).Text(_resolvedManifestPath);
+         
+         _writer.Reserved(names[1]);
          if (Configuration == BuildConfiguration.Debug)
             _writer.Warning(Configuration.ToString());
          else
             _writer.Success(Configuration.ToString());
 
-         _writer.Reserved("Local Repos Only:");
+         _writer.Reserved(names[2]);
          if (LocalReposOnly)
             _writer.Warning("yes");
          else
             _writer.Text("no");
 
-         _writer.Reserved("Force:");
+         _writer.Reserved(names[3]);
          if (Force)
             _writer.Error("yes");
          else
             _writer.Text("no");
 
-         _writer.BeginWrite().Reserved("Dry Run:");
+         _writer.BeginWrite().Reserved(names[4]);
          if (DryRun)
             _writer.Success("yes");
          else
             _writer.Text("no");
 
+         _writer.EndColumns().Empty();
          _writer.EndColumns();
+
       }
 
       private IEnumerable<IRepository> GetRepositories(int depth)
