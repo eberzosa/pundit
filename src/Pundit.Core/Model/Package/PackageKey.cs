@@ -1,9 +1,9 @@
 ﻿using System;
 using System.Runtime.Serialization;
 using System.Xml.Serialization;
+using EBerzosa.Pundit.Core.Package;
 using EBerzosa.Utils;
 using NuGet.Versioning;
-using Pundit.Core.Utils;
 
 namespace Pundit.Core.Model
 {
@@ -23,7 +23,7 @@ namespace Pundit.Core.Model
 
          PackageId = packageId;
          Version = version;
-         Platform = PackageUtils.TrimPlatformName(platform);
+         Platform = PackageFileName.TrimPlatformName(platform);
       }
 
       [XmlAttribute("id")]

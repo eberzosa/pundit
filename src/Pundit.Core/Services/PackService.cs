@@ -1,6 +1,7 @@
 ﻿using System;
 using System.IO;
 using EBerzosa.Pundit.Core.Model;
+using EBerzosa.Pundit.Core.Package;
 using EBerzosa.Pundit.Core.Repository;
 using EBerzosa.Pundit.Core.Serializers;
 using EBerzosa.Utils;
@@ -83,7 +84,7 @@ namespace EBerzosa.Pundit.Core.Services
             }
          }
          
-         var packageName = PackageUtils.GetFileName(packageSpec);
+         var packageName = new PackageFileName(packageSpec).FileName;
 
          DestinationFile = Path.Combine(_resolvedOutputPath, packageName);
 

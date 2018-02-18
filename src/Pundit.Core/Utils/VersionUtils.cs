@@ -1,5 +1,4 @@
 ﻿using System;
-using System.Linq;
 using NuGet.Versioning;
 
 namespace EBerzosa.Pundit.Core
@@ -8,56 +7,26 @@ namespace EBerzosa.Pundit.Core
    {
       public const string DevMarker = "dev";
 
-      public static string MakeFloatVersionString(string version)
+      public static VersionRange GetRangeFromPuntitDependencyVersion(string version)
       {
-         return version.Split('.').Length < 4 ? version + ".*" : version;
-      }
-
-      public static bool IsDeveloper(this NuGetVersion version)
-      {
-         return version.Release == DevMarker;
-      }
-
-      public static void MakeDeveloper(ref NuGetVersion version)
-      {
-         version = new NuGetVersion(version.Version, DevMarker);
-      }
-
-      public static string ToPunditSearchVersion(NuGetVersion version)
-      {
-         return version.Major + "." + version.Minor + "." + version.Patch + "-" + (version.Release ?? "") + version.Revision;
-      }
-      
-      public static string ToPunditSearchVersion(VersionRange version, bool isDeveloper)
-      {
-         if (!version.IsFloating && version.OriginalString.Split('.').Length == 4)
-            return version.MinVersion.Major + "." + version.MinVersion.Minor + "." 
-               + version.MinVersion.Patch + AppendRevision(isDeveloper, version.MinVersion.Revision.ToString());
-
-         if (!version.IsFloating)
-            throw new NotSupportedException("Non floating versions are not supported yet.");
-
-         if (new[] {NuGetVersionFloatBehavior.None, NuGetVersionFloatBehavior.AbsoluteLatest, NuGetVersionFloatBehavior.Prerelease }.Contains(version.Float.FloatBehavior))
-            throw new NotSupportedException($"Float behavior '{version.Float.FloatBehavior}' is not supported");
-
-         if (version.Float.FloatBehavior == NuGetVersionFloatBehavior.Major)
-            return "*" + AppendRevision(isDeveloper, "*");
-
-         if (version.Float.FloatBehavior == NuGetVersionFloatBehavior.Minor)
-            return version.Float.MinVersion.Major + ".*" + AppendRevision(isDeveloper, "*");
-
-         if (version.Float.FloatBehavior == NuGetVersionFloatBehavior.Patch)
-            return version.Float.MinVersion.Major + "." + version.Float.MinVersion.Minor + ".*" + AppendRevision(isDeveloper, "*");
-
-         if (version.Float.FloatBehavior == NuGetVersionFloatBehavior.Revision)
-            return version.Float.MinVersion.Major + "." + version.Float.MinVersion.Minor + "." + version.Float.MinVersion.Patch + AppendRevision(isDeveloper, "*");
+         var parts = version.Split('.');
          
-         throw new NotSupportedException();
-      }
+         if (parts.Length > 4 || parts.Length < 1)
+            throw new NotSupportedException($"Version '{version}' is not supported");
 
-      private static string AppendRevision(bool isDeveloper, string defaultValue)
-      {
-         return "-" + (isDeveloper ? DevMarker : "") + defaultValue;
+         var minVersion = NuGetVersion.Parse(version);
+
+         if (parts.Length == 4)
+            return new VersionRange(minVersion, true, minVersion, true, null, version);
+
+         var release = parts[parts.Length - 1].Split('-');
+
+         if (release.Length == 1)
+            parts[parts.Length - 1] = (int.Parse(parts[parts.Length - 1]) + 1).ToString();
+         else
+            parts[parts.Length - 1] = (int.Parse(release[0]) + 1).ToString() + '-' + release[1];
+
+         return new VersionRange(minVersion, true, NuGetVersion.Parse(string.Join(".", parts)), false, null, version);
       }
    }
 }

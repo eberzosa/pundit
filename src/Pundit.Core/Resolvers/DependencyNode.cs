@@ -47,7 +47,7 @@ namespace EBerzosa.Pundit.Core.Resolvers
          }
       }
 
-      public UnresolvedPackage UnresolvedPackage => new UnresolvedPackage(PackageId, Platform, VersionPattern, _includeDeveloperPackages);
+      public UnresolvedPackage UnresolvedPackage => new UnresolvedPackage(PackageId, Platform, VersionPattern);
 
       public bool CanDowngrade => _activeVersionIndex > 0;
 

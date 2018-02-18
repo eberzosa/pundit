@@ -1,10 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
-using EBerzosa.Pundit.Core;
-using EBerzosa.Pundit.Core.Utils;
+﻿using EBerzosa.Pundit.Core;
 using NuGet.Versioning;
 using Xunit;
 
@@ -12,34 +6,30 @@ namespace Pundit.Test.Utils
 {
    public class VersionUtilsTest
    {
-      [Fact]
-      public void AllVersionsNoDev() => Assert.Equal("*-*", VersionUtils.ToPunditSearchVersion(VersionRange.Parse("*"), false));
+      [Theory]
+      [InlineData("1.2.3.4", "1.2.3.4")]
+      [InlineData("1.2.3", "1.2.4")]
+      [InlineData("1.2", "1.3")]
+      [InlineData("1", "2")]
+      [InlineData("1.2.3.0", "1.2.3.0")]
+      [InlineData("1.2.0", "1.2.1")]
+      [InlineData("1.0.0.0", "1.0.0.0")]
+      [InlineData("1.0", "1.1")]
+      [InlineData("1.2.3.4-dev", "1.2.3.4-dev")]
+      [InlineData("1.2.3-dev", "1.2.4-dev")]
+      [InlineData("1.2-dev", "1.3-dev")]
+      [InlineData("1-dev", "2-dev")]
+      [InlineData("1.2.3.0-dev", "1.2.3.0-dev")]
+      [InlineData("1.2.0-dev", "1.2.1-dev")]
+      [InlineData("1.0.0.0-dev", "1.0.0.0-dev")]
+      [InlineData("1.0-dev", "1.1-dev")]
+      public void GetRangeFromPuntitDependencyVersionTest(string version, string expectedMax)
+      {
+         var range = VersionUtils.GetRangeFromPuntitDependencyVersion(version);
 
-      [Fact]
-      public void MajorNoDev() => Assert.Equal("1.*-*", VersionUtils.ToPunditSearchVersion(VersionRange.Parse("1.*"), false));
-
-      [Fact]
-      public void MinorNoDev() => Assert.Equal("1.2.*-*", VersionUtils.ToPunditSearchVersion(VersionRange.Parse("1.2.*"), false));
-
-      [Fact]
-      public void PatchNoDev() => Assert.Equal("1.2.3-*", VersionUtils.ToPunditSearchVersion(VersionRange.Parse("1.2.3.*"), false));
-      
-      [Fact]
-      public void ReleaseNoDev() => Assert.Equal("1.2.3-4", VersionUtils.ToPunditSearchVersion(VersionRange.Parse("1.2.3.4"), false));
-
-      [Fact]
-      public void AllVersionsDev() => Assert.Equal("*-dev*", VersionUtils.ToPunditSearchVersion(VersionRange.Parse("*"), true));
-
-      [Fact]
-      public void MajorDev() => Assert.Equal("1.*-dev*", VersionUtils.ToPunditSearchVersion(VersionRange.Parse("1.*"), true));
-
-      [Fact]
-      public void MinorDev() => Assert.Equal("1.2.*-dev*", VersionUtils.ToPunditSearchVersion(VersionRange.Parse("1.2.*"), true));
-
-      [Fact]
-      public void PatchDev() => Assert.Equal("1.2.3-dev*", VersionUtils.ToPunditSearchVersion(VersionRange.Parse("1.2.3.*"), true));
-
-      [Fact]
-      public void ReleaseDev() => Assert.Equal("1.2.3-dev4", VersionUtils.ToPunditSearchVersion(VersionRange.Parse("1.2.3.4"), true));
+         Assert.Equal(version, range.MinVersion.ToString());
+         Assert.Equal(expectedMax, range.MaxVersion.ToString());
+         Assert.Equal(version == expectedMax, range.IsMaxInclusive);
+      }
    }
 }

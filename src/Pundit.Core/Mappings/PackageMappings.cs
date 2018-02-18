@@ -35,7 +35,7 @@ namespace EBerzosa.Pundit.Core.Mappings
             .Map(dst => dst.VersionPattern, src => src.VersionPattern.OriginalString.TrimEnd('*', '.'));
 
          Mapster.TypeAdapterConfig<XmlPackageDependency, PackageDependency>.NewConfig()
-            .ConstructUsing(xml => new PackageDependency(xml.PackageId, VersionRange.Parse(VersionUtils.MakeFloatVersionString(xml.VersionPattern))))
+            .ConstructUsing(xml => new PackageDependency(xml.PackageId, VersionUtils.GetRangeFromPuntitDependencyVersion(xml.VersionPattern)))
             .Ignore(src => src.PackageId, src => src.VersionPattern)
             .AfterMapping((src, dst) =>
             {
@@ -53,21 +53,6 @@ namespace EBerzosa.Pundit.Core.Mappings
 
          Mapster.TypeAdapterConfig<SourceFiles, XmlSourceFiles>.NewConfig();
          Mapster.TypeAdapterConfig<XmlSourceFiles, SourceFiles>.NewConfig();
-
-         //Mapper.Register<BuildConfiguration, XmlBuildConfiguration>()
-         //   .Function(dst => dst, src => (XmlBuildConfiguration)src);
-         //Mapper.Register<XmlBuildConfiguration, BuildConfiguration>()
-         //   .Function(dst => dst, src => (BuildConfiguration)src);
-
-         //Mapper.Register<BuildConfiguration, XmlDependencyScope>()
-         //   .Function(dst => dst, src => (XmlDependencyScope)src);
-         //Mapper.Register<XmlDependencyScope, BuildConfiguration>()
-         //   .Function(dst => dst, src => (DependencyScope)src);
-
-         //Mapper.Register<PackageFileKind, XmlPackageFileKind>()
-         //   .Function(dst => dst, src => (XmlPackageFileKind)src);
-         //Mapper.Register<XmlPackageFileKind, PackageFileKind>()
-         //   .Function(dst => dst, src => (PackageFileKind)src);
       }
    }
 }

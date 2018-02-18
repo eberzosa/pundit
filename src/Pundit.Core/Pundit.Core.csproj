@@ -112,6 +112,7 @@
   <ItemGroup>
     <Compile Include="3rdparty\DirectoryScanner.cs" />
     <Compile Include="3rdparty\Options.cs" />
+    <Compile Include="Package\PackageFileName.cs" />
     <Compile Include="Repository\Mappings\RepositoryMappings.cs" />
     <Compile Include="Repository\RegisteredRepository.cs" />
     <Compile Include="Repository\Xml\XmlRegisteredRepository.cs" />
@@ -188,7 +189,6 @@
     <Compile Include="Utils\FileSet.cs" />
     <Compile Include="Utils\ByteFormatProvider.cs" />
     <Compile Include="Utils\NullWriter.cs" />
-    <Compile Include="Utils\PackageUtils.cs" />
     <Compile Include="Utils\PathUtils.cs" />
     <Compile Include="Utils\VersionUtils.cs" />
     <Compile Include="WiringModule.cs" />
