@@ -2,6 +2,7 @@
 using System.IO;
 using System.Linq;
 using System.Xml.Serialization;
+using EBerzosa.Pundit.Core.Repository.Xml;
 
 namespace EBerzosa.Pundit.Core.Repository
 {

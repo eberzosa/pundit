@@ -10,27 +10,27 @@ namespace EBerzosa.Pundit.CommandLine.Controllers
 {
    internal class SourcesController : Controller
    {
-      private readonly LocalRepository _localRepository;
+      private readonly RepositoryFactory _repositoryFactory;
 
-      public SourcesController(LocalRepository localRepository, IOutput output, IInput input) 
+      public SourcesController(RepositoryFactory repositoryFactory, IOutput output, IInput input) 
          : base(output, input)
       {
-         Guard.NotNull(localRepository, nameof(localRepository));
+         Guard.NotNull(repositoryFactory, nameof(repositoryFactory));
 
-         _localRepository = localRepository;
+         _repositoryFactory = repositoryFactory;
       }
 
       public ExitCode Info()
       {
          SafeExecute(() =>
          {
-            Output.Title($"Repositories ({_localRepository.Registered.TotalCount} found):");
+            Output.Title($"Repositories ({_repositoryFactory.GetRegisteredRepositories().TotalCount} found):");
 
             var first = true;
 
             Output.BeginColumns(new int?[] {10, null});
 
-            foreach (var rr in _localRepository.Registered.RepositoriesArray)
+            foreach (var rr in _repositoryFactory.GetRegisteredRepositories().RepositoriesArray)
             {
                if (!first)
                   Output.Empty();

@@ -14,9 +14,13 @@ namespace EBerzosa.Pundit.Core.Repository
    {
       private readonly PackageReaderFactory _packageReaderFactory;
 
+      public string Name { get; }
+
+      public bool CanPublish { get; set; } = false;
+
       public string RootPath { get; }
 
-      public FileSystemRepository(PackageReaderFactory packageReaderFactory, string rootPath)
+      public FileSystemRepository(PackageReaderFactory packageReaderFactory, string rootPath, string name)
       {
          Guard.NotNull(packageReaderFactory, nameof(packageReaderFactory));
          Guard.NotNull(rootPath, nameof(rootPath));
@@ -26,10 +30,14 @@ namespace EBerzosa.Pundit.Core.Repository
 
          _packageReaderFactory = packageReaderFactory;
          RootPath = rootPath;
+         Name = name;
       }
 
       public void Publish(Stream packageStream)
       {
+         if (!CanPublish)
+            throw new Exception("Publish is not allowed");
+
          var tempFile = Path.Combine(RootPath, "download-" + Guid.NewGuid());
 
          using (Stream ts = File.Create(tempFile))

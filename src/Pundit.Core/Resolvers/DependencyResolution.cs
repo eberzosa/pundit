@@ -92,7 +92,7 @@ namespace EBerzosa.Pundit.Core.Resolvers
       {
          if (!node.HasVersions)
          {
-            var punditVersions = new Dictionary<NuGetVersion, LocationInfo>();
+            var punditVersions = new Dictionary<NuGetVersion, SatisfyingInfo>();
 
             foreach (var repo in _activeRepositories)
             foreach (var resolver in _resolvers)
@@ -104,7 +104,7 @@ namespace EBerzosa.Pundit.Core.Resolvers
 
                foreach (var version in versions)
                   if (!punditVersions.ContainsKey(version))
-                     punditVersions.Add(version, new LocationInfo(version, repo, resolver));
+                     punditVersions.Add(version, new SatisfyingInfo(version, repo, resolver));
             }
 
             node.SetVersions(punditVersions.Values);
@@ -135,7 +135,7 @@ namespace EBerzosa.Pundit.Core.Resolvers
                      break;
                   }
 
-                  if (node.ActiveVersions.Any())
+                  if (node.ActiveSatisfayingData.Any())
                      node.RemoveActiveVersion();
                   else
                      throw new ApplicationException("could not find manifest for node " + node.Path);
@@ -161,7 +161,7 @@ namespace EBerzosa.Pundit.Core.Resolvers
          if (!node.IsFull)
             throw new InvalidOperationException("Cannot flatten unresolved node");
 
-         collector.Intersect(node.UnresolvedPackage, node.ActiveVersions);
+         collector.Intersect(node.UnresolvedPackage, node.ActiveSatisfayingData);
 
          foreach (var child in node.Children)
             FlattenNode(child, collector);

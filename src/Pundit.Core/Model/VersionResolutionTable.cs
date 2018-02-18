@@ -1,44 +1,59 @@
-﻿using System;
-using System.Collections.Generic;
+﻿using System.Collections.Generic;
 using System.Linq;
-using System.Text;
-using EBerzosa.Pundit.Core.Model;
-using NuGet.Versioning;
+using EBerzosa.Pundit.Core.Resolvers;
 
 namespace Pundit.Core.Model
 {
    public class VersionResolutionTable
    {
-      private readonly Dictionary<UnresolvedPackage, HashSet<NuGetVersion>> _resolution =
-         new Dictionary<UnresolvedPackage, HashSet<NuGetVersion>>();
+      private readonly Dictionary<UnresolvedPackage, HashSet<SatisfyingInfo>> _resolution;
 
       public VersionResolutionTable()
       {
-         
+         _resolution = new Dictionary<UnresolvedPackage, HashSet<SatisfyingInfo>>();
       }
 
-      public int ConflictCount
+      public int ConflictCount => _resolution.Count(r => r.Value == null || r.Value.Count == 0);
+
+      public bool HasConflicts => ConflictCount > 0;
+
+
+      /// <summary>
+      /// 
+      /// </summary>
+      /// <param name="package"></param>
+      /// <param name="satisfayingInfos"></param>
+      /// <returns>Indicates if this intersection caused a conflict</returns>
+      public bool Intersect(UnresolvedPackage package, IEnumerable<SatisfyingInfo> satisfayingInfos)
       {
-         get
+         if (!_resolution.ContainsKey(package))
          {
-            return _resolution
-               .Where(r => r.Value == null || r.Value.Count == 0)
-               .Count();
+            var set = new HashSet<SatisfyingInfo>();
+
+            foreach (var s in satisfayingInfos)
+               set.Add(s);
+
+            _resolution[package] = set;
+
+            return set.Count == 0;
+         }
+         else
+         {
+            var set = _resolution[package];
+
+            set.IntersectWith(satisfayingInfos);
+
+            return set.Count == 0;
          }
       }
 
-      public bool HasConflicts
-      {
-         get { return ConflictCount > 0; }
-      }
-
-      public NuGetVersion GetActiveVersion(UnresolvedPackage package)
+      public SatisfyingInfo GetActiveSatisfayingInfo(UnresolvedPackage package)
       {
          if(_resolution.ContainsKey(package) && _resolution[package] != null &&
             _resolution[package].Count > 0)
          {
-            HashSet<NuGetVersion> v = _resolution[package];
-            List<NuGetVersion> sorted = v.ToList();
+            var v = _resolution[package];
+            var sorted = v.ToList();
             sorted.Sort();
 
             return sorted[sorted.Count - 1];
@@ -50,9 +65,17 @@ namespace Pundit.Core.Model
       public IEnumerable<PackageKey> GetPackages()
       {
          return from package in _resolution.Keys
-                let v = GetActiveVersion(package)
+                let v = GetActiveSatisfayingInfo(package)
                 where v != null
-                select new PackageKey(package.PackageId, v, package.Platform);
+                select new PackageKey(package.PackageId, v.Version, package.Platform);
+      }
+
+      public IEnumerable<SatisfyingInfoExtended> GetSatisfyingInfos()
+      { 
+         return from package in _resolution.Keys
+            let v = GetActiveSatisfayingInfo(package)
+            where v != null
+            select new SatisfyingInfoExtended(v, package.PackageId, package.Platform);
       }
 
       public IEnumerable<UnresolvedPackage> GetConflictedPackages()
@@ -62,31 +85,5 @@ namespace Pundit.Core.Model
             .Select(r => new UnresolvedPackage(r.Key.PackageId, r.Key.Platform, r.Key.VersionPattern));
       }
 
-      /// <summary>
-      /// 
-      /// </summary>
-      /// <param name="package"></param>
-      /// <param name="versions"></param>
-      /// <returns>Indicates if this intersection caused a conflict</returns>
-      public bool Intersect(UnresolvedPackage package, IEnumerable<NuGetVersion> versions)
-      {
-         if(!_resolution.ContainsKey(package))
-         {
-            var set = new HashSet<NuGetVersion>();
-            foreach (NuGetVersion v in versions) set.Add(v);
-            
-            _resolution[package] = set;
-
-            return set.Count == 0;
-         }
-         else
-         {
-            HashSet<NuGetVersion> set = _resolution[package];
-
-            set.IntersectWith(versions);
-
-            return set.Count == 0;
-         }
-      }
    }
 }

@@ -1,23 +1,110 @@
-﻿using EBerzosa.Pundit.Core.Application;
+﻿using System;
+using System.Collections.Generic;
+using System.IO;
+using System.Linq;
+using EBerzosa.Pundit.Core.Application;
+using EBerzosa.Pundit.Core.Repository.Xml;
+using EBerzosa.Pundit.Core.Serializers;
 using EBerzosa.Utils;
-using Pundit.Core.Model;
+using EBerzosa.Utils.Extensions;
+using Mapster;
 
 namespace EBerzosa.Pundit.Core.Repository
 {
    public class RepositoryFactory
    {
-      private readonly PackageReaderFactory _packageReaderFactory;
+      private const string PunditConfigFolder = ".pundit";
+      private const string LocalRepoFolder = "repository";
+      private const string RepositoriesConfigFile = "repositories.xml";
 
-      public RepositoryFactory(PackageReaderFactory packageReaderFactory)
+      private readonly PackageReaderFactory _packageReaderFactory;
+      private readonly ISerializer _serializer;
+
+      private readonly string _cacheRepoPath;
+      private readonly string _repoConfigPath;
+      
+      private RegisteredRepositories _registeredRepositories;
+
+
+      public RepositoryFactory(PackageReaderFactory packageReaderFactory, ISerializer serializer)
       {
          Guard.NotNull(packageReaderFactory, nameof(packageReaderFactory));
+         Guard.NotNull(serializer, nameof(serializer));
 
          _packageReaderFactory = packageReaderFactory;
+         _serializer = serializer;
+
+         var punditConfigPath = ResolveRootPath(PunditConfigFolder, LocalRepoFolder);
+         _cacheRepoPath = Path.Combine(punditConfigPath, LocalRepoFolder);
+         _repoConfigPath = Path.Combine(punditConfigPath, RepositoriesConfigFile);
       }
 
-      public IRepository CreateFromUri(string uri)
+
+      public IRepository GetLocalRepo()
       {
-         return new FileSystemRepository(_packageReaderFactory, uri);
+         return CreateRepo(new RegisteredRepository {Uri = _cacheRepoPath, Name = "local", UseForPublishing = true});
+      }
+
+      public IRepository GetRepo(string name)
+      {
+         var repo = GetRegistered().RepositoriesArray.FirstOrDefault(r => r.Name.Equals(name, StringComparison.OrdinalIgnoreCase));
+
+         return repo == null ? null : CreateRepo(repo);
+      }
+
+      public IEnumerable<IRepository> GetRepos(bool includeCache, bool includeOther)
+      {
+         if (includeCache)
+            yield return GetLocalRepo();
+
+         if (includeOther)
+            foreach (var repository in GetRegistered().RepositoriesArray.Select(CreateRepo))
+               yield return repository;
+      }
+
+      public RegisteredRepositories GetRegisteredRepositories()
+      {
+         return GetRegistered();
+      }
+
+
+      private IRepository CreateRepo(RegisteredRepository repo)
+      {
+         return new FileSystemRepository(_packageReaderFactory, repo.Uri, repo.Name) {CanPublish = repo.UseForPublishing};
+      }
+
+      private RegisteredRepositories GetRegistered()
+      {
+         if (_registeredRepositories != null)
+            return _registeredRepositories;
+
+         if (!File.Exists(_repoConfigPath))
+            return new RegisteredRepositories();
+
+         using (var stream = File.OpenRead(_repoConfigPath))
+         {
+            var repos = _serializer.Read<XmlRegisteredRepositories>(stream);
+            _registeredRepositories = repos.Adapt<XmlRegisteredRepositories, RegisteredRepositories>();
+         }
+
+         return _registeredRepositories;
+      }
+
+      private string ResolveRootPath(string punditConfigFolder, string localRepoFolder)
+      {
+         var path = Path.Combine(Environment.GetFolderPath(Environment.SpecialFolder.UserProfile), punditConfigFolder);
+
+         if (!Directory.Exists(path))
+            Directory.CreateDirectory(path).Attributes |= (FileAttributes.System | FileAttributes.Hidden);
+
+         var rootPath = path;
+
+         path = Path.Combine(path, localRepoFolder);
+
+         if (!Directory.Exists(path))
+            Directory.CreateDirectory(path);
+
+         return rootPath;
       }
    }
 }

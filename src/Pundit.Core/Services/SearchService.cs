@@ -1,14 +1,11 @@
 ﻿using System;
 using EBerzosa.Pundit.Core.Repository;
 using EBerzosa.Utils;
-using Pundit.Core;
-using Pundit.Core.Model;
 
 namespace EBerzosa.Pundit.Core.Services
 {
    public class SearchService
    {
-      private readonly LocalRepository _localRepository;
       private readonly RepositoryFactory _repositoryFactory;
       private readonly IWriter _writer;
 
@@ -16,13 +13,11 @@ namespace EBerzosa.Pundit.Core.Services
 
       public bool ToXml { get; set; }
 
-      public SearchService(LocalRepository localRepository, RepositoryFactory repositoryFactory, IWriter writer)
+      public SearchService(RepositoryFactory repositoryFactory, IWriter writer)
       {
-         Guard.NotNull(localRepository, nameof(localRepository));
          Guard.NotNull(repositoryFactory, nameof(repositoryFactory));
          Guard.NotNull(writer, nameof(writer));
 
-         _localRepository = localRepository;
          _repositoryFactory = repositoryFactory;
          _writer = writer;
       }
@@ -31,17 +26,13 @@ namespace EBerzosa.Pundit.Core.Services
       {
          if (ToXml)
             throw new NotImplementedException("Feature not available");
-
-         var repoNames = _localRepository.TakeFirstRegisteredNames(LocalRepoOnly ? 0 : int.MaxValue, true);
-
+         
          var anyFound = false;
          
-         foreach (string repoName in repoNames)
+         foreach (var repo in _repositoryFactory.GetRepos(true, !LocalRepoOnly))
          {
-            _writer.Text($"Searching '{repoName}'...");
-
-            IRepository repo = _repositoryFactory.CreateFromUri(_localRepository.GetRepositoryUriFromName(repoName));
-
+            _writer.Empty().Text($"Searching repository '{repo.Name}' [{repo.RootPath}]...").Empty();
+            
             foreach (var packageKey in repo.Search(text))
             {
                anyFound = true;
@@ -56,7 +47,7 @@ namespace EBerzosa.Pundit.Core.Services
                }
 
                _writer.BeginWrite()
-                  .Text(outputText.Substring(0, pos))
+                  .Text(outputText.Substring(0, pos)) 
                   .HightLight(outputText.Substring(pos, text.Length))
                   .Text(outputText.Substring(pos + text.Length))
                   .EndWrite();
@@ -65,11 +56,8 @@ namespace EBerzosa.Pundit.Core.Services
             _writer.Empty();
          }
 
-         //display results
          if (!anyFound)
-         {
             _writer.Error($"No packages found that contain '{text}'");
-         }
       }
    }
 }

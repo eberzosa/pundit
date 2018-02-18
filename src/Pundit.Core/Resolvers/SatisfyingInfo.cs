@@ -1,12 +1,10 @@
 ﻿using System;
-using EBerzosa.Pundit.Core.Model;
 using EBerzosa.Pundit.Core.Repository;
 using NuGet.Versioning;
-using Pundit.Core.Model;
 
 namespace EBerzosa.Pundit.Core.Resolvers
 {
-   public class LocationInfo : IComparable<LocationInfo>
+   public class SatisfyingInfo : IComparable<SatisfyingInfo>
    {
       public NuGetVersion Version { get; set; }
 
@@ -15,14 +13,14 @@ namespace EBerzosa.Pundit.Core.Resolvers
       public IDependencyResolver Resolver { get; set; }
 
 
-      public LocationInfo(NuGetVersion version, IRepository repo, IDependencyResolver resolver)
+      public SatisfyingInfo(NuGetVersion version, IRepository repo, IDependencyResolver resolver)
       {
          Version = version;
          Repo = repo;
          Resolver = resolver;
       }
 
-      public int CompareTo(LocationInfo other)
+      public int CompareTo(SatisfyingInfo other)
       {
          return Version.CompareTo(other.Version);
       }

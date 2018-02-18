@@ -7,7 +7,7 @@
       public string Uri { get; set; }
       
       public bool UseForPublishing { get; set; }
-
+      
       public override string ToString() => Name;
    }
 }

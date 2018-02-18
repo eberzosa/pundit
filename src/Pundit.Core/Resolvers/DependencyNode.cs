@@ -14,8 +14,8 @@ namespace EBerzosa.Pundit.Core.Resolvers
 
       private readonly bool _includeDeveloperPackages;
 
-      private LocationInfo[] _versions; //versions satisfying version pattern
-      private int _activeVersionIndex = -1;  //active version index in _versions
+      private SatisfyingInfo[] _satisfyingData;
+      private int _activeVersionIndex = -1;
 
       //node's dependencies
       private readonly List<DependencyNode> _children = new List<DependencyNode>();
@@ -51,7 +51,7 @@ namespace EBerzosa.Pundit.Core.Resolvers
 
       public bool CanDowngrade => _activeVersionIndex > 0;
 
-      public bool HasVersions => _versions != null;
+      public bool HasVersions => _satisfyingData != null;
 
       public bool HasManifest { get; private set; }
 
@@ -73,23 +73,21 @@ namespace EBerzosa.Pundit.Core.Resolvers
          }
       }
 
-      public IEnumerable<NuGetVersion> AllVersions => _versions.Select(v => v.Version);
+      public IEnumerable<NuGetVersion> AllVersions => _satisfyingData.Select(v => v.Version);
 
-      public LocationInfo ActiveVersion => _activeVersionIndex == -1 ? null : _versions[_activeVersionIndex];
+      public SatisfyingInfo ActiveVersion => _activeVersionIndex == -1 ? null : _satisfyingData[_activeVersionIndex];
 
       /// <summary>
       /// Versions from lowest to latest active (<see cref="ActiveVersion"/>)
       /// </summary>
-      public IEnumerable<NuGetVersion> ActiveVersions
+      public IEnumerable<SatisfyingInfo> ActiveSatisfayingData
       {
          get
          {
-            var active = new List<NuGetVersion>();
+            var active = new List<SatisfyingInfo>();
 
             for (int i = 0; i <= _activeVersionIndex; i++)
-            {
-               active.Add(_versions[i].Version);
-            }
+               active.Add(_satisfyingData[i]);
 
             return active;
          }
@@ -142,23 +140,23 @@ namespace EBerzosa.Pundit.Core.Resolvers
 
       public void MarkAsRoot(PackageManifest rootManifest)
       {
-         SetVersions(new[] {new LocationInfo(rootManifest.Version, null, null)});
+         SetVersions(new[] {new SatisfyingInfo(rootManifest.Version, null, null)});
          SetManifest(rootManifest);
       }
       
-      public void SetVersions(IEnumerable<LocationInfo> versions)
+      public void SetVersions(IEnumerable<SatisfyingInfo> versions)
       {
          if (versions == null)
             throw new ArgumentNullException(nameof(versions));
 
-         _versions = versions.ToArray();
-         Array.Sort(_versions);
+         _satisfyingData = versions.ToArray();
+         Array.Sort(_satisfyingData);
 
-         if(_versions.Length > 0)
-            _activeVersionIndex = _versions.Length - 1;
+         if(_satisfyingData.Length > 0)
+            _activeVersionIndex = _satisfyingData.Length - 1;
 
          _children.Clear();
-         HasManifest = _versions.Length == 0; //if there are no versions, no point to fetch manifest
+         HasManifest = _satisfyingData.Length == 0; //if there are no versions, no point to fetch manifest
       }
 
       public void RemoveActiveVersion()
@@ -166,7 +164,7 @@ namespace EBerzosa.Pundit.Core.Resolvers
          if (_activeVersionIndex < 0)
             return;
 
-         Array.Resize(ref _versions, _versions.Length - 1);
+         Array.Resize(ref _satisfyingData, _satisfyingData.Length - 1);
          _activeVersionIndex--;
       }
 
@@ -187,12 +185,12 @@ namespace EBerzosa.Pundit.Core.Resolvers
       {
          var node = new DependencyNode(_parentNode, PackageId, Platform, VersionPattern, _includeDeveloperPackages);
 
-         if (_versions != null)
+         if (_satisfyingData != null)
          {
-            node._versions = new LocationInfo[_versions.Length];
+            node._satisfyingData = new SatisfyingInfo[_satisfyingData.Length];
 
-            for (int i = 0; i < node._versions.Length; i++)
-               node._versions[i] = new LocationInfo(_versions[0].Version, _versions[0].Repo, _versions[0].Resolver);
+            for (int i = 0; i < node._satisfyingData.Length; i++)
+               node._satisfyingData[i] = new SatisfyingInfo(_satisfyingData[0].Version, _satisfyingData[0].Repo, _satisfyingData[0].Resolver);
          }
 
          node._activeVersionIndex = _activeVersionIndex;

@@ -128,8 +128,9 @@
     <Compile Include="Package\PackageWriter.cs" />
     <Compile Include="Repository\FileSystemRepository.cs" />
     <Compile Include="Resolvers\IDependencyResolver.cs" />
-    <Compile Include="Resolvers\LocationInfo.cs" />
+    <Compile Include="Resolvers\SatisfyingInfo.cs" />
     <Compile Include="Resolvers\PunditDependencyResolver.cs" />
+    <Compile Include="Resolvers\SatisfyingInfoExtended.cs" />
     <Compile Include="Serializers\IPackageSerializer.cs" />
     <Compile Include="Serializers\NuGetv3PackageSerializer.cs" />
     <Compile Include="Serializers\PackageSerializerFactory.cs" />

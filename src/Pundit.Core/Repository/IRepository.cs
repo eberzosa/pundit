@@ -6,6 +6,12 @@ namespace EBerzosa.Pundit.Core.Repository
 {
    public interface IRepository
    {
+      string Name { get; }
+
+      string RootPath { get; }
+
+      bool CanPublish { get; set; }
+
       void Publish(Stream packageStream);
       
       Stream Download(PackageKey key);
