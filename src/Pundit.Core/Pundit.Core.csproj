@@ -114,6 +114,7 @@
     <Compile Include="3rdparty\Options.cs" />
     <Compile Include="Package\PackageFileName.cs" />
     <Compile Include="Repository\Mappings\RepositoryMappings.cs" />
+    <Compile Include="Repository\NugetFileSystemRepo.cs" />
     <Compile Include="Repository\RegisteredRepository.cs" />
     <Compile Include="Repository\Xml\XmlRegisteredRepository.cs" />
     <Compile Include="Repository\Xml\XmlRegisteredRepositories.cs" />
