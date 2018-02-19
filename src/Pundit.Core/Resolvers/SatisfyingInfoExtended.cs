@@ -10,7 +10,7 @@ namespace EBerzosa.Pundit.Core.Resolvers
 
       
       public SatisfyingInfoExtended(SatisfyingInfo satisfying, string packageId, string platform)
-         : base(satisfying.Version, satisfying.Repo, satisfying.Resolver)
+         : base(satisfying.Version, satisfying.Repo)
       {
          PackageId = packageId;
          Platform = platform;

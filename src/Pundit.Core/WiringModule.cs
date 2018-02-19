@@ -21,8 +21,6 @@ namespace EBerzosa.Pundit.Core
 
          serviceRegistry.Register<PackageSerializerFactory>(new PerContainerLifetime());
 
-         serviceRegistry.Register<IDependencyResolver, PunditDependencyResolver>("1", new PerRequestLifeTime());
-         //serviceRegistry.Register<IDependencyResolver, NuGetDependencyResolver>("2", new PerRequestLifeTime());
          serviceRegistry.Register<DependencyResolution>(new PerContainerLifetime());
 
          FrameworkMappings.Initialise();

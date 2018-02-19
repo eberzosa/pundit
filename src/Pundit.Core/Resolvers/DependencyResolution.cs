@@ -11,23 +11,19 @@ namespace EBerzosa.Pundit.Core.Resolvers
 {
    public class DependencyResolution
    {
-      private readonly IEnumerable<IDependencyResolver> _resolvers;
       private readonly IWriter _writer;
       
       private readonly IRepository[] _activeRepositories;
       private readonly bool _includeDeveloperPackages;
       private readonly DependencyNode _rootDependencyNode;
 
-      public DependencyResolution(IEnumerable<IDependencyResolver> resolvers, IWriter writer)
+      public DependencyResolution(IWriter writer)
       {
-         _resolvers = resolvers;
          _writer = writer;
       }
 
-      private DependencyResolution(IEnumerable<IDependencyResolver> resolvers, IWriter writer,
-         PackageManifest rootManifest, IRepository[] activeRepositories, bool includeDeveloperPackages)
+      private DependencyResolution(IWriter writer, PackageManifest rootManifest, IRepository[] activeRepositories, bool includeDeveloperPackages)
       {
-         _resolvers = resolvers;
          _writer = writer;
          _activeRepositories = activeRepositories;
          _includeDeveloperPackages = includeDeveloperPackages;
@@ -39,7 +35,7 @@ namespace EBerzosa.Pundit.Core.Resolvers
 
       public Tuple<VersionResolutionTable, DependencyNode> Resolve(PackageManifest rootManifest, IRepository[] activeRepositories, bool includeDeveloperPackages)
       {
-         return new DependencyResolution(_resolvers, _writer, rootManifest, activeRepositories, includeDeveloperPackages).Resolve();
+         return new DependencyResolution(_writer, rootManifest, activeRepositories, includeDeveloperPackages).Resolve();
       }
 
       /// <summary>
@@ -95,16 +91,15 @@ namespace EBerzosa.Pundit.Core.Resolvers
             var punditVersions = new Dictionary<NuGetVersion, SatisfyingInfo>();
 
             foreach (var repo in _activeRepositories)
-            foreach (var resolver in _resolvers)
             {
-               var versions = resolver.GetVersions(repo, node);
+               var versions = repo.GetVersions(node.UnresolvedPackage);
 
-               if (versions == null)
+                if (versions == null)
                   continue;
 
                foreach (var version in versions)
                   if (!punditVersions.ContainsKey(version))
-                     punditVersions.Add(version, new SatisfyingInfo(version, repo, resolver));
+                     punditVersions.Add(version, new SatisfyingInfo(version, repo));
             }
 
             node.SetVersions(punditVersions.Values);
@@ -127,7 +122,7 @@ namespace EBerzosa.Pundit.Core.Resolvers
             {
                try
                {
-                  manifest = node.ActiveResolver.GetManifest(node.ActiveRepository, node);
+                  manifest = node.ActiveRepository.GetManifest(node.ActiveVersionKey);
 
                   if (manifest != null)
                   {

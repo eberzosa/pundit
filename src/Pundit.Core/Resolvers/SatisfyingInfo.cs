@@ -9,15 +9,12 @@ namespace EBerzosa.Pundit.Core.Resolvers
       public NuGetVersion Version { get; set; }
 
       public IRepository Repo { get; set; }
+        
 
-      public IDependencyResolver Resolver { get; set; }
-
-
-      public SatisfyingInfo(NuGetVersion version, IRepository repo, IDependencyResolver resolver)
+      public SatisfyingInfo(NuGetVersion version, IRepository repo)
       {
          Version = version;
          Repo = repo;
-         Resolver = resolver;
       }
 
       public int CompareTo(SatisfyingInfo other)

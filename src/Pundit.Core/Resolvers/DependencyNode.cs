@@ -115,17 +115,6 @@ namespace EBerzosa.Pundit.Core.Resolvers
          }
       }
 
-      public IDependencyResolver ActiveResolver
-      {
-         get
-         {
-            if (ActiveVersion == null)
-               throw new ArgumentException("node has no active version");
-
-            return ActiveVersion.Resolver;
-         }
-      }
-
 
       public DependencyNode(DependencyNode parentNode,
          string packageId, string platform, VersionRange versionPattern, bool includeDeveloperPackages)
@@ -140,7 +129,7 @@ namespace EBerzosa.Pundit.Core.Resolvers
 
       public void MarkAsRoot(PackageManifest rootManifest)
       {
-         SetVersions(new[] {new SatisfyingInfo(rootManifest.Version, null, null)});
+         SetVersions(new[] {new SatisfyingInfo(rootManifest.Version, null)});
          SetManifest(rootManifest);
       }
       
@@ -190,7 +179,7 @@ namespace EBerzosa.Pundit.Core.Resolvers
             node._satisfyingData = new SatisfyingInfo[_satisfyingData.Length];
 
             for (int i = 0; i < node._satisfyingData.Length; i++)
-               node._satisfyingData[i] = new SatisfyingInfo(_satisfyingData[0].Version, _satisfyingData[0].Repo, _satisfyingData[0].Resolver);
+               node._satisfyingData[i] = new SatisfyingInfo(_satisfyingData[0].Version, _satisfyingData[0].Repo);
          }
 
          node._activeVersionIndex = _activeVersionIndex;
