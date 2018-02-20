@@ -45,9 +45,9 @@
     <StartupObject>EBerzosa.Pundit.CommandLine.Program</StartupObject>
   </PropertyGroup>
   <ItemGroup>
-    <Reference Include="EBerzosa.CommandLineProcess, Version=1.0.6538.27237, Culture=neutral, PublicKeyToken=cdc6b3c7115622fb, processorArchitecture=MSIL">
+    <Reference Include="EBerzosa.CommandLineProcess, Version=2.0.6615.30109, Culture=neutral, PublicKeyToken=cdc6b3c7115622fb, processorArchitecture=MSIL">
       <SpecificVersion>False</SpecificVersion>
-      <HintPath>..\..\packages\EBerzosa.CommandLineProcess.2.0.6615.30109\lib\net46\EBerzosa.CommandLineProcess.dll</HintPath>
+      <HintPath>..\..\packages\EBerzosa.CommandLineProcess.2.0.6624.22922\lib\net46\EBerzosa.CommandLineProcess.dll</HintPath>
     </Reference>
     <Reference Include="EBerzosa.Common">
       <HintPath>..\..\packages\EBerzosa.Common.1.1.6601.34981\lib\net46\EBerzosa.Common.dll</HintPath>

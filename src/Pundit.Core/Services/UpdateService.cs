@@ -7,6 +7,7 @@ using EBerzosa.Pundit.Core.Application;
 using EBerzosa.Pundit.Core.Model;
 using EBerzosa.Pundit.Core.Model.Enums;
 using EBerzosa.Pundit.Core.Model.Package;
+using EBerzosa.Pundit.Core.Package;
 using EBerzosa.Pundit.Core.Repository;
 using EBerzosa.Pundit.Core.Resolvers;
 using EBerzosa.Utils;
@@ -20,7 +21,7 @@ namespace EBerzosa.Pundit.Core.Services
 {
    public class UpdateService
    {  
-      private readonly PackageReaderFactory _packageReaderFactory;
+      private readonly PackageInstallerFactory _packageInstallerFactory;
       private readonly DependencyResolution _dependencyResolution;
 
       private readonly RepositoryFactory _repositoryFactory;
@@ -37,15 +38,15 @@ namespace EBerzosa.Pundit.Core.Services
       public bool IncludeDeveloperPackages { get; set; }
 
 
-      public UpdateService(RepositoryFactory repositoryFactory, PackageReaderFactory packageReaderFactory,
+      public UpdateService(RepositoryFactory repositoryFactory, PackageInstallerFactory packageInstallerFactory,
          DependencyResolution dependencyResolution, IWriter writer)
       {
          Guard.NotNull(repositoryFactory, nameof(repositoryFactory));
-         Guard.NotNull(packageReaderFactory, nameof(packageReaderFactory));
+         Guard.NotNull(packageInstallerFactory, nameof(packageInstallerFactory));
          Guard.NotNull(dependencyResolution, nameof(dependencyResolution));
          Guard.NotNull(writer, nameof(writer));
-         
-         _packageReaderFactory = packageReaderFactory;
+
+         _packageInstallerFactory = packageInstallerFactory;
          _dependencyResolution = dependencyResolution;
          _repositoryFactory = repositoryFactory;
          _writer = writer;
@@ -76,7 +77,7 @@ namespace EBerzosa.Pundit.Core.Services
          
          packageSpec.Validate();
 
-         var repos = _repositoryFactory.GetRepos(true, !LocalReposOnly).ToArray();
+         var repos = _repositoryFactory.GetEnabledRepos(true, !LocalReposOnly).ToArray();
 
          _writer.BeginWrite().Text("Resolving...");
          var resolutionResult = _dependencyResolution.Resolve(packageSpec, repos, IncludeDeveloperPackages);
@@ -99,7 +100,7 @@ namespace EBerzosa.Pundit.Core.Services
 
          var currentPath = Path.GetDirectoryName(assembly.Location);
 
-         if (!Install(resolutionResult, repos, packageSpec, currentPath))
+         if (!Install(resolutionResult, packageSpec, currentPath))
             return true;
 
          var oldPath = Path.Combine(currentPath, "old");
@@ -131,20 +132,20 @@ namespace EBerzosa.Pundit.Core.Services
          return true;
       }
       
-      private bool Install(Tuple<VersionResolutionTable, DependencyNode> resolutionResult, IRepository[] repos, PackageSpec packageSpecSpecs, string folder)
+      private bool Install(Tuple<VersionResolutionTable, DependencyNode> resolutionResult, PackageSpec packageSpecSpecs, string folder)
       {
          var installed = false;
 
-         var localRepo = new LocalRepository(_repositoryFactory.GetLocalRepo());
-         localRepo.PackageDownloadToLocalRepositoryStarted += LocalRepository_PackageDownloadToLocalRepositoryStarted;
-         localRepo.PackageDownloadToLocalRepositoryFinished += LocalRepositoryOnPackageDownloadToLocalRepositoryFinished;
+         var cacheRepository = new CacheRepository(_repositoryFactory.GetCacheRepos());
+         cacheRepository.PackageDownloadToCacheRepositoryStarted += CacheRepositoryPackageDownloadToCacheRepositoryStarted;
+         cacheRepository.PackageDownloadToCacheRepositoryFinished += CacheRepositoryOnPackageDownloadToCacheRepositoryFinished;
 
-         localRepo.DownloadLocally(resolutionResult.Item1.GetSatisfyingInfos());
+         cacheRepository.DownloadLocally(resolutionResult.Item1.GetSatisfyingInfos());
 
-         localRepo.PackageDownloadToLocalRepositoryStarted -= LocalRepository_PackageDownloadToLocalRepositoryStarted;
-         localRepo.PackageDownloadToLocalRepositoryFinished -= LocalRepositoryOnPackageDownloadToLocalRepositoryFinished;
+         cacheRepository.PackageDownloadToCacheRepositoryStarted -= CacheRepositoryPackageDownloadToCacheRepositoryStarted;
+         cacheRepository.PackageDownloadToCacheRepositoryFinished -= CacheRepositoryOnPackageDownloadToCacheRepositoryFinished;
 
-         using (var installer = new PackageInstaller(_packageReaderFactory, folder, resolutionResult.Item1, packageSpecSpecs, repos.First()))
+         using (var installer = _packageInstallerFactory.GetInstaller(folder, resolutionResult.Item1, packageSpecSpecs))
          {
             installer.BeginInstallPackage += BeginInstallPackage;
             installer.FinishInstallPackage += FinishInstallPackage;
@@ -176,12 +177,12 @@ namespace EBerzosa.Pundit.Core.Services
          return installed;
       }
       
-      private void LocalRepository_PackageDownloadToLocalRepositoryStarted(object sender, PackageKeyEventArgs e)
+      private void CacheRepositoryPackageDownloadToCacheRepositoryStarted(object sender, PackageKeyEventArgs e)
       {
          _writer.Text($"Downloading {e.PackageKey.PackageId}... ");
       }
 
-      private void LocalRepositoryOnPackageDownloadToLocalRepositoryFinished(object sender, PackageKeyEventArgs e)
+      private void CacheRepositoryOnPackageDownloadToCacheRepositoryFinished(object sender, PackageKeyEventArgs e)
       {
          if (e.Succeeded)
             _writer.Success("ok");

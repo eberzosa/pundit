@@ -18,32 +18,29 @@ namespace EBerzosa.Pundit.CommandLine.Controllers
 
       public ExitCode Execute(string manifest, string configuration, bool localOnly, bool force, bool dryRun, bool includeDeveloperPackages)
       {
-         SafeExecute(() =>
-         {
-            var service = _serviceFactory.GetResolveService();
+         var service = _serviceFactory.GetResolveService();
 
-            service.ManifestFileOrPath = manifest;
+         service.ManifestFileOrPath = manifest;
 
-            if (configuration == null || BuildConfiguration.Release.ToString().Equals(configuration, StringComparison.OrdinalIgnoreCase))
-               service.Configuration = BuildConfiguration.Release;
+         if (configuration == null || BuildConfiguration.Release.ToString().Equals(configuration, StringComparison.OrdinalIgnoreCase))
+            service.Configuration = BuildConfiguration.Release;
 
-            else if (BuildConfiguration.Debug.ToString().Equals(configuration, StringComparison.OrdinalIgnoreCase))
-               service.Configuration = BuildConfiguration.Debug;
+         else if (BuildConfiguration.Debug.ToString().Equals(configuration, StringComparison.OrdinalIgnoreCase))
+            service.Configuration = BuildConfiguration.Debug;
 
-            else if (BuildConfiguration.Any.ToString().Equals(configuration, StringComparison.OrdinalIgnoreCase))
-               service.Configuration = BuildConfiguration.Any;
+         else if (BuildConfiguration.Any.ToString().Equals(configuration, StringComparison.OrdinalIgnoreCase))
+            service.Configuration = BuildConfiguration.Any;
 
-            else
-               throw new NotSupportedException($"Configuration '{configuration}' is not supported.");
+         else
+            throw new NotSupportedException($"Configuration '{configuration}' is not supported.");
 
-            service.LocalReposOnly = localOnly;
-            service.Force = force;
-            service.DryRun = dryRun;
-            service.IncludeDeveloperPackages = includeDeveloperPackages;
+         service.LocalReposOnly = localOnly;
+         service.Force = force;
+         service.DryRun = dryRun;
+         service.IncludeDeveloperPackages = includeDeveloperPackages;
 
-            service.Resolve();
-         });
-
+         service.Resolve();
+       
          return ExitCode.Success;
       }
    }

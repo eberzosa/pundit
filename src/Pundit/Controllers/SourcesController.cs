@@ -22,39 +22,36 @@ namespace EBerzosa.Pundit.CommandLine.Controllers
 
       public ExitCode Info()
       {
-         SafeExecute(() =>
+         Output.Title($"Repositories ({_repositoryFactory.GetRegisteredRepositories().TotalCount} found):");
+
+         var first = true;
+
+         Output.BeginColumns(new int?[] {10, null});
+
+         foreach (var rr in _repositoryFactory.GetRegisteredRepositories().RepositoriesArray)
          {
-            Output.Title($"Repositories ({_repositoryFactory.GetRegisteredRepositories().TotalCount} found):");
+            if (!first)
+               Output.Empty();
+            else
+               first = false;
 
-            var first = true;
+            Output.Text("Name:").Text(rr.Name);
 
-            Output.BeginColumns(new int?[] {10, null});
+            //GlamTerm.Write("enabled:".PadRight(15));
+            //GlamTerm.WriteLine(rr.IsEnabled ? ConsoleColor.Green : ConsoleColor.Red, rr.IsEnabled ? "yes" : "no");
 
-            foreach (var rr in _repositoryFactory.GetRegisteredRepositories().RepositoriesArray)
-            {
-               if (!first)
-                  Output.Empty();
-               else
-                  first = false;
+            Output.Text("Publish:");
 
-               Output.Text("Name:").Text(rr.Name);
+            if (rr.UseForPublishing)
+               Output.Success("yes");
+            else
+               Output.Error("no");
 
-               //GlamTerm.Write("enabled:".PadRight(15));
-               //GlamTerm.WriteLine(rr.IsEnabled ? ConsoleColor.Green : ConsoleColor.Red, rr.IsEnabled ? "yes" : "no");
+            Output.Text("Url:").Text(rr.Uri);
+         }
 
-               Output.Text("Publish:");
-
-               if (rr.UseForPublishing)
-                  Output.Success("yes");
-               else
-                  Output.Error("no");
-
-               Output.Text("Url:").Text(rr.Uri);
-            }
-
-            Output.EndColumns();
-         });
-
+         Output.EndColumns();
+      
          return ExitCode.Success;
       }
    }

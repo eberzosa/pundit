@@ -1,4 +1,5 @@
-﻿using System.Xml.Serialization;
+﻿using System.ComponentModel;
+using System.Xml.Serialization;
 
 namespace EBerzosa.Pundit.Core.Repository.Xml
 {
@@ -12,5 +13,11 @@ namespace EBerzosa.Pundit.Core.Repository.Xml
 
       [XmlAttribute("publish")]
       public bool UseForPublishing { get; set; }
+
+      [XmlAttribute("disabled")]
+      public bool Disabled { get; set; }
+
+      [XmlAttribute("type")]
+      public XmlRepositoryType Type { get; set; }
    }
 }

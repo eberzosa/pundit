@@ -1,4 +1,5 @@
-﻿using System.IO;
+﻿using System.Collections.Generic;
+using System.IO;
 using NuGet.Versioning;
 using Pundit.Core.Model;
 
@@ -16,12 +17,12 @@ namespace EBerzosa.Pundit.Core.Repository
       
       Stream Download(PackageKey key);
 
-      NuGetVersion[] GetVersions(UnresolvedPackage package);
+      ICollection<NuGetVersion> GetVersions(UnresolvedPackage package);
 
       PackageManifest GetManifest(PackageKey key);
 
-      bool[] PackagesExist(PackageKey[] packages);
+      bool PackageExist(PackageKey package);
 
-      PackageKey[] Search(string substring);
+      IEnumerable<PackageKey> Search(string substring);
    }
 }

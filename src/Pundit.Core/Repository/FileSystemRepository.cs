@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.IO;
+using System.Linq;
 using EBerzosa.Pundit.Core.Application;
 using EBerzosa.Pundit.Core.Package;
 using EBerzosa.Utils;
@@ -70,19 +71,15 @@ namespace EBerzosa.Pundit.Core.Repository
          return File.OpenRead(fullPath);
       }
 
-      public NuGetVersion[] GetVersions(UnresolvedPackage package)
+      public ICollection<NuGetVersion> GetVersions(UnresolvedPackage package)
       {
-         var versions = new List<NuGetVersion>();
-
          var filePattern = new PackageFileName(package).SearchFileName;
 
-         foreach (var file in new DirectoryInfo(RootPath).GetFiles(filePattern))
-         {
-            var key = PackageFileName.GetPackageKeyFromFileName(file.Name);
-            versions.Add(key.Version);
-         }
+         if (filePattern == null)
+            return new NuGetVersion[0];
 
-         return versions.ToArray();
+         return new DirectoryInfo(RootPath).GetFiles(filePattern)
+            .Select(i => PackageFileName.GetPackageKeyFromFileName(i.Name).Version).ToArray();
       }
 
       public PackageManifest GetManifest(PackageKey key)
@@ -96,24 +93,13 @@ namespace EBerzosa.Pundit.Core.Repository
             return reader.ReadManifest();
       }
 
-      public bool[] PackagesExist(PackageKey[] packages)
+      public bool PackageExist(PackageKey package)
       {
-         var results = new bool[packages.Length];
-
-         for (int i = 0; i < packages.Length; i++)
-         {
-            string fullPath = Path.Combine(RootPath, new PackageFileName(packages[i]).FileName);
-
-            results[i] = File.Exists(fullPath);
-         }
-
-         return results;
+         return File.Exists(Path.Combine(RootPath, new PackageFileName(package).FileName));
       }
 
-      public PackageKey[] Search(string substring)
+      public IEnumerable<PackageKey> Search(string substring)
       {
-         var result = new List<PackageKey>();
-
          foreach (var file in new DirectoryInfo(RootPath).GetFiles("*" + substring + "*"))
          {
             PackageKey key = null;
@@ -127,10 +113,8 @@ namespace EBerzosa.Pundit.Core.Repository
             }
 
             if (key != null)
-               result.Add(key);
+               yield return key;
          }
-
-         return result.ToArray();
       }
    }
 }

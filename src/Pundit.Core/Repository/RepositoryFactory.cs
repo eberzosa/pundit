@@ -6,8 +6,8 @@ using EBerzosa.Pundit.Core.Application;
 using EBerzosa.Pundit.Core.Repository.Xml;
 using EBerzosa.Pundit.Core.Serializers;
 using EBerzosa.Utils;
-using EBerzosa.Utils.Extensions;
 using Mapster;
+using NuGet.Configuration;
 
 namespace EBerzosa.Pundit.Core.Repository
 {
@@ -40,11 +40,15 @@ namespace EBerzosa.Pundit.Core.Repository
       }
 
 
-      public IRepository GetLocalRepo()
+      public ICollection<IRepository> GetCacheRepos()
       {
-         return CreateRepo(new RegisteredRepository {Uri = _cacheRepoPath, Name = "local", UseForPublishing = true});
+         return new[]
+         {
+            CreateRepo(new RegisteredRepository {Uri = _cacheRepoPath, Name = "local", UseForPublishing = true}),
+            CreateRepo(new RegisteredRepository {Uri = SettingsUtility.GetGlobalPackagesFolder(NullSettings.Instance), Name = "nugetlocal", UseForPublishing = false, Type = RepositoryType.NuGet})
+         };
       }
-
+      
       public IRepository GetRepo(string name)
       {
          var repo = GetRegistered().RepositoriesArray.FirstOrDefault(r => r.Name.Equals(name, StringComparison.OrdinalIgnoreCase));
@@ -52,13 +56,14 @@ namespace EBerzosa.Pundit.Core.Repository
          return repo == null ? null : CreateRepo(repo);
       }
 
-      public IEnumerable<IRepository> GetRepos(bool includeCache, bool includeOther)
+      public IEnumerable<IRepository> GetEnabledRepos(bool includeCache, bool includeOther)
       {
          if (includeCache)
-            yield return GetLocalRepo();
+            foreach (var repository in GetCacheRepos())
+               yield return repository;
 
          if (includeOther)
-            foreach (var repository in GetRegistered().RepositoriesArray.Select(CreateRepo))
+            foreach (var repository in GetRegistered().RepositoriesArray.Where(r => !r.Disabled).Select(CreateRepo))
                yield return repository;
       }
 
@@ -70,7 +75,10 @@ namespace EBerzosa.Pundit.Core.Repository
 
       private IRepository CreateRepo(RegisteredRepository repo)
       {
-         return new FileSystemRepository(_packageReaderFactory, repo.Uri, repo.Name) {CanPublish = repo.UseForPublishing};
+          if (repo.Type == RepositoryType.NuGet)
+              return new NuGetFileSystemRepo(repo.Uri, repo.Name) {CanPublish = repo.UseForPublishing};
+
+          return new FileSystemRepository(_packageReaderFactory, repo.Uri, repo.Name) {CanPublish = repo.UseForPublishing};
       }
 
       private RegisteredRepositories GetRegistered()

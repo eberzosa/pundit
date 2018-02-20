@@ -4,7 +4,7 @@ using NuGet.Versioning;
 
 namespace EBerzosa.Pundit.Core.Resolvers
 {
-   public class SatisfyingInfo : IComparable<SatisfyingInfo>
+   public class SatisfyingInfo : IComparable<SatisfyingInfo>, IComparable, IEquatable<SatisfyingInfo>
    {
       public NuGetVersion Version { get; set; }
 
@@ -17,9 +17,14 @@ namespace EBerzosa.Pundit.Core.Resolvers
          Repo = repo;
       }
 
-      public int CompareTo(SatisfyingInfo other)
-      {
-         return Version.CompareTo(other.Version);
-      }
+      public int CompareTo(SatisfyingInfo other) => Version.CompareTo(other.Version);
+
+      public int CompareTo(object obj) => Version.CompareTo(obj);
+
+      public bool Equals(SatisfyingInfo other) => Version.Equals(other?.Version);
+
+      public override string ToString() => Version.ToString();
+
+      public override int GetHashCode() => Version.GetHashCode();
    }
 }

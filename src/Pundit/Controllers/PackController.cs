@@ -21,18 +21,15 @@ namespace EBerzosa.Pundit.CommandLine.Controllers
 
       public ExitCode Execute(string manifest, string outputPath, string versionString, bool isDeveloperPackage)
       {
-         SafeExecute(() =>
-         {
-            var service = _serviceFactory.GetPackService();
+         var service = _serviceFactory.GetPackService();
             
-            service.Version = versionString;
-            service.IsDeveloperPackage = isDeveloperPackage;
+         service.Version = versionString;
+         service.IsDeveloperPackage = isDeveloperPackage;
 
-            service.ManifestFileOrPath = manifest;
-            service.OutputPath = outputPath;
+         service.ManifestFileOrPath = manifest;
+         service.OutputPath = outputPath;
 
-            service.Pack();
-         });
+         service.Pack();
 
          return ExitCode.Success;
       }

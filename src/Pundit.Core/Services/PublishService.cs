@@ -47,7 +47,7 @@ namespace EBerzosa.Pundit.Core.Services
          }
          else
          {
-            publishTo = _repositoryFactory.GetRepos(true, true).Where(r => r.CanPublish).ToArray();
+            publishTo = _repositoryFactory.GetEnabledRepos(true, true).Where(r => r.CanPublish).ToArray();
          }
 
          if (publishTo.Length == 0)

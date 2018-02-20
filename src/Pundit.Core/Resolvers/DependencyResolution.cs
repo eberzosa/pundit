@@ -27,8 +27,9 @@ namespace EBerzosa.Pundit.Core.Resolvers
          _writer = writer;
          _activeRepositories = activeRepositories;
          _includeDeveloperPackages = includeDeveloperPackages;
-         
-         var versionRange = VersionRange.Parse(rootManifest.Version.OriginalVersion);
+
+         var version = new NuGetVersion(rootManifest.Version.OriginalVersion);
+         var versionRange = new VersionRange(version, true, version, true, null, rootManifest.Version.OriginalVersion);
          _rootDependencyNode = new DependencyNode(null, rootManifest.PackageId, rootManifest.Platform, versionRange, _includeDeveloperPackages);
          _rootDependencyNode.MarkAsRoot(rootManifest);
       }
@@ -194,11 +195,11 @@ namespace EBerzosa.Pundit.Core.Resolvers
          foreach (DependencyNode node in found)
          {
             if (sb.Length != 0) sb.AppendLine();
-
+            
             sb.Append("dependency: [");
             sb.Append(node.Path);
             sb.Append("], version: [");
-            sb.Append(node.VersionPattern);
+            sb.Append(GetPrintableVersion(node.VersionPattern));
             sb.Append("], resolved to: [");
 
             bool isFirst = true;
@@ -216,6 +217,17 @@ namespace EBerzosa.Pundit.Core.Resolvers
          }
 
          return sb.ToString();
+      }
+
+      public string GetPrintableVersion(VersionRange range)
+      {
+         if (range.IsFloating)
+            return range.Float.ToString();
+
+         if (range.MinVersion == range.MaxVersion)
+            return range.MinVersion.ToString();
+
+         return range.PrettyPrint();
       }
    }
 }

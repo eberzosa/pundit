@@ -2,7 +2,9 @@
 using System.Runtime.Serialization;
 using EBerzosa.Pundit.Core;
 using EBerzosa.Pundit.Core.Package;
+using EBerzosa.Pundit.Core.Repository;
 using EBerzosa.Utils;
+using NuGet.Packaging.Core;
 using NuGet.Versioning;
 using Pundit.Core.Utils;
 
@@ -19,6 +21,7 @@ namespace Pundit.Core.Model
       
       [DataMember]
       public VersionRange VersionPattern { get; set; }
+
 
       public UnresolvedPackage(string packageId, string platform, VersionRange versionRange)
       {

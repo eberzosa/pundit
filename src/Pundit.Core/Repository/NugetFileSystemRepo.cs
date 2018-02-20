@@ -17,106 +17,115 @@ using PackageDependency = EBerzosa.Pundit.Core.Model.Package.PackageDependency;
 
 namespace EBerzosa.Pundit.Core.Repository
 {
-    class NuGetFileSystemRepo : IRepository
-    {
-        private readonly SourceRepository _sourceRepository;
+   internal class NuGetFileSystemRepo : IRepository
+   {
+      private readonly SourceRepository _sourceRepository;
 
-        public string Name { get; }
+      public string Name { get; }
 
-        public string RootPath { get; }
+      public string RootPath { get; }
 
-        public bool CanPublish { get; set; }
-
-
-        public NuGetFileSystemRepo(string rootPath, string name)
-        {
-            Guard.NotNull(rootPath, nameof(rootPath));
-
-            if (!Directory.Exists(rootPath))
-                throw new ArgumentException($"Root directory '{rootPath}' does not exist");
-            
-            RootPath = rootPath;
-            Name = name;
-
-            var providers = new List<Lazy<INuGetResourceProvider>>();
-            providers.AddRange(NuGet.Protocol.Core.Types.Repository.Provider.GetCoreV3());
-
-            _sourceRepository = new SourceRepository(new PackageSource(rootPath), providers);
-        }
+      public bool CanPublish { get; set; }
 
 
-        public void Publish(Stream packageStream)
-        {
-            throw new NotImplementedException();
-        }
+      public NuGetFileSystemRepo(string rootPath, string name)
+      {
+         Guard.NotNull(rootPath, nameof(rootPath));
 
-        public Stream Download(PackageKey key)
-        {
-            throw new NotImplementedException();
-        }
+         if (!Directory.Exists(rootPath))
+            throw new ArgumentException($"Root directory '{rootPath}' does not exist");
 
-        public NuGetVersion[] GetVersions(UnresolvedPackage package)
-        {
-            var findLocalPackagesResource = _sourceRepository.GetResource<FindLocalPackagesResource>();
+         RootPath = rootPath;
+         Name = name;
 
-            var packageInfos = findLocalPackagesResource.FindPackagesById(package.PackageId, new NullLogger(), CancellationToken.None);
+         var providers = new List<Lazy<INuGetResourceProvider>>();
+         providers.AddRange(NuGet.Protocol.Core.Types.Repository.Provider.GetCoreV3());
 
-            return packageInfos.Where(p => package.VersionPattern.Satisfies(p.Identity.Version))
-                .Select(p => p.Identity.Version).ToArray();
-        }
+         _sourceRepository = new SourceRepository(new PackageSource(rootPath), providers);
+      }
 
-        public PackageManifest GetManifest(PackageKey key)
-        {
-            var packageIdentity = new PackageIdentity(key.PackageId, NuGetVersion.Parse(key.VersionString));
 
-            var packagesResource = _sourceRepository.GetResource<PackageMetadataResource>();
-            var packageInfo = packagesResource.GetMetadataAsync(packageIdentity, new NullLogger(), CancellationToken.None).Result;
+      public void Publish(Stream packageStream)
+      {
+         throw new NotImplementedException();
+      }
 
-            var projectFramework = NuGetFramework.ParseFolder(key.Platform);
+      public Stream Download(PackageKey key)
+      {
+         throw new NotImplementedException();
+      }
 
-            PackageDependencyGroup dependencies = null;
-            if (packageInfo.DependencySets.Any())
-            {
-                dependencies = NuGetFrameworkUtility.GetNearest(packageInfo.DependencySets, projectFramework);
+      public ICollection<NuGetVersion> GetVersions(UnresolvedPackage package)
+      {
+         var findLocalPackagesResource = _sourceRepository.GetResource<FindLocalPackagesResource>();
 
-                if (dependencies == null)
-                    throw new ApplicationException(
-                        $"Could not find compatible dependencies for '{packageInfo.Identity}' and framework '{projectFramework}'");
-            }
+         var packageInfos = findLocalPackagesResource.FindPackagesById(package.PackageId, new NullLogger(), CancellationToken.None);
 
-            var manifest = new PackageManifest
-            {
-                PackageId = packageInfo.Identity.Id,
-                Version = packageInfo.Identity.Version,
-                Dependencies = new List<Model.Package.PackageDependency>()
-            };
+         return packageInfos.Where(p => package.VersionPattern.IsFloating
+               ? package.VersionPattern.Float.Satisfies(p.Identity.Version)
+               : package.VersionPattern.Satisfies(p.Identity.Version))
+            .Select(p => p.Identity.Version).ToArray();
+      }
+
+      public PackageManifest GetManifest(PackageKey key)
+      {
+         var packageIdentity = new PackageIdentity(key.PackageId, NuGetVersion.Parse(key.VersionString));
+
+         var packagesResource = _sourceRepository.GetResource<PackageMetadataResource>();
+         var packageInfo = packagesResource.GetMetadataAsync(packageIdentity, new NullLogger(), CancellationToken.None).Result;
+
+         var projectFramework = NuGetFramework.ParseFolder(key.Platform);
+
+         PackageDependencyGroup dependencies = null;
+         if (packageInfo.DependencySets.Any())
+         {
+            dependencies = NuGetFrameworkUtility.GetNearest(packageInfo.DependencySets, projectFramework);
 
             if (dependencies == null)
-                return manifest;
+               throw new ApplicationException($"Could not find compatible dependencies for '{packageInfo.Identity}' and framework '{projectFramework}'");
+         }
 
-            foreach (var dependency in dependencies.Packages)
-                manifest.Dependencies.Add(
-                    new PackageDependency(dependency.Id, dependency.VersionRange) { Platform = dependencies.TargetFramework.GetShortFolderName() });
+         var manifest = new PackageManifest
+         {
+            PackageId = packageInfo.Identity.Id,
+            Version = packageInfo.Identity.Version,
+            Dependencies = new List<Model.Package.PackageDependency>(),
+            Platform = dependencies?.TargetFramework.GetShortFolderName()
+         };
 
+         if (dependencies == null)
             return manifest;
-        }
 
-        public bool[] PackagesExist(PackageKey[] packages)
-        {
-            throw new NotImplementedException();
-        }
+         foreach (var dependency in dependencies.Packages)
+            manifest.Dependencies.Add(new PackageDependency(dependency.Id, dependency.VersionRange) {Platform = manifest.Platform});
 
-        public PackageKey[] Search(string substring)
-        {
-            throw new NotImplementedException();
-        }
+         return manifest;
+      }
 
-        private FileSystemRepository GetFsRepoOrDie(IRepository repo)
-        {
-            if (repo is FileSystemRepository fsRepo)
-                return fsRepo;
+      public bool PackageExist(PackageKey package)
+      {
+         var findLocalPackagesResource = _sourceRepository.GetResource<PackageMetadataResource>();
 
-            throw new ApplicationException("Only FileSystem repos are supported");
-        }
-    }
+         var packageIdentity = new PackageIdentity(package.PackageId, package.Version);
+         return findLocalPackagesResource.GetMetadataAsync(packageIdentity, new NullLogger(), CancellationToken.None).Result != null;
+      }
+
+      public IEnumerable<PackageKey> Search(string substring)
+      {
+         var searchResource = _sourceRepository.GetResource<PackageSearchResource>();
+         var results = searchResource.SearchAsync(substring, new SearchFilter(true), 0, int.MaxValue, new NullLogger(), CancellationToken.None)
+            .Result;
+
+         foreach (var result in results)
+            yield return new PackageKey(result.Identity.Id, result.Identity.Version, null);
+      }
+
+      private FileSystemRepository GetFsRepoOrDie(IRepository repo)
+      {
+         if (repo is FileSystemRepository fsRepo)
+            return fsRepo;
+
+         throw new ApplicationException("Only FileSystem repos are supported");
+      }
+   }
 }

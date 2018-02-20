@@ -19,16 +19,13 @@ namespace EBerzosa.Pundit.CommandLine.Controllers
 
       public ExitCode NuGetToPundit(string sourceFile, string outputPath, string framework)
       {
-         SafeExecute(() =>
-         {
-            var service = _serviceFactory.GetConvertService();
+         var service = _serviceFactory.GetConvertService();
             
-            service.SourcePath = sourceFile;
-            service.DestinationFolder = outputPath;
-            service.Framework = framework;
+         service.SourcePath = sourceFile;
+         service.DestinationFolder = outputPath;
+         service.Framework = framework;
 
-            service.NuGetToPundit();
-         });
+         service.NuGetToPundit();
 
          return ExitCode.Success;
       }

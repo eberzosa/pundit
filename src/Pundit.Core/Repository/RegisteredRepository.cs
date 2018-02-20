@@ -5,9 +5,13 @@
       public string Name { get; set; }
 
       public string Uri { get; set; }
-      
+
+      public RepositoryType Type { get; set; }
+
+      public bool Disabled { get; set; }
+
       public bool UseForPublishing { get; set; }
-      
+
       public override string ToString() => Name;
    }
 }

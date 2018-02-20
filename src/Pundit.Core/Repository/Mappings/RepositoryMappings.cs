@@ -2,20 +2,22 @@
 
 namespace EBerzosa.Pundit.Core.Repository.Mappings
 {
-   public class RepositoryMappings
-   {
-      private static bool _registered;
+    public class RepositoryMappings
+    {
+        private static bool _registered;
 
-      public static void Initalise()
-      {
-         if (_registered)
-            return;
+        public static void Initalise()
+        {
+            if (_registered)
+                return;
 
-         _registered = true;
+            _registered = true;
 
-         Mapster.TypeAdapterConfig<XmlRegisteredRepositories, RegisteredRepositories>.NewConfig();
+            Mapster.TypeAdapterConfig<XmlRegisteredRepositories, RegisteredRepositories>.NewConfig();
 
-         Mapster.TypeAdapterConfig<XmlRegisteredRepository, RegisteredRepository>.NewConfig();
-      }
-   }
+            Mapster.TypeAdapterConfig<XmlRegisteredRepository, RegisteredRepository>.NewConfig();
+
+            Mapster.TypeAdapterConfig<XmlRepositoryType, RepositoryType>.NewConfig();
+        }
+    }
 }

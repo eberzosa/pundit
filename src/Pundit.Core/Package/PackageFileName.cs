@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Collections.Generic;
 using System.Text.RegularExpressions;
 using NuGet.Versioning;
 using Pundit.Core.Model;
@@ -84,8 +85,20 @@ namespace EBerzosa.Pundit.Core.Package
       private string ToPunditFileVersion(NuGetVersion version) 
          => version.Major + "." + version.Minor + "." + version.Patch + "-" + (version.Release ?? "") + version.Revision;
 
-      private string ToPunditFileSearchVersion(VersionRange range)
+      private string ToPunditFileSearchVersion(VersionRange range) 
+         => range.IsFloating ? FromFloating(range.Float) : FromRegular(range);
+      
+      private string NotNullOrThrow(string value, string name) 
+         => value ?? throw new InvalidOperationException($"The current status does not support '{name}'");
+
+      private string FromFloating(FloatRange range) => range.ToString();
+
+      private string FromRegular(VersionRange range)
       {
+         // If there is no max version we only search for 'that' version in Pundit repos
+         if (range.MaxVersion == null)
+            return range.MinVersion.OriginalVersion;
+
          if (range.MinVersion == range.MaxVersion)
             return range.MinVersion.OriginalVersion;
 
@@ -97,11 +110,8 @@ namespace EBerzosa.Pundit.Core.Package
 
          if (range.MinVersion.Patch != range.MaxVersion.Patch)
             return range.MinVersion.Major + "." + range.MinVersion.Minor + "." + range.MinVersion.Patch + "-*";
-         
+
          throw new NotSupportedException($"VersionRange  '{range}' is not supported");
       }
-
-      private string NotNullOrThrow(string value, string name) 
-         => value ?? throw new InvalidOperationException($"The current status does not support '{name}'");
    }
 }

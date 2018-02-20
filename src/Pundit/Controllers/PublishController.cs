@@ -18,15 +18,11 @@ namespace EBerzosa.Pundit.CommandLine.Controllers
       public ExitCode Execute(string package, string repository)
       {
          Guard.NotNull(package, nameof(package));
+         
+         var service = _serviceFactory.GetPublishService();
+         service.Repository = repository;
 
-         SafeExecute(() =>
-         {
-            var service = _serviceFactory.GetPublishService();
-            service.Repository = repository;
-
-            service.Publish(package);
-
-         });
+         service.Publish(package);
 
          return ExitCode.Success;
       }

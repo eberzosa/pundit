@@ -6,18 +6,20 @@ using EBerzosa.Pundit.Core.Application;
 using EBerzosa.Pundit.Core.Model.Enums;
 using EBerzosa.Pundit.Core.Model.Package;
 using EBerzosa.Pundit.Core.Repository;
+using EBerzosa.Utils;
+using Pundit.Core.Application;
 using Pundit.Core.Model;
 using Pundit.Core.Model.EventArguments;
 
-namespace Pundit.Core.Application
+namespace EBerzosa.Pundit.Core.Package
 {
-   public class PackageInstaller : IDisposable
+   public class PackageInstaller : IPackageInstaller
    {
       private readonly PackageReaderFactory _packageReaderFactory;
       private readonly string _rootDirectory;
       private readonly VersionResolutionTable _versionTable;
       private readonly PackageSpec _manifest;
-      private readonly IRepository _localRepository;
+      private readonly ICollection<IRepository> _cacheRepositories;
       private InstalledPackagesIndex _index;
       private bool _indexCommitted;
 
@@ -30,19 +32,19 @@ namespace Pundit.Core.Application
       public event EventHandler<PackageKeyDiffEventArgs> FinishInstallPackage;
 
       public PackageInstaller(PackageReaderFactory packageReaderFactory, string rootDirectory, VersionResolutionTable versionTable,
-         PackageSpec manifest,
-         IRepository localRepository)
+         PackageSpec manifest, ICollection<IRepository> cacheRepositories)
       {
-         if (rootDirectory == null) throw new ArgumentNullException("rootDirectory");
-         if (versionTable == null) throw new ArgumentNullException("versionTable");
-         if (manifest == null) throw new ArgumentNullException("manifest");
-         if (localRepository == null) throw new ArgumentNullException("localRepository");
-
+         Guard.NotNull(packageReaderFactory, nameof(packageReaderFactory));
+         Guard.NotNull(rootDirectory, nameof(rootDirectory));
+         Guard.NotNull(versionTable, nameof(rootDirectory));
+         Guard.NotNull(manifest, nameof(rootDirectory));
+         Guard.NotNull(cacheRepositories, nameof(rootDirectory));
+         
          _packageReaderFactory = packageReaderFactory;
          _rootDirectory = rootDirectory;
          _versionTable = versionTable;
          _manifest = manifest;
-         _localRepository = localRepository;
+         _cacheRepositories = cacheRepositories;
 
          _libFolderPath = Path.Combine(rootDirectory, "lib");
          _includeFolderPath = Path.Combine(rootDirectory, "include");
@@ -144,24 +146,24 @@ namespace Pundit.Core.Application
 
       private void Install(PackageKeyDiff pck, PackageDependency originalDependency, BuildConfiguration configuration)
       {
-         //if(!_index.IsInstalled(pck))
-         //{
-            using (Stream s = _localRepository.Download(pck))
-            {
-               using (PackageReader reader = _packageReaderFactory.Get(s))
-               {
-                  if(BeginInstallPackage != null)
-                     BeginInstallPackage(this, new PackageKeyDiffEventArgs(pck, true));
+         foreach (var repository in _cacheRepositories)
+         {
+            if (!repository.PackageExist(pck))
+               continue;
 
-                  reader.InstallTo(_rootDirectory, originalDependency, configuration);
-               }
+            using (var s = repository.Download(pck))
+            using (var reader = _packageReaderFactory.Get(s))
+            {
+               BeginInstallPackage?.Invoke(this, new PackageKeyDiffEventArgs(pck, true));
+               reader.InstallTo(_rootDirectory, originalDependency, configuration);
             }
 
             _index.Install(pck);
 
-            if(FinishInstallPackage != null)
-               FinishInstallPackage(this, new PackageKeyDiffEventArgs(pck, true));
-         //}
+            FinishInstallPackage?.Invoke(this, new PackageKeyDiffEventArgs(pck, true));
+
+            break;
+         }
       }
 
       ///<summary>

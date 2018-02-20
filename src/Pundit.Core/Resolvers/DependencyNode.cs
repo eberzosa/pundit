@@ -28,6 +28,9 @@ namespace EBerzosa.Pundit.Core.Resolvers
 
       public IEnumerable<DependencyNode> Children => _children;
 
+      // This is hardcoded as a temp hack
+      public bool MustBeNuGet => _parentNode.ActiveRepository is NuGetFileSystemRepo;
+         
       public string Path
       {
          get

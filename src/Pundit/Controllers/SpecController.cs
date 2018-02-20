@@ -20,7 +20,7 @@ namespace EBerzosa.Pundit.CommandLine.Controllers
 
       public ExitCode Execute()
       {
-         SafeExecute(() => _serviceFactory.GetSpecService().Execute());
+         _serviceFactory.GetSpecService().Execute();
          
          return ExitCode.Success;
       }

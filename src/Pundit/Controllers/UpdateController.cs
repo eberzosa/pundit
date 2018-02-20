@@ -19,16 +19,13 @@ namespace EBerzosa.Pundit.CommandLine.Controllers
 
       public ExitCode Execute(string configuration, bool localOnly, bool force, bool dryRun, bool includeDeveloperPackages)
       {
-         SafeExecute(() =>
-         {
-            var service = _serviceFactory.GetUpdateService();
-            service.LocalReposOnly = localOnly;
-            service.Force = force;
-            service.DryRun = dryRun;
-            service.IncludeDeveloperPackages = includeDeveloperPackages;
+         var service = _serviceFactory.GetUpdateService();
+         service.LocalReposOnly = localOnly;
+         service.Force = force;
+         service.DryRun = dryRun;
+         service.IncludeDeveloperPackages = includeDeveloperPackages;
 
-            service.Execute();
-         });
+         service.Execute();
 
          return ExitCode.Success;
       }

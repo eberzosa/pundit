@@ -18,16 +18,13 @@ namespace EBerzosa.Pundit.CommandLine.Controllers
       public ExitCode Execute(string searchText, bool localRepoOnly, bool xml)
       {
          Guard.NotNull(searchText, nameof(searchText));
+         
+         var service = _serviceFactory.GetSearchService();
+         service.LocalRepoOnly = localRepoOnly;
+         service.ToXml = xml;
 
-         SafeExecute(() =>
-         {
-            var service = _serviceFactory.GetSearchService();
-            service.LocalRepoOnly = localRepoOnly;
-            service.ToXml = xml;
-
-            service.Search(searchText);
-         });
-
+         service.Search(searchText);
+         
          return ExitCode.Success;
       }
    }
