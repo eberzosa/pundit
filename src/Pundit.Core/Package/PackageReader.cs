@@ -4,13 +4,14 @@ using EBerzosa.Pundit.Core.Model.Package;
 using EBerzosa.Pundit.Core.Serializers;
 using EBerzosa.Utils;
 using ICSharpCode.SharpZipLib.Zip;
+using Pundit.Core.Application;
 using Pundit.Core.Model;
 using Pundit.Core.Model.EventArguments;
 using Pundit.Core.Utils;
 
-namespace Pundit.Core.Application
+namespace EBerzosa.Pundit.Core.Package
 {
-   public class PackageReader : PackageStreamer
+   public class PackageReader : PackageStreamer, IPackageReader
    {
       private readonly PackageSerializerFactory _packageSerializer;
       public event EventHandler<ResolvedFileEventArgs> InstallingResolvedFile;
@@ -92,12 +93,12 @@ namespace Pundit.Core.Application
          }
       }
 
-      private void InstallLibrary(string packageId, string root, string name, BuildConfiguration targetConfig, string subfolderName)
+      private void InstallLibrary(string packageId, string root, string name, BuildConfiguration targetConfig)
       {
          name = name.Substring(name.IndexOf("/") + 1);
-        
+
          BuildConfiguration config =
-            (BuildConfiguration) Enum.Parse(typeof (BuildConfiguration), name.Substring(0, name.IndexOf("/")), true);
+            (BuildConfiguration)Enum.Parse(typeof(BuildConfiguration), name.Substring(0, name.IndexOf("/")), true);
 
          bool install = (targetConfig == BuildConfiguration.Any) || (config == BuildConfiguration.Any) ||
                         (config == BuildConfiguration.Debug &&
@@ -109,17 +110,10 @@ namespace Pundit.Core.Application
          {
             name = name.Substring(name.IndexOf("/") + 1);
 
-            if (InstallingResolvedFile != null)
-               InstallingResolvedFile(this, new ResolvedFileEventArgs(packageId, PackageFileKind.Binary, config, name));
+            InstallingResolvedFile?.Invoke(null, new ResolvedFileEventArgs(packageId, PackageFileKind.Binary, config, name));
 
             string targetPath = Path.Combine(root, "lib");
             if (!Directory.Exists(targetPath)) Directory.CreateDirectory(targetPath);
-
-            if (!string.IsNullOrEmpty(subfolderName))
-            {
-               targetPath = Path.Combine(targetPath, subfolderName);
-               if (!Directory.Exists(targetPath)) Directory.CreateDirectory(targetPath);
-            }
 
             targetPath = Path.Combine(targetPath, name);
 
@@ -133,9 +127,9 @@ namespace Pundit.Core.Application
                   _zipStream.CopyTo(ts);
                }
             }
-            catch(UnauthorizedAccessException)
+            catch (UnauthorizedAccessException)
             {
-               if(Exceptional.IsVsDocFile(targetPath))
+               if (Exceptional.IsVsDocFile(targetPath))
                {
                }
                else
@@ -171,11 +165,9 @@ namespace Pundit.Core.Application
                switch(kind)
                {
                   case PackageFileKind.Binary:
-                     InstallLibrary(pkg.PackageId, rootFolder, entry.Name, configuration,
-                                    (originalDependency != null && originalDependency.CreatePlatformFolder)
-                                       ? originalDependency.Platform
-                                       : null);
+                     InstallLibrary(pkg.PackageId, rootFolder, entry.Name, configuration);
                      break;
+
                   case PackageFileKind.Include:
                   case PackageFileKind.Tools:
                   case PackageFileKind.Other:

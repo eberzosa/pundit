@@ -95,9 +95,9 @@ namespace EBerzosa.Pundit.Core.Resolvers
             {
                var versions = repo.GetVersions(node.UnresolvedPackage);
 
-                if (versions == null)
+               if (versions == null)
                   continue;
-
+               
                foreach (var version in versions)
                   if (!punditVersions.ContainsKey(version))
                      punditVersions.Add(version, new SatisfyingInfo(version, repo));
@@ -108,6 +108,8 @@ namespace EBerzosa.Pundit.Core.Resolvers
 
          if (!node.HasManifest)
             return;
+
+         _writer.Text(".");
 
          foreach (var child in node.Children)
             ResolveVersions(child);

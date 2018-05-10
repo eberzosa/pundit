@@ -158,7 +158,7 @@ namespace EBerzosa.Pundit.Core.Services
             }
             else
             {
-               var diff = installer.GetDiffWithCurrent(resolutionResult.Item1.GetPackages()).ToArray();
+               var diff = installer.GetDiffWithCurrent(resolutionResult.Item1.GetSatisfyingInfos()).ToArray();
 
                int changed = PrintSuccess(diff);
                if (changed > 0)

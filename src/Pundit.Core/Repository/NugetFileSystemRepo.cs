@@ -27,8 +27,10 @@ namespace EBerzosa.Pundit.Core.Repository
 
       public bool CanPublish { get; set; }
 
+      public RepositoryType Type { get; }
 
-      public NuGetFileSystemRepo(string rootPath, string name)
+
+      public NuGetFileSystemRepo(string rootPath, string name, RepositoryType type)
       {
          Guard.NotNull(rootPath, nameof(rootPath));
 
@@ -37,7 +39,8 @@ namespace EBerzosa.Pundit.Core.Repository
 
          RootPath = rootPath;
          Name = name;
-
+         Type = type;
+         
          var providers = new List<Lazy<INuGetResourceProvider>>();
          providers.AddRange(NuGet.Protocol.Core.Types.Repository.Provider.GetCoreV3());
 
@@ -47,12 +50,29 @@ namespace EBerzosa.Pundit.Core.Repository
 
       public void Publish(Stream packageStream)
       {
-         throw new NotImplementedException();
+         if (!CanPublish)
+            throw new Exception("Publish is not allowed");
+         
+         var packageUpdate = _sourceRepository.GetResource<PackageUpdateResource>();
+         
+         var fileStream = packageStream as FileStream;
+
+         packageUpdate.Push(fileStream.Name, null, 200, false, s => null, s => null, new NullLogger()).Wait();
+
+         packageStream.Dispose();
       }
 
       public Stream Download(PackageKey key)
       {
-         throw new NotImplementedException();
+         var packageIdentity = new PackageIdentity(key.PackageId, NuGetVersion.Parse(key.VersionString));
+
+         var downloadResource = _sourceRepository.GetResource<DownloadResource>();
+         
+         var packageDownloadContext = new PackageDownloadContext(new SourceCacheContext {DirectDownload = true, NoCache = true}, Path.GetTempPath(), true);
+         var result = downloadResource.GetDownloadResourceResultAsync(packageIdentity, packageDownloadContext, 
+            null, new NullLogger(), CancellationToken.None).Result;
+
+         return result.PackageStream;
       }
 
       public ICollection<NuGetVersion> GetVersions(UnresolvedPackage package)

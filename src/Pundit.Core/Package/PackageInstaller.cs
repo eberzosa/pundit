@@ -6,7 +6,9 @@ using EBerzosa.Pundit.Core.Application;
 using EBerzosa.Pundit.Core.Model.Enums;
 using EBerzosa.Pundit.Core.Model.Package;
 using EBerzosa.Pundit.Core.Repository;
+using EBerzosa.Pundit.Core.Resolvers;
 using EBerzosa.Utils;
+using NuGet.Versioning;
 using Pundit.Core.Application;
 using Pundit.Core.Model;
 using Pundit.Core.Model.EventArguments;
@@ -52,16 +54,20 @@ namespace EBerzosa.Pundit.Core.Package
          _otherFolderPath = Path.Combine(rootDirectory, "other");
 
          _index = InstalledPackagesIndex.ReadFromFolder(_rootDirectory);
-      }
 
+         foreach (var package in versionTable.GetPackages())
+            _manifest.Dependencies.Add(new PackageDependency(package.PackageId, new VersionRange(package.Version)) {Platform = package.Platform});
+      }
+      
       /// <summary>
       /// Given the resolution result as an input compares it to the current state of the solution.
       /// </summary>
       /// <param name="resolutionResult">Resolution result</param>
       /// <returns>Differences between the current state and the resolution result</returns>
-      public IEnumerable<PackageKeyDiff> GetDiffWithCurrent(IEnumerable<PackageKey> resolutionResult)
+      public IEnumerable<PackageKeyDiff> GetDiffWithCurrent(IEnumerable<SatisfyingInfoExtended> resolutionResult)
       {
-         if (resolutionResult == null) throw new ArgumentNullException("resolutionResult");
+         if (resolutionResult == null)
+            throw new ArgumentNullException(nameof(resolutionResult));
 
          var diff = new List<PackageKeyDiff>();
 
@@ -69,30 +75,30 @@ namespace EBerzosa.Pundit.Core.Package
 
          if(indexEmpty)
          {
-            diff.AddRange(resolutionResult.Select(rr => new PackageKeyDiff(DiffType.Add, rr)));
+            diff.AddRange(resolutionResult.Select(rr => new PackageKeyDiff(DiffType.Add, rr.GetPackageKey(), rr.RepoType)));
          }
          else
          {
             foreach (var rr in resolutionResult)
             {
-               var pi = _index.InstalledPackages.FirstOrDefault(p => p.LooseEquals(rr));
+               var pi = _index.InstalledPackages.FirstOrDefault(p => p.LooseEquals(rr.GetPackageKey()));
 
                if (pi == null)
-                  diff.Add(new PackageKeyDiff(DiffType.Add, rr));
+                  diff.Add(new PackageKeyDiff(DiffType.Add, rr.GetPackageKey(), rr.RepoType));
 
                else if (rr.Equals(pi))
-                  diff.Add(new PackageKeyDiff(DiffType.NoChange, rr, null));
+                  diff.Add(new PackageKeyDiff(DiffType.NoChange, rr.GetPackageKey(), null, rr.RepoType));
 
                else if (rr.Version > pi.Version)
-                  diff.Add(new PackageKeyDiff(DiffType.Upgrade, rr, pi));
+                  diff.Add(new PackageKeyDiff(DiffType.Upgrade, rr.GetPackageKey(), pi, rr.RepoType));
 
                else if (rr.Version < pi.Version)
-                  diff.Add(new PackageKeyDiff(DiffType.Downgrade, rr, pi));
+                  diff.Add(new PackageKeyDiff(DiffType.Downgrade, rr.GetPackageKey(), pi, rr.RepoType));
             }
 
             var deleted = _index.InstalledPackages
-               .Where(ip => resolutionResult.FirstOrDefault(rr => rr.LooseEquals(ip)) == null)
-               .Select(ip => new PackageKeyDiff(DiffType.Delete, ip));
+               .Where(ip => resolutionResult.FirstOrDefault(rr => rr.GetPackageKey().LooseEquals(ip)) == null)
+               .Select(ip => new PackageKeyDiff(DiffType.Delete, ip, RepositoryType.Pundit));
 
             diff.AddRange(deleted);
          }
@@ -146,24 +152,18 @@ namespace EBerzosa.Pundit.Core.Package
 
       private void Install(PackageKeyDiff pck, PackageDependency originalDependency, BuildConfiguration configuration)
       {
-         foreach (var repository in _cacheRepositories)
+         var repository = _cacheRepositories.First(r => r.Type == pck.PackageType);
+
+         using (var s = repository.Download(pck))
+         using (var reader = _packageReaderFactory.Get(pck.PackageType, s))
          {
-            if (!repository.PackageExist(pck))
-               continue;
-
-            using (var s = repository.Download(pck))
-            using (var reader = _packageReaderFactory.Get(s))
-            {
-               BeginInstallPackage?.Invoke(this, new PackageKeyDiffEventArgs(pck, true));
-               reader.InstallTo(_rootDirectory, originalDependency, configuration);
-            }
-
-            _index.Install(pck);
-
-            FinishInstallPackage?.Invoke(this, new PackageKeyDiffEventArgs(pck, true));
-
-            break;
+            BeginInstallPackage?.Invoke(this, new PackageKeyDiffEventArgs(pck, true));
+            reader.InstallTo(_rootDirectory, originalDependency, configuration);
          }
+
+         _index.Install(pck);
+
+         FinishInstallPackage?.Invoke(this, new PackageKeyDiffEventArgs(pck, true));
       }
 
       ///<summary>
@@ -172,13 +172,13 @@ namespace EBerzosa.Pundit.Core.Package
       ///<param name="configuration"></param>
       public void Reinstall(BuildConfiguration configuration)
       {
-         IEnumerable<PackageKey> currentDependencies = _versionTable.GetPackages();
+         IEnumerable<SatisfyingInfoExtended> currentDependencies = _versionTable.GetSatisfyingInfos();
 
          ResetFiles(configuration);
 
-         foreach (PackageKey pck in currentDependencies)
+         foreach (var pck in currentDependencies)
          {
-            Install(new PackageKeyDiff(DiffType.Add, pck), _manifest.GetPackageDependency(pck), configuration);
+            Install(new PackageKeyDiff(DiffType.Add, pck.GetPackageKey(), pck.RepoType), _manifest.GetPackageDependency(pck.GetPackageKey()), configuration);
          }
 
          _indexCommitted = true;

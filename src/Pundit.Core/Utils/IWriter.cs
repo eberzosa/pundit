@@ -4,6 +4,8 @@
    {
       IWriter Title(string message);
 
+      IWriter Header(string message);
+
       IWriter Text(string message);
 
       IWriter Reserved(string message);

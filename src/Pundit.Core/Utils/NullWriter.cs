@@ -4,6 +4,8 @@
    {
       public IWriter Title(string message) => this;
 
+      public IWriter Header(string message) => null;
+
       public IWriter Text(string message) => this;
 
       public IWriter Reserved(string message) => this;

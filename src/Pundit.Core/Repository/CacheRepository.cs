@@ -39,18 +39,24 @@ namespace EBerzosa.Pundit.Core.Repository
          {
             bool downloaded = false;
 
+            PackageDownloadToCacheRepositoryStarted?.Invoke(null, new PackageKeyEventArgs(info.GetPackageKey(), true));
+
             foreach (var repo in _repos)
             {
-               if (!CanCache(info) || repo.PackageExist(info.GetPackageKey()))
+               if (!CanCache(info, repo))
                   continue;
-               
+
+               if (repo.PackageExist(info.GetPackageKey()))
+               {
+                  downloaded = true;
+                  continue;
+               }
+
                try
                {
-                  using (Stream pckStream = info.Repo.Download(info.GetPackageKey()))
+                  using (var pckStream = info.Repo.Download(info.GetPackageKey()))
                   {
-                     PackageDownloadToCacheRepositoryStarted?.Invoke(null, new PackageKeyEventArgs(info.GetPackageKey(), true));
                      repo.Publish(pckStream);
-
                      downloaded = true;
                   }
                }
@@ -65,6 +71,6 @@ namespace EBerzosa.Pundit.Core.Repository
          }
       }
 
-      private bool CanCache(SatisfyingInfoExtended info) => info.Repo.GetType() == _repos.GetType();
+      private bool CanCache(SatisfyingInfoExtended info, IRepository repo) => info.Repo.GetType() == repo.GetType();
    }
 }

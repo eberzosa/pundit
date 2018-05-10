@@ -114,8 +114,10 @@
     <Compile Include="3rdparty\DirectoryScanner.cs" />
     <Compile Include="3rdparty\Options.cs" />
     <Compile Include="Package\IPackageInstaller.cs" />
+    <Compile Include="Package\IPackageReader.cs" />
     <Compile Include="Package\PackageFileName.cs" />
     <Compile Include="Package\PackageInstallerFactory.cs" />
+    <Compile Include="Package\NuGetPackageReader.cs" />
     <Compile Include="Repository\Mappings\RepositoryMappings.cs" />
     <Compile Include="Repository\NugetFileSystemRepo.cs" />
     <Compile Include="Repository\RegisteredRepository.cs" />

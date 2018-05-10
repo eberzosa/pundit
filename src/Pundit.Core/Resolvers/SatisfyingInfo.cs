@@ -9,7 +9,8 @@ namespace EBerzosa.Pundit.Core.Resolvers
       public NuGetVersion Version { get; set; }
 
       public IRepository Repo { get; set; }
-        
+
+      public RepositoryType RepoType => Repo is NuGetFileSystemRepo ? RepositoryType.NuGet : RepositoryType.Pundit;
 
       public SatisfyingInfo(NuGetVersion version, IRepository repo)
       {

@@ -14,6 +14,7 @@ namespace EBerzosa.Pundit.CommandLine.Utils
          public const ConsoleColor Text = ConsoleColor.Gray;
          public const ConsoleColor Reserved = ConsoleColor.White;
          public const ConsoleColor Info = ConsoleColor.Magenta;
+         public const ConsoleColor Header = ConsoleColor.Magenta;
 
          public const ConsoleColor Highlightted = ConsoleColor.Yellow;
       }
@@ -35,6 +36,12 @@ namespace EBerzosa.Pundit.CommandLine.Utils
          _output.Print(message, ConsoleColor.White);
          _output.Print("".PadLeft(message.Length, '='));
          _output.Print("", true);
+         return this;
+      }
+      
+      public IWriter Header(string message)
+      {
+         _output.Print(PadMessage(message), !_started, Colours.Header);
          return this;
       }
 

@@ -6,7 +6,6 @@ using EBerzosa.Pundit.Core.Application;
 using EBerzosa.Pundit.Core.Package;
 using EBerzosa.Utils;
 using NuGet.Versioning;
-using Pundit.Core.Application;
 using Pundit.Core.Model;
 
 namespace EBerzosa.Pundit.Core.Repository
@@ -21,7 +20,9 @@ namespace EBerzosa.Pundit.Core.Repository
 
       public string RootPath { get; }
 
-      public FileSystemRepository(PackageReaderFactory packageReaderFactory, string rootPath, string name)
+      public RepositoryType Type { get; }
+
+      public FileSystemRepository(PackageReaderFactory packageReaderFactory, string rootPath, string name, RepositoryType type)
       {
          Guard.NotNull(packageReaderFactory, nameof(packageReaderFactory));
          Guard.NotNull(rootPath, nameof(rootPath));
@@ -32,6 +33,7 @@ namespace EBerzosa.Pundit.Core.Repository
          _packageReaderFactory = packageReaderFactory;
          RootPath = rootPath;
          Name = name;
+         Type = type;
       }
 
       public void Publish(Stream packageStream)
@@ -47,7 +49,7 @@ namespace EBerzosa.Pundit.Core.Repository
 
          PackageManifest manifest;
          using (Stream ts = File.OpenRead(tempFile))
-         using (var pr = _packageReaderFactory.Get(ts))
+         using (var pr = _packageReaderFactory.Get(RepositoryType.Pundit, ts))
             manifest = pr.ReadManifest();
 
          foreach (var relatedBuild in Directory.GetFiles(RootPath, new PackageFileName(manifest).RelatedSearchFileName))
@@ -89,7 +91,7 @@ namespace EBerzosa.Pundit.Core.Repository
          if (!File.Exists(fullPath))
             throw new FileNotFoundException("package not found");
 
-         using (PackageReader reader = _packageReaderFactory.Get(File.OpenRead(fullPath)))
+         using (IPackageReader reader = _packageReaderFactory.Get(RepositoryType.Pundit, File.OpenRead(fullPath)))
             return reader.ReadManifest();
       }
 

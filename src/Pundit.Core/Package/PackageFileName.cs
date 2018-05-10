@@ -91,7 +91,16 @@ namespace EBerzosa.Pundit.Core.Package
       private string NotNullOrThrow(string value, string name) 
          => value ?? throw new InvalidOperationException($"The current status does not support '{name}'");
 
-      private string FromFloating(FloatRange range) => range.ToString();
+      private string FromFloating(FloatRange range)
+      {
+         if (range.FloatBehavior != NuGetVersionFloatBehavior.Revision)
+            return range.ToString();
+
+         var version = range.ToString();
+         var index = version.LastIndexOf('.');
+
+         return version.Substring(0, index) + '-' + version.Substring(index + 1);
+      }
 
       private string FromRegular(VersionRange range)
       {

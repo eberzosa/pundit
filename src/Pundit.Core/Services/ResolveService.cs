@@ -97,18 +97,22 @@ namespace EBerzosa.Pundit.Core.Services
             var packageIds = new List<string>();
             var versions = new List<string>();
             var platforms = new List<string>();
-            foreach (var package in resolutionResult.Item1.GetPackages())
+            var inRepo = new List<string>();
+            foreach (var infos in resolutionResult.Item1.GetSatisfyingInfos())
             {
-               packageIds.Add(package.PackageId);
-               versions.Add(package.VersionString);
-               platforms.Add(package.Platform);
+               packageIds.Add(infos.PackageId);
+               versions.Add(infos.Version.ToString());
+               platforms.Add(infos.Platform);
+               inRepo.Add(infos.Repo.Name);
             }
 
             _writer.Title("Resolved packages")
-               .BeginColumns(new int?[] { packageIds.Max(p => p.Length + 2), versions.Max(v => v.Length + 2), null });
+               .BeginColumns(new int?[] {packageIds.Max(p => p.Length + 2), versions.Max(v => v.Length + 2), platforms.Max(p => p.Length +2), null});
+
+            _writer.Header("PackageId").Header("Version").Header("Fmwk").Header("Repository");
 
             for (int i = 0; i < packageIds.Count; i++)
-               _writer.Text(packageIds[i]).Text(versions[i]).Text(platforms[i]);
+               _writer.Text(packageIds[i]).Text(versions[i]).Text(platforms[i]).Text(inRepo[i]);
 
             _writer.EndColumns();
 
@@ -120,7 +124,7 @@ namespace EBerzosa.Pundit.Core.Services
          return true;
       }
 
-      private void Install(Tuple<VersionResolutionTable, DependencyNode> resolutionResult, PackageSpec packageSpecSpecs)
+      private void Install(Tuple<VersionResolutionTable, DependencyNode> resolutionResult, PackageSpec packageSpec)
       {
          var cacheRepo = new CacheRepository(_repositoryFactory.GetCacheRepos());
          cacheRepo.PackageDownloadToCacheRepositoryStarted += CacheRepositoryPackageDownloadToCacheRepositoryStarted;
@@ -131,7 +135,7 @@ namespace EBerzosa.Pundit.Core.Services
          cacheRepo.PackageDownloadToCacheRepositoryStarted -= CacheRepositoryPackageDownloadToCacheRepositoryStarted;
          cacheRepo.PackageDownloadToCacheRepositoryFinished -= CacheRepositoryOnPackageDownloadToCacheRepositoryFinished;
 
-         using (var installer = _packageInstallerFactory.GetInstaller(_manifestResolver.CurrentDirectory, resolutionResult.Item1, packageSpecSpecs))
+         using (var installer = _packageInstallerFactory.GetInstaller(_manifestResolver.CurrentDirectory, resolutionResult.Item1, packageSpec))
          {
             installer.BeginInstallPackage += BeginInstallPackage;
             installer.FinishInstallPackage += FinishInstallPackage;
@@ -143,7 +147,7 @@ namespace EBerzosa.Pundit.Core.Services
             }
             else
             {
-               var diff = installer.GetDiffWithCurrent(resolutionResult.Item1.GetPackages()).ToArray();
+               var diff = installer.GetDiffWithCurrent(resolutionResult.Item1.GetSatisfyingInfos()).ToArray();
 
                int changed = PrintSuccess(diff);
                if (changed > 0)
@@ -257,7 +261,7 @@ namespace EBerzosa.Pundit.Core.Services
 
       void FinishInstallPackage(object sender, PackageKeyDiffEventArgs e)
       {
-         _writer.Text(" done").EndWrite();
+         _writer.Success(" done").EndWrite();
       }
 
    }

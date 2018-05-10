@@ -1,6 +1,7 @@
 ﻿using System.IO;
+using EBerzosa.Pundit.Core.Package;
+using EBerzosa.Pundit.Core.Repository;
 using EBerzosa.Pundit.Core.Serializers;
-using Pundit.Core.Application;
 
 namespace EBerzosa.Pundit.Core.Application
 {
@@ -13,8 +14,11 @@ namespace EBerzosa.Pundit.Core.Application
          _packageSerializerFactory = packageSerializer;
       }
 
-      public PackageReader Get(Stream stream)
+      public IPackageReader Get(RepositoryType repoType, Stream stream)
       {
+         if (repoType == RepositoryType.NuGet)
+            return new NuGetPackageReader(stream);
+
          return new PackageReader(_packageSerializerFactory, stream);
       }
    }

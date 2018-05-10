@@ -44,8 +44,8 @@ namespace EBerzosa.Pundit.Core.Repository
       {
          return new[]
          {
-            CreateRepo(new RegisteredRepository {Uri = _cacheRepoPath, Name = "local", UseForPublishing = true}),
-            CreateRepo(new RegisteredRepository {Uri = SettingsUtility.GetGlobalPackagesFolder(NullSettings.Instance), Name = "nugetlocal", UseForPublishing = false, Type = RepositoryType.NuGet})
+            CreateRepo(new RegisteredRepository {Uri = SettingsUtility.GetGlobalPackagesFolder(NullSettings.Instance), Name = "nugetlocal", UseForPublishing = true, Type = RepositoryType.NuGet}),
+            CreateRepo(new RegisteredRepository {Uri = _cacheRepoPath, Name = "local", UseForPublishing = true})
          };
       }
       
@@ -63,7 +63,7 @@ namespace EBerzosa.Pundit.Core.Repository
                yield return repository;
 
          if (includeOther)
-            foreach (var repository in GetRegistered().RepositoriesArray.Where(r => !r.Disabled).Select(CreateRepo))
+            foreach (var repository in GetRegistered().RepositoriesArray.Where(r => !r.Disabled).OrderByDescending(r => r.Type).Select(CreateRepo))
                yield return repository;
       }
 
@@ -76,9 +76,9 @@ namespace EBerzosa.Pundit.Core.Repository
       private IRepository CreateRepo(RegisteredRepository repo)
       {
           if (repo.Type == RepositoryType.NuGet)
-              return new NuGetFileSystemRepo(repo.Uri, repo.Name) {CanPublish = repo.UseForPublishing};
+              return new NuGetFileSystemRepo(repo.Uri, repo.Name, RepositoryType.NuGet) {CanPublish = repo.UseForPublishing};
 
-          return new FileSystemRepository(_packageReaderFactory, repo.Uri, repo.Name) {CanPublish = repo.UseForPublishing};
+          return new FileSystemRepository(_packageReaderFactory, repo.Uri, repo.Name, RepositoryType.Pundit) {CanPublish = repo.UseForPublishing};
       }
 
       private RegisteredRepositories GetRegistered()
