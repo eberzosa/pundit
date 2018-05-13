@@ -27,7 +27,7 @@ namespace EBerzosa.Pundit.Core.Utils
          else
             version += ".*";
 
-         return new VersionRangeExtended(FloatRangeExtended.Parse(version));
+         return new VersionRange(minVersion, true, PunditVersion.Parse(string.Join(".", parts)), false, null, version);
       }
    }
 }

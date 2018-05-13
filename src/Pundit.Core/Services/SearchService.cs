@@ -29,7 +29,7 @@ namespace EBerzosa.Pundit.Core.Services
          
          var anyFound = false;
          
-         foreach (var repo in _repositoryFactory.GetEnabledRepos(true, !LocalRepoOnly))
+         foreach (var repo in _repositoryFactory.TryGetEnabledRepos(true, !LocalRepoOnly))
          {
             _writer.Empty().Text($"Searching repository '{repo.Name}' [{repo.RootPath}]...").Empty();
             

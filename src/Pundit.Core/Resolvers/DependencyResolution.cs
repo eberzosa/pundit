@@ -1,12 +1,11 @@
 ﻿using System;
 using System.Collections.Generic;
-using System.IO;
 using System.Linq;
 using System.Text;
 using EBerzosa.Pundit.Core.Model;
 using EBerzosa.Pundit.Core.Repository;
 using EBerzosa.Pundit.Core.Versioning;
-using NuGet.Versioning;
+using NuGet.Packaging;
 using Pundit.Core.Model;
 
 namespace EBerzosa.Pundit.Core.Resolvers
@@ -14,7 +13,7 @@ namespace EBerzosa.Pundit.Core.Resolvers
    public class DependencyResolution
    {
       private readonly IWriter _writer;
-      
+
       private readonly IRepository[] _activeRepositories;
       private readonly bool _includeDeveloperPackages;
       private readonly DependencyNode _rootDependencyNode;
@@ -30,13 +29,13 @@ namespace EBerzosa.Pundit.Core.Resolvers
          _activeRepositories = activeRepositories;
          _includeDeveloperPackages = includeDeveloperPackages;
 
-         var version = new NuGetVersion(rootManifest.Version.OriginalVersion);
-         var versionRange = new VersionRange(version, true, version, true, null, rootManifest.Version.OriginalVersion);
+         var versionRange = VersionRange.Parse(rootManifest.Version.OriginalVersion);
          _rootDependencyNode = new DependencyNode(null, rootManifest.PackageId, rootManifest.Platform, versionRange, _includeDeveloperPackages);
          _rootDependencyNode.MarkAsRoot(rootManifest);
       }
 
-      public Tuple<VersionResolutionTable, DependencyNode> Resolve(PackageManifest rootManifest, IRepository[] activeRepositories, bool includeDeveloperPackages)
+      public Tuple<VersionResolutionTable, DependencyNode> Resolve(PackageManifest rootManifest, IRepository[] activeRepositories,
+         bool includeDeveloperPackages)
       {
          return new DependencyResolution(_writer, rootManifest, activeRepositories, includeDeveloperPackages).Resolve();
       }
@@ -91,7 +90,7 @@ namespace EBerzosa.Pundit.Core.Resolvers
       {
          if (!node.HasVersions)
          {
-            var punditVersions = new Dictionary<NuGetVersion, SatisfyingInfo>();
+            var punditVersions = new Dictionary<PunditVersion, SatisfyingInfo>();
 
             foreach (var repo in _activeRepositories)
             {
@@ -179,14 +178,14 @@ namespace EBerzosa.Pundit.Core.Resolvers
 
       private static void FindNodes(DependencyNode rootNode, UnresolvedPackage package, ICollection<DependencyNode> collector)
       {
-         if(rootNode.UnresolvedPackage.Equals(package))
+         if (rootNode.UnresolvedPackage.Equals(package))
             collector.Add(rootNode);
 
-         foreach(DependencyNode child in rootNode.Children)
+         foreach (DependencyNode child in rootNode.Children)
             FindNodes(child, package, collector);
       }
 
-      public string DescribeConflict(DependencyNode rootNode, UnresolvedPackage package)
+      public string DescribeConflict(DependencyNode rootNode, UnresolvedPackage package, ICollection<DependencyNode> collector)
       {
          var sb = new StringBuilder();
          var found = new List<DependencyNode>();
@@ -196,10 +195,28 @@ namespace EBerzosa.Pundit.Core.Resolvers
          if (found.Count <= 0)
             return null;
 
-         foreach (DependencyNode node in found)
+         collector.AddRange(found);
+
+         AppendDependencyNode(found, sb);
+
+         return sb.ToString();
+      }
+
+      public string PrintDependencyNodes(IEnumerable<DependencyNode> nodes)
          {
-            if (sb.Length != 0) sb.AppendLine();
+         var sb = new StringBuilder();
+         AppendDependencyNode(nodes, sb);
             
+         return sb.ToString();
+      }
+
+      private void AppendDependencyNode(IEnumerable<DependencyNode> nodes, StringBuilder sb)
+      {
+         foreach (DependencyNode node in nodes)
+         {
+            if (sb.Length != 0)
+               sb.AppendLine();
+
             sb.Append("dependency: [");
             sb.Append(node.Path);
             sb.Append("], version: [");
@@ -207,7 +224,7 @@ namespace EBerzosa.Pundit.Core.Resolvers
             sb.Append("], resolved to: [");
 
             bool isFirst = true;
-            foreach (NuGetVersion version in node.AllVersions)
+            foreach (PunditVersion version in node.AllVersions)
             {
                if (!isFirst)
                   sb.Append(", ");
@@ -219,8 +236,6 @@ namespace EBerzosa.Pundit.Core.Resolvers
 
             sb.Append("]");
          }
-
-         return sb.ToString();
       }
 
       public string GetPrintableVersion(VersionRangeExtended range)
@@ -233,5 +248,4 @@ namespace EBerzosa.Pundit.Core.Resolvers
 
          return range.PrettyPrint();
       }
-   }
-}
+

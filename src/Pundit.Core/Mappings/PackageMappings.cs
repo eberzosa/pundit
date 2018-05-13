@@ -1,8 +1,7 @@
 ﻿using EBerzosa.Pundit.Core.Model.Enums;
 using EBerzosa.Pundit.Core.Model.Package;
 using EBerzosa.Pundit.Core.Model.Xml;
-using EBerzosa.Pundit.Core.Utils;
-using NuGet.Versioning;
+using EBerzosa.Pundit.Core.Versioning;
 using Pundit.Core.Model;
 
 namespace EBerzosa.Pundit.Core.Mappings
@@ -22,14 +21,14 @@ namespace EBerzosa.Pundit.Core.Mappings
             .Map(dst => dst.Version, src => src.Version.ToString());
 
          Mapster.TypeAdapterConfig<XmlPackageSpec, PackageSpec>.NewConfig()
-            .Map(dst => dst.Version, src => new NuGetVersion(src.Version));
+            .Map(dst => dst.Version, src => PunditVersion.Parse(src.Version));
 
 
          Mapster.TypeAdapterConfig<PackageManifest, XmlPackageManifest>.NewConfig()
             .Map(dst => dst.Version, src => src.Version.ToString());
 
          Mapster.TypeAdapterConfig<XmlPackageManifest, PackageManifest>.NewConfig()
-            .Map(dst => dst.Version, src => new NuGetVersion(src.Version));
+            .Map(dst => dst.Version, src => PunditVersion.Parse(src.Version));
 
 
          Mapster.TypeAdapterConfig<PackageDependency, XmlPackageDependency>.NewConfig()

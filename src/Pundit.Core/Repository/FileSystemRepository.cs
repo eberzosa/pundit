@@ -5,8 +5,8 @@ using System.Linq;
 using EBerzosa.Pundit.Core.Application;
 using EBerzosa.Pundit.Core.Model;
 using EBerzosa.Pundit.Core.Package;
+using EBerzosa.Pundit.Core.Versioning;
 using EBerzosa.Utils;
-using NuGet.Versioning;
 using Pundit.Core.Model;
 
 namespace EBerzosa.Pundit.Core.Repository
@@ -74,7 +74,7 @@ namespace EBerzosa.Pundit.Core.Repository
          return File.OpenRead(fullPath);
       }
 
-      public ICollection<NuGetVersion> GetVersions(UnresolvedPackage package)
+      public ICollection<PunditVersion> GetVersions(UnresolvedPackage package)
       {
          var filePattern = new PackageFileName(package).SearchFileName;
 
@@ -119,5 +119,7 @@ namespace EBerzosa.Pundit.Core.Repository
                yield return key;
          }
       }
+
+      public override string ToString() => $"{Name} [{RootPath}]";
    }
 }

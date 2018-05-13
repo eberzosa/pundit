@@ -30,7 +30,7 @@ namespace EBerzosa.Pundit.Core.Services
 
          if (Repository != null)
          {
-            var repo = _repositoryFactory.GetRepo(Repository);
+            var repo = _repositoryFactory.TryGetRepo(Repository);
             if (repo == null)
             {
                _writer.Error($"Repository '{Repository}' does not exist");
@@ -47,7 +47,7 @@ namespace EBerzosa.Pundit.Core.Services
          }
          else
          {
-            publishTo = _repositoryFactory.GetEnabledRepos(true, true).Where(r => r.CanPublish).ToArray();
+            publishTo = _repositoryFactory.TryGetEnabledRepos(true, true).Where(r => r.CanPublish).ToArray();
          }
 
          if (publishTo.Length == 0)

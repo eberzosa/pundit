@@ -4,15 +4,13 @@ using System.IO;
 using System.Linq;
 using System.Reflection;
 using EBerzosa.Pundit.Core.Application;
-using EBerzosa.Pundit.Core.Model;
 using EBerzosa.Pundit.Core.Model.Enums;
 using EBerzosa.Pundit.Core.Model.Package;
 using EBerzosa.Pundit.Core.Package;
 using EBerzosa.Pundit.Core.Repository;
 using EBerzosa.Pundit.Core.Resolvers;
+using EBerzosa.Pundit.Core.Versioning;
 using EBerzosa.Utils;
-using NuGet.Versioning;
-using Pundit.Core;
 using Pundit.Core.Application;
 using Pundit.Core.Model;
 using Pundit.Core.Model.EventArguments;
@@ -64,7 +62,7 @@ namespace EBerzosa.Pundit.Core.Services
          {
             PackageId = packageId,
             Platform = netFramework,
-            Version = new NuGetVersion(1, 0, 0, 0),
+            Version = new PunditVersion(1, 0, 0, 0),
             Dependencies =
             {
                new PackageDependency(packageId, VersionRange.Parse($"{assemblyVersion.Major}.*"))
@@ -77,7 +75,21 @@ namespace EBerzosa.Pundit.Core.Services
          
          packageSpec.Validate();
 
-         var repos = _repositoryFactory.GetEnabledRepos(true, !LocalReposOnly).ToArray();
+         _writer.BeginWrite().Text("Getting repositories...");
+
+         var repos = _repositoryFactory.TryGetRepos(true, !LocalReposOnly).ToArray();
+
+         if (repos.Length == 0)
+         {
+            _writer.Error(" no available repos").EndWrite();
+            return false;
+         }
+
+         _writer.Text(" using repos:");
+         foreach (var repository in repos)
+            _writer.Info(repository.ToString());
+
+         _writer.EndWrite();
 
          _writer.BeginWrite().Text("Resolving...");
          var resolutionResult = _dependencyResolution.Resolve(packageSpec, repos, IncludeDeveloperPackages);
@@ -218,11 +230,14 @@ namespace EBerzosa.Pundit.Core.Services
 
       private void PrintConflicts(DependencyResolution dependencyResolution, VersionResolutionTable versionResolutionTable, DependencyNode dependencyNode)
       {
+         var allNodes = new List<DependencyNode>();
+
          foreach (UnresolvedPackage conflict in versionResolutionTable.GetConflictedPackages())
-         {
-            _writer.Error(dependencyResolution.DescribeConflict(dependencyNode, conflict));
+            _writer.Error(dependencyResolution.DescribeConflict(dependencyNode, conflict, allNodes));
+
+         _writer.Empty();
+         _writer.Error(dependencyResolution.PrintDependencyNodes(allNodes.Distinct(DependencyNodeComparer.PackageId).OrderBy(n => n.PackageId)));
          }
-      }
 
       private int PrintSuccess(IEnumerable<PackageKeyDiff> diffs1)
       {
