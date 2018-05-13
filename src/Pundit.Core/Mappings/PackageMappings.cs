@@ -1,6 +1,7 @@
 ﻿using EBerzosa.Pundit.Core.Model.Enums;
 using EBerzosa.Pundit.Core.Model.Package;
 using EBerzosa.Pundit.Core.Model.Xml;
+using EBerzosa.Pundit.Core.Utils;
 using NuGet.Versioning;
 using Pundit.Core.Model;
 
@@ -32,11 +33,11 @@ namespace EBerzosa.Pundit.Core.Mappings
 
 
          Mapster.TypeAdapterConfig<PackageDependency, XmlPackageDependency>.NewConfig()
-            .Map(dst => dst.VersionPattern, src => src.VersionPattern.OriginalString.TrimEnd('*', '.'));
+            .Map(dst => dst.VersionPattern, src => src.VersionRange.OriginalString.Replace(".*", ""));
 
          Mapster.TypeAdapterConfig<XmlPackageDependency, PackageDependency>.NewConfig()
-            .ConstructUsing(xml => new PackageDependency(xml.PackageId, VersionUtils.GetRangeFromPuntitDependencyVersion(xml.VersionPattern)))
-            .Ignore(src => src.PackageId, src => src.VersionPattern)
+            .ConstructUsing(xml => new PackageDependency(xml.PackageId, VersionUtils.GetVersionRangeFromPuntitDependencyVersion(xml.VersionPattern)))
+            .Ignore(src => src.PackageId, src => src.VersionRange)
             .AfterMapping((src, dst) =>
             {
                if (src.DevTimeOnly)

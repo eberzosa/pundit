@@ -3,6 +3,8 @@ using System.Collections.Generic;
 using System.IO;
 using System.Linq;
 using System.Threading;
+using System.Threading.Tasks;
+using EBerzosa.Pundit.Core.Model;
 using EBerzosa.Utils;
 using NuGet.Common;
 using NuGet.Configuration;
@@ -34,7 +36,7 @@ namespace EBerzosa.Pundit.Core.Repository
       {
          Guard.NotNull(rootPath, nameof(rootPath));
 
-         if (!Directory.Exists(rootPath))
+         if (!rootPath.StartsWith("http", StringComparison.OrdinalIgnoreCase) && !Directory.Exists(rootPath))
             throw new ArgumentException($"Root directory '{rootPath}' does not exist");
 
          RootPath = rootPath;
@@ -57,7 +59,7 @@ namespace EBerzosa.Pundit.Core.Repository
          
          var fileStream = packageStream as FileStream;
 
-         packageUpdate.Push(fileStream.Name, null, 200, false, s => null, s => null, new NullLogger()).Wait();
+         packageUpdate.Push(fileStream.Name, null, 200, false, s => null, s => null, true, NullLogger.Instance).Wait();
 
          packageStream.Dispose();
       }
@@ -75,16 +77,29 @@ namespace EBerzosa.Pundit.Core.Repository
          return result.PackageStream;
       }
 
+      public class xxxxx : LoggerBase
+      {
+         public override void Log(ILogMessage message)
+         {
+            var x = message;
+         }
+
+         public override Task LogAsync(ILogMessage message)
+         {
+            var x = message;
+            return Task.CompletedTask;
+         }
+      }
+
       public ICollection<NuGetVersion> GetVersions(UnresolvedPackage package)
       {
-         var findLocalPackagesResource = _sourceRepository.GetResource<FindLocalPackagesResource>();
-
-         var packageInfos = findLocalPackagesResource.FindPackagesById(package.PackageId, new NullLogger(), CancellationToken.None);
-
-         return packageInfos.Where(p => package.VersionPattern.IsFloating
-               ? package.VersionPattern.Float.Satisfies(p.Identity.Version)
-               : package.VersionPattern.Satisfies(p.Identity.Version))
-            .Select(p => p.Identity.Version).ToArray();
+         var packagesResource = _sourceRepository.GetResource<FindPackageByIdResource>();
+         var packageInfos = packagesResource.GetAllVersionsAsync(package.PackageId, NullSourceCacheContext.Instance, NullLogger.Instance, CancellationToken.None);
+         
+         return packageInfos.Result.Where(p => package.VersionPattern.IsFloating
+               ? package.VersionPattern.Float.Satisfies(p)
+               : package.VersionPattern.Satisfies(p))
+            .ToArray();
       }
 
       public PackageManifest GetManifest(PackageKey key)
@@ -92,7 +107,7 @@ namespace EBerzosa.Pundit.Core.Repository
          var packageIdentity = new PackageIdentity(key.PackageId, NuGetVersion.Parse(key.VersionString));
 
          var packagesResource = _sourceRepository.GetResource<PackageMetadataResource>();
-         var packageInfo = packagesResource.GetMetadataAsync(packageIdentity, new NullLogger(), CancellationToken.None).Result;
+         var packageInfo = packagesResource.GetMetadataAsync(packageIdentity, NullSourceCacheContext.Instance, NullLogger.Instance, CancellationToken.None).Result;
 
          var projectFramework = NuGetFramework.ParseFolder(key.Platform);
 
@@ -127,7 +142,7 @@ namespace EBerzosa.Pundit.Core.Repository
          var findLocalPackagesResource = _sourceRepository.GetResource<PackageMetadataResource>();
 
          var packageIdentity = new PackageIdentity(package.PackageId, package.Version);
-         return findLocalPackagesResource.GetMetadataAsync(packageIdentity, new NullLogger(), CancellationToken.None).Result != null;
+         return findLocalPackagesResource.GetMetadataAsync(packageIdentity, NullSourceCacheContext.Instance, NullLogger.Instance, CancellationToken.None).Result != null;
       }
 
       public IEnumerable<PackageKey> Search(string substring)

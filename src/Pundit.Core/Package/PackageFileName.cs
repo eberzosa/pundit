@@ -1,6 +1,7 @@
 ﻿using System;
-using System.Collections.Generic;
 using System.Text.RegularExpressions;
+using EBerzosa.Pundit.Core.Model;
+using EBerzosa.Pundit.Core.Versioning;
 using NuGet.Versioning;
 using Pundit.Core.Model;
 
@@ -85,7 +86,7 @@ namespace EBerzosa.Pundit.Core.Package
       private string ToPunditFileVersion(NuGetVersion version) 
          => version.Major + "." + version.Minor + "." + version.Patch + "-" + (version.Release ?? "") + version.Revision;
 
-      private string ToPunditFileSearchVersion(VersionRange range) 
+      private string ToPunditFileSearchVersion(VersionRangeExtended range) 
          => range.IsFloating ? FromFloating(range.Float) : FromRegular(range);
       
       private string NotNullOrThrow(string value, string name) 

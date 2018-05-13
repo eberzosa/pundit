@@ -1,6 +1,6 @@
 ﻿using EBerzosa.Pundit.Core.Model.Enums;
+using EBerzosa.Pundit.Core.Versioning;
 using EBerzosa.Utils;
-using NuGet.Versioning;
 
 namespace EBerzosa.Pundit.Core.Model.Package
 {
@@ -9,18 +9,18 @@ namespace EBerzosa.Pundit.Core.Model.Package
    ///</summary>
    public class PackageDependency
    {
-      public PackageDependency(string packageId, VersionRange versionPattern)
+      public PackageDependency(string packageId, VersionRangeExtended versionRange)
       {
          Guard.NotNull(packageId, nameof(packageId));
-         Guard.NotNull(versionPattern, nameof(versionPattern));
+         Guard.NotNull(versionRange, nameof(versionRange));
          
          PackageId = packageId;
-         VersionPattern = versionPattern;
+         VersionRange = versionRange;
       }
 
       public string PackageId { get; set; }
 
-      public VersionRange VersionPattern { get; set; }
+      public VersionRangeExtended VersionRange { get; set; }
 
       /// <summary>
       /// Dependency platform. If ommitted "noarch" assumed. If noarch is not found, no automatic

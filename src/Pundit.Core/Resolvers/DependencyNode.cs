@@ -1,8 +1,10 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Linq;
+using EBerzosa.Pundit.Core.Model;
 using EBerzosa.Pundit.Core.Model.Package;
 using EBerzosa.Pundit.Core.Repository;
+using EBerzosa.Pundit.Core.Versioning;
 using NuGet.Versioning;
 using Pundit.Core.Model;
 
@@ -24,7 +26,7 @@ namespace EBerzosa.Pundit.Core.Resolvers
 
       public string Platform { get; }
 
-      public VersionRange VersionPattern { get; }
+      public VersionRangeExtended VersionPattern { get; }
 
       public IEnumerable<DependencyNode> Children => _children;
 
@@ -120,7 +122,7 @@ namespace EBerzosa.Pundit.Core.Resolvers
 
 
       public DependencyNode(DependencyNode parentNode,
-         string packageId, string platform, VersionRange versionPattern, bool includeDeveloperPackages)
+         string packageId, string platform, VersionRangeExtended versionPattern, bool includeDeveloperPackages)
       {
          _parentNode = parentNode;
          PackageId = packageId;
@@ -168,7 +170,7 @@ namespace EBerzosa.Pundit.Core.Resolvers
          _children.Clear();
 
          foreach (PackageDependency pd in thisManifest.Dependencies)
-            _children.Add(new DependencyNode(this, pd.PackageId, pd.Platform ?? Platform, pd.VersionPattern, _includeDeveloperPackages));
+            _children.Add(new DependencyNode(this, pd.PackageId, pd.Platform ?? Platform, pd.VersionRange, _includeDeveloperPackages));
 
          HasManifest = true;
       }

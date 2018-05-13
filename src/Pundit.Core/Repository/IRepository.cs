@@ -1,5 +1,6 @@
 ﻿using System.Collections.Generic;
 using System.IO;
+using EBerzosa.Pundit.Core.Model;
 using NuGet.Versioning;
 using Pundit.Core.Model;
 

@@ -3,7 +3,9 @@ using System.Collections.Generic;
 using System.IO;
 using System.Linq;
 using System.Text;
+using EBerzosa.Pundit.Core.Model;
 using EBerzosa.Pundit.Core.Repository;
+using EBerzosa.Pundit.Core.Versioning;
 using NuGet.Versioning;
 using Pundit.Core.Model;
 
@@ -221,7 +223,7 @@ namespace EBerzosa.Pundit.Core.Resolvers
          return sb.ToString();
       }
 
-      public string GetPrintableVersion(VersionRange range)
+      public string GetPrintableVersion(VersionRangeExtended range)
       {
          if (range.IsFloating)
             return range.Float.ToString();

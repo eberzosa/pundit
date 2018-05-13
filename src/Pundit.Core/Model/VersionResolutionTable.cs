@@ -1,5 +1,6 @@
 ﻿using System.Collections.Generic;
 using System.Linq;
+using EBerzosa.Pundit.Core.Model;
 using EBerzosa.Pundit.Core.Resolvers;
 
 namespace Pundit.Core.Model

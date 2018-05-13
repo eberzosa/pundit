@@ -1,14 +1,10 @@
 ﻿using System;
 using System.Runtime.Serialization;
-using EBerzosa.Pundit.Core;
 using EBerzosa.Pundit.Core.Package;
-using EBerzosa.Pundit.Core.Repository;
+using EBerzosa.Pundit.Core.Versioning;
 using EBerzosa.Utils;
-using NuGet.Packaging.Core;
-using NuGet.Versioning;
-using Pundit.Core.Utils;
 
-namespace Pundit.Core.Model
+namespace EBerzosa.Pundit.Core.Model
 {
    [DataContract]
    public class UnresolvedPackage
@@ -20,10 +16,10 @@ namespace Pundit.Core.Model
       public string Platform { get; set; }
       
       [DataMember]
-      public VersionRange VersionPattern { get; set; }
+      public VersionRangeExtended VersionPattern { get; set; }
 
 
-      public UnresolvedPackage(string packageId, string platform, VersionRange versionRange)
+      public UnresolvedPackage(string packageId, string platform, VersionRangeExtended versionRange)
       {
          Guard.NotNull(packageId, nameof(packageId));
 
