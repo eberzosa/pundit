@@ -22,7 +22,7 @@ namespace EBerzosa.Pundit.Core.Repository
 
       private readonly string _cacheRepoPath;
       private readonly string _repoConfigPath;
-      
+
       private RegisteredRepositories _registeredRepositories;
 
 
@@ -40,26 +40,27 @@ namespace EBerzosa.Pundit.Core.Repository
       }
 
 
-      public IRepository GetLocalRepo()
+      public IRepository TryGetLocalRepo()
       {
-         return CreateRepo(new RegisteredRepository {Uri = _cacheRepoPath, Name = "local", UseForPublishing = true});
+         return TryCreateRepo(new RegisteredRepository {Uri = _cacheRepoPath, Name = "local", UseForPublishing = true});
       }
 
-      public IRepository GetRepo(string name)
+      public IRepository TryGetRepo(string name)
       {
          var repo = GetRegistered().RepositoriesArray.FirstOrDefault(r => r.Name.Equals(name, StringComparison.OrdinalIgnoreCase));
 
-         return repo == null ? null : CreateRepo(repo);
+         return repo == null ? null : TryCreateRepo(repo);
       }
 
-      public IEnumerable<IRepository> GetRepos(bool includeCache, bool includeOther)
+      public IEnumerable<IRepository> TryGetRepos(bool includeCache, bool includeOther)
       {
          if (includeCache)
-            yield return GetLocalRepo();
+            yield return TryGetLocalRepo();
 
          if (includeOther)
-            foreach (var repository in GetRegistered().RepositoriesArray.Select(CreateRepo))
-               yield return repository;
+            foreach (var repository in GetRegistered().RepositoriesArray.Select(TryCreateRepo))
+               if (repository != null)
+                  yield return repository;
       }
 
       public RegisteredRepositories GetRegisteredRepositories()
@@ -68,8 +69,14 @@ namespace EBerzosa.Pundit.Core.Repository
       }
 
 
-      private IRepository CreateRepo(RegisteredRepository repo)
+      private IRepository TryCreateRepo(RegisteredRepository repo)
       {
+         if (repo.Uri.StartsWith("http", StringComparison.OrdinalIgnoreCase))
+            throw new NotSupportedException("Only FileSystem repos are supported");
+
+         if (!Directory.Exists(repo.Uri))
+            return null;
+
          return new FileSystemRepository(_packageReaderFactory, repo.Uri, repo.Name) {CanPublish = repo.UseForPublishing};
       }
 

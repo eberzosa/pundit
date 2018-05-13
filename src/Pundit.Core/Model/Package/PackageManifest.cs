@@ -5,7 +5,7 @@ using System.Reflection;
 using System.Text.RegularExpressions;
 using EBerzosa.Pundit.Core.Model.Enums;
 using EBerzosa.Pundit.Core.Model.Package;
-using NuGet.Versioning;
+using EBerzosa.Pundit.Core.Versioning;
 
 namespace Pundit.Core.Model
 {
@@ -32,7 +32,7 @@ namespace Pundit.Core.Model
 
       public string ProjectUrl { get; set; }
 
-      public NuGetVersion Version { get; set; }
+      public PunditVersion Version { get; set; }
 
       public string Author { get; set; }
 

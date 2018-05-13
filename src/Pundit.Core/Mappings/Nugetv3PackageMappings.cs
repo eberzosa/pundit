@@ -1,9 +1,9 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Linq;
+using EBerzosa.Pundit.Core.Versioning;
 using Mapster;
 using NuGet.Frameworks;
-using NuGet.Versioning;
 using Pundit.Core.Model;
 using PackageDependency = EBerzosa.Pundit.Core.Model.Package.PackageDependency;
 using NuGetv3 = NuGet.Packaging;
@@ -30,7 +30,7 @@ namespace EBerzosa.Pundit.Core.Mappings
                .Select(packagesForPlatform => new NuGetv3.PackageDependencyGroup(
                   NuGetFramework.Parse(packagesForPlatform.Key),
                   packagesForPlatform.Select(d =>
-                     new NuGetv3.Core.PackageDependency(d.PackageId, d.VersionPattern)))));
+                     new NuGetv3.Core.PackageDependency(d.PackageId, d.VersionPattern.NuGetVersionRange)))));
 
          Mapster.TypeAdapterConfig<SourceFiles, NuGetv3.ManifestFile>.NewConfig()
             .Map(file => file.Target, files => files.FileKind.Adapt<PackageFileKind, string>() + files.TargetDirectory);
@@ -39,19 +39,19 @@ namespace EBerzosa.Pundit.Core.Mappings
             .MapWith(kind => PackageFileKindToString(kind));
       }
 
-      internal static VersionRange PunditStringVersionToNugetVersionRange(string punditVersion)
+      internal static VersionRange PunditStringVersionToVersionRange(string punditVersion)
       {
          var versionChunks = punditVersion.Split('.');
 
          var lastNumberPlusOne = int.Parse(versionChunks[versionChunks.Length - 1]) + 1;
 
-         var minVersion = new NuGetVersion(
+         var minVersion = new PunditVersion(
             int.Parse(versionChunks[0]), 
             int.Parse(versionChunks[1]),
             versionChunks.Length > 2 ? int.Parse(versionChunks[2]) : 0,
             versionChunks.Length > 3 ? int.Parse(versionChunks[3]) : 0);
 
-         var maxVersion = new NuGetVersion(
+         var maxVersion = new PunditVersion(
             int.Parse(versionChunks[0]),
             versionChunks.Length > 2 ? int.Parse(versionChunks[1]) : lastNumberPlusOne,
             versionChunks.Length > 3 ? int.Parse(versionChunks[2]) : versionChunks.Length > 2 ? lastNumberPlusOne : 0,
@@ -67,7 +67,7 @@ namespace EBerzosa.Pundit.Core.Mappings
             MinClientVersionString = "3.3", // Because of the ContentFiles
 
             Id = spec.PackageId,
-            Version = new NuGetVersion(spec.Version),
+            Version = spec.Version.NuGetVersion,
             Description = spec.Description,
             Authors = new[] { spec.Author },
 

@@ -1,6 +1,6 @@
 ﻿using EBerzosa.Pundit.Core.Model.Enums;
+using EBerzosa.Pundit.Core.Versioning;
 using EBerzosa.Utils;
-using NuGet.Versioning;
 
 namespace EBerzosa.Pundit.Core.Model.Package
 {

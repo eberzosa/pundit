@@ -4,6 +4,7 @@ using System.IO;
 using System.Linq;
 using EBerzosa.Pundit.Core.Model.Package;
 using EBerzosa.Pundit.Core.Serializers;
+using EBerzosa.Pundit.Core.Versioning;
 using EBerzosa.Utils;
 using Mapster;
 using NuGet.Common;
@@ -56,7 +57,7 @@ namespace EBerzosa.Pundit.Core.Services
             var reader = new PackageArchiveReader(stream);
 
             punditSpec.PackageId = reader.NuspecReader.GetIdentity().Id;
-            punditSpec.Version = reader.NuspecReader.GetVersion();
+            punditSpec.Version = new PunditVersion(reader.NuspecReader.GetVersion());
             punditSpec.Author = reader.NuspecReader.GetAuthors();
             punditSpec.Description = reader.NuspecReader.GetDescription();
             punditSpec.License = reader.NuspecReader.GetLicenseUrl();
@@ -80,7 +81,7 @@ namespace EBerzosa.Pundit.Core.Services
 
                if (dependencies != null)
                   foreach (var dependency in dependencies.Packages)
-                     punditSpec.Dependencies.Add(new PackageDependency(dependency.Id, dependency.VersionRange));
+                     punditSpec.Dependencies.Add(new PackageDependency(dependency.Id, new VersionRange(dependency.VersionRange)));
 
                var libs = reader.GetLibItems().FirstOrDefault(d => d.TargetFramework == framework);
 

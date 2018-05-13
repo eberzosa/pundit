@@ -1,6 +1,6 @@
 ﻿using System;
 using System.Text.RegularExpressions;
-using NuGet.Versioning;
+using EBerzosa.Pundit.Core.Versioning;
 using Pundit.Core.Model;
 
 namespace EBerzosa.Pundit.Core.Package
@@ -70,7 +70,7 @@ namespace EBerzosa.Pundit.Core.Package
 
          string packageId = mtch.Groups[1].Value;
 
-         var version = new NuGetVersion(
+         var version = new PunditVersion(
             int.Parse(mtch.Groups[2].Value),
             int.Parse(mtch.Groups[3].Value),
             int.Parse(mtch.Groups[4].Value),
@@ -81,7 +81,7 @@ namespace EBerzosa.Pundit.Core.Package
          return new PackageKey(packageId, version, platform);
       }
 
-      private string ToPunditFileVersion(NuGetVersion version) 
+      private string ToPunditFileVersion(PunditVersion version) 
          => version.Major + "." + version.Minor + "." + version.Patch + "-" + (version.Release ?? "") + version.Revision;
 
       private string ToPunditFileSearchVersion(VersionRange range)

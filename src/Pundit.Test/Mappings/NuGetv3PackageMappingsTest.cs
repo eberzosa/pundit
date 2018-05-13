@@ -15,7 +15,7 @@ namespace Pundit.Test.Mappings
       [InlineData("1.4.5.60")]
       public void Map_VersionString_To_NuGet_VersionRange(string version)
       {
-         var nuGetVersion = NuGetv3PackageMappings.PunditStringVersionToNugetVersionRange(version);
+         var nuGetVersion = NuGetv3PackageMappings.PunditStringVersionToVersionRange(version);
          
          Assert.Equal(version.ToFullVersion(), nuGetVersion.MinVersion.Version);
          Assert.Equal(true, nuGetVersion.IsMinInclusive);

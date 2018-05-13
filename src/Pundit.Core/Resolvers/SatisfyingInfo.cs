@@ -1,17 +1,17 @@
 ﻿using System;
 using EBerzosa.Pundit.Core.Repository;
-using NuGet.Versioning;
+using EBerzosa.Pundit.Core.Versioning;
 
 namespace EBerzosa.Pundit.Core.Resolvers
 {
    public class SatisfyingInfo : IComparable<SatisfyingInfo>
    {
-      public NuGetVersion Version { get; set; }
+      public PunditVersion Version { get; set; }
 
       public IRepository Repo { get; set; }
         
 
-      public SatisfyingInfo(NuGetVersion version, IRepository repo)
+      public SatisfyingInfo(PunditVersion version, IRepository repo)
       {
          Version = version;
          Repo = repo;
@@ -21,5 +21,12 @@ namespace EBerzosa.Pundit.Core.Resolvers
       {
          return Version.CompareTo(other.Version);
       }
+      
+
+      public override string ToString() => Version.ToString();
+
+      public override bool Equals(object obj) => Version.Equals(obj);
+
+      public override int GetHashCode() => Version.GetHashCode();
    }
 }

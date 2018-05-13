@@ -128,6 +128,7 @@
     <Compile Include="Package\PackageStreamer.cs" />
     <Compile Include="Package\PackageWriter.cs" />
     <Compile Include="Repository\FileSystemRepository.cs" />
+    <Compile Include="Resolvers\DependencyNodeComparer.cs" />
     <Compile Include="Resolvers\SatisfyingInfo.cs" />
     <Compile Include="Resolvers\SatisfyingInfoExtended.cs" />
     <Compile Include="Serializers\IPackageSerializer.cs" />
@@ -189,6 +190,8 @@
     <Compile Include="Utils\NullWriter.cs" />
     <Compile Include="Utils\PathUtils.cs" />
     <Compile Include="Utils\VersionUtils.cs" />
+    <Compile Include="Versioning\PunditVersion.cs" />
+    <Compile Include="Versioning\VersionRange.cs" />
     <Compile Include="WiringModule.cs" />
   </ItemGroup>
   <ItemGroup>

@@ -1,5 +1,5 @@
 ﻿using System;
-using NuGet.Versioning;
+using EBerzosa.Pundit.Core.Versioning;
 
 namespace EBerzosa.Pundit.Core
 {
@@ -14,7 +14,7 @@ namespace EBerzosa.Pundit.Core
          if (parts.Length > 4 || parts.Length < 1)
             throw new NotSupportedException($"Version '{version}' is not supported");
 
-         var minVersion = NuGetVersion.Parse(version);
+         var minVersion = PunditVersion.Parse(version);
 
          if (parts.Length == 4)
             return new VersionRange(minVersion, true, minVersion, true, null, version);
@@ -26,7 +26,7 @@ namespace EBerzosa.Pundit.Core
          else
             parts[parts.Length - 1] = (int.Parse(release[0]) + 1).ToString() + '-' + release[1];
 
-         return new VersionRange(minVersion, true, NuGetVersion.Parse(string.Join(".", parts)), false, null, version);
+         return new VersionRange(minVersion, true, PunditVersion.Parse(string.Join(".", parts)), false, null, version);
       }
    }
 }

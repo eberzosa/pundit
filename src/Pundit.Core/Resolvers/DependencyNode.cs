@@ -3,7 +3,7 @@ using System.Collections.Generic;
 using System.Linq;
 using EBerzosa.Pundit.Core.Model.Package;
 using EBerzosa.Pundit.Core.Repository;
-using NuGet.Versioning;
+using EBerzosa.Pundit.Core.Versioning;
 using Pundit.Core.Model;
 
 namespace EBerzosa.Pundit.Core.Resolvers
@@ -73,7 +73,7 @@ namespace EBerzosa.Pundit.Core.Resolvers
          }
       }
 
-      public IEnumerable<NuGetVersion> AllVersions => _satisfyingData.Select(v => v.Version);
+      public IEnumerable<PunditVersion> AllVersions => _satisfyingData.Select(v => v.Version);
 
       public SatisfyingInfo ActiveVersion => _activeVersionIndex == -1 ? null : _satisfyingData[_activeVersionIndex];
 

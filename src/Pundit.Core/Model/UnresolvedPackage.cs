@@ -2,9 +2,8 @@
 using System.Runtime.Serialization;
 using EBerzosa.Pundit.Core;
 using EBerzosa.Pundit.Core.Package;
+using EBerzosa.Pundit.Core.Versioning;
 using EBerzosa.Utils;
-using NuGet.Versioning;
-using Pundit.Core.Utils;
 
 namespace Pundit.Core.Model
 {

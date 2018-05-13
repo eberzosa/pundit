@@ -1,5 +1,5 @@
 ﻿using System.IO;
-using NuGet.Versioning;
+using EBerzosa.Pundit.Core.Versioning;
 using Pundit.Core.Model;
 
 namespace EBerzosa.Pundit.Core.Repository
@@ -16,7 +16,7 @@ namespace EBerzosa.Pundit.Core.Repository
       
       Stream Download(PackageKey key);
 
-      NuGetVersion[] GetVersions(UnresolvedPackage package);
+      PunditVersion[] GetVersions(UnresolvedPackage package);
 
       PackageManifest GetManifest(PackageKey key);
 
