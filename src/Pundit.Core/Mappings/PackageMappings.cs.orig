@@ -1,8 +1,12 @@
 ﻿using EBerzosa.Pundit.Core.Model.Enums;
 using EBerzosa.Pundit.Core.Model.Package;
 using EBerzosa.Pundit.Core.Model.Xml;
+<<<<<<< HEAD
 using EBerzosa.Pundit.Core.Utils;
+using NuGet.Versioning;
+=======
 using EBerzosa.Pundit.Core.Versioning;
+>>>>>>> cb1277dd87e719f2fb046fca8e0417eb130ce926
 using Pundit.Core.Model;
 
 namespace EBerzosa.Pundit.Core.Mappings

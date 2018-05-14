@@ -18,6 +18,7 @@ namespace EBerzosa.Pundit.Core.Resolvers
          Repo = repo;
       }
 
+<<<<<<< HEAD
       public int CompareTo(SatisfyingInfo other) => Version.CompareTo(other.Version);
 
       public int CompareTo(object obj) => Version.CompareTo(obj);
@@ -26,8 +27,18 @@ namespace EBerzosa.Pundit.Core.Resolvers
 
       public override string ToString() => Version.ToString();
 
-      public override int GetHashCode() => Version.GetHashCode();
+=======
+      public int CompareTo(SatisfyingInfo other)
+      {
+         return Version.CompareTo(other.Version);
+      }
       
+
+      public override string ToString() => Version.ToString();
+
       public override bool Equals(object obj) => Version.Equals(obj);
+
+>>>>>>> cb1277dd87e719f2fb046fca8e0417eb130ce926
+      public override int GetHashCode() => Version.GetHashCode();
    }
 }

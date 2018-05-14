@@ -9,7 +9,7 @@ namespace EBerzosa.Pundit.Core.Model.Package
    ///</summary>
    public class PackageDependency
    {
-      public PackageDependency(string packageId, VersionRangeExtended versionRange)
+      public PackageDependency(string packageId, VersionRange versionRange)
       {
          Guard.NotNull(packageId, nameof(packageId));
          Guard.NotNull(versionRange, nameof(versionRange));
@@ -20,7 +20,7 @@ namespace EBerzosa.Pundit.Core.Model.Package
 
       public string PackageId { get; set; }
 
-      public VersionRangeExtended VersionRange { get; set; }
+      public VersionRange VersionRange { get; set; }
 
       /// <summary>
       /// Dependency platform. If ommitted "noarch" assumed. If noarch is not found, no automatic

@@ -1,89 +1,204 @@
-﻿using System;
-using NuGet.Versioning;
+﻿// Copyright (c) .NET Foundation. All rights reserved.
+// Licensed under the Apache License, Version 2.0. See License.txt in the project root for license information.
+
+using System;
+using System.Collections.Generic;
 
 namespace EBerzosa.Pundit.Core.Versioning
 {
-   public class PunditVersion : IFormattable, IComparable, IComparable<PunditVersion>, IEquatable<PunditVersion>
+   /// <summary>
+   /// A hybrid implementation of SemVer that supports semantic versioning as described at http://semver.org while
+   /// not strictly enforcing it to
+   /// allow older 4-digit versioning schemes to continue working.
+   /// </summary>
+   public partial class PunditVersion : SemanticVersion
    {
-      public NuGetVersion NuGetVersion { get; }
+      private readonly string _originalString;
 
-      public int Major => NuGetVersion.Major;
+      /// <summary>
+      /// Creates a NuGetVersion using NuGetVersion.Parse(string)
+      /// </summary>
+      /// <param name="version">Version string</param>
+      public PunditVersion(string version)
+          : this(Parse(version))
+      {
+      }
 
-      public int Minor => NuGetVersion.Minor;
+      /// <summary>
+      /// Creates a NuGetVersion from an existing NuGetVersion
+      /// </summary>
+      public PunditVersion(PunditVersion version)
+          : this(version.Version, version.ReleaseLabels, version.Metadata, version.OriginalVersion)
+      {
+      }
 
-      public int Patch => NuGetVersion.Patch;
+      /// <summary>
+      /// Creates a NuGetVersion from a .NET Version
+      /// </summary>
+      /// <param name="version">Version numbers</param>
+      /// <param name="releaseLabel">Prerelease label</param>
+      /// <param name="metadata">Build metadata</param>
+      public PunditVersion(Version version, string releaseLabel = null, string metadata = null)
+          : this(version, ParseReleaseLabels(releaseLabel), metadata, GetLegacyString(version, ParseReleaseLabels(releaseLabel), metadata))
+      {
+      }
 
-      public int Revision => NuGetVersion.Revision;
+      /// <summary>
+      /// Creates a NuGetVersion X.Y.Z
+      /// </summary>
+      /// <param name="major">X.y.z</param>
+      /// <param name="minor">x.Y.z</param>
+      /// <param name="patch">x.y.Z</param>
+      public PunditVersion(int major, int minor, int patch)
+          : this(major, minor, patch, EmptyReleaseLabels, null)
+      {
+      }
 
-      public string Release => NuGetVersion.Release;
+      /// <summary>
+      /// Creates a NuGetVersion X.Y.Z-alpha
+      /// </summary>
+      /// <param name="major">X.y.z</param>
+      /// <param name="minor">x.Y.z</param>
+      /// <param name="patch">x.y.Z</param>
+      /// <param name="releaseLabel">Prerelease label</param>
+      public PunditVersion(int major, int minor, int patch, string releaseLabel)
+          : this(major, minor, patch, ParseReleaseLabels(releaseLabel), null)
+      {
+      }
 
-      public string OriginalVersion => NuGetVersion.OriginalVersion;
+      /// <summary>
+      /// Creates a NuGetVersion X.Y.Z-alpha#build01
+      /// </summary>
+      /// <param name="major">X.y.z</param>
+      /// <param name="minor">x.Y.z</param>
+      /// <param name="patch">x.y.Z</param>
+      /// <param name="releaseLabel">Prerelease label</param>
+      /// <param name="metadata">Build metadata</param>
+      public PunditVersion(int major, int minor, int patch, string releaseLabel, string metadata)
+          : this(major, minor, patch, ParseReleaseLabels(releaseLabel), metadata)
+      {
+      }
 
-      public Version Version => NuGetVersion.Version;
+      /// <summary>
+      /// Creates a NuGetVersion X.Y.Z-alpha.1.2#build01
+      /// </summary>
+      /// <param name="major">X.y.z</param>
+      /// <param name="minor">x.Y.z</param>
+      /// <param name="patch">x.y.Z</param>
+      /// <param name="releaseLabels">Prerelease labels</param>
+      /// <param name="metadata">Build metadata</param>
+      public PunditVersion(int major, int minor, int patch, IEnumerable<string> releaseLabels, string metadata)
+          : this(new Version(major, minor, patch, 0), releaseLabels, metadata, null)
+      {
+      }
 
-
-      public PunditVersion(NuGetVersion version) 
-         => NuGetVersion = version;
-
-      public PunditVersion(Version version)
-         => NuGetVersion = new NuGetVersion(version);
-
+      /// <summary>
+      /// Creates a NuGetVersion W.X.Y.Z
+      /// </summary>
+      /// <param name="major">W.x.y.z</param>
+      /// <param name="minor">w.X.y.z</param>
+      /// <param name="patch">w.x.Y.z</param>
+      /// <param name="revision">w.x.y.Z</param>
       public PunditVersion(int major, int minor, int patch, int revision)
-         => NuGetVersion = new NuGetVersion(major, minor, patch, revision);
-
-      public PunditVersion(int major, int minor, int patch, int revision, string release, string metadata) 
-         => NuGetVersion = new NuGetVersion(major, minor, patch, revision, release, metadata);
-
-      public static PunditVersion Parse(string value)
+          : this(major, minor, patch, revision, EmptyReleaseLabels, null)
       {
-         var version = NuGetVersion.Parse(value);
-         return version == null ? null : new PunditVersion(version);
       }
 
-
-      /// <summary>Equals</summary>
-      public static bool operator ==(PunditVersion version1, PunditVersion version2) => Compare(version1, version2) == 0;
-
-      /// <summary>Not equal</summary>
-      public static bool operator !=(PunditVersion version1, PunditVersion version2) => (uint)Compare(version1, version2) > 0U;
-
-      /// <summary>Less than</summary>
-      public static bool operator <(PunditVersion version1, PunditVersion version2) => Compare(version1, version2) < 0;
-
-      /// <summary>Less than or equal</summary>
-      public static bool operator <=(PunditVersion version1, PunditVersion version2) => Compare(version1, version2) <= 0;
-
-      /// <summary>Greater than</summary>
-      public static bool operator >(PunditVersion version1, PunditVersion version2) => Compare(version1, version2) > 0;
-
-      /// <summary>Greater than or equal</summary>
-      public static bool operator >=(PunditVersion version1, PunditVersion version2) => Compare(version1, version2) >= 0;
-
-      private static int Compare(PunditVersion version1, PunditVersion version2)
+      /// <summary>
+      /// Creates a NuGetVersion W.X.Y.Z-alpha#build01
+      /// </summary>
+      /// <param name="major">W.x.y.z</param>
+      /// <param name="minor">w.X.y.z</param>
+      /// <param name="patch">w.x.Y.z</param>
+      /// <param name="revision">w.x.y.Z</param>
+      /// <param name="releaseLabel">Prerelease label</param>
+      /// <param name="metadata">Build metadata</param>
+      public PunditVersion(int major, int minor, int patch, int revision, string releaseLabel, string metadata)
+          : this(major, minor, patch, revision, ParseReleaseLabels(releaseLabel), metadata)
       {
-         if ((object)version1 == null && (object)version2 == null)
-            return 0;
-
-         if ((object)version1 != null && (object)version2 == null)
-            return 1;
-
-         if ((object)version1 == null)
-            return -1;
-
-         return VersionComparer.Default.Compare(version1.NuGetVersion, version2.NuGetVersion);
       }
 
+      /// <summary>
+      /// Creates a NuGetVersion W.X.Y.Z-alpha.1#build01
+      /// </summary>
+      /// <param name="major">W.x.y.z</param>
+      /// <param name="minor">w.X.y.z</param>
+      /// <param name="patch">w.x.Y.z</param>
+      /// <param name="revision">w.x.y.Z</param>
+      /// <param name="releaseLabels">Prerelease labels</param>
+      /// <param name="metadata">Build metadata</param>
+      public PunditVersion(int major, int minor, int patch, int revision, IEnumerable<string> releaseLabels, string metadata)
+          : this(new Version(major, minor, patch, revision), releaseLabels, metadata, null)
+      {
+      }
 
-      public override string ToString() => NuGetVersion.ToString();
+      /// <summary>
+      /// Creates a NuGetVersion from a .NET Version with additional release labels, build metadata, and a
+      /// non-normalized version string.
+      /// </summary>
+      /// <param name="version">Version numbers</param>
+      /// <param name="releaseLabels">prerelease labels</param>
+      /// <param name="metadata">Build metadata</param>
+      /// <param name="originalVersion">Non-normalized original version string</param>
+      public PunditVersion(Version version, IEnumerable<string> releaseLabels, string metadata, string originalVersion)
+          : base(version, releaseLabels, metadata)
+      {
+         _originalString = originalVersion;
+      }
 
-      public override int GetHashCode() => NuGetVersion.GetHashCode();
+      /// <summary>
+      /// Returns the version string.
+      /// </summary>
+      /// <remarks>This method includes legacy behavior. Use ToNormalizedString() instead.</remarks>
+      /// <remarks>Versions with SemVer 2.0.0 components are automatically normalized.</remarks>
+      public override string ToString()
+      {
+         // Versions with SemVer 2.0.0 components are automatically normalized,
+         // non-normalized strings are only allowed for backcompat with older versions
+         // of nuget, and those did not support SemVer 2.0.0.
+         if (string.IsNullOrEmpty(_originalString) || IsSemVer2)
+         {
+            return ToNormalizedString();
+         }
 
-      public string ToString(string format, IFormatProvider formatProvider) => NuGetVersion.ToString(format, formatProvider);
+         return _originalString;
+      }
 
-      public int CompareTo(object obj) => NuGetVersion.CompareTo(obj);
+      /// <summary>
+      /// A System.Version representation of the version without metadata or release labels.
+      /// </summary>
+      public Version Version
+      {
+         get { return _version; }
+      }
 
-      public int CompareTo(PunditVersion other) => NuGetVersion.CompareTo(other?.NuGetVersion);
+      /// <summary>
+      /// True if the NuGetVersion is using legacy behavior.
+      /// </summary>
+      public virtual bool IsLegacyVersion
+      {
+         get { return Version.Revision > 0; }
+      }
 
-      public bool Equals(PunditVersion other) => NuGetVersion.Equals(other?.NuGetVersion);
+      /// <summary>
+      /// Revision version R (x.y.z.R)
+      /// </summary>
+      public int Revision
+      {
+         get { return _version.Revision; }
+      }
+
+      /// <summary>
+      /// Returns true if version is a SemVer 2.0.0 version
+      /// </summary>
+      public bool IsSemVer2
+      {
+         get { return (_releaseLabels != null && _releaseLabels.Length > 1) || HasMetadata; }
+      }
+
+      /// <summary>
+      /// Returns the original, non-normalized version string.
+      /// </summary>
+      public string OriginalVersion => _originalString;
    }
 }

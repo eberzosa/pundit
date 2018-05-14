@@ -5,7 +5,9 @@ using System.Linq;
 using System.Threading;
 using System.Threading.Tasks;
 using EBerzosa.Pundit.Core.Model;
+using EBerzosa.Pundit.Core.Versioning;
 using EBerzosa.Utils;
+using Mapster;
 using NuGet.Common;
 using NuGet.Configuration;
 using NuGet.Frameworks;
@@ -13,7 +15,6 @@ using NuGet.Packaging;
 using NuGet.Packaging.Core;
 using NuGet.Protocol;
 using NuGet.Protocol.Core.Types;
-using NuGet.Versioning;
 using Pundit.Core.Model;
 using PackageDependency = EBerzosa.Pundit.Core.Model.Package.PackageDependency;
 
@@ -66,7 +67,7 @@ namespace EBerzosa.Pundit.Core.Repository
 
       public Stream Download(PackageKey key)
       {
-         var packageIdentity = new PackageIdentity(key.PackageId, NuGetVersion.Parse(key.VersionString));
+         var packageIdentity = new PackageIdentity(key.PackageId, PunditVersion.Parse(key.VersionString).Adapt<NuGet.Versioning.NuGetVersion>());
 
          var downloadResource = _sourceRepository.GetResource<DownloadResource>();
          
@@ -91,20 +92,20 @@ namespace EBerzosa.Pundit.Core.Repository
          }
       }
 
-      public ICollection<NuGetVersion> GetVersions(UnresolvedPackage package)
+      public ICollection<PunditVersion> GetVersions(UnresolvedPackage package)
       {
          var packagesResource = _sourceRepository.GetResource<FindPackageByIdResource>();
          var packageInfos = packagesResource.GetAllVersionsAsync(package.PackageId, NullSourceCacheContext.Instance, NullLogger.Instance, CancellationToken.None);
          
          return packageInfos.Result.Where(p => package.VersionPattern.IsFloating
-               ? package.VersionPattern.Float.Satisfies(p)
-               : package.VersionPattern.Satisfies(p))
-            .ToArray();
+               ? package.VersionPattern.Float.Satisfies(p.Adapt<PunditVersion>())
+               : package.VersionPattern.Satisfies(p.Adapt<PunditVersion>()))
+            .Adapt<IEnumerable<PunditVersion>>().ToArray();
       }
 
       public PackageManifest GetManifest(PackageKey key)
       {
-         var packageIdentity = new PackageIdentity(key.PackageId, NuGetVersion.Parse(key.VersionString));
+         var packageIdentity = new PackageIdentity(key.PackageId, PunditVersion.Parse(key.VersionString).Adapt<NuGet.Versioning.NuGetVersion>());
 
          var packagesResource = _sourceRepository.GetResource<PackageMetadataResource>();
          var packageInfo = packagesResource.GetMetadataAsync(packageIdentity, NullSourceCacheContext.Instance, NullLogger.Instance, CancellationToken.None).Result;
@@ -123,7 +124,7 @@ namespace EBerzosa.Pundit.Core.Repository
          var manifest = new PackageManifest
          {
             PackageId = packageInfo.Identity.Id,
-            Version = packageInfo.Identity.Version,
+            Version = packageInfo.Identity.Version.Adapt<PunditVersion>(),
             Dependencies = new List<Model.Package.PackageDependency>(),
             Platform = dependencies?.TargetFramework.GetShortFolderName()
          };
@@ -132,7 +133,7 @@ namespace EBerzosa.Pundit.Core.Repository
             return manifest;
 
          foreach (var dependency in dependencies.Packages)
-            manifest.Dependencies.Add(new PackageDependency(dependency.Id, dependency.VersionRange) {Platform = manifest.Platform});
+            manifest.Dependencies.Add(new PackageDependency(dependency.Id, dependency.VersionRange.Adapt<VersionRange>()) {Platform = manifest.Platform});
 
          return manifest;
       }
@@ -141,7 +142,7 @@ namespace EBerzosa.Pundit.Core.Repository
       {
          var findLocalPackagesResource = _sourceRepository.GetResource<PackageMetadataResource>();
 
-         var packageIdentity = new PackageIdentity(package.PackageId, package.Version);
+         var packageIdentity = new PackageIdentity(package.PackageId, package.Version.Adapt<NuGet.Versioning.NuGetVersion>());
          return findLocalPackagesResource.GetMetadataAsync(packageIdentity, NullSourceCacheContext.Instance, NullLogger.Instance, CancellationToken.None).Result != null;
       }
 
@@ -152,7 +153,7 @@ namespace EBerzosa.Pundit.Core.Repository
             .Result;
 
          foreach (var result in results)
-            yield return new PackageKey(result.Identity.Id, result.Identity.Version, null);
+            yield return new PackageKey(result.Identity.Id, result.Identity.Version.Adapt<PunditVersion>(), null);
       }
 
       private FileSystemRepository GetFsRepoOrDie(IRepository repo)

@@ -1,10 +1,9 @@
 ﻿using EBerzosa.Pundit.Core.Versioning;
-using NuGet.Versioning;
 using Xunit;
 
 namespace Pundit.Test.Versioning
 {
-   public class FloatRangeExtendedTest
+   public class FloatRangeTest
    {
       [Theory]
       [InlineData("1",             FloatBehaviour.None,               "1",            null)]
@@ -29,7 +28,7 @@ namespace Pundit.Test.Versioning
       [InlineData("*-beta.*",      FloatBehaviour.MajorPrerelease,    "0-beta.0",      "beta.")]
       public void Parse_Valid(string version, FloatBehaviour expectedFloatBehaviour, string expectedMinVersion, string expectedOriginalRelease)
       {
-         var result = FloatRangeExtended.TryParse(version, out var floatVersion);
+         var result = FloatRange.TryParse(version, out var floatVersion);
          
          Assert.True(result);
          Assert.Equal(expectedFloatBehaviour, floatVersion.FloatBehaviour);
@@ -58,7 +57,7 @@ namespace Pundit.Test.Versioning
       [InlineData("0.0.0-")]
       public void Parse_NotValid(string version)
       {
-         var result = FloatRangeExtended.TryParse(version, out var floatVersion);
+         var result = FloatRange.TryParse(version, out var floatVersion);
 
          Assert.False(result);
          Assert.Null(floatVersion);
@@ -138,8 +137,8 @@ namespace Pundit.Test.Versioning
       [InlineData("*-beta.*",      "1.0.0")]
       public void Satisfies_True(string version, string satisfiesVersion)
       {
-         var satisfies = NuGetVersion.Parse(satisfiesVersion);
-         var floatVersion = FloatRangeExtended.Parse(version);
+         var satisfies = PunditVersion.Parse(satisfiesVersion);
+         var floatVersion = FloatRange.Parse(version);
 
          var result = floatVersion.Satisfies(satisfies);
 
@@ -207,8 +206,8 @@ namespace Pundit.Test.Versioning
       [InlineData("*-beta.*",      "0.0.0-beta0")]
       public void Satisfies_False(string version, string satisfiesVersion)
       {
-         var satisfies = NuGetVersion.Parse(satisfiesVersion);
-         var floatVersion = FloatRangeExtended.Parse(version);
+         var satisfies = PunditVersion.Parse(satisfiesVersion);
+         var floatVersion = FloatRange.Parse(version);
 
          var result = floatVersion.Satisfies(satisfies);
 

@@ -21,7 +21,7 @@ namespace EBerzosa.Pundit.Core.Package
 
       public IPackageInstaller GetInstaller(string rootDirectory, VersionResolutionTable versionTable, PackageSpec manifest)
       {
-         return new PackageInstaller(_packageReaderFactory, rootDirectory, versionTable, manifest, _repositoryFactory.GetCacheRepos());
+         return new PackageInstaller(_packageReaderFactory, rootDirectory, versionTable, manifest, _repositoryFactory.TryGetCacheRepos());
       }
    }
 }

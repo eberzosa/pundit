@@ -30,7 +30,11 @@ namespace EBerzosa.Pundit.Core.Mappings
                .Select(packagesForPlatform => new NuGetv3.PackageDependencyGroup(
                   NuGetFramework.Parse(packagesForPlatform.Key),
                   packagesForPlatform.Select(d =>
-                     new NuGetv3.Core.PackageDependency(d.PackageId, d.VersionRange.Adapt<NuGet.Versioning.VersionRange>())))));
+<<<<<<< HEAD
+                     new NuGetv3.Core.PackageDependency(d.PackageId, d.VersionRange)))));
+=======
+                     new NuGetv3.Core.PackageDependency(d.PackageId, d.VersionPattern.NuGetVersionRange)))));
+>>>>>>> cb1277dd87e719f2fb046fca8e0417eb130ce926
 
          Mapster.TypeAdapterConfig<SourceFiles, NuGetv3.ManifestFile>.NewConfig()
             .Map(file => file.Target, files => files.FileKind.Adapt<PackageFileKind, string>() + files.TargetDirectory);
@@ -67,7 +71,7 @@ namespace EBerzosa.Pundit.Core.Mappings
             MinClientVersionString = "3.3", // Because of the ContentFiles
 
             Id = spec.PackageId,
-            Version = spec.Version.Adapt<NuGet.Versioning.NuGetVersion>(),
+            Version = spec.Version.NuGetVersion,
             Description = spec.Description,
             Authors = new[] { spec.Author },
 

@@ -7,6 +7,11 @@ using EBerzosa.Pundit.Core.Model;
 using EBerzosa.Pundit.Core.Package;
 using EBerzosa.Pundit.Core.Versioning;
 using EBerzosa.Utils;
+<<<<<<< HEAD
+using NuGet.Versioning;
+=======
+using Pundit.Core.Application;
+>>>>>>> cb1277dd87e719f2fb046fca8e0417eb130ce926
 using Pundit.Core.Model;
 
 namespace EBerzosa.Pundit.Core.Repository
@@ -74,12 +79,19 @@ namespace EBerzosa.Pundit.Core.Repository
          return File.OpenRead(fullPath);
       }
 
-      public ICollection<PunditVersion> GetVersions(UnresolvedPackage package)
+<<<<<<< HEAD
+      public ICollection<NuGetVersion> GetVersions(UnresolvedPackage package)
       {
+=======
+      public PunditVersion[] GetVersions(UnresolvedPackage package)
+      {
+         var versions = new List<PunditVersion>();
+
+>>>>>>> cb1277dd87e719f2fb046fca8e0417eb130ce926
          var filePattern = new PackageFileName(package).SearchFileName;
 
          if (filePattern == null)
-            return new PunditVersion[0];
+            return new NuGetVersion[0];
 
          return new DirectoryInfo(RootPath).GetFiles(filePattern)
             .Select(i => PackageFileName.GetPackageKeyFromFileName(i.Name).Version).ToArray();

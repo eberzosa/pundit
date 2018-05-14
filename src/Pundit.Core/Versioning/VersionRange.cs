@@ -1,50 +1,369 @@
-﻿using System;
+﻿// Copyright (c) .NET Foundation. All rights reserved.
+// Licensed under the Apache License, Version 2.0. See License.txt in the project root for license information.
+
+using System;
+using System.Collections.Generic;
+using System.Linq;
 
 namespace EBerzosa.Pundit.Core.Versioning
 {
-   public class VersionRange : IFormattable, IEquatable<VersionRange>
-   {
-      public NuGet.Versioning.VersionRange NuGetVersionRange { get; }
-      
-      public PunditVersion MinVersion { get; }
+    /// <summary>
+    /// Represents a range of versions and a preferred order.
+    /// </summary>
+    public partial class VersionRange : VersionRangeBase, IFormattable
+    {
+        private readonly FloatRange _floatRange;
+        private readonly string _originalString;
 
-      public bool IsMinInclusive => NuGetVersionRange.IsMinInclusive;
-     
-      public PunditVersion MaxVersion { get; }
+        /// <summary>
+        /// Creates a range that is greater than or equal to the minVersion.
+        /// </summary>
+        /// <param name="minVersion">Lower bound of the version range.</param>
+        public VersionRange(PunditVersion minVersion)
+            : this(minVersion, null)
+        {
+        }
 
-      public bool IsMaxInclusive => NuGetVersionRange.IsMaxInclusive;
+        /// <summary>
+        /// Creates a range that is greater than or equal to the minVersion with the given float behavior.
+        /// </summary>
+        /// <param name="minVersion">Lower bound of the version range.</param>
+        /// <param name="floatRange">Floating behavior.</param>
+        public VersionRange(PunditVersion minVersion, FloatRange floatRange)
+            : this(
+                  minVersion: minVersion,
+                  includeMinVersion: true,
+                  maxVersion: null,
+                  includeMaxVersion: false,
+                  originalString: null,
+                  floatRange: floatRange)
+        {
+        }
 
-      public string OriginalString => NuGetVersionRange.OriginalString;
+        /// <summary>
+        /// Clones a version range and applies a new float range.
+        /// </summary>
+        public VersionRange(VersionRange range, FloatRange floatRange)
+            : this(range.MinVersion, range.IsMinInclusive, range.MaxVersion, range.IsMaxInclusive, floatRange)
+        {
+        }
 
+        /// <summary>
+        /// Creates a VersionRange with the given min and max.
+        /// </summary>
+        /// <param name="minVersion">Lower bound of the version range.</param>
+        /// <param name="includeMinVersion">True if minVersion satisfies the condition.</param>
+        /// <param name="maxVersion">Upper bound of the version range.</param>
+        /// <param name="includeMaxVersion">True if maxVersion satisfies the condition.</param>
+        /// <param name="floatRange">The floating range subset used to find the best version match.</param>
+        /// <param name="originalString">The original string being parsed to this object.</param>
+        public VersionRange(PunditVersion minVersion = null, bool includeMinVersion = true, PunditVersion maxVersion = null,
+            bool includeMaxVersion = false, FloatRange floatRange = null, string originalString = null)
+            : base(minVersion, includeMinVersion, maxVersion, includeMaxVersion)
+        {
+            _floatRange = floatRange;
+            _originalString = originalString;
+        }
 
-      public VersionRange(NuGet.Versioning.VersionRange range)
-      {
-         NuGetVersionRange = range;
-         MinVersion = new PunditVersion(NuGetVersionRange.MinVersion);
-         MaxVersion = new PunditVersion(NuGetVersionRange.MaxVersion);
-      }
+        /// <summary>
+        /// True if the range has a floating version above the min version.
+        /// </summary>
+        public bool IsFloating
+        {
+            get { return Float != null && Float.FloatBehaviour != FloatBehaviour.None; }
+        }
 
-      public VersionRange(PunditVersion minVersion = null, bool includeMinVersion = true, PunditVersion maxVersion = null,
-         bool includeMaxVersion = false, NuGet.Versioning.FloatRange floatRange = null, string originalString = null)
-      {
-         NuGetVersionRange = new NuGet.Versioning.VersionRange(minVersion.NuGetVersion, includeMinVersion, maxVersion.NuGetVersion, includeMaxVersion,
-            floatRange, originalString);
+        /// <summary>
+        /// Optional floating range used to determine the best version match.
+        /// </summary>
+        public FloatRange Float
+        {
+            get { return _floatRange; }
+        }
 
-         MinVersion = minVersion;
-         MaxVersion = maxVersion;
-      }
+        /// <summary>
+        /// Original string being parsed to this object.
+        /// </summary>
+        public string OriginalString
+        {
+            get { return _originalString; }
+        }
 
-      public static VersionRange Parse(string value)
-      {
-         var range = NuGet.Versioning.VersionRange.Parse(value);
-         return range == null ? null : new VersionRange(range);
-      }
+        /// <summary>
+        /// Normalized range string.
+        /// </summary>
+        public override string ToString()
+        {
+            return ToNormalizedString();
+        }
 
+        /// <summary>
+        /// Normalized range string.
+        /// </summary>
+        public virtual string ToNormalizedString()
+        {
+            return ToString("N", new VersionRangeFormatter());
+        }
 
-      public override string ToString() => NuGetVersionRange.ToString();
+        /// <summary>
+        /// A legacy version range compatible with NuGet 2.8.3
+        /// </summary>
+        public virtual string ToLegacyString()
+        {
+            return ToString("D", new VersionRangeFormatter());
+        }
 
-      public string ToString(string format, IFormatProvider formatProvider) => NuGetVersionRange.ToString(format, formatProvider);
+        /// <summary>
+        /// A short legacy version range compatible with NuGet 2.8.3.
+        /// Ex: 1.0.0
+        /// </summary>
+        public virtual string ToLegacyShortString()
+        {
+            return ToString("T", new VersionRangeFormatter());
+        }
 
-      public bool Equals(VersionRange other) => NuGetVersionRange.Equals(other?.NuGetVersionRange);
-   }
+        /// <summary>
+        /// Format the version range with an IFormatProvider
+        /// </summary>
+        public string ToString(string format, IFormatProvider formatProvider)
+        {
+            string formattedString = null;
+
+            if (formatProvider == null
+                || !TryFormatter(format, formatProvider, out formattedString))
+            {
+                formattedString = ToString();
+            }
+
+            return formattedString;
+        }
+
+        /// <summary>
+        /// Format the range
+        /// </summary>
+        protected bool TryFormatter(string format, IFormatProvider formatProvider, out string formattedString)
+        {
+            var formatted = false;
+            formattedString = null;
+
+            if (formatProvider != null)
+            {
+                var formatter = formatProvider.GetFormat(this.GetType()) as ICustomFormatter;
+                if (formatter != null)
+                {
+                    formatted = true;
+                    formattedString = formatter.Format(format, this, formatProvider);
+                }
+            }
+
+            return formatted;
+        }
+
+        /// <summary>
+        /// Format the version range in Pretty Print format.
+        /// </summary>
+        public string PrettyPrint()
+        {
+            return ToString("P", new VersionRangeFormatter());
+        }
+
+        /// <summary>
+        /// Return the version that best matches the range.
+        /// </summary>
+        public PunditVersion FindBestMatch(IEnumerable<PunditVersion> versions)
+        {
+           PunditVersion bestMatch = null;
+
+            if (versions != null)
+            {
+                foreach (var version in versions)
+                {
+                    if (IsBetter(bestMatch, version))
+                    {
+                        bestMatch = version;
+                    }
+                }
+            }
+
+            return bestMatch;
+        }
+
+        /// <summary>
+        /// Determines if a given version is better suited to the range than a current version.
+        /// </summary>
+        public bool IsBetter(PunditVersion current, PunditVersion considering)
+        {
+            if (ReferenceEquals(current, considering))
+            {
+                return false;
+            }
+
+            // null checks
+            if (ReferenceEquals(considering, null))
+            {
+                return false;
+            }
+
+            // If the range contains only stable versions disallow prerelease versions
+            if (!HasPrereleaseBounds
+                && considering.IsPrerelease
+                && _floatRange?.FloatBehaviour != FloatBehaviour.Prerelease
+                && _floatRange?.FloatBehaviour != FloatBehaviour.AbsoluteLatest)
+            {
+                return false;
+            }
+
+            if (!Satisfies(considering))
+            {
+                // keep null over a value outside of the range
+                return false;
+            }
+
+            if (ReferenceEquals(current, null))
+            {
+                return true;
+            }
+
+            if (IsFloating)
+            {
+                // check if either version is in the floating range
+                var curInRange = _floatRange.Satisfies(current);
+                var conInRange = _floatRange.Satisfies(considering);
+
+                if (curInRange && !conInRange)
+                {
+                    // take the version in the range
+                    return false;
+                }
+                else if (conInRange && !curInRange)
+                {
+                    // take the version in the range
+                    return true;
+                }
+                else if (curInRange && conInRange)
+                {
+                    // prefer the highest one if both are in the range
+                    return current < considering;
+                }
+                else
+                {
+                    // neither are in range
+                    var curToLower = current < _floatRange.MinVersion;
+                    var conToLower = considering < _floatRange.MinVersion;
+
+                    if (curToLower && !conToLower)
+                    {
+                        // favor the version above the range
+                        return true;
+                    }
+                    else if (!curToLower && conToLower)
+                    {
+                        // favor the version above the range
+                        return false;
+                    }
+                    else if (!curToLower
+                             && !conToLower)
+                    {
+                        // favor the lower version if we are above the range
+                        return current > considering;
+                    }
+                    else if (curToLower && conToLower)
+                    {
+                        // favor the higher version if we are below the range
+                        return current < considering;
+                    }
+                }
+            }
+
+            // Favor lower versions
+            return current > considering;
+        }
+
+        /// <summary>
+        /// Removes the floating snapshot part of the minimum version if it exists.
+        /// Ex: 1.0.0-* -> 1.0.0
+        /// </summary>
+        public VersionRange ToNonSnapshotRange()
+        {
+            // For non-floating versions there is no change
+            var result = this;
+
+            if (IsFloating)
+            {
+                var minVersion = MinVersion;
+
+                if (Float.FloatBehaviour == FloatBehaviour.Prerelease)
+                {
+                    minVersion = GetNonSnapshotVersion(minVersion);
+                }
+
+                // Drop the floating range from the new range regardless of the float type
+                result = new VersionRange(
+                    minVersion,
+                    IsMinInclusive,
+                    MaxVersion,
+                    IsMaxInclusive);
+            }
+
+            return result;
+        }
+
+        /// <summary>
+        /// Remove the snapshot version section of a version
+        /// </summary>
+        private static PunditVersion GetNonSnapshotVersion(PunditVersion version)
+        {
+            var nonSnapshotVersion = version;
+
+            var lastLabel = version.ReleaseLabels.LastOrDefault() ?? string.Empty;
+
+            var endsWithZero = lastLabel == "0";
+            var endsWithDash = lastLabel.EndsWith("-", StringComparison.Ordinal);
+
+            if (endsWithZero || endsWithDash)
+            {
+                var fixedReleaseLabel = string.Empty;
+
+                if (endsWithDash)
+                {
+                    if (lastLabel.EndsWith("--", StringComparison.Ordinal))
+                    {
+                        // For labels such as rc1-* an additional - is added by nuget
+                        fixedReleaseLabel = lastLabel.Substring(0, lastLabel.Length - 2);
+                    }
+                    else
+                    {
+                        // Remove the - for 1.0.0-* (1.0.0--)
+                        fixedReleaseLabel = lastLabel.Substring(0, lastLabel.Length - 1);
+                    }
+                }
+
+                // Remove the last label and add in the fixed label if one exists.
+                var fixedLabels = version.ReleaseLabels.Take(version.ReleaseLabels.Count() - 1).ToList();
+
+                if (!string.IsNullOrEmpty(fixedReleaseLabel))
+                {
+                    fixedLabels.Add(fixedReleaseLabel);
+                }
+
+                nonSnapshotVersion = new PunditVersion(
+                    version.Major,
+                    version.Minor,
+                    version.Patch,
+                    version.Revision,
+                    fixedLabels,
+                    version.Metadata);
+            }
+
+            return nonSnapshotVersion;
+        }
+
+        /// <summary>
+        /// ToLegacyShortString that also includes floating ranges
+        /// </summary>
+        public virtual string ToShortString()
+        {
+            return ToString("A", new VersionRangeFormatter());
+        }
+    }
 }

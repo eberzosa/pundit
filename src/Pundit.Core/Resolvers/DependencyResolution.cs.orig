@@ -5,7 +5,11 @@ using System.Text;
 using EBerzosa.Pundit.Core.Model;
 using EBerzosa.Pundit.Core.Repository;
 using EBerzosa.Pundit.Core.Versioning;
+<<<<<<< HEAD
+using NuGet.Versioning;
+=======
 using NuGet.Packaging;
+>>>>>>> cb1277dd87e719f2fb046fca8e0417eb130ce926
 using Pundit.Core.Model;
 
 namespace EBerzosa.Pundit.Core.Resolvers
@@ -29,7 +33,12 @@ namespace EBerzosa.Pundit.Core.Resolvers
          _activeRepositories = activeRepositories;
          _includeDeveloperPackages = includeDeveloperPackages;
 
+<<<<<<< HEAD
+         var version = new NuGetVersion(rootManifest.Version.OriginalVersion);
+         var versionRange = new VersionRange(version, true, version, true, null, rootManifest.Version.OriginalVersion);
+=======
          var versionRange = VersionRange.Parse(rootManifest.Version.OriginalVersion);
+>>>>>>> cb1277dd87e719f2fb046fca8e0417eb130ce926
          _rootDependencyNode = new DependencyNode(null, rootManifest.PackageId, rootManifest.Platform, versionRange, _includeDeveloperPackages);
          _rootDependencyNode.MarkAsRoot(rootManifest);
       }
@@ -98,7 +107,7 @@ namespace EBerzosa.Pundit.Core.Resolvers
 
                if (versions == null)
                   continue;
-
+               
                foreach (var version in versions)
                   if (!punditVersions.ContainsKey(version))
                      punditVersions.Add(version, new SatisfyingInfo(version, repo));
@@ -214,9 +223,14 @@ namespace EBerzosa.Pundit.Core.Resolvers
       {
          foreach (DependencyNode node in nodes)
          {
+<<<<<<< HEAD
+            if (sb.Length != 0) sb.AppendLine();
+            
+=======
             if (sb.Length != 0)
                sb.AppendLine();
 
+>>>>>>> cb1277dd87e719f2fb046fca8e0417eb130ce926
             sb.Append("dependency: [");
             sb.Append(node.Path);
             sb.Append("], version: [");
@@ -238,7 +252,7 @@ namespace EBerzosa.Pundit.Core.Resolvers
          }
       }
 
-      public string GetPrintableVersion(VersionRange range)
+      public string GetPrintableVersion(VersionRangeExtended range)
       {
          if (range.IsFloating)
             return range.Float.ToString();

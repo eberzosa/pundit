@@ -113,6 +113,7 @@
   <ItemGroup>
     <Compile Include="3rdparty\DirectoryScanner.cs" />
     <Compile Include="3rdparty\Options.cs" />
+    <Compile Include="Mappings\VersionsMappings.cs" />
     <Compile Include="Package\IPackageInstaller.cs" />
     <Compile Include="Package\IPackageReader.cs" />
     <Compile Include="Package\PackageFileName.cs" />
@@ -197,11 +198,25 @@
     <Compile Include="Utils\ByteFormatProvider.cs" />
     <Compile Include="Utils\NullWriter.cs" />
     <Compile Include="Utils\PathUtils.cs" />
+    <Compile Include="Versioning\VersionRange.cs" />
+    <Compile Include="Versioning\VersionRangeFactory.cs" />
+    <Compile Include="Versioning\VersionRangeFormatter.cs" />
+    <Compile Include="Versioning\VersionRangeComparer.cs" />
+    <Compile Include="Versioning\IVersionRangeComparer.cs" />
+    <Compile Include="Versioning\PunditVersionFactory.cs" />
+    <Compile Include="Versioning\VersionFormatter.cs" />
+    <Compile Include="Versioning\IVersionComparer.cs" />
+    <Compile Include="Versioning\SemanticVersionFactory.cs" />
+    <Compile Include="Versioning\SemanticVersionBase.cs" />
+    <Compile Include="Versioning\SemanticVersion.cs" />
+    <Compile Include="Versioning\VersionComparison.cs" />
+    <Compile Include="Versioning\HashCodeCombiner.cs" />
     <Compile Include="Versioning\FloatBehaviour.cs" />
-    <Compile Include="Versioning\FloatRangeExtended.cs" />
+    <Compile Include="Versioning\FloatRange.cs" />
     <Compile Include="Utils\VersionUtils.cs" />
     <Compile Include="Versioning\PunditVersion.cs" />
-    <Compile Include="Versioning\VersionRange.cs" />
+    <Compile Include="Versioning\VersionComparer.cs" />
+    <Compile Include="Versioning\VersionRangeBase.cs" />
     <Compile Include="WiringModule.cs" />
   </ItemGroup>
   <ItemGroup>

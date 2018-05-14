@@ -16,10 +16,10 @@ namespace EBerzosa.Pundit.Core.Model
       public string Platform { get; set; }
       
       [DataMember]
-      public VersionRangeExtended VersionPattern { get; set; }
+      public VersionRange VersionPattern { get; set; }
 
 
-      public UnresolvedPackage(string packageId, string platform, VersionRangeExtended versionRange)
+      public UnresolvedPackage(string packageId, string platform, VersionRange versionRange)
       {
          Guard.NotNull(packageId, nameof(packageId));
 

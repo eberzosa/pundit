@@ -74,8 +74,12 @@ namespace EBerzosa.Pundit.Core.Services
          _writer.Success(" ok").EndWrite();
 
          _writer.BeginWrite().Text("Getting repositories...");
+<<<<<<< HEAD
+         var repos = _repositoryFactory.GetEnabledRepos(true, !LocalReposOnly).ToArray();
+         _writer.Success(" ok").EndWrite();
+=======
 
-         var repos = _repositoryFactory.TryGetEnabledRepos(true, !LocalReposOnly).ToArray();
+         var repos = _repositoryFactory.TryGetRepos(true, !LocalReposOnly).ToArray();
 
          if (repos.Length == 0)
          {
@@ -89,6 +93,7 @@ namespace EBerzosa.Pundit.Core.Services
             _writer.Info("  " + repository);
 
          _writer.EndWrite();
+>>>>>>> cb1277dd87e719f2fb046fca8e0417eb130ce926
 
          _writer.BeginWrite().Text("Resolving...");
          var resolutionResult = _dependencyResolution.Resolve(packageSpecs, repos, IncludeDeveloperPackages);
@@ -140,9 +145,15 @@ namespace EBerzosa.Pundit.Core.Services
 
       private void Install(Tuple<VersionResolutionTable, DependencyNode> resolutionResult, PackageSpec packageSpec)
       {
-         var cacheRepo = new CacheRepository(_repositoryFactory.TryGetCacheRepos());
+<<<<<<< HEAD
+         var cacheRepo = new CacheRepository(_repositoryFactory.GetCacheRepos());
          cacheRepo.PackageDownloadToCacheRepositoryStarted += CacheRepositoryPackageDownloadToCacheRepositoryStarted;
          cacheRepo.PackageDownloadToCacheRepositoryFinished += CacheRepositoryOnPackageDownloadToCacheRepositoryFinished;
+=======
+         var localRepo = new LocalRepository(_repositoryFactory.TryGetLocalRepo());
+         localRepo.PackageDownloadToLocalRepositoryStarted += LocalRepository_PackageDownloadToLocalRepositoryStarted;
+         localRepo.PackageDownloadToLocalRepositoryFinished += LocalRepositoryOnPackageDownloadToLocalRepositoryFinished;
+>>>>>>> cb1277dd87e719f2fb046fca8e0417eb130ce926
 
          cacheRepo.DownloadLocally(resolutionResult.Item1.GetSatisfyingInfos());
 
@@ -236,7 +247,7 @@ namespace EBerzosa.Pundit.Core.Services
 
          _writer.Empty();
          _writer.Error(dependencyResolution.PrintDependencyNodes(allNodes.Distinct(DependencyNodeComparer.PackageId).OrderBy(n => n.PackageId)));
-         }
+      }
 
       private int PrintSuccess(IEnumerable<PackageKeyDiff> diffs1)
       {

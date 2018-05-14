@@ -1,7 +1,12 @@
+<<<<<<< HEAD
 ﻿using System.Collections.Generic;
 using System.IO;
 using EBerzosa.Pundit.Core.Model;
+using NuGet.Versioning;
+=======
+﻿using System.IO;
 using EBerzosa.Pundit.Core.Versioning;
+>>>>>>> cb1277dd87e719f2fb046fca8e0417eb130ce926
 using Pundit.Core.Model;
 
 namespace EBerzosa.Pundit.Core.Repository
@@ -20,7 +25,11 @@ namespace EBerzosa.Pundit.Core.Repository
       
       Stream Download(PackageKey key);
 
-      ICollection<PunditVersion> GetVersions(UnresolvedPackage package);
+<<<<<<< HEAD
+      ICollection<NuGetVersion> GetVersions(UnresolvedPackage package);
+=======
+      PunditVersion[] GetVersions(UnresolvedPackage package);
+>>>>>>> cb1277dd87e719f2fb046fca8e0417eb130ce926
 
       PackageManifest GetManifest(PackageKey key);
 

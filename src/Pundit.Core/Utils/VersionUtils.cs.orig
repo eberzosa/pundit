@@ -5,7 +5,9 @@ namespace EBerzosa.Pundit.Core.Utils
 {
    internal static class VersionUtils
    {
-      public static VersionRange GetVersionRangeFromPuntitDependencyVersion(string version)
+      public const string DevMarker = "dev";
+
+      public static VersionRangeExtended GetVersionRangeFromPuntitDependencyVersion(string version)
       {
          if (version.Contains("*"))
             throw new NotSupportedException("Pundit versions cannot contain *");
@@ -15,11 +17,13 @@ namespace EBerzosa.Pundit.Core.Utils
          if (parts.Length > 4 || parts.Length < 1)
             throw new NotSupportedException($"Version '{version}' is not supported");
 
+<<<<<<< HEAD
+=======
+         var minVersion = PunditVersion.Parse(version);
+
+>>>>>>> cb1277dd87e719f2fb046fca8e0417eb130ce926
          if (parts.Length == 4)
-         {
-            var floatVersion = FloatRange.Parse(version);
-            return new VersionRange(floatVersion.MinVersion, floatVersion);
-         }
+            return new VersionRangeExtended(FloatRangeExtended.Parse(version));
 
          var indexOfRelease = version.IndexOf('-');
 
@@ -28,8 +32,11 @@ namespace EBerzosa.Pundit.Core.Utils
          else
             version += ".*";
 
-         var floatVersion2 = FloatRange.Parse(string.Join(".", parts));
-         return new VersionRange(floatVersion2.MinVersion, floatVersion2);
+<<<<<<< HEAD
+         return new VersionRangeExtended(FloatRangeExtended.Parse(version));
+=======
+         return new VersionRange(minVersion, true, PunditVersion.Parse(string.Join(".", parts)), false, null, version);
+>>>>>>> cb1277dd87e719f2fb046fca8e0417eb130ce926
       }
    }
 }

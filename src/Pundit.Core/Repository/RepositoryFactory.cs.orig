@@ -40,33 +40,52 @@ namespace EBerzosa.Pundit.Core.Repository
       }
 
 
-      public ICollection<IRepository> TryGetCacheRepos()
+<<<<<<< HEAD
+      public ICollection<IRepository> GetCacheRepos()
       {
          return new[]
          {
-            TryCreateRepo(new RegisteredRepository {Uri = SettingsUtility.GetGlobalPackagesFolder(NullSettings.Instance), Name = "nugetlocal", UseForPublishing = true, Type = RepositoryType.NuGet}),
-            TryCreateRepo(new RegisteredRepository {Uri = _cacheRepoPath, Name = "local", UseForPublishing = true})
+            CreateRepo(new RegisteredRepository {Uri = SettingsUtility.GetGlobalPackagesFolder(NullSettings.Instance), Name = "nugetlocal", UseForPublishing = true, Type = RepositoryType.NuGet}),
+            CreateRepo(new RegisteredRepository {Uri = _cacheRepoPath, Name = "local", UseForPublishing = true})
          };
       }
       
+      public IRepository GetRepo(string name)
+=======
+      public IRepository TryGetLocalRepo()
+      {
+         return TryCreateRepo(new RegisteredRepository {Uri = _cacheRepoPath, Name = "local", UseForPublishing = true});
+      }
+
       public IRepository TryGetRepo(string name)
+>>>>>>> cb1277dd87e719f2fb046fca8e0417eb130ce926
       {
          var repo = GetRegistered().RepositoriesArray.FirstOrDefault(r => r.Name.Equals(name, StringComparison.OrdinalIgnoreCase));
 
          return repo == null ? null : TryCreateRepo(repo);
       }
 
-      public IEnumerable<IRepository> TryGetEnabledRepos(bool includeCache, bool includeOther)
+<<<<<<< HEAD
+      public IEnumerable<IRepository> GetEnabledRepos(bool includeCache, bool includeOther)
       {
          if (includeCache)
-            foreach (var repository in TryGetCacheRepos())
-               if (repository != null)
-                  yield return repository;
+            foreach (var repository in GetCacheRepos())
+               yield return repository;
 
          if (includeOther)
-            foreach (var repository in GetRegistered().RepositoriesArray.Where(r => !r.Disabled).OrderByDescending(r => r.Type).Select(TryCreateRepo))
-               if (repository != null)
+            foreach (var repository in GetRegistered().RepositoriesArray.Where(r => !r.Disabled).OrderByDescending(r => r.Type).Select(CreateRepo))
                yield return repository;
+=======
+      public IEnumerable<IRepository> TryGetRepos(bool includeCache, bool includeOther)
+      {
+         if (includeCache)
+            yield return TryGetLocalRepo();
+
+         if (includeOther)
+            foreach (var repository in GetRegistered().RepositoriesArray.Select(TryCreateRepo))
+               if (repository != null)
+                  yield return repository;
+>>>>>>> cb1277dd87e719f2fb046fca8e0417eb130ce926
       }
 
       public RegisteredRepositories GetRegisteredRepositories()
@@ -77,16 +96,20 @@ namespace EBerzosa.Pundit.Core.Repository
 
       private IRepository TryCreateRepo(RegisteredRepository repo)
       {
+<<<<<<< HEAD
+          if (repo.Type == RepositoryType.NuGet)
+              return new NuGetFileSystemRepo(repo.Uri, repo.Name, RepositoryType.NuGet) {CanPublish = repo.UseForPublishing};
+
+          return new FileSystemRepository(_packageReaderFactory, repo.Uri, repo.Name, RepositoryType.Pundit) {CanPublish = repo.UseForPublishing};
+=======
          if (repo.Uri.StartsWith("http", StringComparison.OrdinalIgnoreCase))
             throw new NotSupportedException("Only FileSystem repos are supported");
 
          if (!Directory.Exists(repo.Uri))
             return null;
 
-         if (repo.Type == RepositoryType.NuGet)
-            return new NuGetFileSystemRepo(repo.Uri, repo.Name, RepositoryType.NuGet) {CanPublish = repo.UseForPublishing};
-
-         return new FileSystemRepository(_packageReaderFactory, repo.Uri, repo.Name, RepositoryType.Pundit) {CanPublish = repo.UseForPublishing};
+         return new FileSystemRepository(_packageReaderFactory, repo.Uri, repo.Name) {CanPublish = repo.UseForPublishing};
+>>>>>>> cb1277dd87e719f2fb046fca8e0417eb130ce926
       }
 
       private RegisteredRepositories GetRegistered()

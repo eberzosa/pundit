@@ -1,4 +1,5 @@
 ﻿using EBerzosa.Pundit.Core.Model.Enums;
+using EBerzosa.Pundit.Core.Repository;
 using EBerzosa.Pundit.Core.Versioning;
 
 namespace Pundit.Core.Model

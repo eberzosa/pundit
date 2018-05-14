@@ -5,40 +5,45 @@
    /// </summary>
    public enum FloatBehaviour
    {
-      /// <summary>
-      /// Lowest version, no float
-      /// </summary>
-      None,
+       /// <summary>
+       /// Lowest version, no float
+       /// </summary>
+       None,
 
-      /// <summary>
-      /// x.y.z-ttt pre-release starting with ttt
-      /// </summary>
-      Prerelease,
+       /// <summary>
+       /// Highest matching pre-release label
+       /// </summary>
+       Prerelease,
 
-      /// <summary>
-      /// x.y.z.*
-      /// </summary>
-      Revision,
+       /// <summary>
+       /// x.y.z.*
+       /// </summary>
+       Revision,
 
-      /// <summary>
-      /// x.y.*
-      /// </summary>
-      Patch,
+       /// <summary>
+       /// x.y.*
+       /// </summary>
+       Patch,
 
-      /// <summary>
-      /// x.*
-      /// </summary>
-      Minor,
+       /// <summary>
+       /// x.*
+       /// </summary>
+       Minor,
 
-      /// <summary>
-      /// *
-      /// </summary>
-      Major,
-      
+       /// <summary>
+       /// *
+       /// </summary>
+       Major,
+
+       /// <summary>
+       /// Float major and pre-release
+       /// </summary>
+       AbsoluteLatest,
+
       /// <summary>
       /// x.y.z-ttt.* matching pre-release
       /// </summary>
-      RevisionPrerelease,
+        RevisionPrerelease,
 
       /// <summary>
       /// x.y.*-ttt.*, matching pre-release

@@ -5,6 +5,10 @@ using EBerzosa.Pundit.Core.Model;
 using EBerzosa.Pundit.Core.Model.Package;
 using EBerzosa.Pundit.Core.Repository;
 using EBerzosa.Pundit.Core.Versioning;
+<<<<<<< HEAD
+using NuGet.Versioning;
+=======
+>>>>>>> cb1277dd87e719f2fb046fca8e0417eb130ce926
 using Pundit.Core.Model;
 
 namespace EBerzosa.Pundit.Core.Resolvers
@@ -25,7 +29,7 @@ namespace EBerzosa.Pundit.Core.Resolvers
 
       public string Platform { get; }
 
-      public VersionRange VersionPattern { get; }
+      public VersionRangeExtended VersionPattern { get; }
 
       public IEnumerable<DependencyNode> Children => _children;
 
@@ -121,7 +125,7 @@ namespace EBerzosa.Pundit.Core.Resolvers
 
 
       public DependencyNode(DependencyNode parentNode,
-         string packageId, string platform, VersionRange versionPattern, bool includeDeveloperPackages)
+         string packageId, string platform, VersionRangeExtended versionPattern, bool includeDeveloperPackages)
       {
          _parentNode = parentNode;
          PackageId = packageId;

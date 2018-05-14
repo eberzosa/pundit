@@ -1,10 +1,13 @@
 ﻿using System;
 using System.Text.RegularExpressions;
+<<<<<<< HEAD
 using EBerzosa.Pundit.Core.Model;
 using EBerzosa.Pundit.Core.Versioning;
+using NuGet.Versioning;
+=======
+using EBerzosa.Pundit.Core.Versioning;
+>>>>>>> cb1277dd87e719f2fb046fca8e0417eb130ce926
 using Pundit.Core.Model;
-using PunditVersion = EBerzosa.Pundit.Core.Versioning.PunditVersion;
-using VersionRange = EBerzosa.Pundit.Core.Versioning.VersionRange;
 
 namespace EBerzosa.Pundit.Core.Package
 {
@@ -87,7 +90,7 @@ namespace EBerzosa.Pundit.Core.Package
       private string ToPunditFileVersion(PunditVersion version) 
          => version.Major + "." + version.Minor + "." + version.Patch + "-" + (version.Release ?? "") + version.Revision;
 
-      private string ToPunditFileSearchVersion(VersionRange range) 
+      private string ToPunditFileSearchVersion(VersionRangeExtended range) 
          => range.IsFloating ? FromFloating(range.Float) : FromRegular(range);
       
       private string NotNullOrThrow(string value, string name) 
@@ -95,7 +98,7 @@ namespace EBerzosa.Pundit.Core.Package
 
       private string FromFloating(FloatRange range)
       {
-         if (range.FloatBehaviour != FloatBehaviour.Revision)
+         if (range.FloatBehavior != NuGetVersionFloatBehavior.Revision)
             return range.ToString();
 
          var version = range.ToString();
