@@ -24,10 +24,9 @@ namespace EBerzosa.Pundit.CommandLine.Builders
                var local = BuildLocalOption(opt);
                var force = BuildForceOption(opt);
                var ping = BuildDryRunOption(opt);
-               var includeDeveloperPackages = BuildIncludeDeveloperOption(opt);
 
                cmd.OnExecute(() =>
-                  _controller.Execute(configuration.Value, local.HasValue, force.HasValue, ping.HasValue, includeDeveloperPackages.HasValue).ToInteger());
+                  _controller.Execute(configuration.Value, local.HasValue, force.HasValue, ping.HasValue).ToInteger());
             });
       }
    }

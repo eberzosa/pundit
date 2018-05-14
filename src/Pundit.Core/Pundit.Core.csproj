@@ -198,6 +198,7 @@
     <Compile Include="Utils\ByteFormatProvider.cs" />
     <Compile Include="Utils\NullWriter.cs" />
     <Compile Include="Utils\PathUtils.cs" />
+    <Compile Include="Versioning\FloatRange - Copy.cs" />
     <Compile Include="Versioning\VersionRange.cs" />
     <Compile Include="Versioning\VersionRangeFactory.cs" />
     <Compile Include="Versioning\VersionRangeFormatter.cs" />
@@ -213,7 +214,7 @@
     <Compile Include="Versioning\HashCodeCombiner.cs" />
     <Compile Include="Versioning\FloatBehaviour.cs" />
     <Compile Include="Versioning\FloatRange.cs" />
-    <Compile Include="Utils\VersionUtils.cs" />
+    <Compile Include="Versioning\VersionUtils.cs" />
     <Compile Include="Versioning\PunditVersion.cs" />
     <Compile Include="Versioning\VersionComparer.cs" />
     <Compile Include="Versioning\VersionRangeBase.cs" />

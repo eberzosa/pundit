@@ -26,10 +26,10 @@ namespace EBerzosa.Pundit.CommandLine.Builders
                var local = BuildLocalOption(opt);
                var force = BuildForceOption(opt);
                var ping = BuildDryRunOption(opt);
-               var includeDeveloperPackages = BuildIncludeDeveloperOption(opt);
+               var releaseLabel = BuildReleaseLabel(opt);
 
                cmd.OnExecute(() => _controller.Execute(manifest.Value, configuration.Value, local.HasValue, force.HasValue,
-                  ping.HasValue, includeDeveloperPackages.HasValue).ToInteger());
+                  ping.HasValue, releaseLabel.Value).ToInteger());
             });
       }
 

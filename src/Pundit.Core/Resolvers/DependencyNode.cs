@@ -13,7 +13,7 @@ namespace EBerzosa.Pundit.Core.Resolvers
    {
       private readonly DependencyNode _parentNode;
 
-      private readonly bool _includeDeveloperPackages;
+      private readonly string _useReleasePackages;
 
       private SatisfyingInfo[] _satisfyingData;
       private int _activeVersionIndex = -1;
@@ -25,7 +25,7 @@ namespace EBerzosa.Pundit.Core.Resolvers
 
       public string Platform { get; }
 
-      public VersionRange VersionPattern { get; }
+      public FloatRange AllowedVersions { get; }
 
       public IEnumerable<DependencyNode> Children => _children;
 
@@ -51,7 +51,7 @@ namespace EBerzosa.Pundit.Core.Resolvers
          }
       }
 
-      public UnresolvedPackage UnresolvedPackage => new UnresolvedPackage(PackageId, Platform, VersionPattern);
+      public UnresolvedPackage UnresolvedPackage => new UnresolvedPackage(PackageId, Platform, AllowedVersions);
 
       public bool CanDowngrade => _activeVersionIndex > 0;
 
@@ -121,13 +121,13 @@ namespace EBerzosa.Pundit.Core.Resolvers
 
 
       public DependencyNode(DependencyNode parentNode,
-         string packageId, string platform, VersionRange versionPattern, bool includeDeveloperPackages)
+         string packageId, string platform, FloatRange allowedVersions, string useReleasePackages)
       {
          _parentNode = parentNode;
          PackageId = packageId;
          Platform = platform;
-         VersionPattern = versionPattern;
-         _includeDeveloperPackages = includeDeveloperPackages;
+         AllowedVersions = allowedVersions;
+         _useReleasePackages = useReleasePackages;
       }
 
 
@@ -169,14 +169,14 @@ namespace EBerzosa.Pundit.Core.Resolvers
          _children.Clear();
 
          foreach (PackageDependency pd in thisManifest.Dependencies)
-            _children.Add(new DependencyNode(this, pd.PackageId, pd.Platform ?? Platform, pd.VersionRange, _includeDeveloperPackages));
+            _children.Add(new DependencyNode(this, pd.PackageId, pd.Platform ?? Platform, pd.AllowedVersions, _useReleasePackages));
 
          HasManifest = true;
       }
 
       public object Clone()
       {
-         var node = new DependencyNode(_parentNode, PackageId, Platform, VersionPattern, _includeDeveloperPackages);
+         var node = new DependencyNode(_parentNode, PackageId, Platform, AllowedVersions, _useReleasePackages);
 
          if (_satisfyingData != null)
          {

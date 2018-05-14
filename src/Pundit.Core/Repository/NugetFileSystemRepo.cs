@@ -97,10 +97,11 @@ namespace EBerzosa.Pundit.Core.Repository
          var packagesResource = _sourceRepository.GetResource<FindPackageByIdResource>();
          var packageInfos = packagesResource.GetAllVersionsAsync(package.PackageId, NullSourceCacheContext.Instance, NullLogger.Instance, CancellationToken.None);
          
-         return packageInfos.Result.Where(p => package.VersionPattern.IsFloating
-               ? package.VersionPattern.Float.Satisfies(p.Adapt<PunditVersion>())
-               : package.VersionPattern.Satisfies(p.Adapt<PunditVersion>()))
-            .Adapt<IEnumerable<PunditVersion>>().ToArray();
+         throw new NotImplementedException();
+         //return packageInfos.Result.Where(p => package.AllowedVersions.IsFloating
+         //      ? package.AllowedVersions.Float.Satisfies(p.Adapt<PunditVersion>())
+         //      : package.AllowedVersions.Satisfies(p.Adapt<PunditVersion>()))
+         //   .Adapt<IEnumerable<PunditVersion>>().ToArray();
       }
 
       public PackageManifest GetManifest(PackageKey key)
@@ -132,8 +133,9 @@ namespace EBerzosa.Pundit.Core.Repository
          if (dependencies == null)
             return manifest;
 
-         foreach (var dependency in dependencies.Packages)
-            manifest.Dependencies.Add(new PackageDependency(dependency.Id, dependency.VersionRange.Adapt<VersionRange>()) {Platform = manifest.Platform});
+         throw new NotImplementedException();
+         //foreach (var dependency in dependencies.Packages)
+         //   manifest.Dependencies.Add(new PackageDependency(dependency.Id, dependency.VersionRange.Adapt<VersionRange>()) {Platform = manifest.Platform});
 
          return manifest;
       }

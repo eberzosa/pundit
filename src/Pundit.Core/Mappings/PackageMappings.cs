@@ -33,11 +33,11 @@ namespace EBerzosa.Pundit.Core.Mappings
 
 
          Mapster.TypeAdapterConfig<PackageDependency, XmlPackageDependency>.NewConfig()
-            .Map(dst => dst.VersionPattern, src => src.VersionRange.OriginalString.Replace(".*", ""));
+            .Map(dst => dst.VersionPattern, src => src.AllowedVersions.OriginalVersion.Replace(".*", ""));
 
          Mapster.TypeAdapterConfig<XmlPackageDependency, PackageDependency>.NewConfig()
-            .ConstructUsing(xml => new PackageDependency(xml.PackageId, VersionUtils.GetVersionRangeFromPuntitDependencyVersion(xml.VersionPattern)))
-            .Ignore(src => src.PackageId, src => src.VersionRange)
+            .ConstructUsing(xml => new PackageDependency(xml.PackageId, VersionUtils.ConvertPunditDependencyVersionToFloatVersion(xml.VersionPattern)))
+            .Ignore(src => src.PackageId, src => src.AllowedVersions)
             .AfterMapping((src, dst) =>
             {
                if (src.DevTimeOnly)

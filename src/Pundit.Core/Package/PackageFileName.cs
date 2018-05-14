@@ -56,7 +56,7 @@ namespace EBerzosa.Pundit.Core.Package
       {
          _searchFileName = string.Format(PackageFileNamePattern,
             pkg.PackageId,
-            ToPunditFileSearchVersion(pkg.VersionPattern),
+            ToPunditFileSearchVersion(pkg.AllowedVersions),
             TrimPlatformName(pkg.Platform),
             PackageManifest.PackedExtension);
       }
@@ -87,42 +87,49 @@ namespace EBerzosa.Pundit.Core.Package
       private string ToPunditFileVersion(PunditVersion version) 
          => version.Major + "." + version.Minor + "." + version.Patch + "-" + (version.Release ?? "") + version.Revision;
 
-      private string ToPunditFileSearchVersion(VersionRange range) 
-         => range.IsFloating ? FromFloating(range.Float) : FromRegular(range);
-      
-      private string NotNullOrThrow(string value, string name) 
+      private string ToPunditFileSearchVersion(FloatRange range)
+      {
+         return range.OriginalVersion;
+         //if (range.FloatBehaviour == FloatBehaviour.None)
+         //   return range.OriginalVersion;
+
+         //if (range.FloatBehaviour == FloatBehaviour.Revision || range.FloatBehaviour == FloatBehaviour.RevisionPrerelease)
+         //   return range.MinVersion.Version.ToString(3) + ".*";
+
+         //if (range.FloatBehaviour == FloatBehaviour.Patch || range.FloatBehaviour == FloatBehaviour.PatchPrerelease)
+         //   return range.MinVersion.Version.ToString(2) + ".*";
+
+         //if (range.FloatBehaviour == FloatBehaviour.Minor || range.FloatBehaviour == FloatBehaviour.MinorPrerelease)
+         //   return range.MinVersion.Version.ToString(1) + ".*";
+
+         //if (range.FloatBehaviour == FloatBehaviour.Major || range.FloatBehaviour == FloatBehaviour.MajorPrerelease)
+         //   return "*";
+
+         throw new NotSupportedException();
+      }
+
+      private string NotNullOrThrow(string value, string name)
          => value ?? throw new InvalidOperationException($"The current status does not support '{name}'");
 
-      private string FromFloating(FloatRange range)
-      {
-         if (range.FloatBehaviour != FloatBehaviour.Revision)
-            return range.ToString();
+      //private string FromRegular(VersionRange range)
+      //{
+      //   // If there is no max version we only search for 'that' version in Pundit repos
+      //   if (range.MaxVersion == null)
+      //      return range.MinVersion.OriginalVersion;
 
-         var version = range.ToString();
-         var index = version.LastIndexOf('.');
+      //   if (range.MinVersion == range.MaxVersion)
+      //      return range.MinVersion.OriginalVersion;
 
-         return version.Substring(0, index) + '-' + version.Substring(index + 1);
-      }
+      //   if (range.MinVersion.Major != range.MaxVersion.Major)
+      //      return range.MinVersion.Major + ".*";
 
-      private string FromRegular(VersionRange range)
-      {
-         // If there is no max version we only search for 'that' version in Pundit repos
-         if (range.MaxVersion == null)
-            return range.MinVersion.OriginalVersion;
+      //   if (range.MinVersion.Minor != range.MaxVersion.Minor)
+      //      return range.MinVersion.Major + "." + range.MinVersion.Minor + ".*";
 
-         if (range.MinVersion == range.MaxVersion)
-            return range.MinVersion.OriginalVersion;
+      //   if (range.MinVersion.Patch != range.MaxVersion.Patch)
+      //      return range.MinVersion.Major + "." + range.MinVersion.Minor + "." + range.MinVersion.Patch + "-*";
 
-         if (range.MinVersion.Major != range.MaxVersion.Major)
-            return range.MinVersion.Major + ".*";
-
-         if (range.MinVersion.Minor != range.MaxVersion.Minor)
-            return range.MinVersion.Major + "." + range.MinVersion.Minor + ".*";
-
-         if (range.MinVersion.Patch != range.MaxVersion.Patch)
-            return range.MinVersion.Major + "." + range.MinVersion.Minor + "." + range.MinVersion.Patch + "-*";
-
-         throw new NotSupportedException($"VersionRange  '{range}' is not supported");
-      }
+      //   throw new NotSupportedException($"VersionRange  '{range}' is not supported");
+      //}
    }
 }

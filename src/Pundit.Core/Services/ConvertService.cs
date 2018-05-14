@@ -79,9 +79,10 @@ namespace EBerzosa.Pundit.Core.Services
 
                var dependencies = reader.GetPackageDependencies().FirstOrDefault(d => d.TargetFramework == framework);
 
-               if (dependencies != null)
-                  foreach (var dependency in dependencies.Packages)
-                     punditSpec.Dependencies.Add(new PackageDependency(dependency.Id, dependency.VersionRange.Adapt<VersionRange>()));
+               throw new NotImplementedException();
+               //if (dependencies != null)
+                  //foreach (var dependency in dependencies.Packages)
+                  //   punditSpec.Dependencies.Add(new PackageDependency(dependency.Id, dependency.VersionRange));
 
                var libs = reader.GetLibItems().FirstOrDefault(d => d.TargetFramework == framework);
 

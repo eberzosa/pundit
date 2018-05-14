@@ -19,12 +19,12 @@ namespace EBerzosa.Pundit.CommandLine.Controllers
          _serviceFactory = serviceFactory;
       }
 
-      public ExitCode Execute(string manifest, string outputPath, string versionString, bool isDeveloperPackage)
+      public ExitCode Execute(string manifest, string outputPath, string versionString, string releaseLabel)
       {
          var service = _serviceFactory.GetPackService();
             
          service.Version = versionString;
-         service.IsDeveloperPackage = isDeveloperPackage;
+         service.ReleaseLabel = releaseLabel;
 
          service.ManifestFileOrPath = manifest;
          service.OutputPath = outputPath;

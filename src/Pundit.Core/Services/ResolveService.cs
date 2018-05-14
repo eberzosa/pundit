@@ -40,7 +40,7 @@ namespace EBerzosa.Pundit.Core.Services
 
       public bool LocalReposOnly { get; set; }
 
-      public bool IncludeDeveloperPackages { get; set; }
+      public string ReleaseLabel { get; set; }
 
 
       public ResolveService(ManifestResolver manifestResolver, RepositoryFactory repositoryFactory, DependencyResolution dependencyResolution, 
@@ -91,7 +91,7 @@ namespace EBerzosa.Pundit.Core.Services
          _writer.EndWrite();
 
          _writer.BeginWrite().Text("Resolving...");
-         var resolutionResult = _dependencyResolution.Resolve(packageSpecs, repos, IncludeDeveloperPackages);
+         var resolutionResult = _dependencyResolution.Resolve(packageSpecs, repos, ReleaseLabel);
 
          if (resolutionResult.Item1.HasConflicts)
          {

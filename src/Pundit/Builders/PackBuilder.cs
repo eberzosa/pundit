@@ -25,9 +25,9 @@ namespace EBerzosa.Pundit.CommandLine.Builders
                //manifest = BuildManifestOption(opt);
                var output = opt.SingleValue("o", "output", "directory", "Specifies the output directory for the package");
                var version = opt.SingleValue("v", "packageVersion", "versionNumber", "Overrides the version number inside the manifest");
-               var isDeveloperPackage = opt.NoValue("p", "isDeveloperPackage", "Specifies if the package should be built as a developer package");
+               var releaseLabel = opt.NoValue("p", "releaseLabel", "Specifies the release label if any");
 
-               cmd.OnExecute(() => _controller.Execute(manifest.Value, output.Value, version.Value, isDeveloperPackage.HasValue).ToInteger());
+               cmd.OnExecute(() => _controller.Execute(manifest.Value, output.Value, version.Value, releaseLabel.Value).ToInteger());
             });
       }
 

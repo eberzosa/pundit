@@ -15,7 +15,7 @@ namespace EBerzosa.Pundit.Core.Resolvers
       private readonly IWriter _writer;
 
       private readonly IRepository[] _activeRepositories;
-      private readonly bool _includeDeveloperPackages;
+      private readonly string _useReleasePackages;
       private readonly DependencyNode _rootDependencyNode;
 
       public DependencyResolution(IWriter writer)
@@ -23,21 +23,20 @@ namespace EBerzosa.Pundit.Core.Resolvers
          _writer = writer;
       }
 
-      private DependencyResolution(IWriter writer, PackageManifest rootManifest, IRepository[] activeRepositories, bool includeDeveloperPackages)
+      private DependencyResolution(IWriter writer, PackageManifest rootManifest, IRepository[] activeRepositories, string useReleasePackages)
       {
          _writer = writer;
          _activeRepositories = activeRepositories;
-         _includeDeveloperPackages = includeDeveloperPackages;
+         _useReleasePackages = useReleasePackages;
 
-         var versionRange = VersionRange.Parse(rootManifest.Version.OriginalVersion);
-         _rootDependencyNode = new DependencyNode(null, rootManifest.PackageId, rootManifest.Platform, versionRange, _includeDeveloperPackages);
+         _rootDependencyNode = new DependencyNode(null, rootManifest.PackageId, rootManifest.Platform, rootManifest.Version.ToFloatRange(), useReleasePackages);
          _rootDependencyNode.MarkAsRoot(rootManifest);
       }
 
       public Tuple<VersionResolutionTable, DependencyNode> Resolve(PackageManifest rootManifest, IRepository[] activeRepositories,
-         bool includeDeveloperPackages)
+         string useReleasePackages)
       {
-         return new DependencyResolution(_writer, rootManifest, activeRepositories, includeDeveloperPackages).Resolve();
+         return new DependencyResolution(_writer, rootManifest, activeRepositories, useReleasePackages).Resolve();
       }
 
       /// <summary>
@@ -220,7 +219,7 @@ namespace EBerzosa.Pundit.Core.Resolvers
             sb.Append("dependency: [");
             sb.Append(node.Path);
             sb.Append("], version: [");
-            sb.Append(GetPrintableVersion(node.VersionPattern));
+            sb.Append(node.AllowedVersions);
             sb.Append("], resolved to: [");
 
             bool isFirst = true;
@@ -236,17 +235,6 @@ namespace EBerzosa.Pundit.Core.Resolvers
 
             sb.Append("]");
          }
-      }
-
-      public string GetPrintableVersion(VersionRange range)
-      {
-         if (range.IsFloating)
-            return range.Float.ToString();
-
-         if (range.MinVersion == range.MaxVersion)
-            return range.MinVersion.ToString();
-
-         return range.PrettyPrint();
       }
    }
 }

@@ -1,5 +1,4 @@
 ﻿using EBerzosa.CommandLineProcess;
-using EBerzosa.CommandLineProcess.Utils;
 using EBerzosa.Pundit.Core.Services;
 using EBerzosa.Utils;
 
@@ -17,13 +16,12 @@ namespace EBerzosa.Pundit.CommandLine.Controllers
          _serviceFactory = serviceFactory;
       }
 
-      public ExitCode Execute(string configuration, bool localOnly, bool force, bool dryRun, bool includeDeveloperPackages)
+      public ExitCode Execute(string configuration, bool localOnly, bool force, bool dryRun)
       {
          var service = _serviceFactory.GetUpdateService();
          service.LocalReposOnly = localOnly;
          service.Force = force;
          service.DryRun = dryRun;
-         service.IncludeDeveloperPackages = includeDeveloperPackages;
 
          service.Execute();
 

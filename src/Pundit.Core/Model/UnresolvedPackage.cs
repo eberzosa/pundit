@@ -16,15 +16,15 @@ namespace EBerzosa.Pundit.Core.Model
       public string Platform { get; set; }
       
       [DataMember]
-      public VersionRange VersionPattern { get; set; }
+      public FloatRange AllowedVersions { get; set; }
 
 
-      public UnresolvedPackage(string packageId, string platform, VersionRange versionRange)
+      public UnresolvedPackage(string packageId, string platform, FloatRange allowedVersions)
       {
          Guard.NotNull(packageId, nameof(packageId));
 
          PackageId = packageId;
-         VersionPattern = versionRange;
+         AllowedVersions = allowedVersions;
          Platform = PackageFileName.TrimPlatformName(platform);
       }
 

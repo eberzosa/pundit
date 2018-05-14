@@ -38,8 +38,8 @@ namespace EBerzosa.Pundit.CommandLine.Builders
       protected IOption BuildDryRunOption(IOptionCreator optionCreator)
          => optionCreator.NoValue("r", "dryrun", "Dependencies must be checked but no changes to the local repository should be made; use it to check for changes without updating to latest versions");
 
-      protected IOption BuildIncludeDeveloperOption(IOptionCreator optionCreator)
-         => optionCreator.NoValue("p", "includeDeveloperPackages", "Includes developer packages in the search. Default false.");
+      protected IOption BuildReleaseLabel(IOptionCreator optionCreator)
+         => optionCreator.SingleValue("p", "releaseLabel", "label", "Filters packages by a release label");
 
       protected void ReorderArgs(ref string[] args, string optionToBeConvertedToArgument)
       {

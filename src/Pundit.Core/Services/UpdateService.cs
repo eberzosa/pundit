@@ -3,7 +3,6 @@ using System.Collections.Generic;
 using System.IO;
 using System.Linq;
 using System.Reflection;
-using EBerzosa.Pundit.Core.Application;
 using EBerzosa.Pundit.Core.Model;
 using EBerzosa.Pundit.Core.Model.Enums;
 using EBerzosa.Pundit.Core.Model.Package;
@@ -12,7 +11,6 @@ using EBerzosa.Pundit.Core.Repository;
 using EBerzosa.Pundit.Core.Resolvers;
 using EBerzosa.Pundit.Core.Versioning;
 using EBerzosa.Utils;
-using Pundit.Core.Application;
 using Pundit.Core.Model;
 using Pundit.Core.Model.EventArguments;
 
@@ -33,8 +31,6 @@ namespace EBerzosa.Pundit.Core.Services
       public bool DryRun { get; set; }
 
       public bool LocalReposOnly { get; set; }
-
-      public bool IncludeDeveloperPackages { get; set; }
 
 
       public UpdateService(RepositoryFactory repositoryFactory, PackageInstallerFactory packageInstallerFactory,
@@ -66,7 +62,7 @@ namespace EBerzosa.Pundit.Core.Services
             Version = new PunditVersion(1, 0, 0, 0),
             Dependencies =
             {
-               new PackageDependency(packageId, VersionRange.Parse($"{assemblyVersion.Major}.*"))
+               new PackageDependency(packageId, FloatRange.Parse($"{assemblyVersion.Major}.*"))
                {
                   Scope = DependencyScope.Normal,
                   Platform = netFramework
@@ -93,7 +89,7 @@ namespace EBerzosa.Pundit.Core.Services
          _writer.EndWrite();
 
          _writer.BeginWrite().Text("Resolving...");
-         var resolutionResult = _dependencyResolution.Resolve(packageSpec, repos, IncludeDeveloperPackages);
+         var resolutionResult = _dependencyResolution.Resolve(packageSpec, repos, null);
 
          if (resolutionResult.Item1.HasConflicts)
          {

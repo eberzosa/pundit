@@ -55,17 +55,17 @@ namespace EBerzosa.Pundit.Core.Services
             },
             Dependencies =
             {
-               new PackageDependency("MyApplication.Common", VersionRange.Parse("1.0.4"))
+               new PackageDependency("MyApplication.Common", FloatRange.Parse("1.0.4"))
                {
                   Scope = DependencyScope.Normal,
                   Platform = "net46"
                },
-               new PackageDependency("MyApplication.Test", VersionRange.Parse("1.0.4"))
+               new PackageDependency("MyApplication.Test", FloatRange.Parse("1.0.4"))
                {
                   Scope = DependencyScope.Test,
                   Platform = "net46"
                },
-               new PackageDependency("MyApplication.Legacy", VersionRange.Parse("1.0.4"))
+               new PackageDependency("MyApplication.Legacy", FloatRange.Parse("1.0.4"))
                {
                   Scope = DependencyScope.Normal,
                   Platform = "net11",

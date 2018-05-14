@@ -30,7 +30,7 @@ namespace EBerzosa.Pundit.Core.Mappings
                .Select(packagesForPlatform => new NuGetv3.PackageDependencyGroup(
                   NuGetFramework.Parse(packagesForPlatform.Key),
                   packagesForPlatform.Select(d =>
-                     new NuGetv3.Core.PackageDependency(d.PackageId, d.VersionRange.Adapt<NuGet.Versioning.VersionRange>())))));
+                     new NuGetv3.Core.PackageDependency(d.PackageId, d.AllowedVersions.Adapt<NuGet.Versioning.VersionRange>())))));
 
          Mapster.TypeAdapterConfig<SourceFiles, NuGetv3.ManifestFile>.NewConfig()
             .Map(file => file.Target, files => files.FileKind.Adapt<PackageFileKind, string>() + files.TargetDirectory);

@@ -28,7 +28,7 @@ namespace EBerzosa.Pundit.Core.Services
 
       public string Version { get; set; }
 
-      public bool IsDeveloperPackage { get; set; }
+      public string ReleaseLabel { get; set; }
 
       public string DestinationFile { get; private set; }
 
@@ -71,7 +71,7 @@ namespace EBerzosa.Pundit.Core.Services
          {
             _writer.Info($"Overriding package version '{packageSpec.Version}' from spec with '{Version}'");
 
-            if (!IsDeveloperPackage)
+            if (ReleaseLabel == null)
                packageSpec.Version = PunditVersion.Parse(Version);
             else
             {
@@ -80,7 +80,7 @@ namespace EBerzosa.Pundit.Core.Services
 
                var versionChunks = Version.Split('.');
                packageSpec.Version = new PunditVersion(int.Parse(versionChunks[0]), 
-                  int.Parse(versionChunks[1]), int.Parse(versionChunks[2]), int.Parse(versionChunks[3]), VersionUtils.DevMarker, null);
+                  int.Parse(versionChunks[1]), int.Parse(versionChunks[2]), int.Parse(versionChunks[3]), ReleaseLabel, null);
             }
          }
          

@@ -83,7 +83,7 @@ namespace Pundit.Core.Model
       {
          return _resolution
             .Where(r => r.Value.Count == 0)
-            .Select(r => new UnresolvedPackage(r.Key.PackageId, r.Key.Platform, r.Key.VersionPattern));
+            .Select(r => new UnresolvedPackage(r.Key.PackageId, r.Key.Platform, r.Key.AllowedVersions));
       }
 
    }
