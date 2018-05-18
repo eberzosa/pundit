@@ -113,6 +113,7 @@
     <Compile Include="Utils\ByteFormatProviderTest.cs" />
     <Compile Include="Utils\VersionUtilsTest.cs" />
     <Compile Include="Versioning\FloatRangeTest.cs" />
+    <Compile Include="Versioning\VersionComparerTest.cs" />
   </ItemGroup>
   <ItemGroup>
     <ProjectReference Include="..\Pundit.Core\Pundit.Core.csproj">

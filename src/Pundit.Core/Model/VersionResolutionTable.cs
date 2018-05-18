@@ -48,35 +48,32 @@ namespace Pundit.Core.Model
          }
       }
 
-      public SatisfyingInfo GetActiveSatisfayingInfo(UnresolvedPackage package)
+      public SatisfyingInfo GetActiveSatisfyingInfo(UnresolvedPackage package)
       {
-         if(_resolution.ContainsKey(package) && _resolution[package] != null &&
-            _resolution[package].Count > 0)
-         {
-            var v = _resolution[package];
-            var sorted = v.ToList();
-            sorted.Sort();
-
-            return sorted[sorted.Count - 1];
-         }
-
+         if (_resolution.ContainsKey(package) && _resolution[package] != null && _resolution[package].Count > 0)
+            return _resolution[package].OrderByDescending(p => p).FirstOrDefault();
+         
          return null;
       }
 
       public IEnumerable<PackageKey> GetPackages()
       {
-         return from package in _resolution.Keys
-                let v = GetActiveSatisfayingInfo(package)
-                where v != null
-                select new PackageKey(package.PackageId, v.Version, package.Platform);
+         foreach (var package in _resolution.Keys)
+         {
+            var satisfyingInfo = GetActiveSatisfyingInfo(package);
+            if (satisfyingInfo != null)
+               yield return new PackageKey(package.PackageId, satisfyingInfo.Version, package.Platform);
+         }
       }
 
       public IEnumerable<SatisfyingInfoExtended> GetSatisfyingInfos()
-      { 
-         return from package in _resolution.Keys
-            let v = GetActiveSatisfayingInfo(package)
-            where v != null
-            select new SatisfyingInfoExtended(v, package.PackageId, package.Platform);
+      {
+         foreach (var package in _resolution.Keys)
+         {
+            var satisfyingInfo = GetActiveSatisfyingInfo(package);
+            if (satisfyingInfo != null)
+               yield return new SatisfyingInfoExtended(satisfyingInfo, package.PackageId, package.Platform);
+         }
       }
 
       public IEnumerable<UnresolvedPackage> GetConflictedPackages()

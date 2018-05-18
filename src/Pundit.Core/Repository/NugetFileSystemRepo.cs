@@ -97,6 +97,7 @@ namespace EBerzosa.Pundit.Core.Repository
          var packagesResource = _sourceRepository.GetResource<FindPackageByIdResource>();
          var packageInfos = packagesResource.GetAllVersionsAsync(package.PackageId, NullSourceCacheContext.Instance, NullLogger.Instance, CancellationToken.None);
          
+         // TODO: Finish this
          throw new NotImplementedException();
          //return packageInfos.Result.Where(p => package.AllowedVersions.IsFloating
          //      ? package.AllowedVersions.Float.Satisfies(p.Adapt<PunditVersion>())
@@ -133,6 +134,7 @@ namespace EBerzosa.Pundit.Core.Repository
          if (dependencies == null)
             return manifest;
 
+         //TODO: Finish this
          throw new NotImplementedException();
          //foreach (var dependency in dependencies.Packages)
          //   manifest.Dependencies.Add(new PackageDependency(dependency.Id, dependency.VersionRange.Adapt<VersionRange>()) {Platform = manifest.Platform});
@@ -165,5 +167,7 @@ namespace EBerzosa.Pundit.Core.Repository
 
          throw new ApplicationException("Only FileSystem repos are supported");
       }
+
+      public override string ToString() => $"{Name} [{RootPath}]";
    }
 }

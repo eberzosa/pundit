@@ -39,7 +39,7 @@ namespace EBerzosa.Pundit.CommandLine.Builders
          => optionCreator.NoValue("r", "dryrun", "Dependencies must be checked but no changes to the local repository should be made; use it to check for changes without updating to latest versions");
 
       protected IOption BuildReleaseLabel(IOptionCreator optionCreator)
-         => optionCreator.SingleValue("p", "releaseLabel", "label", "Filters packages by a release label");
+         => optionCreator.SingleValue("b", "releaseLabel", "label", "Filters packages by a release label");
 
       protected void ReorderArgs(ref string[] args, string optionToBeConvertedToArgument)
       {

@@ -20,12 +20,34 @@ namespace EBerzosa.Pundit.Core.Resolvers
 
       //node's dependencies
       private readonly List<DependencyNode> _children = new List<DependencyNode>();
+      private readonly FloatRange _allowedVersions;
 
       public string PackageId { get; }
 
       public string Platform { get; }
 
-      public FloatRange AllowedVersions { get; }
+      public FloatRange AllowedVersions
+      {
+         get
+         {
+            if (_useReleasePackages == null)
+               return _allowedVersions;
+
+            FloatBehaviour behaviour;
+            if (_allowedVersions.FloatBehaviour == FloatBehaviour.Major)
+               behaviour = FloatBehaviour.MajorPrerelease;
+            else if (_allowedVersions.FloatBehaviour == FloatBehaviour.Minor)
+               behaviour = FloatBehaviour.MinorPrerelease;
+            else if (_allowedVersions.FloatBehaviour == FloatBehaviour.Patch)
+               behaviour = FloatBehaviour.PatchPrerelease;
+            else if (_allowedVersions.FloatBehaviour == FloatBehaviour.Revision)
+               behaviour = FloatBehaviour.RevisionPrerelease;
+            else
+               behaviour = _allowedVersions.FloatBehaviour;
+
+            return new FloatRange(behaviour, _allowedVersions.MinVersion, _useReleasePackages);
+         }
+      }
 
       public IEnumerable<DependencyNode> Children => _children;
 
@@ -51,7 +73,7 @@ namespace EBerzosa.Pundit.Core.Resolvers
          }
       }
 
-      public UnresolvedPackage UnresolvedPackage => new UnresolvedPackage(PackageId, Platform, AllowedVersions);
+      public UnresolvedPackage UnresolvedPackage => new UnresolvedPackage(PackageId, Platform, _allowedVersions);
 
       public bool CanDowngrade => _activeVersionIndex > 0;
 
@@ -126,8 +148,29 @@ namespace EBerzosa.Pundit.Core.Resolvers
          _parentNode = parentNode;
          PackageId = packageId;
          Platform = platform;
-         AllowedVersions = allowedVersions;
+         _allowedVersions = allowedVersions;
          _useReleasePackages = useReleasePackages;
+
+
+         //if (_useReleasePackages == null)
+         //{
+         //   AllowedVersions = allowedVersions;
+         //   return;
+         //}
+
+         //FloatBehaviour behaviour;
+         //if (allowedVersions.FloatBehaviour == FloatBehaviour.Major)
+         //   behaviour = FloatBehaviour.MajorPrerelease;
+         //else if (allowedVersions.FloatBehaviour == FloatBehaviour.Minor)
+         //   behaviour = FloatBehaviour.MinorPrerelease;
+         //else if (allowedVersions.FloatBehaviour == FloatBehaviour.Patch)
+         //   behaviour = FloatBehaviour.PatchPrerelease;
+         //else if (allowedVersions.FloatBehaviour == FloatBehaviour.Revision)
+         //   behaviour = FloatBehaviour.RevisionPrerelease;
+         //else
+         //   behaviour = allowedVersions.FloatBehaviour;
+
+         //AllowedVersions = new FloatRange(behaviour, allowedVersions.MinVersion, _useReleasePackages);
       }
 
 
@@ -176,7 +219,7 @@ namespace EBerzosa.Pundit.Core.Resolvers
 
       public object Clone()
       {
-         var node = new DependencyNode(_parentNode, PackageId, Platform, AllowedVersions, _useReleasePackages);
+         var node = new DependencyNode(_parentNode, PackageId, Platform, _allowedVersions, _useReleasePackages);
 
          if (_satisfyingData != null)
          {
@@ -199,5 +242,7 @@ namespace EBerzosa.Pundit.Core.Resolvers
 
          return node;
       }
+
+      public override string ToString() => PackageId + "[" + AllowedVersions + "]" + "[" + Platform + "]";
    }
 }

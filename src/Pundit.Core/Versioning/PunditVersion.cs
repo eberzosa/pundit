@@ -3,6 +3,7 @@
 
 using System;
 using System.Collections.Generic;
+using System.Linq;
 
 namespace EBerzosa.Pundit.Core.Versioning
 {
@@ -14,6 +15,7 @@ namespace EBerzosa.Pundit.Core.Versioning
    public partial class PunditVersion : SemanticVersion
    {
       private readonly string _originalString;
+      private readonly int? _revisionFromReleaseLabel;
 
       /// <summary>
       /// Creates a NuGetVersion using NuGetVersion.Parse(string)

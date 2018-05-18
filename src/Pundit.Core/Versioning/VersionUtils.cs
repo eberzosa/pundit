@@ -14,7 +14,7 @@ namespace EBerzosa.Pundit.Core.Versioning
          if (parts.Length > 4 || parts.Length < 1)
             throw new NotSupportedException($"Version '{punditDependencyVersion}' is not supported");
 
-         if (punditDependencyVersion.IndexOf('-') == -1)
+         if (punditDependencyVersion.IndexOf('-') != -1)
             throw new NotSupportedException("Versions cannot contain Release part");
 
          return parts.Length == 4

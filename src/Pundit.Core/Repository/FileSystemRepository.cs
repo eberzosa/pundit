@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using System.IO;
 using System.Linq;
+using System.Text.RegularExpressions;
 using EBerzosa.Pundit.Core.Application;
 using EBerzosa.Pundit.Core.Model;
 using EBerzosa.Pundit.Core.Package;
@@ -53,8 +54,22 @@ namespace EBerzosa.Pundit.Core.Repository
          using (var pr = _packageReaderFactory.Get(RepositoryType.Pundit, ts))
             manifest = pr.ReadManifest();
 
+         Regex regEx;
+         if (string.IsNullOrEmpty(manifest.Version.Release))
+            regEx = new Regex(manifest.PackageId + "-[0-9.]+-[^A-Z].*", RegexOptions.IgnoreCase);
+         else
+         {
+            var parts = manifest.Version.Release.Split('.');
+            var releaseLabel = parts.Length > 0 ? parts[0] + "." : manifest.Version.Release;
+
+            regEx = new Regex(manifest.PackageId + "-[0-9.]+-" + releaseLabel + ".*", RegexOptions.IgnoreCase);
+         }
+
          foreach (var relatedBuild in Directory.GetFiles(RootPath, new PackageFileName(manifest).RelatedSearchFileName))
-            File.Delete(relatedBuild);
+         {
+            if (regEx.Match(Path.GetFileName(relatedBuild)).Success)
+               File.Delete(relatedBuild);
+         }
 
 
          var targetPath = Path.Combine(RootPath, new PackageFileName(manifest).FileName);

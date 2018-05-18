@@ -18,11 +18,11 @@ namespace EBerzosa.Pundit.Core.Resolvers
          Repo = repo;
       }
 
-      public int CompareTo(SatisfyingInfo other) => Version.CompareTo(other.Version);
+      public int CompareTo(SatisfyingInfo other) => Version.CompareTo(other.Version, VersionComparison.PunditVersion);
 
       public int CompareTo(object obj) => Version.CompareTo(obj);
 
-      public bool Equals(SatisfyingInfo other) => Version.Equals(other?.Version);
+      public bool Equals(SatisfyingInfo other) => Version.Equals(other?.Version, VersionComparison.PunditVersion);
 
       public override string ToString() => Version.ToString();
 

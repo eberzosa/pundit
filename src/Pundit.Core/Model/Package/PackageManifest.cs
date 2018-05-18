@@ -80,11 +80,6 @@ namespace Pundit.Core.Model
          return PackageStringRgx.IsMatch(s);
       }
 
-      private bool IsValidPackageVersion(string s)
-      {
-         return PackageVersionRgx.IsMatch(s);
-      }
-
       /// <summary>
       /// Validates the package. In case of invalid package throws <see cref="InvalidPackageException"/>
       /// </summary>
@@ -104,9 +99,6 @@ namespace Pundit.Core.Model
          if(Version == null)
             ex.AddError("Version", "version is required");
 
-         if(Version != null && !IsValidPackageVersion(Version.ToString()))
-            ex.AddError("Version", "version format is invalid, expected Major.Minor.Build.Revision");
-
          if (ex.HasErrors)
             throw ex;
       }
@@ -120,5 +112,7 @@ namespace Pundit.Core.Model
       {
          return Dependencies?.Where(d => d.PackageId == key.PackageId && d.Platform == key.Platform).FirstOrDefault();
       }
+
+      public override string ToString() => PackageId + " [" + Version + "] [" + Platform + "]";
    }
 }

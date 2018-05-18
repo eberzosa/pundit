@@ -44,7 +44,8 @@ namespace EBerzosa.Pundit.Core.Repository
       {
          return new[]
          {
-            TryCreateRepo(new RegisteredRepository {Uri = SettingsUtility.GetGlobalPackagesFolder(NullSettings.Instance), Name = "nugetlocal", UseForPublishing = true, Type = RepositoryType.NuGet}),
+            //TODO: Finish this
+            //TryCreateRepo(new RegisteredRepository {Uri = SettingsUtility.GetGlobalPackagesFolder(NullSettings.Instance), Name = "nugetlocal", UseForPublishing = true, Type = RepositoryType.NuGet}),
             TryCreateRepo(new RegisteredRepository {Uri = _cacheRepoPath, Name = "local", UseForPublishing = true})
          };
       }
@@ -100,7 +101,13 @@ namespace EBerzosa.Pundit.Core.Repository
          using (var stream = File.OpenRead(_repoConfigPath))
          {
             var repos = _serializer.Read<XmlRegisteredRepositories>(stream);
+
             _registeredRepositories = repos.Adapt<XmlRegisteredRepositories, RegisteredRepositories>();
+
+            //TODO: Finish this
+            foreach (var repository in _registeredRepositories.RepositoriesArray)
+               if (repository.Type == RepositoryType.NuGet)
+                  repository.Disabled = true;
          }
 
          return _registeredRepositories;

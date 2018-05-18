@@ -70,18 +70,13 @@ namespace EBerzosa.Pundit.Core.Services
          if (Version != null)
          {
             _writer.Info($"Overriding package version '{packageSpec.Version}' from spec with '{Version}'");
+            packageSpec.Version = PunditVersion.Parse(Version);
+         }
 
-            if (ReleaseLabel == null)
-               packageSpec.Version = PunditVersion.Parse(Version);
-            else
-            {
-               if (Version.Split('.').Length > 4)
-                  throw new ApplicationException($"Version format for '{Version}' not supported");
-
-               var versionChunks = Version.Split('.');
-               packageSpec.Version = new PunditVersion(int.Parse(versionChunks[0]), 
-                  int.Parse(versionChunks[1]), int.Parse(versionChunks[2]), int.Parse(versionChunks[3]), ReleaseLabel, null);
-            }
+         if (ReleaseLabel != null)
+         {
+            packageSpec.Version = new PunditVersion(packageSpec.Version.Major,
+               packageSpec.Version.Minor, packageSpec.Version.Patch, ReleaseLabel + "." + packageSpec.Version.Revision, null);
          }
          
          var packageName = new PackageFileName(packageSpec).FileName;
@@ -91,7 +86,7 @@ namespace EBerzosa.Pundit.Core.Services
          if (File.Exists(DestinationFile))
             _writer.Warning($"Package '{packageName}' already exists, it will be overwritted");
 
-         _writer.Text($"Creating package '{packageName}'...");
+         _writer.Text($"Creating package {packageSpec}...");
 
          long bytesWritten;
 

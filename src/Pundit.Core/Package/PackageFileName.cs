@@ -1,19 +1,18 @@
 ﻿using System;
+using System.Linq;
 using System.Text.RegularExpressions;
 using EBerzosa.Pundit.Core.Model;
 using EBerzosa.Pundit.Core.Versioning;
 using Pundit.Core.Model;
-using PunditVersion = EBerzosa.Pundit.Core.Versioning.PunditVersion;
-using VersionRange = EBerzosa.Pundit.Core.Versioning.VersionRange;
 
 namespace EBerzosa.Pundit.Core.Package
 {
    internal class PackageFileName
    {
-      public const string PackageFileNamePattern = "{0}-{1}-{2}{3}"; // Id - Major.Minor.Patch-Revision[-Release] - Platform .pundit
+      public const string PackageFileNamePattern = "{0}-{1}-{2}{3}"; // Id - Major.Minor.Patch-[ReleaseLabel]Revision - Platform .pundit
       public const string NoArchName = "noarch";
 
-      private static readonly Regex PackageNameRgx = new Regex(@"^(.*)-(\d+)\.(\d+)\.(\d+)-(\d+)-(.*)" + PackageManifest.PackedExtension.Replace(".", "\\.") + "$");
+      private static readonly Regex PackageNameRgx = new Regex(@"^(.*)-(\d+)\.(\d+)\.(\d+)-([A-z0-9.]+)-(.*)" + PackageManifest.PackedExtension.Replace(".", "\\.") + "$");
 
       private readonly string _fileName;
       private readonly string _searchFileName;
@@ -73,23 +72,47 @@ namespace EBerzosa.Pundit.Core.Package
 
          string packageId = mtch.Groups[1].Value;
 
-         var version = new PunditVersion(
-            int.Parse(mtch.Groups[2].Value),
-            int.Parse(mtch.Groups[3].Value),
-            int.Parse(mtch.Groups[4].Value),
-            int.Parse(mtch.Groups[5].Value));
+         PunditVersion version;
+         if (int.TryParse(mtch.Groups[5].Value, out var rev))
+         {
+            version = new PunditVersion(
+               int.Parse(mtch.Groups[2].Value),
+               int.Parse(mtch.Groups[3].Value),
+               int.Parse(mtch.Groups[4].Value),
+               rev);
+         }
+         else
+         {
+            version = new PunditVersion(
+               int.Parse(mtch.Groups[2].Value),
+               int.Parse(mtch.Groups[3].Value),
+               int.Parse(mtch.Groups[4].Value),
+               mtch.Groups[5].Value);
+         }
 
          string platform = mtch.Groups[6].Value;
 
          return new PackageKey(packageId, version, platform);
       }
 
-      private string ToPunditFileVersion(PunditVersion version) 
-         => version.Major + "." + version.Minor + "." + version.Patch + "-" + (version.Release ?? "") + version.Revision;
+      private string ToPunditFileVersion(PunditVersion version)
+      {
+         return version.ReleaseLabels.Any()
+            ? version.ToString()
+            : version.Major + "." + version.Minor + "." + version.Patch + "-" + (version.Release ?? "") + version.Revision;
+      }
 
       private string ToPunditFileSearchVersion(FloatRange range)
       {
-         return range.OriginalVersion;
+
+         var versionParts = range.OriginalVersion.Split('-');
+         var numberParts = versionParts[0].Split('.');
+
+         if (numberParts.Length <= 3)
+            return range.OriginalVersion;
+         else
+            return string.Join(".", numberParts, 0, 3) + '-' + numberParts[3] + (versionParts.Length > 1 ? "-" + string.Join("-", versionParts) : "");
+
          //if (range.FloatBehaviour == FloatBehaviour.None)
          //   return range.OriginalVersion;
 

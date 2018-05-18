@@ -2,6 +2,7 @@
 // Licensed under the Apache License, Version 2.0. See License.txt in the project root for license information.
 
 using System;
+using System.Collections.Generic;
 using System.Linq;
 
 namespace EBerzosa.Pundit.Core.Versioning
@@ -126,70 +127,57 @@ namespace EBerzosa.Pundit.Core.Versioning
       public int Compare(SemanticVersion x, SemanticVersion y)
       {
          if (ReferenceEquals(x, y))
-         {
             return 0;
-         }
 
          if (ReferenceEquals(y, null))
-         {
             return 1;
-         }
 
          if (ReferenceEquals(x, null))
-         {
             return -1;
-         }
 
          // compare version
          var result = x.Major.CompareTo(y.Major);
          if (result != 0)
-         {
             return result;
-         }
 
          result = x.Minor.CompareTo(y.Minor);
          if (result != 0)
-         {
             return result;
-         }
 
          result = x.Patch.CompareTo(y.Patch);
          if (result != 0)
-         {
             return result;
-         }
 
          var legacyX = x as PunditVersion;
          var legacyY = y as PunditVersion;
 
-         result = CompareLegacyVersion(legacyX, legacyY);
-         if (result != 0)
+         if (_mode == VersionComparison.PunditVersion)
          {
-            return result;
+            legacyX = GetFinalVersion(legacyX);
+            legacyY = GetFinalVersion(legacyY);
          }
 
+         result = CompareLegacyVersion(legacyX, legacyY);
+         if (result != 0)
+            return result;
+         
          if (_mode != VersionComparison.Version)
          {
             // compare release labels
             var xLabels = GetReleaseLabelsOrNull(x);
             var yLabels = GetReleaseLabelsOrNull(y);
 
-            if (xLabels != null
-                && yLabels == null)
-            {
+            if (xLabels != null && yLabels == null)
                return -1;
-            }
 
-            if (xLabels == null
-                && yLabels != null)
-            {
+            if (xLabels == null && yLabels != null)
                return 1;
-            }
 
-            if (xLabels != null
-                && yLabels != null)
+            if (xLabels != null && yLabels != null)
             {
-               result = CompareReleaseLabels(xLabels, yLabels);
+               result = CompareReleaseLabels(xLabels, yLabels, 
+                  legacyX.IsLegacyVersion ? legacyX.Revision : (int?)null, legacyY.IsLegacyVersion ? legacyY.Revision : (int?)null);
+
                if (result != 0)
                {
                   return result;
@@ -218,18 +206,15 @@ namespace EBerzosa.Pundit.Core.Versioning
          var result = 0;
 
          // true if one has a 4th version number
-         if (legacyX != null
-             && legacyY != null)
+         if (legacyX != null && legacyY != null)
          {
             result = legacyX.Version.CompareTo(legacyY.Version);
          }
-         else if (legacyX != null
-                  && legacyX.Version.Revision > 0)
+         else if (legacyX != null && legacyX.Version.Revision > 0)
          {
             result = 1;
          }
-         else if (legacyY != null
-                  && legacyY.Version.Revision > 0)
+         else if (legacyY != null && legacyY.Version.Revision > 0)
          {
             result = -1;
          }
@@ -252,6 +237,9 @@ namespace EBerzosa.Pundit.Core.Versioning
       /// </summary>
       public static readonly IVersionComparer VersionRelease = new VersionComparer(VersionComparison.VersionRelease);
 
+      
+      public static readonly IVersionComparer Pundit = new VersionComparer(VersionComparison.PunditVersion);
+
       /// <summary>
       /// A version comparer that follows SemVer 2.0.0 rules.
       /// </summary>
@@ -260,34 +248,31 @@ namespace EBerzosa.Pundit.Core.Versioning
       /// <summary>
       /// Compares sets of release labels.
       /// </summary>
-      private static int CompareReleaseLabels(string[] version1, string[] version2)
+      private static int CompareReleaseLabels(string[] version1, string[] version2, int? version1Revision, int? version2Revisiton)
       {
          var result = 0;
 
-         var count = Math.Max(version1.Length, version2.Length);
+         if (version1Revision != null)
+            return version1Revision.Value.CompareTo(version1Revision);
 
+         var count = Math.Max(version1.Length, version2.Length);
+         
          for (var i = 0; i < count; i++)
          {
             var aExists = i < version1.Length;
             var bExists = i < version2.Length;
 
             if (!aExists && bExists)
-            {
                return -1;
-            }
 
             if (aExists && !bExists)
-            {
                return 1;
-            }
 
             // compare the labels
             result = CompareRelease(version1[i], version2[i]);
 
             if (result != 0)
-            {
                return result;
-            }
          }
 
          return result;
@@ -404,6 +389,19 @@ namespace EBerzosa.Pundit.Core.Versioning
       {
          var nugetVersion = version as PunditVersion;
          return nugetVersion?.Revision ?? 0;
+      }
+
+
+      private static PunditVersion GetFinalVersion(PunditVersion version)
+      {
+         if (version == null)
+            return null;
+
+         var last = version.ReleaseLabels != null && version.ReleaseLabels.Any() ? version.ReleaseLabels.Last() : null;
+
+         return last != null && int.TryParse(last, out var revision)
+            ? new PunditVersion(version.Major, version.Minor, version.Patch, revision, version.ReleaseLabels, version.Metadata)
+            : version;
       }
    }
 }

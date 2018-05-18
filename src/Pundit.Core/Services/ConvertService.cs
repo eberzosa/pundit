@@ -79,6 +79,7 @@ namespace EBerzosa.Pundit.Core.Services
 
                var dependencies = reader.GetPackageDependencies().FirstOrDefault(d => d.TargetFramework == framework);
 
+               //TODO: Finish this
                throw new NotImplementedException();
                //if (dependencies != null)
                   //foreach (var dependency in dependencies.Packages)

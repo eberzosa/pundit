@@ -99,7 +99,7 @@ namespace EBerzosa.Pundit.Core.Resolvers
                   continue;
 
                foreach (var version in versions)
-                  if (!punditVersions.ContainsKey(version))
+                  if (node.AllowedVersions.Satisfies(version) && !punditVersions.ContainsKey(version))
                      punditVersions.Add(version, new SatisfyingInfo(version, repo));
             }
 
@@ -109,7 +109,7 @@ namespace EBerzosa.Pundit.Core.Resolvers
          if (!node.HasManifest)
             return;
 
-         _writer.Text(".");
+         _writer.Text("´");
 
          foreach (var child in node.Children)
             ResolveVersions(child);
@@ -151,8 +151,10 @@ namespace EBerzosa.Pundit.Core.Resolvers
             ResolveManifests(child);
       }
 
-      private static void FlattenNode(DependencyNode node, VersionResolutionTable collector)
+      private void FlattenNode(DependencyNode node, VersionResolutionTable collector)
       {
+         _writer.Text("`");
+
          if (node == null)
             return;
 
