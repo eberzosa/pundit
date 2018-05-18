@@ -3,7 +3,6 @@ using System.Collections.Generic;
 using System.IO;
 using System.Linq;
 using System.Reflection;
-using System.Text;
 using EBerzosa.Pundit.Core.Utils;
 using NAnt.Core;
 
@@ -36,33 +35,10 @@ namespace Pundit.Core.Utils
 
          return path;
       }
+      
+      public static string FileSizeToString(long size) => String.Format(new ByteFormatProvider(), "{0:fs}", size);
 
-      public static string GetRelativePath(string baseDir, string fullFilePath)
-      {
-         string path;
-
-         if(fullFilePath.StartsWith(baseDir, StringComparison.CurrentCultureIgnoreCase))
-         {
-            path = fullFilePath.Substring(baseDir.Length);
-         }
-         else
-         {
-            path = Path.GetFileName(fullFilePath);
-         }
-
-         return path;
-      }
-
-      public static string FileSizeToString(long size)
-      {
-         size.ToString();
-         return String.Format(new ByteFormatProvider(), "{0:fs}", size);
-      }
-
-      public static string GetOSPath(string path)
-      {
-         return path.Replace('/', Path.DirectorySeparatorChar);
-      }
+      public static string GetOSPath(string path) => path.Replace('/', Path.DirectorySeparatorChar);
 
       /// <summary>
       /// Ensures that the directory exists. Otherwise creates the directory (including all levels)
@@ -89,47 +65,9 @@ namespace Pundit.Core.Utils
          }
       }
 
-      private static string[] ParsePatternArray(string array)
-      {
-         return string.IsNullOrEmpty(array)
-                   ? new string[0]
-                   : array.Split(new[] { ';' }, StringSplitOptions.RemoveEmptyEntries);
-      }
-
-
-      public static IEnumerable<FileInfo> SearchFiles(string baseDirectory, string includePattern, string excludePattern)
-      {
-         var scanner = new DirectoryScanner(false);
-         scanner.BaseDirectory = new DirectoryInfo(baseDirectory);
-         scanner.Excludes.AddRange(DefaultExcludesList.ToArray());
-
-         if (!string.IsNullOrEmpty(excludePattern)) scanner.Excludes.AddRange(ParsePatternArray(excludePattern));
-         if (!string.IsNullOrEmpty(includePattern)) scanner.Includes.AddRange(ParsePatternArray(includePattern));
-
-         scanner.Scan();
-
-         var files = new string[scanner.FileNames.Count];
-         scanner.FileNames.CopyTo(files, 0);
-
-         return files.Select(f => new FileInfo(f));
-      }
-
       public static string FixPathSeparators(string s)
       {
-         return s == null ? null : s.Replace('/', Path.DirectorySeparatorChar);
+         return s?.Replace('/', Path.DirectorySeparatorChar);
       }
-
-      public static string ExeFolder
-      {
-         get
-         {
-            Assembly asm = Assembly.GetExecutingAssembly();
-
-            return (asm == null || asm.Location == null ? null : Path.GetDirectoryName(asm.Location))
-               ?? Environment.CurrentDirectory
-               ?? AppDomain.CurrentDomain.BaseDirectory;
-         }
-      }
-
    }
 }

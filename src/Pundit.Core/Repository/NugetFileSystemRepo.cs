@@ -16,7 +16,6 @@ using NuGet.Packaging.Core;
 using NuGet.Protocol;
 using NuGet.Protocol.Core.Types;
 using Pundit.Core.Model;
-using PackageDependency = EBerzosa.Pundit.Core.Model.Package.PackageDependency;
 
 namespace EBerzosa.Pundit.Core.Repository
 {
@@ -77,21 +76,7 @@ namespace EBerzosa.Pundit.Core.Repository
 
          return result.PackageStream;
       }
-
-      public class xxxxx : LoggerBase
-      {
-         public override void Log(ILogMessage message)
-         {
-            var x = message;
-         }
-
-         public override Task LogAsync(ILogMessage message)
-         {
-            var x = message;
-            return Task.CompletedTask;
-         }
-      }
-
+      
       public ICollection<PunditVersion> GetVersions(UnresolvedPackage package)
       {
          var packagesResource = _sourceRepository.GetResource<FindPackageByIdResource>();

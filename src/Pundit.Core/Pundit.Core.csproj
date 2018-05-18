@@ -146,7 +146,6 @@
     <Compile Include="Serializers\NuGetv3Serializer.cs" />
     <Compile Include="Services\ConvertService.cs" />
     <Compile Include="Services\UpdateService.cs" />
-    <Compile Include="Utils\AutoUpdate.cs" />
     <Compile Include="Utils\IWriter.cs" />
     <Compile Include="Repository\CacheRepository.cs" />
     <Compile Include="Mappings\PackageMappings.cs" />
@@ -194,7 +193,6 @@
     <Compile Include="Services\ServiceFactory.cs" />
     <Compile Include="Services\SpecService.cs" />
     <Compile Include="Utils\Exceptional.cs" />
-    <Compile Include="Utils\FileSet.cs" />
     <Compile Include="Utils\ByteFormatProvider.cs" />
     <Compile Include="Utils\NullWriter.cs" />
     <Compile Include="Utils\PathUtils.cs" />

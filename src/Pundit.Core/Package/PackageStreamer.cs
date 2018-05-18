@@ -47,7 +47,7 @@ namespace Pundit.Core.Application
          //using NAnt.Core for now, will continue working on FileSet later
          var scanner = new DirectoryScanner(false);
          scanner.BaseDirectory = new DirectoryInfo(manifestDir);
-         scanner.Excludes.AddRange(FileSet.DefaultExcludesList.ToArray());
+         scanner.Excludes.AddRange(PathUtils.DefaultExcludesList.ToArray());
          scanner.Excludes.AddRange(ParsePatternArray(sourceFiles.Exclude));
          scanner.Includes.AddRange(ParsePatternArray(sourceFiles.Include));
 
