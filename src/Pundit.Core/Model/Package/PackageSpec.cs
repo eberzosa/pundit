@@ -1,6 +1,9 @@
 ﻿using System.Collections.Generic;
+using System.Diagnostics;
 using System.IO;
 using System.Xml.Serialization;
+using EBerzosa.Pundit.Core.Model;
+using EBerzosa.Pundit.Core.Model.Package;
 
 namespace Pundit.Core.Model
 {

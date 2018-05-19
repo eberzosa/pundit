@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using EBerzosa.Pundit.Core.Model;
+using EBerzosa.Pundit.Core.Model.Package;
 using EBerzosa.Pundit.Core.Repository;
 using EBerzosa.Pundit.Core.Versioning;
 using NuGet.Packaging;
@@ -29,7 +30,7 @@ namespace EBerzosa.Pundit.Core.Resolvers
          _activeRepositories = activeRepositories;
          _useReleasePackages = useReleasePackages;
 
-         _rootDependencyNode = new DependencyNode(null, rootManifest.PackageId, rootManifest.Platform, rootManifest.Version.ToFloatRange(), useReleasePackages);
+         _rootDependencyNode = new DependencyNode(null, rootManifest.PackageId, rootManifest.Framework, rootManifest.Version.ToFloatRange(), useReleasePackages);
          _rootDependencyNode.MarkAsRoot(rootManifest);
       }
 

@@ -1,4 +1,6 @@
-﻿using EBerzosa.Pundit.Core.Model.Enums;
+﻿using EBerzosa.Pundit.Core.Framework;
+using EBerzosa.Pundit.Core.Model.Enums;
+using EBerzosa.Pundit.Core.Model.Package;
 using EBerzosa.Pundit.Core.Repository;
 using EBerzosa.Pundit.Core.Versioning;
 
@@ -21,22 +23,22 @@ namespace Pundit.Core.Model
          
       }
 
-      public PackageKeyDiff(DiffType diffType, string packageId, PunditVersion version, string platform, RepositoryType packageType, bool isDeveloper) 
-         : base(packageId, version, platform)
+      public PackageKeyDiff(DiffType diffType, string packageId, PunditVersion version, PunditFramework framework, RepositoryType packageType) 
+         : base(packageId, version, framework)
       {
          DiffType = diffType;
          PackageType = packageType;
       }
 
       public PackageKeyDiff(DiffType diffType, PackageKey key, RepositoryType packageType)
-         : base(key.PackageId, key.Version, key.Platform)
+         : base(key.PackageId, key.Version, key.Framework)
       {
          DiffType = diffType;
          PackageType = packageType;
       }
 
       public PackageKeyDiff(DiffType diffType, PackageKey newPackageKey, PackageKey oldPackageKey, RepositoryType packageType) 
-         : base(newPackageKey.PackageId, newPackageKey.Version, newPackageKey.Platform)
+         : base(newPackageKey.PackageId, newPackageKey.Version, newPackageKey.Framework)
       {
          DiffType = diffType;
          OldPackageKey = oldPackageKey;

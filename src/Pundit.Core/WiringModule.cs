@@ -28,7 +28,9 @@ namespace EBerzosa.Pundit.Core
 
          FrameworkMappings.Initialise();
 
-         PackageMappings.XmlMappings();
+         XmlMappings.Map();
+         NuGetMappings.Map();
+
          NuGetv3PackageMappings.Initialise();
          RepositoryMappings.Initalise();
          TypeAdapterConfig.GlobalSettings.Compile();

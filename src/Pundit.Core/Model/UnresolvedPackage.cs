@@ -1,6 +1,5 @@
-﻿using System;
-using System.Runtime.Serialization;
-using EBerzosa.Pundit.Core.Package;
+﻿using System.Runtime.Serialization;
+using EBerzosa.Pundit.Core.Framework;
 using EBerzosa.Pundit.Core.Versioning;
 using EBerzosa.Utils;
 
@@ -10,39 +9,34 @@ namespace EBerzosa.Pundit.Core.Model
    public class UnresolvedPackage
    {
       [DataMember]
-      public string PackageId { get; set; }
+      public string PackageId { get; }
 
       [DataMember]
-      public string Platform { get; set; }
+      public PunditFramework Framework { get; }
       
       [DataMember]
-      public FloatRange AllowedVersions { get; set; }
+      public FloatRange AllowedVersions { get; }
 
 
-      public UnresolvedPackage(string packageId, string platform, FloatRange allowedVersions)
+      public UnresolvedPackage(string packageId, PunditFramework framework, FloatRange allowedVersions)
       {
          Guard.NotNull(packageId, nameof(packageId));
 
          PackageId = packageId;
          AllowedVersions = allowedVersions;
-         Platform = PackageFileName.TrimPlatformName(platform);
+         Framework = framework;
       }
 
       public override bool Equals(object obj)
       {
-         if (obj is UnresolvedPackage that)
-         {
-            return that.PackageId == PackageId && 
-               PackageFileName.TrimPlatformName(Platform).Equals(PackageFileName.TrimPlatformName(that.Platform), StringComparison.OrdinalIgnoreCase);
-         }
+          if (obj is UnresolvedPackage that)
+              return that.PackageId == PackageId && Framework == that.Framework;
 
-         return false;
+          return false;
       }
 
-      public override int GetHashCode() 
-         => PackageId.GetHashCode() * Platform.GetHashCode();
+      public override int GetHashCode()  => PackageId.GetHashCode() * Framework.GetHashCode();
 
-      public override string ToString()
-         => $"package id: [{PackageId}], platform: [{Platform}]";
+      public override string ToString() => $"{PackageId} [{AllowedVersions}] [{Framework}]";
    }
 }

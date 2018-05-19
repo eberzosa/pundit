@@ -1,4 +1,6 @@
-﻿using EBerzosa.Pundit.Core.Model.Enums;
+﻿using System.Diagnostics;
+using EBerzosa.Pundit.Core.Framework;
+using EBerzosa.Pundit.Core.Model.Enums;
 using EBerzosa.Pundit.Core.Versioning;
 using EBerzosa.Utils;
 
@@ -7,6 +9,7 @@ namespace EBerzosa.Pundit.Core.Model.Package
    ///<summary>
    /// Package dependency
    ///</summary>
+   [DebuggerDisplay("{PackageId} [{AllowedVersions.ToString()}] [{Framework.GetShortFolderName()}] [{Scope}]")]
    public class PackageDependency
    {
       public PackageDependency(string packageId, FloatRange allowedVersions)
@@ -26,7 +29,7 @@ namespace EBerzosa.Pundit.Core.Model.Package
       /// Dependency platform. If ommitted "noarch" assumed. If noarch is not found, no automatic
       /// guess is performed
       /// </summary>
-      public string Platform { get; set; }
+      public PunditFramework Framework { get; set; }
       
       /// <summary>
       /// Set to true if the dependency must exist at dev time only.

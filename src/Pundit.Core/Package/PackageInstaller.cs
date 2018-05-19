@@ -56,7 +56,7 @@ namespace EBerzosa.Pundit.Core.Package
          _index = InstalledPackagesIndex.ReadFromFolder(_rootDirectory);
 
          foreach (var package in versionTable.GetPackages())
-            _manifest.Dependencies.Add(new PackageDependency(package.PackageId, new FloatRange(FloatBehaviour.None, package.Version)) {Platform = package.Platform});
+            _manifest.Dependencies.Add(new PackageDependency(package.PackageId, new FloatRange(FloatBehaviour.None, package.Version)) {Framework = package.Framework});
       }
       
       /// <summary>

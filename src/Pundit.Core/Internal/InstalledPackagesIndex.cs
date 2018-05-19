@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.IO;
 using System.Linq;
 using System.Xml.Serialization;
+using EBerzosa.Pundit.Core.Model.Package;
 using Pundit.Core.Model;
 
 namespace Pundit.Core.Application

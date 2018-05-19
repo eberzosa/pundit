@@ -1,8 +1,10 @@
 ﻿using System.Collections.Generic;
+using System.Diagnostics;
 using System.Xml.Serialization;
 
 namespace EBerzosa.Pundit.Core.Model.Xml
 {
+   [DebuggerDisplay("{PackageId} [{Version}] [{Platform}] [Deps={Dependencies?.Count}]")]
    [XmlRoot("package")]
    [XmlInclude(typeof(XmlPackageSpec))]
    public class XmlPackageManifest

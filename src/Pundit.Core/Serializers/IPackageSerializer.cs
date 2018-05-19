@@ -1,4 +1,5 @@
 ﻿using System.IO;
+using EBerzosa.Pundit.Core.Model.Package;
 using Pundit.Core.Model;
 
 namespace EBerzosa.Pundit.Core.Serializers

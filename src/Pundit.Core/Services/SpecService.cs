@@ -1,6 +1,7 @@
 ﻿using System;
 using System.IO;
 using System.Reflection;
+using EBerzosa.Pundit.Core.Framework;
 using EBerzosa.Pundit.Core.Model.Enums;
 using EBerzosa.Pundit.Core.Model.Package;
 using EBerzosa.Pundit.Core.Serializers;
@@ -27,7 +28,7 @@ namespace EBerzosa.Pundit.Core.Services
          var packageSpec = new PackageSpec
          {
             PackageId = "MyApplication.Tool",
-            Platform = "net46",
+            Framework = PunditFramework.Parse("net46"),
             Author = Environment.UserName,
             Description = "This is a sample package for a imaginaty tool.",
             License = "MIT license (or anything you want)",
@@ -58,17 +59,17 @@ namespace EBerzosa.Pundit.Core.Services
                new PackageDependency("MyApplication.Common", FloatRange.Parse("1.0.4"))
                {
                   Scope = DependencyScope.Normal,
-                  Platform = "net46"
+                  Framework = PunditFramework.Parse("net46")
                },
                new PackageDependency("MyApplication.Test", FloatRange.Parse("1.0.4"))
                {
                   Scope = DependencyScope.Test,
-                  Platform = "net46"
+                  Framework = PunditFramework.Parse("net46")
                },
                new PackageDependency("MyApplication.Legacy", FloatRange.Parse("1.0.4"))
                {
                   Scope = DependencyScope.Normal,
-                  Platform = "net11",
+                  Framework = PunditFramework.Parse("net11"),
                   CreatePlatformFolder = true
                },
             }

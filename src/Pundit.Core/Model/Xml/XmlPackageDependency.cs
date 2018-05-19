@@ -1,9 +1,11 @@
 ﻿using System;
 using System.ComponentModel;
+using System.Diagnostics;
 using System.Xml.Serialization;
 
 namespace EBerzosa.Pundit.Core.Model.Xml
 {
+   [DebuggerDisplay("{PackageId} [{VersionPattern}] [{Platform}] [{Scope}] [DevOnly={DevTimeOnly}]")]
    [XmlRoot("package")]
    [Serializable]
    public class XmlPackageDependency

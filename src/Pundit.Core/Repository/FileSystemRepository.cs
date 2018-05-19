@@ -5,6 +5,7 @@ using System.Linq;
 using System.Text.RegularExpressions;
 using EBerzosa.Pundit.Core.Application;
 using EBerzosa.Pundit.Core.Model;
+using EBerzosa.Pundit.Core.Model.Package;
 using EBerzosa.Pundit.Core.Package;
 using EBerzosa.Pundit.Core.Versioning;
 using EBerzosa.Utils;
@@ -65,14 +66,14 @@ namespace EBerzosa.Pundit.Core.Repository
             regEx = new Regex(manifest.PackageId + "-[0-9.]+-" + releaseLabel + ".*", RegexOptions.IgnoreCase);
          }
 
-         foreach (var relatedBuild in Directory.GetFiles(RootPath, new PackageFileName(manifest).RelatedSearchFileName))
+         foreach (var relatedBuild in Directory.GetFiles(RootPath, manifest.GetRelatedSearchFileName(true)))
          {
             if (regEx.Match(Path.GetFileName(relatedBuild)).Success)
                File.Delete(relatedBuild);
          }
 
 
-         var targetPath = Path.Combine(RootPath, new PackageFileName(manifest).FileName);
+         var targetPath = Path.Combine(RootPath, manifest.GetFileName(true));
          if (File.Exists(targetPath))
             File.Delete(targetPath);
 
@@ -81,7 +82,7 @@ namespace EBerzosa.Pundit.Core.Repository
 
       public Stream Download(PackageKey key)
       {
-         var fullPath = Path.Combine(RootPath, new PackageFileName(key).FileName);
+         var fullPath = Path.Combine(RootPath, key.GetFileName(true));
 
          if (!File.Exists(fullPath))
             throw new FileNotFoundException("package not found");
@@ -91,18 +92,18 @@ namespace EBerzosa.Pundit.Core.Repository
 
       public ICollection<PunditVersion> GetVersions(UnresolvedPackage package)
       {
-         var filePattern = new PackageFileName(package).SearchFileName;
+         var filePattern = package.GetSearchFileName(true);
 
          if (filePattern == null)
             return new PunditVersion[0];
 
          return new DirectoryInfo(RootPath).GetFiles(filePattern)
-            .Select(i => PackageFileName.GetPackageKeyFromFileName(i.Name).Version).ToArray();
+            .Select(i => PackageExtensions.GetPackageKeyFromFileName(i.Name).Version).ToArray();
       }
 
       public PackageManifest GetManifest(PackageKey key)
       {
-         var fullPath = Path.Combine(RootPath, new PackageFileName(key).FileName);
+         var fullPath = Path.Combine(RootPath, key.GetFileName(true));
 
          if (!File.Exists(fullPath))
             throw new FileNotFoundException("package not found");
@@ -113,7 +114,7 @@ namespace EBerzosa.Pundit.Core.Repository
 
       public bool PackageExist(PackageKey package)
       {
-         return File.Exists(Path.Combine(RootPath, new PackageFileName(package).FileName));
+         return File.Exists(Path.Combine(RootPath, package.GetFileName(true)));
       }
 
       public IEnumerable<PackageKey> Search(string substring)
@@ -124,7 +125,7 @@ namespace EBerzosa.Pundit.Core.Repository
 
             try
             {
-               key = PackageFileName.GetPackageKeyFromFileName(file.Name);
+               key = PackageExtensions.GetPackageKeyFromFileName(file.Name);
             }
             catch (ArgumentException)
             {

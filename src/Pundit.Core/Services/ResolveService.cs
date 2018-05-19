@@ -116,7 +116,7 @@ namespace EBerzosa.Pundit.Core.Services
             {
                packageIds.Add(infos.PackageId);
                versions.Add(infos.Version.ToString());
-               platforms.Add(infos.Platform);
+               platforms.Add(infos.Framework.ToString());
                inRepo.Add(infos.Repo.Name);
             }
 
@@ -259,7 +259,7 @@ namespace EBerzosa.Pundit.Core.Services
             _writer.BeginWrite();
 
             writer(diffWord + " ");
-            _writer.Text($"{d.PackageId} v{(isMod ? d.OldPackageKey.Version : d.Version)} ({d.Platform})");
+            _writer.Text($"{d.PackageId} v{(isMod ? d.OldPackageKey.Version : d.Version)} ({d.Framework})");
 
             if (isMod)
             {

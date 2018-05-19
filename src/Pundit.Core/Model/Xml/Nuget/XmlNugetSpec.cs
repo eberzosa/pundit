@@ -1,4 +1,5 @@
 ﻿using System.Collections.Generic;
+using System.Diagnostics;
 using System.Xml.Serialization;
 
 namespace EBerzosa.Pundit.Core.Model.Xml.Nuget

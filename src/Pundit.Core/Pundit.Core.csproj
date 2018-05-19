@@ -97,6 +97,7 @@
     <Reference Include="System.Core" />
     <Reference Include="System.IdentityModel" />
     <Reference Include="System.IO.Compression" />
+    <Reference Include="System.IO.Compression.FileSystem" />
     <Reference Include="System.Net.Http" />
     <Reference Include="System.Net.Http.WebRequest" />
     <Reference Include="System.Numerics" />
@@ -113,12 +114,14 @@
   <ItemGroup>
     <Compile Include="3rdparty\DirectoryScanner.cs" />
     <Compile Include="3rdparty\Options.cs" />
+    <Compile Include="Framework\PunditFramework.cs" />
+    <Compile Include="Mappings\NuGetMappings.cs" />
     <Compile Include="Mappings\VersionsMappings.cs" />
     <Compile Include="Package\IPackageInstaller.cs" />
     <Compile Include="Package\IPackageReader.cs" />
-    <Compile Include="Package\PackageFileName.cs" />
     <Compile Include="Package\PackageInstallerFactory.cs" />
     <Compile Include="Package\NuGetPackageReader.cs" />
+    <Compile Include="Package\PackageExtensions.cs" />
     <Compile Include="Repository\Mappings\RepositoryMappings.cs" />
     <Compile Include="Repository\NugetFileSystemRepo.cs" />
     <Compile Include="Repository\RegisteredRepository.cs" />
@@ -148,7 +151,7 @@
     <Compile Include="Services\UpdateService.cs" />
     <Compile Include="Utils\IWriter.cs" />
     <Compile Include="Repository\CacheRepository.cs" />
-    <Compile Include="Mappings\PackageMappings.cs" />
+    <Compile Include="Mappings\XmlMappings.cs" />
     <Compile Include="Model\Enums\BuildConfiguration.cs" />
     <Compile Include="Resolvers\DependencyNode.cs" />
     <Compile Include="Model\Enums\DependencyScope.cs" />

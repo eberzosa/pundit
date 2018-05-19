@@ -3,8 +3,9 @@ using System.Collections.Generic;
 using System.IO;
 using System.Linq;
 using System.Threading;
-using System.Threading.Tasks;
+using EBerzosa.Pundit.Core.Framework;
 using EBerzosa.Pundit.Core.Model;
+using EBerzosa.Pundit.Core.Model.Package;
 using EBerzosa.Pundit.Core.Versioning;
 using EBerzosa.Utils;
 using Mapster;
@@ -15,7 +16,6 @@ using NuGet.Packaging;
 using NuGet.Packaging.Core;
 using NuGet.Protocol;
 using NuGet.Protocol.Core.Types;
-using Pundit.Core.Model;
 
 namespace EBerzosa.Pundit.Core.Repository
 {
@@ -97,12 +97,12 @@ namespace EBerzosa.Pundit.Core.Repository
          var packagesResource = _sourceRepository.GetResource<PackageMetadataResource>();
          var packageInfo = packagesResource.GetMetadataAsync(packageIdentity, NullSourceCacheContext.Instance, NullLogger.Instance, CancellationToken.None).Result;
 
-         var projectFramework = NuGetFramework.ParseFolder(key.Platform);
+         var projectFramework = key.Framework;
 
          PackageDependencyGroup dependencies = null;
          if (packageInfo.DependencySets.Any())
          {
-            dependencies = NuGetFrameworkUtility.GetNearest(packageInfo.DependencySets, projectFramework);
+            dependencies = NuGetFrameworkUtility.GetNearest(packageInfo.DependencySets, projectFramework.Adapt<NuGetFramework>());
 
             if (dependencies == null)
                throw new ApplicationException($"Could not find compatible dependencies for '{packageInfo.Identity}' and framework '{projectFramework}'");
@@ -113,7 +113,7 @@ namespace EBerzosa.Pundit.Core.Repository
             PackageId = packageInfo.Identity.Id,
             Version = packageInfo.Identity.Version.Adapt<PunditVersion>(),
             Dependencies = new List<Model.Package.PackageDependency>(),
-            Platform = dependencies?.TargetFramework.GetShortFolderName()
+            Framework = dependencies?.TargetFramework.Adapt<PunditFramework>()
          };
 
          if (dependencies == null)

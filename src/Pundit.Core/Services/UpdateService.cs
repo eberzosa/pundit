@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.IO;
 using System.Linq;
 using System.Reflection;
+using EBerzosa.Pundit.Core.Framework;
 using EBerzosa.Pundit.Core.Model;
 using EBerzosa.Pundit.Core.Model.Enums;
 using EBerzosa.Pundit.Core.Model.Package;
@@ -53,19 +54,19 @@ namespace EBerzosa.Pundit.Core.Services
 
          var packageId = "EBerzosa.Pundit";
          var assemblyVersion = assembly.GetName().Version;
-         var netFramework = "net46";
+         var netFramework = PunditFramework.Parse("net46");
 
          var packageSpec = new PackageSpec
          {
             PackageId = packageId,
-            Platform = netFramework,
+            Framework = netFramework,
             Version = new PunditVersion(1, 0, 0, 0),
             Dependencies =
             {
                new PackageDependency(packageId, FloatRange.Parse($"{assemblyVersion.Major}.*"))
                {
                   Scope = DependencyScope.Normal,
-                  Platform = netFramework
+                  Framework = netFramework
                }
             }
          };
@@ -257,7 +258,7 @@ namespace EBerzosa.Pundit.Core.Services
             _writer.BeginWrite();
 
             writer(diffWord + " ");
-            _writer.Text($"{d.PackageId} v{(isMod ? d.OldPackageKey.Version : d.Version)} ({d.Platform})");
+            _writer.Text($"{d.PackageId} v{(isMod ? d.OldPackageKey.Version : d.Version)} ({d.Framework})");
 
             if (isMod)
             {

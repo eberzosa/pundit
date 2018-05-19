@@ -1,6 +1,7 @@
 ﻿using System.Collections.Generic;
 using System.Linq;
 using EBerzosa.Pundit.Core.Model;
+using EBerzosa.Pundit.Core.Model.Package;
 using EBerzosa.Pundit.Core.Resolvers;
 
 namespace Pundit.Core.Model
@@ -62,7 +63,7 @@ namespace Pundit.Core.Model
          {
             var satisfyingInfo = GetActiveSatisfyingInfo(package);
             if (satisfyingInfo != null)
-               yield return new PackageKey(package.PackageId, satisfyingInfo.Version, package.Platform);
+               yield return new PackageKey(package.PackageId, satisfyingInfo.Version, package.Framework);
          }
       }
 
@@ -72,7 +73,7 @@ namespace Pundit.Core.Model
          {
             var satisfyingInfo = GetActiveSatisfyingInfo(package);
             if (satisfyingInfo != null)
-               yield return new SatisfyingInfoExtended(satisfyingInfo, package.PackageId, package.Platform);
+               yield return new SatisfyingInfoExtended(satisfyingInfo, package.PackageId, package.Framework);
          }
       }
 
@@ -80,7 +81,7 @@ namespace Pundit.Core.Model
       {
          return _resolution
             .Where(r => r.Value.Count == 0)
-            .Select(r => new UnresolvedPackage(r.Key.PackageId, r.Key.Platform, r.Key.AllowedVersions));
+            .Select(r => new UnresolvedPackage(r.Key.PackageId, r.Key.Framework, r.Key.AllowedVersions));
       }
 
    }

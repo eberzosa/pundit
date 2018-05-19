@@ -1,6 +1,9 @@
 ﻿using System;
 using System.IO;
+using EBerzosa.Pundit.Core.Model.Package;
 using EBerzosa.Utils;
+using Mapster;
+using NuGet.Frameworks;
 using NuGet.Packaging;
 using Pundit.Core.Application;
 using Pundit.Core.Model;
@@ -30,7 +33,7 @@ namespace EBerzosa.Pundit.Core.Package
       {
          foreach (var frameworkSpecificGroup in _packageReader.GetReferenceItems())
          {
-            if (frameworkSpecificGroup.TargetFramework.GetShortFolderName() != originalDependency.Platform)
+            if (frameworkSpecificGroup.TargetFramework != originalDependency.Framework.Adapt<NuGetFramework>())
                continue;
 
             foreach (var item in frameworkSpecificGroup.Items)

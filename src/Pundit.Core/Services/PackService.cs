@@ -1,14 +1,10 @@
-﻿using System;
-using System.IO;
+﻿using System.IO;
 using EBerzosa.Pundit.Core.Package;
 using EBerzosa.Pundit.Core.Repository;
 using EBerzosa.Pundit.Core.Serializers;
-using EBerzosa.Pundit.Core.Utils;
 using EBerzosa.Pundit.Core.Versioning;
 using EBerzosa.Utils;
-using Pundit.Core.Application;
 using Pundit.Core.Model;
-using Pundit.Core.Model.EventArguments;
 using Pundit.Core.Utils;
 
 namespace EBerzosa.Pundit.Core.Services
@@ -79,7 +75,7 @@ namespace EBerzosa.Pundit.Core.Services
                packageSpec.Version.Minor, packageSpec.Version.Patch, ReleaseLabel + "." + packageSpec.Version.Revision, null);
          }
          
-         var packageName = new PackageFileName(packageSpec).FileName;
+         var packageName = packageSpec.GetFileName(true);
 
          DestinationFile = Path.Combine(_resolvedOutputPath, packageName);
 
@@ -91,27 +87,18 @@ namespace EBerzosa.Pundit.Core.Services
          long bytesWritten;
 
          using (Stream writeStream = File.Create(DestinationFile))
-         using (var packageWriter = new PackageWriter(_packageSerializerFactory, solutionDirectory, packageSpec, writeStream))
+         using (var packageWriter = new PackageWriter(_packageSerializerFactory, solutionDirectory, packageSpec, writeStream)
          {
-            packageWriter.BeginPackingFile += PackageWriterOnBeginPackingFile;
-            packageWriter.EndPackingFile += PackageWriterOnEndPackingFile;
+            OnBeginPackingFile = p => _writer.EndWrite().BeginWrite().Text("Packing ").Success(p.FileName).Text("... "),
+            OnEndPackingFile = p => _writer.Success("ok").EndWrite()
+         })
+         {
             bytesWritten = packageWriter.WriteAll();
          }
 
          var packageSize = new FileInfo(DestinationFile).Length;
 
          _writer.Text($"Packed {PathUtils.FileSizeToString(bytesWritten)} to {PathUtils.FileSizeToString(packageSize)} (ratio: {packageSize * 100 / bytesWritten:D2}%)");
-      }
-
-      private void PackageWriterOnBeginPackingFile(object sender, PackageFileEventArgs e)
-      {
-         _writer.EndWrite().BeginWrite()
-            .Text("Packing ").Success(e.FileName).Text("... ");
-      }
-
-      private void PackageWriterOnEndPackingFile(object sender, PackageFileEventArgs e)
-      {
-         _writer.Success("ok").EndWrite();
       }
    }
 }

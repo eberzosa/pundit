@@ -1,11 +1,11 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Linq;
+using EBerzosa.Pundit.Core.Framework;
 using EBerzosa.Pundit.Core.Model;
 using EBerzosa.Pundit.Core.Model.Package;
 using EBerzosa.Pundit.Core.Repository;
 using EBerzosa.Pundit.Core.Versioning;
-using Pundit.Core.Model;
 
 namespace EBerzosa.Pundit.Core.Resolvers
 {
@@ -24,7 +24,7 @@ namespace EBerzosa.Pundit.Core.Resolvers
 
       public string PackageId { get; }
 
-      public string Platform { get; }
+      public PunditFramework Framework { get; }
 
       public FloatRange AllowedVersions
       {
@@ -73,7 +73,7 @@ namespace EBerzosa.Pundit.Core.Resolvers
          }
       }
 
-      public UnresolvedPackage UnresolvedPackage => new UnresolvedPackage(PackageId, Platform, _allowedVersions);
+      public UnresolvedPackage UnresolvedPackage => new UnresolvedPackage(PackageId, Framework, _allowedVersions);
 
       public bool CanDowngrade => _activeVersionIndex > 0;
 
@@ -126,7 +126,7 @@ namespace EBerzosa.Pundit.Core.Resolvers
             if (ActiveVersion == null)
                throw new ArgumentException("node has no active version");
 
-            return new PackageKey(PackageId, ActiveVersion.Version, Platform);
+            return new PackageKey(PackageId, ActiveVersion.Version, Framework);
          }
       }
 
@@ -143,11 +143,11 @@ namespace EBerzosa.Pundit.Core.Resolvers
 
 
       public DependencyNode(DependencyNode parentNode,
-         string packageId, string platform, FloatRange allowedVersions, string useReleasePackages)
+         string packageId, PunditFramework framework, FloatRange allowedVersions, string useReleasePackages)
       {
          _parentNode = parentNode;
          PackageId = packageId;
-         Platform = platform;
+         Framework = framework;
          _allowedVersions = allowedVersions;
          _useReleasePackages = useReleasePackages;
 
@@ -212,14 +212,14 @@ namespace EBerzosa.Pundit.Core.Resolvers
          _children.Clear();
 
          foreach (PackageDependency pd in thisManifest.Dependencies)
-            _children.Add(new DependencyNode(this, pd.PackageId, pd.Platform ?? Platform, pd.AllowedVersions, _useReleasePackages));
+            _children.Add(new DependencyNode(this, pd.PackageId, pd.Framework ?? Framework, pd.AllowedVersions, _useReleasePackages));
 
          HasManifest = true;
       }
 
       public object Clone()
       {
-         var node = new DependencyNode(_parentNode, PackageId, Platform, _allowedVersions, _useReleasePackages);
+         var node = new DependencyNode(_parentNode, PackageId, Framework, _allowedVersions, _useReleasePackages);
 
          if (_satisfyingData != null)
          {
@@ -243,6 +243,6 @@ namespace EBerzosa.Pundit.Core.Resolvers
          return node;
       }
 
-      public override string ToString() => PackageId + "[" + AllowedVersions + "]" + "[" + Platform + "]";
+      public override string ToString() => PackageId + "[" + AllowedVersions + "]" + "[" + Framework + "]";
    }
 }

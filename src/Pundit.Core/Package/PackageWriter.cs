@@ -1,20 +1,20 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.IO;
+using EBerzosa.Pundit.Core.Model;
+using EBerzosa.Pundit.Core.Model.Package;
 using EBerzosa.Pundit.Core.Serializers;
 using EBerzosa.Utils;
 using ICSharpCode.SharpZipLib.Zip;
+using Pundit.Core.Application;
 using Pundit.Core.Model;
 using Pundit.Core.Model.EventArguments;
 
-namespace Pundit.Core.Application
+namespace EBerzosa.Pundit.Core.Package
 {
    public class PackageWriter : PackageStreamer
    {
       private readonly PackageSerializerFactory _packageSerializerFactory;
-
-      public event EventHandler<PackageFileEventArgs> BeginPackingFile;
-      public event EventHandler<PackageFileEventArgs> EndPackingFile;
 
       private readonly string _rootDirectory;
       private readonly PackageSpec _packageSpecInfo;
@@ -22,12 +22,11 @@ namespace Pundit.Core.Application
       private readonly Dictionary<string, bool> _packedFiles = new Dictionary<string, bool>();
       private long _bytesWritten;
 
-      public PackageWriter(PackageSerializerFactory packageSerializerFactory)
-      {
-         Guard.NotNull(packageSerializerFactory, nameof(packageSerializerFactory));
 
-         _packageSerializerFactory = packageSerializerFactory;
-      }
+      public Action<PackageFileEventArgs> OnBeginPackingFile { get; set; }
+
+      public Action<PackageFileEventArgs> OnEndPackingFile { get; set; }
+      
 
       /// <summary>
       /// 
@@ -37,7 +36,6 @@ namespace Pundit.Core.Application
       /// <param name="packageSpecInfo"></param>
       /// <param name="outputStream"></param>
       public PackageWriter(PackageSerializerFactory packageSerializerFactory, string rootDirectory, PackageSpec packageSpecInfo, Stream outputStream)
-         : this(packageSerializerFactory)
       {
          Guard.NotNull(packageSerializerFactory, nameof(packageSerializerFactory));
          Guard.NotNull(rootDirectory, nameof(rootDirectory));
@@ -48,6 +46,7 @@ namespace Pundit.Core.Application
 
          packageSpecInfo.Validate();
 
+         _packageSerializerFactory = packageSerializerFactory;
          _rootDirectory = rootDirectory;
          _packageSpecInfo = packageSpecInfo;
          _zipStream = new ZipOutputStream(outputStream);
@@ -122,7 +121,7 @@ namespace Pundit.Core.Application
          var originalSize = new FileInfo(filePath).Length;
          _bytesWritten += originalSize;
 
-         BeginPackingFile?.Invoke(this, new PackageFileEventArgs(unixPath, originalSize));
+         OnBeginPackingFile?.Invoke(new PackageFileEventArgs(unixPath, originalSize));
 
          var entry = new ZipEntry(unixPath)
          {
@@ -134,8 +133,7 @@ namespace Pundit.Core.Application
          using (Stream fileStream = File.OpenRead(filePath))
             fileStream.CopyTo(_zipStream);
 
-         if(EndPackingFile != null)
-            EndPackingFile(this, new PackageFileEventArgs(unixPath, originalSize));
+         OnEndPackingFile?.Invoke(new PackageFileEventArgs(unixPath, originalSize));
       }
 
       protected override void Dispose(bool disposing)

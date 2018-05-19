@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Linq;
+using EBerzosa.Pundit.Core.Framework;
 using EBerzosa.Pundit.Core.Versioning;
 using Mapster;
 using NuGet.Frameworks;
@@ -26,9 +27,9 @@ namespace EBerzosa.Pundit.Core.Mappings
 
          Mapster.TypeAdapterConfig<List<PackageDependency>, IEnumerable<NuGetv3.PackageDependencyGroup>>.NewConfig()
             .MapWith(dependencies => dependencies
-               .GroupBy(d => d.Platform)
+               .GroupBy(d => d.Framework)
                .Select(packagesForPlatform => new NuGetv3.PackageDependencyGroup(
-                  NuGetFramework.Parse(packagesForPlatform.Key),
+                  packagesForPlatform.Key.Adapt<NuGetFramework>(), 
                   packagesForPlatform.Select(d =>
                      new NuGetv3.Core.PackageDependency(d.PackageId, d.AllowedVersions.Adapt<NuGet.Versioning.VersionRange>())))));
 

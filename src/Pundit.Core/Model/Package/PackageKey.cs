@@ -1,11 +1,11 @@
 ﻿using System;
 using System.Runtime.Serialization;
 using System.Xml.Serialization;
-using EBerzosa.Pundit.Core.Package;
+using EBerzosa.Pundit.Core.Framework;
 using EBerzosa.Pundit.Core.Versioning;
 using EBerzosa.Utils;
 
-namespace Pundit.Core.Model
+namespace EBerzosa.Pundit.Core.Model.Package
 {
    /// <summary>
    /// Unique identifier for a package
@@ -17,13 +17,18 @@ namespace Pundit.Core.Model
       {
       }
 
-      public PackageKey(string packageId, PunditVersion version, string platform)
+      public PackageKey(string packageId, PunditVersion version, PunditFramework framework)
       {
          Guard.NotNull(packageId, nameof(packageId));
 
          PackageId = packageId;
          Version = version;
-         Platform = PackageFileName.TrimPlatformName(platform);
+         Framework = framework;
+      }
+
+      private PackageKey(string packageId, PunditVersion version, string framework)
+         : this(packageId, version, PunditFramework.Parse(framework))
+      {
       }
 
       [XmlAttribute("id")]
@@ -45,14 +50,14 @@ namespace Pundit.Core.Model
 
       [XmlAttribute("platform")]
       [DataMember]
-      public string Platform { get; set; }
+      public PunditFramework Framework { get; set; }
       
       public override bool Equals(object obj)
       {
          if (obj is PackageKey packageKey)
             return 
                PackageId == packageKey.PackageId && 
-               Platform == packageKey.Platform && 
+               Framework == packageKey.Framework && 
                Version == packageKey.Version;
 
          return false;
@@ -62,22 +67,22 @@ namespace Pundit.Core.Model
       {
          return 
             PackageId == key.PackageId && 
-            Platform == key.Platform;
+            Framework == key.Framework;
       }
 
       public override int GetHashCode()
       {
-         return PackageId.GetHashCode() * Version.GetHashCode() * Platform.GetHashCode();
+         return PackageId.GetHashCode() * Version.GetHashCode() * Framework.GetHashCode();
       }
 
       public object Clone()
       {
-         return new PackageKey(PackageId, Version, Platform);
+         return new PackageKey(PackageId, Version, Framework);
       }
 
       public override string ToString()
       {
-         return $"{PackageId} v{Version} ({Platform})";
+         return $"{PackageId} v{Version} ({Framework})";
       }
    }
 }

@@ -1,38 +1,39 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Diagnostics;
 using System.Linq;
 using System.Reflection;
 using System.Text.RegularExpressions;
-using EBerzosa.Pundit.Core.Model.Enums;
-using EBerzosa.Pundit.Core.Model.Package;
+using EBerzosa.Pundit.Core.Framework;
 using EBerzosa.Pundit.Core.Versioning;
 
-namespace Pundit.Core.Model
+namespace EBerzosa.Pundit.Core.Model.Package
 {
-   public class PackageManifest : ICloneable
+   [DebuggerDisplay("{PackageId} [{Version.ToString()}] [{Framework.GetShortFolderName()}]")]
+   public class PackageManifest
    {
       public const string DefaultManifestFileName = "pundit.xml"; //package definition
       public const string PackedExtension = ".pundit";
 
       private const string PackageStringDescr = "allowed characters: letters (A-Z, a-z), numbers, underscore (_) and dot sign (.)";
 
+      private static readonly Lazy<string> CoreVersionValue = new Lazy<string>(() => Assembly.GetExecutingAssembly().GetName().Version.ToString());
+
       private static readonly Regex PackageStringRgx = new Regex("^[0-9a-zA-Z\\._]+$");
-      private static readonly Regex PackageVersionRgx = new Regex("^[0-9\\*]+(\\.[0-9\\*]+){3}(-dev){0,1}$");
-      
+
 
       private List<PackageDependency> _dependencies = new List<PackageDependency>();
 
       public string CoreVersion { get; internal set; }
 
-      //WARNING!!! remember to reflect copy constructor if adding a new property to this class
-
+      
       public string PackageId { get; set; }
 
-      public string Platform { get; set; }
+      public PunditVersion Version { get; set; }
+
+      public PunditFramework Framework { get; set; }
 
       public string ProjectUrl { get; set; }
-
-      public PunditVersion Version { get; set; }
 
       public string Author { get; set; }
 
@@ -48,38 +49,10 @@ namespace Pundit.Core.Model
          set => _dependencies = new List<PackageDependency>(value);
       }
 
-      public PackageManifest()
-      {
-         CoreVersion = Assembly.GetExecutingAssembly().GetName().Version.ToString();
-      }
 
-      /// <summary>
-      /// Crates an instance of a package copying it from the source package
-      /// </summary>
-      /// <param name="copy">The package to copy from. Must be valid,
-      /// otherwise <see cref="InvalidPackageException"/> is thrown</param>
-      public PackageManifest(PackageManifest copy)
-         : this()
-      {
-         copy.Validate();
-         
-         _dependencies = new List<PackageDependency>(copy._dependencies.Where(pd => pd.Scope == DependencyScope.Normal));
+      public PackageManifest() => CoreVersion = CoreVersionValue.Value;
 
-         PackageId = copy.PackageId;
-         Platform = copy.Platform;
-         ProjectUrl = copy.ProjectUrl;
-         Version = copy.Version;
-         Author = copy.Author;
-         Description = copy.Description;
-         ReleaseNotes = copy.ReleaseNotes;
-         License = copy.License;
-      }
       
-      private bool IsValidPackageNameString(string s)
-      {
-         return PackageStringRgx.IsMatch(s);
-      }
-
       /// <summary>
       /// Validates the package. In case of invalid package throws <see cref="InvalidPackageException"/>
       /// </summary>
@@ -87,32 +60,25 @@ namespace Pundit.Core.Model
       {
          var ex = new InvalidPackageException();
 
-         if(string.IsNullOrEmpty(PackageId))
-            ex.AddError("PackageId", "package id is required");
+         if (string.IsNullOrEmpty(PackageId))
+            ex.AddError("PackageId", "PackageId is missing");
 
-         if(!IsValidPackageNameString(PackageId))
-            ex.AddError("PackageId", "package id is invalid, " + PackageStringDescr);
+         if (!IsValidPackageNameString(PackageId))
+            ex.AddError("PackageId", "PackageId is invalid, " + PackageStringDescr);
 
-         if(!string.IsNullOrEmpty(Platform) && !IsValidPackageNameString(Platform))
-            ex.AddError("Platform", "platform name is invalid, " + PackageStringDescr);
-
-         if(Version == null)
-            ex.AddError("Version", "version is required");
+         if (Version == null)
+            ex.AddError("Version", "Version is missing");
 
          if (ex.HasErrors)
             throw ex;
       }
+      
 
-      public object Clone()
-      {
-         return new PackageManifest(this);
-      }
+      public PackageDependency GetPackageDependency(PackageKey key) 
+         => Dependencies?.Where(d => d.PackageId == key.PackageId && d.Framework == key.Framework).FirstOrDefault();
 
-      public PackageDependency GetPackageDependency(PackageKey key)
-      {
-         return Dependencies?.Where(d => d.PackageId == key.PackageId && d.Platform == key.Platform).FirstOrDefault();
-      }
+      public override string ToString() => PackageId + " [" + Version + "] [" + Framework + "]";
 
-      public override string ToString() => PackageId + " [" + Version + "] [" + Platform + "]";
+      private bool IsValidPackageNameString(string s) => PackageStringRgx.IsMatch(s);
    }
 }

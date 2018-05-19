@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
+using EBerzosa.Pundit.Core.Model.Package;
 
 namespace Pundit.Core.Model.EventArguments
 {

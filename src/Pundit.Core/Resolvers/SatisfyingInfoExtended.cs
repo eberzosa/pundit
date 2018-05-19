@@ -1,4 +1,5 @@
-﻿using Pundit.Core.Model;
+﻿using EBerzosa.Pundit.Core.Framework;
+using EBerzosa.Pundit.Core.Model.Package;
 
 namespace EBerzosa.Pundit.Core.Resolvers
 {
@@ -6,16 +7,16 @@ namespace EBerzosa.Pundit.Core.Resolvers
    {
       public string PackageId { get; set; }
 
-      public string Platform { get; }
+      public PunditFramework Framework { get; }
 
       
-      public SatisfyingInfoExtended(SatisfyingInfo satisfying, string packageId, string platform)
+      public SatisfyingInfoExtended(SatisfyingInfo satisfying, string packageId, PunditFramework framework)
          : base(satisfying.Version, satisfying.Repo)
       {
          PackageId = packageId;
-         Platform = platform;
+         Framework = framework;
       }
 
-      public PackageKey GetPackageKey() => new PackageKey(PackageId, Version, Platform);
+      public PackageKey GetPackageKey() => new PackageKey(PackageId, Version, Framework);
    }
 }
