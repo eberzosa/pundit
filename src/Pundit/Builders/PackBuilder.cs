@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using EBerzosa.CommandLineProcess;
 using EBerzosa.Pundit.CommandLine.Controllers;
+using EBerzosa.Pundit.Core.Services;
 using EBerzosa.Utils;
 
 namespace EBerzosa.Pundit.CommandLine.Builders
@@ -26,8 +27,9 @@ namespace EBerzosa.Pundit.CommandLine.Builders
                var output = opt.SingleValue("o", "output", "directory", "Specifies the output directory for the package");
                var version = opt.SingleValue("v", "packageVersion", "versionNumber", "Overrides the version number inside the manifest");
                var releaseLabel = BuildReleaseLabel(opt);
+               var type = opt.SingleFixedValue("t", "type", "packageType", "The type of package to produce. Default Pundit", Enum.GetNames(typeof(PackType)));
 
-               cmd.OnExecute(() => _controller.Execute(manifest.Value, output.Value, version.Value, releaseLabel.Value).ToInteger());
+               cmd.OnExecute(() => _controller.Execute(manifest.Value, output.Value, version.Value, releaseLabel.Value, type.Value).ToInteger());
             });
       }
 

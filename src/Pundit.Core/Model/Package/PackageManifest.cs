@@ -9,7 +9,7 @@ using EBerzosa.Pundit.Core.Versioning;
 
 namespace EBerzosa.Pundit.Core.Model.Package
 {
-   [DebuggerDisplay("{PackageId} [{Version.ToString()}] [{Framework.GetShortFolderName()}]")]
+   [DebuggerDisplay("{PackageId} [{Version.ToString()}] [{Framework?.GetShortFolderName()}]")]
    public class PackageManifest
    {
       public const string DefaultManifestFileName = "pundit.xml"; //package definition

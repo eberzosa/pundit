@@ -2,16 +2,19 @@
 using EBerzosa.Pundit.Core.Package;
 using EBerzosa.Pundit.Core.Repository;
 using EBerzosa.Pundit.Core.Serializers;
+using EBerzosa.Utils;
 
 namespace EBerzosa.Pundit.Core.Application
 {
    public class PackageReaderFactory
    {
-      private readonly PackageSerializerFactory _packageSerializerFactory;
+      private readonly IPackageSerializer _packageSerializer;
 
-      public PackageReaderFactory(PackageSerializerFactory packageSerializer)
+      public PackageReaderFactory(IPackageSerializer packageSerializer)
       {
-         _packageSerializerFactory = packageSerializer;
+         Guard.NotNull(packageSerializer, nameof(packageSerializer));
+
+         _packageSerializer = packageSerializer;
       }
 
       public IPackageReader Get(RepositoryType repoType, Stream stream)
@@ -19,7 +22,7 @@ namespace EBerzosa.Pundit.Core.Application
          if (repoType == RepositoryType.NuGet)
             return new NuGetPackageReader(stream);
 
-         return new PackageReader(_packageSerializerFactory, stream);
+         return new PackageReader(_packageSerializer, stream);
       }
    }
 }

@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.IO;
 using System.Linq;
 using System.Threading;
+using EBerzosa.Pundit.Core.Converters;
 using EBerzosa.Pundit.Core.Framework;
 using EBerzosa.Pundit.Core.Model;
 using EBerzosa.Pundit.Core.Model.Package;
@@ -66,7 +67,7 @@ namespace EBerzosa.Pundit.Core.Repository
 
       public Stream Download(PackageKey key)
       {
-         var packageIdentity = new PackageIdentity(key.PackageId, PunditVersion.Parse(key.VersionString).Adapt<NuGet.Versioning.NuGetVersion>());
+         var packageIdentity = new PackageIdentity(key.PackageId, PunditVersion.Parse(key.VersionString).ToNuGetVersion());
 
          var downloadResource = _sourceRepository.GetResource<DownloadResource>();
          
@@ -92,7 +93,7 @@ namespace EBerzosa.Pundit.Core.Repository
 
       public PackageManifest GetManifest(PackageKey key)
       {
-         var packageIdentity = new PackageIdentity(key.PackageId, PunditVersion.Parse(key.VersionString).Adapt<NuGet.Versioning.NuGetVersion>());
+         var packageIdentity = new PackageIdentity(key.PackageId, PunditVersion.Parse(key.VersionString).ToNuGetVersion());
 
          var packagesResource = _sourceRepository.GetResource<PackageMetadataResource>();
          var packageInfo = packagesResource.GetMetadataAsync(packageIdentity, NullSourceCacheContext.Instance, NullLogger.Instance, CancellationToken.None).Result;
@@ -102,7 +103,7 @@ namespace EBerzosa.Pundit.Core.Repository
          PackageDependencyGroup dependencies = null;
          if (packageInfo.DependencySets.Any())
          {
-            dependencies = NuGetFrameworkUtility.GetNearest(packageInfo.DependencySets, projectFramework.Adapt<NuGetFramework>());
+            dependencies = NuGetFrameworkUtility.GetNearest(packageInfo.DependencySets, projectFramework.ToNuGetFramework());
 
             if (dependencies == null)
                throw new ApplicationException($"Could not find compatible dependencies for '{packageInfo.Identity}' and framework '{projectFramework}'");
@@ -111,9 +112,9 @@ namespace EBerzosa.Pundit.Core.Repository
          var manifest = new PackageManifest
          {
             PackageId = packageInfo.Identity.Id,
-            Version = packageInfo.Identity.Version.Adapt<PunditVersion>(),
+            Version = packageInfo.Identity.Version.ToPunditVersion(),
             Dependencies = new List<Model.Package.PackageDependency>(),
-            Framework = dependencies?.TargetFramework.Adapt<PunditFramework>()
+            Framework = dependencies?.TargetFramework.ToPunditFramework()
          };
 
          if (dependencies == null)
@@ -131,7 +132,7 @@ namespace EBerzosa.Pundit.Core.Repository
       {
          var findLocalPackagesResource = _sourceRepository.GetResource<PackageMetadataResource>();
 
-         var packageIdentity = new PackageIdentity(package.PackageId, package.Version.Adapt<NuGet.Versioning.NuGetVersion>());
+         var packageIdentity = new PackageIdentity(package.PackageId, package.Version.ToNuGetVersion());
          return findLocalPackagesResource.GetMetadataAsync(packageIdentity, NullSourceCacheContext.Instance, NullLogger.Instance, CancellationToken.None).Result != null;
       }
 
@@ -142,7 +143,7 @@ namespace EBerzosa.Pundit.Core.Repository
             .Result;
 
          foreach (var result in results)
-            yield return new PackageKey(result.Identity.Id, result.Identity.Version.Adapt<PunditVersion>(), null);
+            yield return new PackageKey(result.Identity.Id, result.Identity.Version.ToPunditVersion(), null);
       }
 
       private FileSystemRepository GetFsRepoOrDie(IRepository repo)

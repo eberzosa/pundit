@@ -17,9 +17,9 @@ namespace EBerzosa.Pundit.Core.Services
 {
    public class ResolveService
    {
+      private readonly IPackageSerializer _packageSerializer;
       private readonly ManifestResolver _manifestResolver;
       private readonly PackageReaderFactory _packageReaderFactory;
-      private readonly PackageSerializerFactory _packageSerializerFactory;
       private readonly DependencyResolution _dependencyResolution;
       private readonly PackageInstallerFactory _packageInstallerFactory;
 
@@ -43,20 +43,20 @@ namespace EBerzosa.Pundit.Core.Services
       public string ReleaseLabel { get; set; }
 
 
-      public ResolveService(ManifestResolver manifestResolver, RepositoryFactory repositoryFactory, DependencyResolution dependencyResolution, 
-         PackageSerializerFactory packageSerializerFactory, PackageInstallerFactory packageInstallerFactory, IWriter writer)
+      public ResolveService(IPackageSerializer packageSerializer, ManifestResolver manifestResolver, RepositoryFactory repositoryFactory, DependencyResolution dependencyResolution, 
+         PackageInstallerFactory packageInstallerFactory, IWriter writer)
       {
+         Guard.NotNull(packageSerializer, nameof(packageSerializer));
          Guard.NotNull(manifestResolver, nameof(manifestResolver));
          Guard.NotNull(repositoryFactory, nameof(repositoryFactory));
          Guard.NotNull(dependencyResolution, nameof(dependencyResolution));
-         Guard.NotNull(packageSerializerFactory, nameof(packageSerializerFactory));
          Guard.NotNull(packageInstallerFactory, nameof(packageInstallerFactory));
          Guard.NotNull(writer, nameof(writer));
-         
+
+         _packageSerializer = packageSerializer;
          _manifestResolver = manifestResolver;
          _repositoryFactory = repositoryFactory;
          _dependencyResolution = dependencyResolution;
-         _packageSerializerFactory = packageSerializerFactory;
          _packageInstallerFactory = packageInstallerFactory;
          _writer = writer;
       }
@@ -69,7 +69,7 @@ namespace EBerzosa.Pundit.Core.Services
          PrintSettings();
 
          _writer.BeginWrite().Text("Reading manifest...");
-         var packageSpecs = _packageSerializerFactory.GetPundit().DeserializePackageSpec(File.OpenRead(_resolvedManifestPath));
+         var packageSpecs = _packageSerializer.DeserializePackageSpec(File.OpenRead(_resolvedManifestPath));
          packageSpecs.Validate();
          _writer.Success(" ok").EndWrite();
 

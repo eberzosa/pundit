@@ -2,8 +2,10 @@
 using System.Collections.Generic;
 using System.IO;
 using System.Linq;
+using EBerzosa.Pundit.Core.Converters;
 using EBerzosa.Pundit.Core.Framework;
 using EBerzosa.Pundit.Core.Model.Package;
+using EBerzosa.Pundit.Core.Package;
 using EBerzosa.Pundit.Core.Serializers;
 using EBerzosa.Pundit.Core.Versioning;
 using EBerzosa.Utils;
@@ -18,7 +20,6 @@ namespace EBerzosa.Pundit.Core.Services
    public class ConvertService
    {
       private readonly PackService _packService;
-      private readonly PackageSerializerFactory _packageSerializerFactory;
       private readonly IWriter _writer;
 
       public string SourcePath { get; set; }
@@ -28,10 +29,9 @@ namespace EBerzosa.Pundit.Core.Services
       public string Framework { get; set; }
 
 
-      public ConvertService(PackService packService, PackageSerializerFactory packageSerializerFactory, IWriter writer)
+      public ConvertService(PackService packService, IWriter writer)
       {
          _packService = packService;
-         _packageSerializerFactory = packageSerializerFactory;
          _writer = writer;
       }
 
@@ -58,7 +58,7 @@ namespace EBerzosa.Pundit.Core.Services
             var reader = new PackageArchiveReader(stream);
 
             punditSpec.PackageId = reader.NuspecReader.GetIdentity().Id;
-            punditSpec.Version = reader.NuspecReader.GetVersion().Adapt<PunditVersion>();
+            punditSpec.Version = reader.NuspecReader.GetVersion().ToPunditVersion();
             punditSpec.Author = reader.NuspecReader.GetAuthors();
             punditSpec.Description = reader.NuspecReader.GetDescription();
             punditSpec.License = reader.NuspecReader.GetLicenseUrl();
@@ -75,7 +75,7 @@ namespace EBerzosa.Pundit.Core.Services
                }
 
                punditSpec.Dependencies = new List<PackageDependency>();
-               punditSpec.Framework = framework.Adapt<PunditFramework>();
+               punditSpec.Framework = framework.ToPunditFramework();
                punditSpec.Files = new List<SourceFiles>();
 
                var dependencies = reader.GetPackageDependencies().FirstOrDefault(d => d.TargetFramework == framework);
@@ -111,8 +111,9 @@ namespace EBerzosa.Pundit.Core.Services
                   }
 
                   var punditSpecFile = Path.Combine(tempOut, PackageManifest.DefaultManifestFileName);
-                  using (var outFileStream = File.Create(punditSpecFile))
-                     _packageSerializerFactory.GetPundit().SerializePackageSpec(punditSpec, outFileStream);
+                  //using (var outFileStream = File.Create(punditSpecFile))
+                  //   new PunditPackageWriter(new XmlSerializer(), )
+                  //   _packageSerializerFactory.GetPundit().SerializePackageSpec(punditSpec, outFileStream);
 
                   _packService.ManifestFileOrPath = punditSpecFile;
                   _packService.Pack();

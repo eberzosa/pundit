@@ -2,11 +2,11 @@
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
+using EBerzosa.Pundit.Core.Converters;
 using EBerzosa.Pundit.Core.Model;
 using EBerzosa.Pundit.Core.Model.Package;
 using EBerzosa.Pundit.Core.Repository;
 using EBerzosa.Pundit.Core.Versioning;
-using NuGet.Packaging;
 using Pundit.Core.Model;
 
 namespace EBerzosa.Pundit.Core.Resolvers
@@ -197,7 +197,8 @@ namespace EBerzosa.Pundit.Core.Resolvers
          if (found.Count <= 0)
             return null;
 
-         collector.AddRange(found);
+         foreach (var node in found)
+            collector.Add(node);
 
          AppendDependencyNode(found, sb);
 

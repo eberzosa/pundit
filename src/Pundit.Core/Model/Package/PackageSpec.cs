@@ -16,24 +16,10 @@ namespace Pundit.Core.Model
 
       public override void Validate()
       {
-         InvalidPackageException ex;
+         if (Files == null || Files.Count == 0)
+            throw new InvalidPackageException("manifest has no input files");
 
-         try
-         {
-            base.Validate();
-
-            ex = new InvalidPackageException();
-         }
-         catch(InvalidPackageException ex1)
-         {
-            ex = ex1;
-         }
-
-         //if(Files.Count == 0)
-         //   ex.AddError("Files", "package requires files to be included");
-
-         if (ex.HasErrors)
-            throw ex;
+         base.Validate();
       }
    }
 }

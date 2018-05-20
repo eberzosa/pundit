@@ -150,27 +150,6 @@ namespace EBerzosa.Pundit.Core.Resolvers
          Framework = framework;
          _allowedVersions = allowedVersions;
          _useReleasePackages = useReleasePackages;
-
-
-         //if (_useReleasePackages == null)
-         //{
-         //   AllowedVersions = allowedVersions;
-         //   return;
-         //}
-
-         //FloatBehaviour behaviour;
-         //if (allowedVersions.FloatBehaviour == FloatBehaviour.Major)
-         //   behaviour = FloatBehaviour.MajorPrerelease;
-         //else if (allowedVersions.FloatBehaviour == FloatBehaviour.Minor)
-         //   behaviour = FloatBehaviour.MinorPrerelease;
-         //else if (allowedVersions.FloatBehaviour == FloatBehaviour.Patch)
-         //   behaviour = FloatBehaviour.PatchPrerelease;
-         //else if (allowedVersions.FloatBehaviour == FloatBehaviour.Revision)
-         //   behaviour = FloatBehaviour.RevisionPrerelease;
-         //else
-         //   behaviour = allowedVersions.FloatBehaviour;
-
-         //AllowedVersions = new FloatRange(behaviour, allowedVersions.MinVersion, _useReleasePackages);
       }
 
 

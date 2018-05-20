@@ -13,17 +13,17 @@ namespace EBerzosa.Pundit.Core.Package
 {
    public class PackageReader : PackageStreamer, IPackageReader
    {
-      private readonly PackageSerializerFactory _packageSerializer;
+      private readonly IPackageSerializer _packageSerializer;
       public event EventHandler<ResolvedFileEventArgs> InstallingResolvedFile;
 
       private ZipInputStream _zipStream;
 
-      public PackageReader(PackageSerializerFactory packageSerializerFactory, Stream packageStream)
+      public PackageReader(IPackageSerializer packageSerializer, Stream packageStream)
       {
-         Guard.NotNull(packageSerializerFactory, nameof(packageSerializerFactory));
+         Guard.NotNull(packageSerializer, nameof(packageSerializer));
          Guard.NotNull(packageStream, nameof(packageStream));
 
-         _packageSerializer = packageSerializerFactory;
+         _packageSerializer = packageSerializer;
          _zipStream = new ZipInputStream(packageStream);
       }
 
@@ -35,7 +35,7 @@ namespace EBerzosa.Pundit.Core.Package
          {
             if(entry.IsFile && entry.Name == PackageManifest.DefaultManifestFileName)
             {
-               return _packageSerializer.GetPundit().DeserializePackageManifest(_zipStream);
+               _packageSerializer.DeserializePackageManifest(_zipStream);
             }
          }
 

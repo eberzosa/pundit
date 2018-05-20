@@ -19,7 +19,7 @@ namespace EBerzosa.Pundit.CommandLine.Controllers
          _serviceFactory = serviceFactory;
       }
 
-      public ExitCode Execute(string manifest, string outputPath, string versionString, string releaseLabel)
+      public ExitCode Execute(string manifest, string outputPath, string versionString, string releaseLabel, string typeString)
       {
          var service = _serviceFactory.GetPackService();
             
@@ -29,6 +29,20 @@ namespace EBerzosa.Pundit.CommandLine.Controllers
          service.ManifestFileOrPath = manifest;
          service.OutputPath = outputPath;
 
+         if (string.IsNullOrEmpty(typeString))
+         {
+            service.Type = PackType.Pundit;
+         }
+         else if (Enum.TryParse<PackType>(typeString, true, out var type))
+         {
+            service.Type = type;
+         }
+         else
+         {
+            Output.Error($"PackType '{typeString}' is not supported");
+            return ExitCode.InvalidParameter;
+         }
+         
          service.Pack();
 
          return ExitCode.Success;

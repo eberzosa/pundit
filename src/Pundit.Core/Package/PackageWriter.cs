@@ -1,24 +1,18 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.IO;
-using EBerzosa.Pundit.Core.Model;
-using EBerzosa.Pundit.Core.Model.Package;
-using EBerzosa.Pundit.Core.Serializers;
 using EBerzosa.Utils;
-using ICSharpCode.SharpZipLib.Zip;
 using Pundit.Core.Application;
 using Pundit.Core.Model;
 using Pundit.Core.Model.EventArguments;
 
 namespace EBerzosa.Pundit.Core.Package
 {
-   public class PackageWriter : PackageStreamer
+   public abstract class PackageWriter : PackageStreamer, IPackageWriter
    {
-      private readonly PackageSerializerFactory _packageSerializerFactory;
-
-      private readonly string _rootDirectory;
-      private readonly PackageSpec _packageSpecInfo;
-      private readonly ZipOutputStream _zipStream;
+      protected readonly PackageSpec PackageSpec;
+      protected readonly string RootDirectory;
+      
       private readonly Dictionary<string, bool> _packedFiles = new Dictionary<string, bool>();
       private long _bytesWritten;
 
@@ -31,58 +25,45 @@ namespace EBerzosa.Pundit.Core.Package
       /// <summary>
       /// 
       /// </summary>
-      /// <param name="packageSerializerFactory"></param>
+      /// <param name="packageSerializer"></param>
       /// <param name="rootDirectory">Root directory of a project (base path for all the file patterns)</param>
-      /// <param name="packageSpecInfo"></param>
-      /// <param name="outputStream"></param>
-      public PackageWriter(PackageSerializerFactory packageSerializerFactory, string rootDirectory, PackageSpec packageSpecInfo, Stream outputStream)
+      /// <param name="packageSpec"></param>
+      protected PackageWriter(string rootDirectory, PackageSpec packageSpec)
       {
-         Guard.NotNull(packageSerializerFactory, nameof(packageSerializerFactory));
          Guard.NotNull(rootDirectory, nameof(rootDirectory));
-         Guard.NotNull(packageSpecInfo, nameof(packageSpecInfo));
-         Guard.NotNull(outputStream, nameof(outputStream));
+         Guard.NotNull(packageSpec, nameof(packageSpec));
 
          rootDirectory = new DirectoryInfo(rootDirectory).FullName;
 
-         packageSpecInfo.Validate();
-
-         _packageSerializerFactory = packageSerializerFactory;
-         _rootDirectory = rootDirectory;
-         _packageSpecInfo = packageSpecInfo;
-         _zipStream = new ZipOutputStream(outputStream);
-         _zipStream.SetLevel(9);
+         packageSpec.Validate();
+         
+         RootDirectory = rootDirectory;
+         PackageSpec = packageSpec;
       }
 
       public long WriteAll()
       {
-         if(_packageSpecInfo.Files == null || _packageSpecInfo.Files.Count == 0)
-            throw new InvalidPackageException("manifest has no input files");
-
          WriteManifest();
 
-         _bytesWritten += _zipStream.Length;
+         _bytesWritten += GetCurrentSize();
 
          WriteFiles();
 
          return _bytesWritten;
       }
 
-      private void WriteManifest()
-      {
-         var entry = new ZipEntry(PackageManifest.DefaultManifestFileName);
+      protected abstract void WriteManifest();
 
-         _zipStream.PutNextEntry(entry);
+      protected abstract long GetCurrentSize();
 
-         _packageSpecInfo.Validate();
-         _packageSerializerFactory.GetPundit().SerializePackageManifest(_packageSpecInfo, _zipStream);
-      }
+      protected abstract void WriteEmptyDirectory(string path);
 
       private void WriteFiles()
       {
-         foreach(SourceFiles files in _packageSpecInfo.Files)
+         foreach(SourceFiles files in PackageSpec.Files)
          {
             Resolve(files,
-               _rootDirectory,   //root directory to start search from
+               RootDirectory,   //root directory to start search from
                out var searchBase,   //full path to the returned files and dirs search root
                out var archiveFiles,          //full path to found files
                out var archiveDirectories);   //full path to found folders
@@ -98,7 +79,7 @@ namespace EBerzosa.Pundit.Core.Package
                var dirPath = GetRelativeUnixPath(files, searchBase, adir);
                if(!dirPath.EndsWith("/")) dirPath += "/";
 
-               _zipStream.PutNextEntry(new ZipEntry(dirPath));
+               WriteEmptyDirectory(dirPath);
             }
          }
       }
@@ -123,23 +104,11 @@ namespace EBerzosa.Pundit.Core.Package
 
          OnBeginPackingFile?.Invoke(new PackageFileEventArgs(unixPath, originalSize));
 
-         var entry = new ZipEntry(unixPath)
-         {
-            DateTime = DateTime.Now,
-            Size = originalSize
-         };
-         _zipStream.PutNextEntry(entry);
-
-         using (Stream fileStream = File.OpenRead(filePath))
-            fileStream.CopyTo(_zipStream);
+         WriteFile(filePath, originalSize, unixPath);
 
          OnEndPackingFile?.Invoke(new PackageFileEventArgs(unixPath, originalSize));
       }
 
-      protected override void Dispose(bool disposing)
-      {
-         _zipStream.Close();
-         _zipStream.Dispose();
-      }
+      protected abstract void WriteFile(string filePath, long size, string relativePath);
    }
 }

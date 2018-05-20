@@ -2,7 +2,6 @@
 using System.Linq;
 using System.Text.RegularExpressions;
 using EBerzosa.Pundit.Core.Framework;
-using EBerzosa.Pundit.Core.Mappings;
 using EBerzosa.Pundit.Core.Model;
 using EBerzosa.Pundit.Core.Model.Package;
 using EBerzosa.Pundit.Core.Versioning;

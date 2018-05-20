@@ -1,4 +1,5 @@
-﻿using System.IO;
+﻿using System;
+using System.IO;
 using EBerzosa.Pundit.Core.Package;
 using EBerzosa.Pundit.Core.Repository;
 using EBerzosa.Pundit.Core.Serializers;
@@ -11,12 +12,12 @@ namespace EBerzosa.Pundit.Core.Services
 {
    public class PackService
    {
-      private readonly PackageSerializerFactory _packageSerializerFactory;
+      private readonly IPackageSerializer _packageSerializer;
       private readonly ManifestResolver _manifestResolver;
       private readonly IWriter _writer;
 
       private string _resolvedOutputPath;
-      private string _resolvedManifestPath;
+      private string _packageSpecFile;
 
       public string ManifestFileOrPath { get; set; }
 
@@ -26,25 +27,28 @@ namespace EBerzosa.Pundit.Core.Services
 
       public string ReleaseLabel { get; set; }
 
+      public PackType Type { get; set; }
+
       public string DestinationFile { get; private set; }
 
 
-      public PackService(PackageSerializerFactory packageSerializerFactory, ManifestResolver manifestResolver, IWriter writer)
+
+      public PackService(IPackageSerializer packageSerializer, ManifestResolver manifestResolver, IWriter writer)
       {
-         Guard.NotNull(packageSerializerFactory, nameof(packageSerializerFactory));
+         Guard.NotNull(packageSerializer, nameof(packageSerializer));
          Guard.NotNull(manifestResolver, nameof(manifestResolver));
          Guard.NotNull(writer, nameof(writer));
 
-         _packageSerializerFactory = packageSerializerFactory;
+         _packageSerializer = packageSerializer;
          _manifestResolver = manifestResolver;
          _writer = writer;
       }
 
       public void Pack()
       {
-         _resolvedManifestPath = _manifestResolver.GetManifest(ManifestFileOrPath);
+         _packageSpecFile = _manifestResolver.GetManifest(ManifestFileOrPath);
 
-         var solutionDirectory = Path.GetDirectoryName(_resolvedManifestPath);
+         var solutionDirectory = Path.GetDirectoryName(_packageSpecFile);
 
          _resolvedOutputPath = Path.Combine(_manifestResolver.CurrentDirectory, OutputPath ?? solutionDirectory);
          
@@ -52,15 +56,16 @@ namespace EBerzosa.Pundit.Core.Services
             throw new DirectoryNotFoundException($"Destination directory '{_resolvedOutputPath}' does not exist");
 
          _writer.BeginColumns(new int?[] {15, null})
-            .Text("Package Spec:").Text(_resolvedManifestPath)
+            .Text("Package Spec:").Text(_packageSpecFile)
             .Text("Solution Root:").Text(solutionDirectory)
             .Text("Output Dir:").Text(_resolvedOutputPath)
             .EndColumns().Empty();
 
          PackageSpec packageSpec;
-         using (Stream devPackStream = File.OpenRead(_resolvedManifestPath))
+         using (Stream packageSpecStream = File.OpenRead(_packageSpecFile))
          {
-            packageSpec = _packageSerializerFactory.GetPundit().DeserializePackageSpec(devPackStream);
+            packageSpec = _packageSerializer.DeserializePackageSpec(packageSpecStream);
+            packageSpec.Validate();
          }
 
          if (Version != null)
@@ -77,6 +82,9 @@ namespace EBerzosa.Pundit.Core.Services
          
          var packageName = packageSpec.GetFileName(true);
 
+         if (Type == PackType.NuGet)
+            packageName = Path.ChangeExtension(packageName, ".nupkg");
+
          DestinationFile = Path.Combine(_resolvedOutputPath, packageName);
 
          if (File.Exists(DestinationFile))
@@ -87,18 +95,28 @@ namespace EBerzosa.Pundit.Core.Services
          long bytesWritten;
 
          using (Stream writeStream = File.Create(DestinationFile))
-         using (var packageWriter = new PackageWriter(_packageSerializerFactory, solutionDirectory, packageSpec, writeStream)
+         using (var packageWriter = GetWriter(solutionDirectory, packageSpec, writeStream))
          {
-            OnBeginPackingFile = p => _writer.EndWrite().BeginWrite().Text("Packing ").Success(p.FileName).Text("... "),
-            OnEndPackingFile = p => _writer.Success("ok").EndWrite()
-         })
-         {
+            packageWriter.OnBeginPackingFile = p => _writer.EndWrite().BeginWrite().Text("Packing ").Success(p.FileName).Text("... ");
+            packageWriter.OnEndPackingFile = p => _writer.Success("ok").EndWrite();
+
             bytesWritten = packageWriter.WriteAll();
          }
 
          var packageSize = new FileInfo(DestinationFile).Length;
 
          _writer.Text($"Packed {PathUtils.FileSizeToString(bytesWritten)} to {PathUtils.FileSizeToString(packageSize)} (ratio: {packageSize * 100 / bytesWritten:D2}%)");
+      }
+
+      private IPackageWriter GetWriter(string rootDirectory, PackageSpec packageSpec, Stream outputStream)
+      {
+         if (Type == PackType.Pundit)
+            return new PunditPackageWriter(_packageSerializer, rootDirectory, packageSpec, outputStream);
+
+         if (Type == PackType.NuGet)
+            return new NuGetv3PackageWriter(rootDirectory, packageSpec, outputStream);
+
+         throw new NotSupportedException();
       }
    }
 }

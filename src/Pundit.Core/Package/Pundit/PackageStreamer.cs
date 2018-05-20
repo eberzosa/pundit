@@ -1,8 +1,5 @@
 ﻿using System;
-using System.Collections.Generic;
 using System.IO;
-using System.Linq;
-using System.Text;
 using NAnt.Core;
 using Pundit.Core.Model;
 using Pundit.Core.Utils;
@@ -11,11 +8,6 @@ namespace Pundit.Core.Application
 {
    public abstract class PackageStreamer : IDisposable
    {
-      protected virtual void Dispose(bool disposing)
-      {
-         
-      }
-
       private static string[] ParsePatternArray(string array)
       {
          return string.IsNullOrEmpty(array)
@@ -85,6 +77,7 @@ namespace Pundit.Core.Application
             case PackageFileKind.Binary:
                path = sourceFiles.Configuration.ToString().ToLower() + "/" + path;
                break;
+
             default:
                if (!string.IsNullOrEmpty(sourceFiles.TargetDirectory))
                   path = sourceFiles.TargetDirectory + "/" + path;
@@ -110,10 +103,11 @@ namespace Pundit.Core.Application
          return path;
       }
 
-
       public void Dispose()
       {
          Dispose(true);
       }
+
+      protected abstract void Dispose(bool disposing);
    }
 }

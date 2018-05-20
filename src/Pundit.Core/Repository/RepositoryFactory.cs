@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.IO;
 using System.Linq;
 using EBerzosa.Pundit.Core.Application;
+using EBerzosa.Pundit.Core.Converters;
 using EBerzosa.Pundit.Core.Repository.Xml;
 using EBerzosa.Pundit.Core.Serializers;
 using EBerzosa.Utils;
@@ -102,7 +103,7 @@ namespace EBerzosa.Pundit.Core.Repository
          {
             var repos = _serializer.Read<XmlRegisteredRepositories>(stream);
 
-            _registeredRepositories = repos.Adapt<XmlRegisteredRepositories, RegisteredRepositories>();
+            _registeredRepositories = repos.ToRegisteredRepositories();
 
             //TODO: Finish this
             foreach (var repository in _registeredRepositories.RepositoriesArray)

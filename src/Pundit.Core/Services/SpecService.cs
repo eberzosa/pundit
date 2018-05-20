@@ -6,20 +6,25 @@ using EBerzosa.Pundit.Core.Model.Enums;
 using EBerzosa.Pundit.Core.Model.Package;
 using EBerzosa.Pundit.Core.Serializers;
 using EBerzosa.Pundit.Core.Versioning;
+using EBerzosa.Utils;
 using Pundit.Core.Model;
 
 namespace EBerzosa.Pundit.Core.Services
 {
    public class SpecService
    {
+      private readonly IPackageSerializer _packageSerializer;
       private readonly string _currentDirectory;
-      private readonly PackageSerializerFactory _packageSerializerFactory;
       private readonly IWriter _writer;
 
-      public SpecService(string currentDirectory, PackageSerializerFactory packageSerializerFactory, IWriter writer)
+      public SpecService(IPackageSerializer packageSerializer, string currentDirectory, IWriter writer)
       {
+         Guard.NotNull(packageSerializer, nameof(packageSerializer));
+         Guard.NotNull(currentDirectory, nameof(currentDirectory));
+         Guard.NotNull(writer, nameof(writer));
+
+         _packageSerializer = packageSerializer;
          _currentDirectory = currentDirectory;
-         _packageSerializerFactory = packageSerializerFactory;
          _writer = writer;
       }
 
@@ -81,11 +86,8 @@ namespace EBerzosa.Pundit.Core.Services
             .Text($"Writing package spec to '{path}'... ");
 
          using (var outFileStream = File.Create(path))
-            _packageSerializerFactory.GetPundit().SerializePackageSpec(packageSpec, outFileStream);
-
-         using (var outFileStream = File.Create(path + ".nuspec"))
-            _packageSerializerFactory.GetNuGetv3().SerializePackageSpec(packageSpec, outFileStream);
-
+            _packageSerializer.SerializePackageSpec(packageSpec, outFileStream);
+         
             _writer.Success("done")
                .EndWrite();
       }
