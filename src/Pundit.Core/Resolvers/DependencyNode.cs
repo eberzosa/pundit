@@ -12,40 +12,39 @@ namespace EBerzosa.Pundit.Core.Resolvers
    public class DependencyNode : ICloneable
    {
       private readonly DependencyNode _parentNode;
-
-      private readonly string _useReleasePackages;
-
+      
       private SatisfyingInfo[] _satisfyingData;
       private int _activeVersionIndex = -1;
 
       //node's dependencies
       private readonly List<DependencyNode> _children = new List<DependencyNode>();
-      private readonly FloatRange _allowedVersions;
+      private readonly VersionRangeExtended _allowedVersions;
 
       public string PackageId { get; }
 
       public PunditFramework Framework { get; }
 
-      public FloatRange AllowedVersions
+      public VersionRangeExtended AllowedVersions
       {
          get
          {
-            if (_useReleasePackages == null)
-               return _allowedVersions;
+            //if (_useReleasePackages == null)
+            //   return _allowedVersions;
 
-            FloatBehaviour behaviour;
-            if (_allowedVersions.FloatBehaviour == FloatBehaviour.Major)
-               behaviour = FloatBehaviour.MajorPrerelease;
-            else if (_allowedVersions.FloatBehaviour == FloatBehaviour.Minor)
-               behaviour = FloatBehaviour.MinorPrerelease;
-            else if (_allowedVersions.FloatBehaviour == FloatBehaviour.Patch)
-               behaviour = FloatBehaviour.PatchPrerelease;
-            else if (_allowedVersions.FloatBehaviour == FloatBehaviour.Revision)
-               behaviour = FloatBehaviour.RevisionPrerelease;
-            else
-               behaviour = _allowedVersions.FloatBehaviour;
+            //FloatBehaviour behaviour;
+            //if (_allowedVersions.FloatBehaviour == FloatBehaviour.Major)
+            //   behaviour = FloatBehaviour.MajorPrerelease;
+            //else if (_allowedVersions.FloatBehaviour == FloatBehaviour.Minor)
+            //   behaviour = FloatBehaviour.MinorPrerelease;
+            //else if (_allowedVersions.FloatBehaviour == FloatBehaviour.Patch)
+            //   behaviour = FloatBehaviour.PatchPrerelease;
+            //else if (_allowedVersions.FloatBehaviour == FloatBehaviour.Revision)
+            //   behaviour = FloatBehaviour.RevisionPrerelease;
+            //else
+            //   behaviour = _allowedVersions.FloatBehaviour;
 
-            return new FloatRange(behaviour, _allowedVersions.MinVersion, _useReleasePackages);
+            //return new FloatRange(behaviour, _allowedVersions.MinVersion, _useReleasePackages);
+            return _allowedVersions;
          }
       }
 
@@ -99,7 +98,7 @@ namespace EBerzosa.Pundit.Core.Resolvers
          }
       }
 
-      public IEnumerable<PunditVersion> AllVersions => _satisfyingData.Select(v => v.Version);
+      public IEnumerable<NuGet.Versioning.NuGetVersion> AllVersions => _satisfyingData.Select(v => v.Version);
 
       public SatisfyingInfo ActiveVersion => _activeVersionIndex == -1 ? null : _satisfyingData[_activeVersionIndex];
 
@@ -142,14 +141,12 @@ namespace EBerzosa.Pundit.Core.Resolvers
       }
 
 
-      public DependencyNode(DependencyNode parentNode,
-         string packageId, PunditFramework framework, FloatRange allowedVersions, string useReleasePackages)
+      public DependencyNode(DependencyNode parentNode, string packageId, PunditFramework framework, VersionRangeExtended allowedVersions)
       {
          _parentNode = parentNode;
          PackageId = packageId;
          Framework = framework;
          _allowedVersions = allowedVersions;
-         _useReleasePackages = useReleasePackages;
       }
 
 
@@ -191,14 +188,14 @@ namespace EBerzosa.Pundit.Core.Resolvers
          _children.Clear();
 
          foreach (PackageDependency pd in thisManifest.Dependencies)
-            _children.Add(new DependencyNode(this, pd.PackageId, pd.Framework ?? Framework, pd.AllowedVersions, _useReleasePackages));
+            _children.Add(new DependencyNode(this, pd.PackageId, pd.Framework ?? Framework, pd.AllowedVersions));
 
          HasManifest = true;
       }
 
       public object Clone()
       {
-         var node = new DependencyNode(_parentNode, PackageId, Framework, _allowedVersions, _useReleasePackages);
+         var node = new DependencyNode(_parentNode, PackageId, Framework, _allowedVersions);
 
          if (_satisfyingData != null)
          {

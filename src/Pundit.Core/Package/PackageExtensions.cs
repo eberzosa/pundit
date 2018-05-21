@@ -10,17 +10,21 @@ namespace EBerzosa.Pundit.Core.Package
 {
    internal static class PackageExtensions
    {
+      public const string NuGetPackageExtension = ".nupkg";
+
       private const string PackageFileNamePattern = "{0}-{1}-{2}{3}"; // Id - Major.Minor.Patch-[ReleaseLabel]Revision - Platform .pundit
       private static readonly Regex PackageNameRgx = new Regex(@"^(.*)-(\d+)\.(\d+)\.(\d+)-([A-z0-9.]+)-(.*)" + PackageManifest.PackedExtension.Replace(".", "\\.") + "$");
 
 
       public static string GetFileName(this PackageManifest manifest, bool useLegacy)
       {
-         return string.Format(PackageFileNamePattern,
-            manifest.PackageId,
-            ToPunditFileVersion(manifest.Version),
-            manifest.Framework.GetShortFolderName(),
-            PackageManifest.PackedExtension);
+         return useLegacy
+            ? string.Format(PackageFileNamePattern,
+               manifest.PackageId,
+               ToPunditFileVersion(manifest.Version),
+               manifest.Framework.GetShortFolderName(),
+               PackageManifest.PackedExtension)
+            : manifest.PackageId + "." + manifest.Version.ToNormalizedString() + NuGetPackageExtension;
       }
 
       public static string GetRelatedSearchFileName(this PackageManifest manifest, bool useLegacy)
@@ -59,7 +63,7 @@ namespace EBerzosa.Pundit.Core.Package
             PackageManifest.PackedExtension);
       }
 
-      private static string ToPunditFileVersion(this PunditVersion version)
+      private static string ToPunditFileVersion(this NuGet.Versioning.NuGetVersion version)
       {
          return version.ReleaseLabels.Any()
             ? version.ToString()
@@ -76,10 +80,10 @@ namespace EBerzosa.Pundit.Core.Package
 
          string packageId = mtch.Groups[1].Value;
 
-         PunditVersion version;
+         NuGet.Versioning.NuGetVersion version;
          if (int.TryParse(mtch.Groups[5].Value, out var rev))
          {
-            version = new PunditVersion(
+            version = new NuGet.Versioning.NuGetVersion(
                int.Parse(mtch.Groups[2].Value),
                int.Parse(mtch.Groups[3].Value),
                int.Parse(mtch.Groups[4].Value),
@@ -87,7 +91,7 @@ namespace EBerzosa.Pundit.Core.Package
          }
          else
          {
-            version = new PunditVersion(
+            version = new NuGet.Versioning.NuGetVersion(
                int.Parse(mtch.Groups[2].Value),
                int.Parse(mtch.Groups[3].Value),
                int.Parse(mtch.Groups[4].Value),
@@ -97,14 +101,13 @@ namespace EBerzosa.Pundit.Core.Package
          return new PackageKey(packageId, version, PunditFramework.Parse(mtch.Groups[6].Value));
       }
 
-      private static string ToPunditFileSearchVersion(FloatRange range)
+      private static string ToPunditFileSearchVersion(VersionRangeExtended range)
       {
-
-         var versionParts = range.OriginalVersion.Split('-');
+         var versionParts = range.NuGetVersionRange.OriginalString.Split('-');
          var numberParts = versionParts[0].Split('.');
 
          if (numberParts.Length <= 3)
-            return range.OriginalVersion;
+            return range.NuGetVersionRange.OriginalString;
 
          return string.Join(".", numberParts, 0, 3) + '-' + numberParts[3] + (versionParts.Length > 1 ? "-" + string.Join("-", versionParts) : "");
       }

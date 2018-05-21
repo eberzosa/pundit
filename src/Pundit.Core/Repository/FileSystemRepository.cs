@@ -90,12 +90,12 @@ namespace EBerzosa.Pundit.Core.Repository
          return File.OpenRead(fullPath);
       }
 
-      public ICollection<PunditVersion> GetVersions(UnresolvedPackage package)
+      public ICollection<NuGet.Versioning.NuGetVersion> GetVersions(UnresolvedPackage package)
       {
          var filePattern = package.GetSearchFileName(true);
 
          if (filePattern == null)
-            return new PunditVersion[0];
+            return new NuGet.Versioning.NuGetVersion[0];
 
          return new DirectoryInfo(RootPath).GetFiles(filePattern)
             .Select(i => PackageExtensions.GetPackageKeyFromFileName(i.Name).Version).ToArray();

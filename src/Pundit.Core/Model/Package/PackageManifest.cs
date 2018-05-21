@@ -29,7 +29,7 @@ namespace EBerzosa.Pundit.Core.Model.Package
       
       public string PackageId { get; set; }
 
-      public PunditVersion Version { get; set; }
+      public NuGet.Versioning.NuGetVersion Version { get; set; }
 
       public PunditFramework Framework { get; set; }
 

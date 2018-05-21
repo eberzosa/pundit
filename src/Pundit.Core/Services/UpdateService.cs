@@ -60,10 +60,10 @@ namespace EBerzosa.Pundit.Core.Services
          {
             PackageId = packageId,
             Framework = netFramework,
-            Version = new PunditVersion(1, 0, 0, 0),
+            Version = new NuGet.Versioning.NuGetVersion(1, 0, 0, 0),
             Dependencies =
             {
-               new PackageDependency(packageId, FloatRange.Parse($"{assemblyVersion.Major}.*"))
+               new PackageDependency(packageId, new VersionRangeExtended(NuGet.Versioning.NuGetVersion.Parse($"{assemblyVersion.Major}.*")))
                {
                   Scope = DependencyScope.Normal,
                   Framework = netFramework

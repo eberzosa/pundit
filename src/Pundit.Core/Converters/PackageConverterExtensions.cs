@@ -16,7 +16,7 @@ namespace EBerzosa.Pundit.Core.Converters
             MinClientVersionString = "3.3", // Because of the ContentFiles
 
             Id = packageSpec.PackageId,
-            Version = packageSpec.Version.ToNuGetVersion(),
+            Version = packageSpec.Version,
             Description = packageSpec.Description,
             Authors = new[] {packageSpec.Author},
 
@@ -45,7 +45,7 @@ namespace EBerzosa.Pundit.Core.Converters
 
       private static NuGet.Packaging.Core.PackageDependency ToNuGetPackageDependency(this PackageDependency packageDependency)
       {
-         return new NuGet.Packaging.Core.PackageDependency(packageDependency.PackageId, packageDependency.AllowedVersions.ToNuGetVersionRange());
+         return new NuGet.Packaging.Core.PackageDependency(packageDependency.PackageId, packageDependency.AllowedVersions.NuGetVersionRange);
       }
    }
 }

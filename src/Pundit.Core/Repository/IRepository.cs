@@ -21,7 +21,7 @@ namespace EBerzosa.Pundit.Core.Repository
       
       Stream Download(PackageKey key);
 
-      ICollection<PunditVersion> GetVersions(UnresolvedPackage package);
+      ICollection<NuGet.Versioning.NuGetVersion> GetVersions(UnresolvedPackage package);
 
       PackageManifest GetManifest(PackageKey key);
 

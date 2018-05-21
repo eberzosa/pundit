@@ -67,7 +67,7 @@ namespace EBerzosa.Pundit.Core.Repository
 
       public Stream Download(PackageKey key)
       {
-         var packageIdentity = new PackageIdentity(key.PackageId, PunditVersion.Parse(key.VersionString).ToNuGetVersion());
+         var packageIdentity = new PackageIdentity(key.PackageId, NuGet.Versioning.NuGetVersion.Parse(key.VersionString));
 
          var downloadResource = _sourceRepository.GetResource<DownloadResource>();
          
@@ -78,7 +78,7 @@ namespace EBerzosa.Pundit.Core.Repository
          return result.PackageStream;
       }
       
-      public ICollection<PunditVersion> GetVersions(UnresolvedPackage package)
+      public ICollection<NuGet.Versioning.NuGetVersion> GetVersions(UnresolvedPackage package)
       {
          var packagesResource = _sourceRepository.GetResource<FindPackageByIdResource>();
          var packageInfos = packagesResource.GetAllVersionsAsync(package.PackageId, NullSourceCacheContext.Instance, NullLogger.Instance, CancellationToken.None);
@@ -93,7 +93,7 @@ namespace EBerzosa.Pundit.Core.Repository
 
       public PackageManifest GetManifest(PackageKey key)
       {
-         var packageIdentity = new PackageIdentity(key.PackageId, PunditVersion.Parse(key.VersionString).ToNuGetVersion());
+         var packageIdentity = new PackageIdentity(key.PackageId, NuGet.Versioning.NuGetVersion.Parse(key.VersionString));
 
          var packagesResource = _sourceRepository.GetResource<PackageMetadataResource>();
          var packageInfo = packagesResource.GetMetadataAsync(packageIdentity, NullSourceCacheContext.Instance, NullLogger.Instance, CancellationToken.None).Result;
@@ -112,7 +112,7 @@ namespace EBerzosa.Pundit.Core.Repository
          var manifest = new PackageManifest
          {
             PackageId = packageInfo.Identity.Id,
-            Version = packageInfo.Identity.Version.ToPunditVersion(),
+            Version = packageInfo.Identity.Version,
             Dependencies = new List<Model.Package.PackageDependency>(),
             Framework = dependencies?.TargetFramework.ToPunditFramework()
          };
@@ -132,7 +132,7 @@ namespace EBerzosa.Pundit.Core.Repository
       {
          var findLocalPackagesResource = _sourceRepository.GetResource<PackageMetadataResource>();
 
-         var packageIdentity = new PackageIdentity(package.PackageId, package.Version.ToNuGetVersion());
+         var packageIdentity = new PackageIdentity(package.PackageId, package.Version);
          return findLocalPackagesResource.GetMetadataAsync(packageIdentity, NullSourceCacheContext.Instance, NullLogger.Instance, CancellationToken.None).Result != null;
       }
 
@@ -143,7 +143,7 @@ namespace EBerzosa.Pundit.Core.Repository
             .Result;
 
          foreach (var result in results)
-            yield return new PackageKey(result.Identity.Id, result.Identity.Version.ToPunditVersion(), null);
+            yield return new PackageKey(result.Identity.Id, result.Identity.Version, null);
       }
 
       private FileSystemRepository GetFsRepoOrDie(IRepository repo)

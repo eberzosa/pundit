@@ -12,7 +12,7 @@ namespace EBerzosa.Pundit.Core.Model.Package
    [DebuggerDisplay("{PackageId} [{AllowedVersions.ToString()}] [{Framework.GetShortFolderName()}] [{Scope}]")]
    public class PackageDependency
    {
-      public PackageDependency(string packageId, FloatRange allowedVersions)
+      public PackageDependency(string packageId, VersionRangeExtended allowedVersions)
       {
          Guard.NotNull(packageId, nameof(packageId));
          Guard.NotNull(allowedVersions, nameof(allowedVersions));
@@ -23,7 +23,7 @@ namespace EBerzosa.Pundit.Core.Model.Package
 
       public string PackageId { get; set; }
 
-      public FloatRange AllowedVersions { get; set; }
+      public VersionRangeExtended AllowedVersions { get; set; }
 
       /// <summary>
       /// Dependency platform. If ommitted "noarch" assumed. If noarch is not found, no automatic

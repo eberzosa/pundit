@@ -15,10 +15,10 @@ namespace EBerzosa.Pundit.Core.Model
       public PunditFramework Framework { get; }
       
       [DataMember]
-      public FloatRange AllowedVersions { get; }
+      public VersionRangeExtended AllowedVersions { get; }
 
 
-      public UnresolvedPackage(string packageId, PunditFramework framework, FloatRange allowedVersions)
+      public UnresolvedPackage(string packageId, PunditFramework framework, VersionRangeExtended allowedVersions)
       {
          Guard.NotNull(packageId, nameof(packageId));
 

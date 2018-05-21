@@ -50,8 +50,8 @@ namespace Pundit.Test.Versioning
       [InlineData("1.1.1", "1.1.2-ABC", RightGreater)]
       public void VersionRelease_Compare_Test(string v1, string v2, int expectedResult)
       {
-         var version1 = PunditVersion.Parse(v1);
-         var version2 = PunditVersion.Parse(v2);
+         var version1 = NuGet.Versioning.NuGetVersion.Parse(v1);
+         var version2 = NuGet.Versioning.NuGetVersion.Parse(v2);
 
          var result = VersionComparer.Compare(version1, version2, VersionComparison.VersionRelease);
 

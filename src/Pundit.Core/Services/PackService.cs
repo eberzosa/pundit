@@ -71,26 +71,23 @@ namespace EBerzosa.Pundit.Core.Services
          if (Version != null)
          {
             _writer.Info($"Overriding package version '{packageSpec.Version}' from spec with '{Version}'");
-            packageSpec.Version = PunditVersion.Parse(Version);
+            packageSpec.Version = NuGet.Versioning.NuGetVersion.Parse(Version);
          }
 
          if (ReleaseLabel != null)
          {
-            packageSpec.Version = new PunditVersion(packageSpec.Version.Major,
+            packageSpec.Version = new NuGet.Versioning.NuGetVersion(packageSpec.Version.Major,
                packageSpec.Version.Minor, packageSpec.Version.Patch, ReleaseLabel + "." + packageSpec.Version.Revision, null);
          }
          
-         var packageName = packageSpec.GetFileName(true);
-
-         if (Type == PackType.NuGet)
-            packageName = Path.ChangeExtension(packageName, ".nupkg");
-
+         var packageName = packageSpec.GetFileName(Type == PackType.Pundit);
+         
          DestinationFile = Path.Combine(_resolvedOutputPath, packageName);
 
          if (File.Exists(DestinationFile))
             _writer.Warning($"Package '{packageName}' already exists, it will be overwritted");
 
-         _writer.Text($"Creating package {packageSpec}...");
+         _writer.Text($"Creating package '{packageName}', {packageSpec}...");
 
          long bytesWritten;
 

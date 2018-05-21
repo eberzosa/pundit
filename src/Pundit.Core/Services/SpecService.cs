@@ -1,6 +1,7 @@
 ﻿using System;
 using System.IO;
 using System.Reflection;
+using EBerzosa.Pundit.Core.Converters;
 using EBerzosa.Pundit.Core.Framework;
 using EBerzosa.Pundit.Core.Model.Enums;
 using EBerzosa.Pundit.Core.Model.Package;
@@ -39,7 +40,7 @@ namespace EBerzosa.Pundit.Core.Services
             License = "MIT license (or anything you want)",
             ProjectUrl = "http://myapplication.myweb.com",
             ReleaseNotes = "Initial version of this imaginary tool with lots of features.",
-            Version = new PunditVersion(Assembly.GetExecutingAssembly().GetName().Version),
+            Version = new NuGet.Versioning.NuGetVersion(Assembly.GetExecutingAssembly().GetName().Version),
             Files =
             {
                new SourceFiles("*.dll")
@@ -61,17 +62,17 @@ namespace EBerzosa.Pundit.Core.Services
             },
             Dependencies =
             {
-               new PackageDependency("MyApplication.Common", FloatRange.Parse("1.0.4"))
+               new PackageDependency("MyApplication.Common", VersionConverterExtensions.ConvertPunditDependencyVersionToVersionRangeExtended("1.0.4"))
                {
                   Scope = DependencyScope.Normal,
                   Framework = PunditFramework.Parse("net46")
                },
-               new PackageDependency("MyApplication.Test", FloatRange.Parse("1.0.4"))
+               new PackageDependency("MyApplication.Test", VersionConverterExtensions.ConvertPunditDependencyVersionToVersionRangeExtended("1.0.4"))
                {
                   Scope = DependencyScope.Test,
                   Framework = PunditFramework.Parse("net46")
                },
-               new PackageDependency("MyApplication.Legacy", FloatRange.Parse("1.0.4"))
+               new PackageDependency("MyApplication.Legacy", VersionConverterExtensions.ConvertPunditDependencyVersionToVersionRangeExtended("1.0.4"))
                {
                   Scope = DependencyScope.Normal,
                   Framework = PunditFramework.Parse("net11"),

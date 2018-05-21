@@ -2,7 +2,6 @@
 // Licensed under the Apache License, Version 2.0. See License.txt in the project root for license information.
 
 using System;
-using System.Collections.Generic;
 using System.Linq;
 
 namespace EBerzosa.Pundit.Core.Versioning
@@ -10,7 +9,7 @@ namespace EBerzosa.Pundit.Core.Versioning
    /// <summary>
    /// An IVersionComparer for NuGetVersion and NuGetVersion types.
    /// </summary>
-   public sealed class VersionComparer : IVersionComparer
+   public sealed class VersionComparer : NuGet.Versioning.IVersionComparer
    {
       private readonly VersionComparison _mode;
 
@@ -34,7 +33,7 @@ namespace EBerzosa.Pundit.Core.Versioning
       /// <summary>
       /// Determines if both versions are equal.
       /// </summary>
-      public bool Equals(SemanticVersion x, SemanticVersion y)
+      public bool Equals(NuGet.Versioning.SemanticVersion x, NuGet.Versioning.SemanticVersion y)
       {
          if (ReferenceEquals(x, y))
          {
@@ -68,16 +67,16 @@ namespace EBerzosa.Pundit.Core.Versioning
       /// <summary>
       /// Compares the given versions using the VersionComparison mode.
       /// </summary>
-      public static int Compare(SemanticVersion version1, SemanticVersion version2, VersionComparison versionComparison)
+      public static int Compare(NuGet.Versioning.SemanticVersion version1, NuGet.Versioning.SemanticVersion version2, VersionComparison versionComparison)
       {
-         IVersionComparer comparer = new VersionComparer(versionComparison);
+         NuGet.Versioning.IVersionComparer comparer = new VersionComparer(versionComparison);
          return comparer.Compare(version1, version2);
       }
 
       /// <summary>
       /// Gives a hash code based on the normalized version string.
       /// </summary>
-      public int GetHashCode(SemanticVersion version)
+      public int GetHashCode(NuGet.Versioning.SemanticVersion version)
       {
          if (ReferenceEquals(version, null))
          {
@@ -90,7 +89,7 @@ namespace EBerzosa.Pundit.Core.Versioning
          combiner.AddObject(version.Minor);
          combiner.AddObject(version.Patch);
 
-         var nuGetVersion = version as PunditVersion;
+         var nuGetVersion = version as NuGet.Versioning.NuGetVersion;
          if (nuGetVersion != null
              && nuGetVersion.Revision > 0)
          {
@@ -124,7 +123,7 @@ namespace EBerzosa.Pundit.Core.Versioning
       /// <summary>
       /// Compare versions.
       /// </summary>
-      public int Compare(SemanticVersion x, SemanticVersion y)
+      public int Compare(NuGet.Versioning.SemanticVersion x, NuGet.Versioning.SemanticVersion y)
       {
          if (ReferenceEquals(x, y))
             return 0;
@@ -148,8 +147,8 @@ namespace EBerzosa.Pundit.Core.Versioning
          if (result != 0)
             return result;
 
-         var legacyX = x as PunditVersion;
-         var legacyY = y as PunditVersion;
+         var legacyX = x as NuGet.Versioning.NuGetVersion;
+         var legacyY = y as NuGet.Versioning.NuGetVersion;
 
          if (_mode == VersionComparison.PunditVersion)
          {
@@ -201,7 +200,7 @@ namespace EBerzosa.Pundit.Core.Versioning
       /// <summary>
       /// Compares the 4th digit of the version number.
       /// </summary>
-      private static int CompareLegacyVersion(PunditVersion legacyX, PunditVersion legacyY)
+      private static int CompareLegacyVersion(NuGet.Versioning.NuGetVersion legacyX, NuGet.Versioning.NuGetVersion legacyY)
       {
          var result = 0;
 
@@ -225,25 +224,25 @@ namespace EBerzosa.Pundit.Core.Versioning
       /// <summary>
       /// A default comparer that compares metadata as strings.
       /// </summary>
-      public static readonly IVersionComparer Default = new VersionComparer(VersionComparison.Default);
+      public static readonly NuGet.Versioning.IVersionComparer Default = new VersionComparer(VersionComparison.Default);
 
       /// <summary>
       /// A comparer that uses only the version numbers.
       /// </summary>
-      public static readonly IVersionComparer Version = new VersionComparer(VersionComparison.Version);
+      public static readonly NuGet.Versioning.IVersionComparer Version = new VersionComparer(VersionComparison.Version);
 
       /// <summary>
       /// Compares versions without comparing the metadata.
       /// </summary>
-      public static readonly IVersionComparer VersionRelease = new VersionComparer(VersionComparison.VersionRelease);
+      public static readonly NuGet.Versioning.IVersionComparer VersionRelease = new VersionComparer(VersionComparison.VersionRelease);
 
       
-      public static readonly IVersionComparer Pundit = new VersionComparer(VersionComparison.PunditVersion);
+      public static readonly NuGet.Versioning.IVersionComparer Pundit = new VersionComparer(VersionComparison.PunditVersion);
 
       /// <summary>
       /// A version comparer that follows SemVer 2.0.0 rules.
       /// </summary>
-      public static IVersionComparer VersionReleaseMetadata = new VersionComparer(VersionComparison.VersionReleaseMetadata);
+      public static NuGet.Versioning.IVersionComparer VersionReleaseMetadata = new VersionComparer( VersionComparison.VersionReleaseMetadata);
 
       /// <summary>
       /// Compares sets of release labels.
@@ -321,7 +320,7 @@ namespace EBerzosa.Pundit.Core.Versioning
       /// <summary>
       /// Returns an array of release labels from the version, or null.
       /// </summary>
-      private static string[] GetReleaseLabelsOrNull(SemanticVersion version)
+      private static string[] GetReleaseLabelsOrNull(NuGet.Versioning.SemanticVersion version)
       {
          string[] labels = null;
 
@@ -345,7 +344,7 @@ namespace EBerzosa.Pundit.Core.Versioning
       /// <summary>
       /// Compare release labels
       /// </summary>
-      private static bool AreReleaseLabelsEqual(SemanticVersion x, SemanticVersion y)
+      private static bool AreReleaseLabelsEqual(NuGet.Versioning.SemanticVersion x, NuGet.Versioning.SemanticVersion y)
       {
          var xLabels = GetReleaseLabelsOrNull(x);
          var yLabels = GetReleaseLabelsOrNull(y);
@@ -385,14 +384,14 @@ namespace EBerzosa.Pundit.Core.Versioning
       /// <summary>
       /// Returns the fourth version number or zero.
       /// </summary>
-      private static int GetRevisionOrZero(SemanticVersion version)
+      private static int GetRevisionOrZero(NuGet.Versioning.SemanticVersion version)
       {
-         var nugetVersion = version as PunditVersion;
+         var nugetVersion = version as NuGet.Versioning.NuGetVersion;
          return nugetVersion?.Revision ?? 0;
       }
 
 
-      private static PunditVersion GetFinalVersion(PunditVersion version)
+      private static NuGet.Versioning.NuGetVersion GetFinalVersion(NuGet.Versioning.NuGetVersion version)
       {
          if (version == null)
             return null;
@@ -400,7 +399,7 @@ namespace EBerzosa.Pundit.Core.Versioning
          var last = version.ReleaseLabels != null && version.ReleaseLabels.Any() ? version.ReleaseLabels.Last() : null;
 
          return last != null && int.TryParse(last, out var revision)
-            ? new PunditVersion(version.Major, version.Minor, version.Patch, revision, version.ReleaseLabels, version.Metadata)
+            ? new NuGet.Versioning.NuGetVersion(version.Major, version.Minor, version.Patch, revision, version.ReleaseLabels, version.Metadata)
             : version;
       }
    }

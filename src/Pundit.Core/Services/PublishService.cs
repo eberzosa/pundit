@@ -1,5 +1,7 @@
-﻿using System.IO;
+﻿using System;
+using System.IO;
 using System.Linq;
+using EBerzosa.Pundit.Core.Package;
 using EBerzosa.Pundit.Core.Repository;
 using EBerzosa.Utils;
 
@@ -11,6 +13,8 @@ namespace EBerzosa.Pundit.Core.Services
       private readonly IWriter _writer;
 
       public string Repository { get; set; }
+
+      public string ApiKey { get; set; }
 
       public PublishService(RepositoryFactory repositoryFactory, IWriter writer)
       {
@@ -26,8 +30,19 @@ namespace EBerzosa.Pundit.Core.Services
          if (!File.Exists(packagePath))
             throw new FileNotFoundException($"Package Manifest '{packagePath}' not found");
 
-         IRepository[] publishTo;
+         if (packagePath.EndsWith(PackageExtensions.NuGetPackageExtension, StringComparison.OrdinalIgnoreCase))
+         {
+            new NuGetCommands.NuGetPushService(packagePath)
+            {
+               Source = Repository,
+               ApiKey = ApiKey
+            }.Push();
 
+            return;
+         }
+
+         IRepository[] publishTo;
+         
          if (Repository != null)
          {
             var repo = _repositoryFactory.TryGetRepo(Repository);

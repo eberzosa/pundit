@@ -16,7 +16,6 @@ namespace EBerzosa.Pundit.Core.Resolvers
       private readonly IWriter _writer;
 
       private readonly IRepository[] _activeRepositories;
-      private readonly string _useReleasePackages;
       private readonly DependencyNode _rootDependencyNode;
 
       public DependencyResolution(IWriter writer)
@@ -24,20 +23,21 @@ namespace EBerzosa.Pundit.Core.Resolvers
          _writer = writer;
       }
 
-      private DependencyResolution(IWriter writer, PackageManifest rootManifest, IRepository[] activeRepositories, string useReleasePackages)
+      private DependencyResolution(IWriter writer, PackageManifest rootManifest, IRepository[] activeRepositories, string releaseLabel)
       {
          _writer = writer;
          _activeRepositories = activeRepositories;
-         _useReleasePackages = useReleasePackages;
 
-         _rootDependencyNode = new DependencyNode(null, rootManifest.PackageId, rootManifest.Framework, rootManifest.Version.ToFloatRange(), useReleasePackages);
+         var version = new VersionRangeExtended(rootManifest.Version) {ReleaseLabel = releaseLabel};
+
+         _rootDependencyNode = new DependencyNode(null, rootManifest.PackageId, rootManifest.Framework, version);
          _rootDependencyNode.MarkAsRoot(rootManifest);
       }
 
       public Tuple<VersionResolutionTable, DependencyNode> Resolve(PackageManifest rootManifest, IRepository[] activeRepositories,
-         string useReleasePackages)
+         string releaseLabel)
       {
-         return new DependencyResolution(_writer, rootManifest, activeRepositories, useReleasePackages).Resolve();
+         return new DependencyResolution(_writer, rootManifest, activeRepositories, releaseLabel).Resolve();
       }
 
       /// <summary>
@@ -90,7 +90,7 @@ namespace EBerzosa.Pundit.Core.Resolvers
       {
          if (!node.HasVersions)
          {
-            var punditVersions = new Dictionary<PunditVersion, SatisfyingInfo>();
+            var punditVersions = new Dictionary<NuGet.Versioning.NuGetVersion, SatisfyingInfo>();
 
             foreach (var repo in _activeRepositories)
             {
@@ -227,7 +227,7 @@ namespace EBerzosa.Pundit.Core.Resolvers
             sb.Append("], resolved to: [");
 
             bool isFirst = true;
-            foreach (PunditVersion version in node.AllVersions)
+            foreach (NuGet.Versioning.NuGetVersion version in node.AllVersions)
             {
                if (!isFirst)
                   sb.Append(", ");
