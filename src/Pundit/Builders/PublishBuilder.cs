@@ -23,8 +23,9 @@ namespace EBerzosa.Pundit.CommandLine.Builders
             {
                var package = arg.SingleValue("package", "Specificies the package to publish");
                var repository = opt.SingleValue("r", "repo", "name", "Specifies repository to publish to. Note that you have to have publishing permissions in that repo.");
+               var apiKey = opt.SingleValue("k", "apiKey", "key", "The NuGet repo API Key, nothing for Pundit repos.");
 
-               cmd.OnExecute(() => _controller.Execute(package.Value, repository.Value).ToInteger());
+               cmd.OnExecute(() => _controller.Execute(package.Value, repository.Value, apiKey.Value).ToInteger());
             });
       }
 

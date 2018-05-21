@@ -15,12 +15,13 @@ namespace EBerzosa.Pundit.CommandLine.Controllers
          _serviceFactory = serviceFactory;
       }
 
-      public ExitCode Execute(string package, string repository)
+      public ExitCode Execute(string package, string repository, string apiKey)
       {
          Guard.NotNull(package, nameof(package));
          
          var service = _serviceFactory.GetPublishService();
          service.Repository = repository;
+         service.ApiKey = apiKey;
 
          service.Publish(package);
 
