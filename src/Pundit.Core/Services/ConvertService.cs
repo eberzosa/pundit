@@ -2,14 +2,8 @@
 using System.Collections.Generic;
 using System.IO;
 using System.Linq;
-using EBerzosa.Pundit.Core.Converters;
-using EBerzosa.Pundit.Core.Framework;
 using EBerzosa.Pundit.Core.Model.Package;
-using EBerzosa.Pundit.Core.Package;
-using EBerzosa.Pundit.Core.Serializers;
-using EBerzosa.Pundit.Core.Versioning;
 using EBerzosa.Utils;
-using Mapster;
 using NuGet.Common;
 using NuGet.Frameworks;
 using NuGet.Packaging;
@@ -75,7 +69,7 @@ namespace EBerzosa.Pundit.Core.Services
                }
 
                punditSpec.Dependencies = new List<PackageDependency>();
-               punditSpec.Framework = framework.ToPunditFramework();
+               punditSpec.Framework = framework;
                punditSpec.Files = new List<SourceFiles>();
 
                var dependencies = reader.GetPackageDependencies().FirstOrDefault(d => d.TargetFramework == framework);

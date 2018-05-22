@@ -120,7 +120,6 @@
   <ItemGroup>
     <Compile Include="3rdparty\DirectoryScanner.cs" />
     <Compile Include="3rdparty\Options.cs" />
-    <Compile Include="Framework\PunditFramework.cs" />
     <Compile Include="Converters\PackageConverterExtensions.cs" />
     <Compile Include="Converters\VersionConverterExtensions.cs" />
     <Compile Include="Package\IPackageInstaller.cs" />
@@ -140,7 +139,6 @@
     <Compile Include="Repository\Xml\XmlRegisteredRepositories.cs" />
     <Compile Include="Resolvers\DependencyResolution.cs" />
     <Compile Include="Internal\InstalledPackagesIndex.cs" />
-    <Compile Include="Converters\FrameworkConverterExtensions.cs" />
     <Compile Include="Package\PackageInstaller.cs" />
     <Compile Include="Package\Pundit\PackageReader.cs" />
     <Compile Include="Package\Pundit\PackageStreamer.cs" />

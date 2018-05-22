@@ -4,8 +4,6 @@ using System.Diagnostics;
 using System.Linq;
 using System.Reflection;
 using System.Text.RegularExpressions;
-using EBerzosa.Pundit.Core.Framework;
-using EBerzosa.Pundit.Core.Versioning;
 
 namespace EBerzosa.Pundit.Core.Model.Package
 {
@@ -31,7 +29,7 @@ namespace EBerzosa.Pundit.Core.Model.Package
 
       public NuGet.Versioning.NuGetVersion Version { get; set; }
 
-      public PunditFramework Framework { get; set; }
+      public NuGet.Frameworks.NuGetFramework Framework { get; set; }
 
       public string ProjectUrl { get; set; }
 

@@ -71,14 +71,14 @@ namespace EBerzosa.Pundit.Core.Repository
             regEx = new Regex(manifest.PackageId + "-[0-9.]+-" + releaseLabel + ".*", RegexOptions.IgnoreCase);
          }
 
-         foreach (var relatedBuild in Directory.GetFiles(RootPath, manifest.GetRelatedSearchFileName(true)))
+         foreach (var relatedBuild in Directory.GetFiles(RootPath, manifest.GetRelatedSearchFileName()))
          {
             if (regEx.Match(Path.GetFileName(relatedBuild)).Success)
                File.Delete(relatedBuild);
          }
 
 
-         var targetPath = Path.Combine(RootPath, manifest.GetFileName(true));
+         var targetPath = Path.Combine(RootPath, manifest.GetFileName());
          if (File.Exists(targetPath))
             File.Delete(targetPath);
 
@@ -87,7 +87,7 @@ namespace EBerzosa.Pundit.Core.Repository
 
       public Stream Download(PackageKey key)
       {
-         var fullPath = Path.Combine(RootPath, key.GetFileName(true));
+         var fullPath = Path.Combine(RootPath, key.GetFileName());
 
          if (!File.Exists(fullPath))
             throw new FileNotFoundException("package not found");
@@ -97,7 +97,7 @@ namespace EBerzosa.Pundit.Core.Repository
 
       public ICollection<NuGet.Versioning.NuGetVersion> GetVersions(UnresolvedPackage package)
       {
-         var filePattern = package.GetSearchFileName(true);
+         var filePattern = package.GetSearchFileName();
 
          if (filePattern == null)
             return new NuGet.Versioning.NuGetVersion[0];
@@ -108,7 +108,7 @@ namespace EBerzosa.Pundit.Core.Repository
 
       public PackageManifest GetManifest(PackageKey key)
       {
-         var fullPath = Path.Combine(RootPath, key.GetFileName(true));
+         var fullPath = Path.Combine(RootPath, key.GetFileName());
 
          if (!File.Exists(fullPath))
             throw new FileNotFoundException("package not found");
@@ -119,7 +119,7 @@ namespace EBerzosa.Pundit.Core.Repository
 
       public bool PackageExist(PackageKey package)
       {
-         return File.Exists(Path.Combine(RootPath, package.GetFileName(true)));
+         return File.Exists(Path.Combine(RootPath, package.GetFileName()));
       }
 
       public IEnumerable<PackageKey> Search(string substring)

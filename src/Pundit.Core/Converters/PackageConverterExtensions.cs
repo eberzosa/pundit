@@ -1,7 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Linq;
-using EBerzosa.Pundit.Core.Framework;
 using EBerzosa.Pundit.Core.Model.Package;
 using Pundit.Core.Model;
 
@@ -38,7 +37,7 @@ namespace EBerzosa.Pundit.Core.Converters
          return packageDependency
             .GroupBy(dependency => dependency.Framework, dependency => dependency)
             .Select(grupedDepenencies => new NuGet.Packaging.PackageDependencyGroup(
-               grupedDepenencies.Key.NuGetFramework, 
+               grupedDepenencies.Key, 
                grupedDepenencies.Select(dependency => dependency.ToNuGetPackageDependency())));
       }
 

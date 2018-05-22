@@ -1,5 +1,4 @@
 ﻿using System.Runtime.Serialization;
-using EBerzosa.Pundit.Core.Framework;
 using EBerzosa.Pundit.Core.Versioning;
 using EBerzosa.Utils;
 
@@ -12,13 +11,13 @@ namespace EBerzosa.Pundit.Core.Model
       public string PackageId { get; }
 
       [DataMember]
-      public PunditFramework Framework { get; }
+      public NuGet.Frameworks.NuGetFramework Framework { get; }
       
       [DataMember]
       public VersionRangeExtended AllowedVersions { get; }
 
 
-      public UnresolvedPackage(string packageId, PunditFramework framework, VersionRangeExtended allowedVersions)
+      public UnresolvedPackage(string packageId, NuGet.Frameworks.NuGetFramework framework, VersionRangeExtended allowedVersions)
       {
          Guard.NotNull(packageId, nameof(packageId));
 

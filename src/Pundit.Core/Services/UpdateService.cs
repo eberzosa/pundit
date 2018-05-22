@@ -3,7 +3,6 @@ using System.Collections.Generic;
 using System.IO;
 using System.Linq;
 using System.Reflection;
-using EBerzosa.Pundit.Core.Framework;
 using EBerzosa.Pundit.Core.Model;
 using EBerzosa.Pundit.Core.Model.Enums;
 using EBerzosa.Pundit.Core.Model.Package;
@@ -54,7 +53,7 @@ namespace EBerzosa.Pundit.Core.Services
 
          var packageId = "EBerzosa.Pundit";
          var assemblyVersion = assembly.GetName().Version;
-         var netFramework = PunditFramework.Parse("net46");
+         var netFramework = NuGet.Frameworks.NuGetFramework.Parse("net46");
 
          var packageSpec = new PackageSpec
          {

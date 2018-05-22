@@ -1,5 +1,4 @@
-﻿using EBerzosa.Pundit.Core.Framework;
-using EBerzosa.Pundit.Core.Model.Package;
+﻿using EBerzosa.Pundit.Core.Model.Package;
 
 namespace EBerzosa.Pundit.Core.Resolvers
 {
@@ -7,10 +6,10 @@ namespace EBerzosa.Pundit.Core.Resolvers
    {
       public string PackageId { get; set; }
 
-      public PunditFramework Framework { get; }
+      public NuGet.Frameworks.NuGetFramework Framework { get; }
 
       
-      public SatisfyingInfoExtended(SatisfyingInfo satisfying, string packageId, PunditFramework framework)
+      public SatisfyingInfoExtended(SatisfyingInfo satisfying, string packageId, NuGet.Frameworks.NuGetFramework framework)
          : base(satisfying.Version, satisfying.Repo)
       {
          PackageId = packageId;

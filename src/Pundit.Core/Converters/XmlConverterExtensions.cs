@@ -1,7 +1,7 @@
-﻿using EBerzosa.Pundit.Core.Framework;
-using EBerzosa.Pundit.Core.Model.Enums;
+﻿using EBerzosa.Pundit.Core.Model.Enums;
 using EBerzosa.Pundit.Core.Model.Package;
 using EBerzosa.Pundit.Core.Model.Xml;
+using EBerzosa.Pundit.Core.Package;
 using EBerzosa.Pundit.Core.Repository;
 using EBerzosa.Pundit.Core.Repository.Xml;
 using Mapster;
@@ -67,7 +67,7 @@ namespace EBerzosa.Pundit.Core.Converters
          TypeAdapterConfig<XmlPackageManifest, PackageManifest>.NewConfig()
             .Include<XmlPackageSpec, PackageSpec>()
             .Map(dst => dst.Version, src => NuGet.Versioning.NuGetVersion.Parse(src.Version))
-            .Map(dst => dst.Framework, src => PunditFramework.Parse(src.Platform));
+            .Map(dst => dst.Framework, src => PackageExtensions.GetFramework(src.Platform));
 
 
          TypeAdapterConfig<PackageDependency, XmlPackageDependency>.NewConfig()
@@ -77,7 +77,7 @@ namespace EBerzosa.Pundit.Core.Converters
          TypeAdapterConfig<XmlPackageDependency, PackageDependency>.NewConfig()
             .ConstructUsing(xml => new PackageDependency(xml.PackageId, VersionConverterExtensions.ConvertPunditDependencyVersionToVersionRangeExtended(xml.VersionPattern)))
             .Ignore(dst => dst.PackageId, src => src.AllowedVersions)
-            .Map(dst => dst.Framework, src => string.IsNullOrEmpty(src.Platform) ? PunditFramework.AnyFramework : PunditFramework.Parse(src.Platform))
+            .Map(dst => dst.Framework, src => PackageExtensions.GetFramework(src.Platform))
             .AfterMapping((src, dst) =>
             {
                if (src.DevTimeOnly)

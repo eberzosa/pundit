@@ -1,7 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Linq;
-using EBerzosa.Pundit.Core.Framework;
 using EBerzosa.Pundit.Core.Model;
 using EBerzosa.Pundit.Core.Model.Package;
 using EBerzosa.Pundit.Core.Repository;
@@ -22,7 +21,7 @@ namespace EBerzosa.Pundit.Core.Resolvers
 
       public string PackageId { get; }
 
-      public PunditFramework Framework { get; }
+      public NuGet.Frameworks.NuGetFramework Framework { get; }
 
       public VersionRangeExtended AllowedVersions
       {
@@ -141,7 +140,7 @@ namespace EBerzosa.Pundit.Core.Resolvers
       }
 
 
-      public DependencyNode(DependencyNode parentNode, string packageId, PunditFramework framework, VersionRangeExtended allowedVersions)
+      public DependencyNode(DependencyNode parentNode, string packageId, NuGet.Frameworks.NuGetFramework framework, VersionRangeExtended allowedVersions)
       {
          _parentNode = parentNode;
          PackageId = packageId;

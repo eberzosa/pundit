@@ -3,7 +3,6 @@ using System.Collections.Generic;
 using System.IO;
 using System.Linq;
 using System.Threading;
-using EBerzosa.Pundit.Core.Converters;
 using EBerzosa.Pundit.Core.Model;
 using EBerzosa.Pundit.Core.Model.Package;
 using EBerzosa.Pundit.Core.Versioning;
@@ -93,7 +92,7 @@ namespace EBerzosa.Pundit.Core.Repository
          NuGet.Packaging.PackageDependencyGroup dependencies = null;
          if (packageInfo.DependencySets.Any())
          {
-            dependencies = NuGetFrameworkUtility.GetNearest(packageInfo.DependencySets, projectFramework.ToNuGetFramework());
+            dependencies = NuGetFrameworkUtility.GetNearest(packageInfo.DependencySets, projectFramework);
 
             if (dependencies == null)
                throw new ApplicationException($"Could not find compatible dependencies for '{packageInfo.Identity}' and framework '{projectFramework}'");
@@ -104,7 +103,7 @@ namespace EBerzosa.Pundit.Core.Repository
             PackageId = packageInfo.Identity.Id,
             Version = packageInfo.Identity.Version,
             Dependencies = new List<PackageDependency>(),
-            Framework = dependencies?.TargetFramework.ToPunditFramework()
+            Framework = dependencies?.TargetFramework
          };
 
          if (dependencies == null)

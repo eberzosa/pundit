@@ -79,8 +79,10 @@ namespace EBerzosa.Pundit.Core.Services
             packageSpec.Version = new NuGet.Versioning.NuGetVersion(packageSpec.Version.Major,
                packageSpec.Version.Minor, packageSpec.Version.Patch, ReleaseLabel + "." + packageSpec.Version.Revision, null);
          }
-         
-         var packageName = packageSpec.GetFileName(Type == PackType.Pundit);
+
+         var packageName = Type == PackType.NuGet
+            ? new NuGet.Packaging.VersionFolderPathResolver(null).GetPackageFileName(packageSpec.PackageId, packageSpec.Version)
+            : packageSpec.GetFileName();
          
          DestinationFile = Path.Combine(_resolvedOutputPath, packageName);
 

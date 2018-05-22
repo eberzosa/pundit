@@ -1,8 +1,6 @@
 ﻿using System;
 using System.Runtime.Serialization;
 using System.Xml.Serialization;
-using EBerzosa.Pundit.Core.Framework;
-using EBerzosa.Pundit.Core.Versioning;
 using EBerzosa.Utils;
 
 namespace EBerzosa.Pundit.Core.Model.Package
@@ -17,7 +15,7 @@ namespace EBerzosa.Pundit.Core.Model.Package
       {
       }
 
-      public PackageKey(string packageId, NuGet.Versioning.NuGetVersion version, PunditFramework framework)
+      public PackageKey(string packageId, NuGet.Versioning.NuGetVersion version, NuGet.Frameworks.NuGetFramework framework)
       {
          Guard.NotNull(packageId, nameof(packageId));
 
@@ -27,7 +25,7 @@ namespace EBerzosa.Pundit.Core.Model.Package
       }
 
       private PackageKey(string packageId, NuGet.Versioning.NuGetVersion version, string framework)
-         : this(packageId, version, PunditFramework.Parse(framework))
+         : this(packageId, version, NuGet.Frameworks.NuGetFramework.Parse(framework))
       {
       }
 
@@ -50,7 +48,7 @@ namespace EBerzosa.Pundit.Core.Model.Package
 
       [XmlAttribute("platform")]
       [DataMember]
-      public PunditFramework Framework { get; set; }
+      public NuGet.Frameworks.NuGetFramework Framework { get; set; }
       
       public override bool Equals(object obj)
       {

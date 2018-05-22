@@ -2,11 +2,9 @@
 using System.IO;
 using System.Reflection;
 using EBerzosa.Pundit.Core.Converters;
-using EBerzosa.Pundit.Core.Framework;
 using EBerzosa.Pundit.Core.Model.Enums;
 using EBerzosa.Pundit.Core.Model.Package;
 using EBerzosa.Pundit.Core.Serializers;
-using EBerzosa.Pundit.Core.Versioning;
 using EBerzosa.Utils;
 using Pundit.Core.Model;
 
@@ -34,7 +32,7 @@ namespace EBerzosa.Pundit.Core.Services
          var packageSpec = new PackageSpec
          {
             PackageId = "MyApplication.Tool",
-            Framework = PunditFramework.Parse("net46"),
+            Framework = NuGet.Frameworks.NuGetFramework.Parse("net46"),
             Author = Environment.UserName,
             Description = "This is a sample package for a imaginaty tool.",
             License = "MIT license (or anything you want)",
@@ -65,17 +63,17 @@ namespace EBerzosa.Pundit.Core.Services
                new PackageDependency("MyApplication.Common", VersionConverterExtensions.ConvertPunditDependencyVersionToVersionRangeExtended("1.0.4"))
                {
                   Scope = DependencyScope.Normal,
-                  Framework = PunditFramework.Parse("net46")
+                  Framework = NuGet.Frameworks.NuGetFramework.Parse("net46")
                },
                new PackageDependency("MyApplication.Test", VersionConverterExtensions.ConvertPunditDependencyVersionToVersionRangeExtended("1.0.4"))
                {
                   Scope = DependencyScope.Test,
-                  Framework = PunditFramework.Parse("net46")
+                  Framework = NuGet.Frameworks.NuGetFramework.Parse("net46")
                },
                new PackageDependency("MyApplication.Legacy", VersionConverterExtensions.ConvertPunditDependencyVersionToVersionRangeExtended("1.0.4"))
                {
                   Scope = DependencyScope.Normal,
-                  Framework = PunditFramework.Parse("net11"),
+                  Framework = NuGet.Frameworks.NuGetFramework.Parse("net11"),
                   CreatePlatformFolder = true
                },
             }

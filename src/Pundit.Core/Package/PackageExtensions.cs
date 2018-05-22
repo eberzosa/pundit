@@ -1,7 +1,6 @@
 ﻿using System;
 using System.Linq;
 using System.Text.RegularExpressions;
-using EBerzosa.Pundit.Core.Framework;
 using EBerzosa.Pundit.Core.Model;
 using EBerzosa.Pundit.Core.Model.Package;
 using EBerzosa.Pundit.Core.Versioning;
@@ -10,56 +9,45 @@ namespace EBerzosa.Pundit.Core.Package
 {
    internal static class PackageExtensions
    {
-      public const string NuGetPackageExtension = ".nupkg";
+      private const string NoArchFrameworkShortName = "noarch";
 
       private const string PackageFileNamePattern = "{0}-{1}-{2}{3}"; // Id - Major.Minor.Patch-[ReleaseLabel]Revision - Platform .pundit
       private static readonly Regex PackageNameRgx = new Regex(@"^(.*)-(\d+)\.(\d+)\.(\d+)-([A-z0-9.]+)-(.*)" + PackageManifest.PackedExtension.Replace(".", "\\.") + "$");
 
 
-      public static string GetFileName(this PackageManifest manifest, bool useLegacy)
+      public static string GetFileName(this PackageManifest manifest)
       {
-         return useLegacy
-            ? string.Format(PackageFileNamePattern,
+         return string.Format(PackageFileNamePattern,
                manifest.PackageId,
                ToPunditFileVersion(manifest.Version),
-               manifest.Framework.GetShortFolderName(),
-               PackageManifest.PackedExtension)
-            : manifest.PackageId + "." + manifest.Version.ToNormalizedString() + NuGetPackageExtension;
+               manifest.Framework.GetPunditFrameworkFolderName(),
+               PackageManifest.PackedExtension);
       }
 
-      public static string GetRelatedSearchFileName(this PackageManifest manifest, bool useLegacy)
+      public static string GetRelatedSearchFileName(this PackageManifest manifest)
       {
-         if (!useLegacy)
-            throw new NotSupportedException();
-
          return string.Format(PackageFileNamePattern,
             manifest.PackageId,
             manifest.Version.Major + "." + manifest.Version.Minor + "." + manifest.Version.Patch + "-*",
-            manifest.Framework.GetShortFolderName(),
+            manifest.Framework.GetPunditFrameworkFolderName(),
             PackageManifest.PackedExtension);
       }
 
-      public static string GetFileName(this PackageKey key, bool useLegacy)
+      public static string GetFileName(this PackageKey key)
       {
-         if (!useLegacy)
-            throw new NotSupportedException();
-
          return string.Format(PackageFileNamePattern,
             key.PackageId,
             ToPunditFileVersion(key.Version),
-            key.Framework.GetShortFolderName(),
+            key.Framework.GetPunditFrameworkFolderName(),
             PackageManifest.PackedExtension);
       }
 
-      public static string GetSearchFileName(this UnresolvedPackage package, bool useLegacy)
+      public static string GetSearchFileName(this UnresolvedPackage package)
       {
-         if (!useLegacy)
-            throw new NotSupportedException();
-
          return string.Format(PackageFileNamePattern,
             package.PackageId,
             ToPunditFileSearchVersion(package.AllowedVersions),
-            package.Framework.GetShortFolderName(),
+            package.Framework.GetPunditFrameworkFolderName(),
             PackageManifest.PackedExtension);
       }
 
@@ -98,7 +86,7 @@ namespace EBerzosa.Pundit.Core.Package
                mtch.Groups[5].Value);
          }
 
-         return new PackageKey(packageId, version, PunditFramework.Parse(mtch.Groups[6].Value));
+         return new PackageKey(packageId, version, GetFramework(mtch.Groups[6].Value));
       }
 
       private static string ToPunditFileSearchVersion(VersionRangeExtended range)
@@ -110,6 +98,24 @@ namespace EBerzosa.Pundit.Core.Package
             return range.NuGetVersionRange.OriginalString;
 
          return string.Join(".", numberParts, 0, 3) + '-' + numberParts[3] + (versionParts.Length > 1 ? "-" + string.Join("-", versionParts) : "");
+      }
+
+      public static NuGet.Frameworks.NuGetFramework GetFramework(string frameworkString)
+      {
+         if (string.IsNullOrEmpty(frameworkString))
+            return NuGet.Frameworks.NuGetFramework.AnyFramework;
+
+         if (NoArchFrameworkShortName.Equals(frameworkString, StringComparison.OrdinalIgnoreCase))
+            return NuGet.Frameworks.NuGetFramework.AnyFramework;
+
+         return NuGet.Frameworks.NuGetFramework.Parse(frameworkString);
+      }
+
+      private static string GetPunditFrameworkFolderName(this NuGet.Frameworks.NuGetFramework framework)
+      {
+         return framework == NuGet.Frameworks.NuGetFramework.AnyFramework
+            ? NoArchFrameworkShortName
+            : framework.GetShortFolderName();
       }
    }
 }

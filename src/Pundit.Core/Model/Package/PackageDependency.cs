@@ -1,5 +1,4 @@
 ﻿using System.Diagnostics;
-using EBerzosa.Pundit.Core.Framework;
 using EBerzosa.Pundit.Core.Model.Enums;
 using EBerzosa.Pundit.Core.Versioning;
 using EBerzosa.Utils;
@@ -29,7 +28,7 @@ namespace EBerzosa.Pundit.Core.Model.Package
       /// Dependency platform. If ommitted "noarch" assumed. If noarch is not found, no automatic
       /// guess is performed
       /// </summary>
-      public PunditFramework Framework { get; set; }
+      public NuGet.Frameworks.NuGetFramework Framework { get; set; }
       
       /// <summary>
       /// Set to true if the dependency must exist at dev time only.
