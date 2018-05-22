@@ -79,6 +79,7 @@
     <Compile Include="Builders\ResolveBuilder.cs" />
     <Compile Include="Builders\SearchBuilder.cs" />
     <Compile Include="Builders\SpecBuilder.cs" />
+    <Compile Include="Builders\UtilBuilder.cs" />
     <Compile Include="Builders\UpdateBuilder.cs" />
     <Compile Include="Controllers\ConvertController.cs" />
     <Compile Include="Controllers\Controller.cs" />
@@ -89,6 +90,7 @@
     <Compile Include="Controllers\ResolveController.cs" />
     <Compile Include="Controllers\SearchController.cs" />
     <Compile Include="Controllers\SpecController.cs" />
+    <Compile Include="Controllers\UtilController.cs" />
     <Compile Include="Controllers\UpdateController.cs" />
     <Compile Include="Program.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
