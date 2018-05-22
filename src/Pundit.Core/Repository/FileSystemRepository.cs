@@ -7,9 +7,7 @@ using EBerzosa.Pundit.Core.Application;
 using EBerzosa.Pundit.Core.Model;
 using EBerzosa.Pundit.Core.Model.Package;
 using EBerzosa.Pundit.Core.Package;
-using EBerzosa.Pundit.Core.Versioning;
 using EBerzosa.Utils;
-using Pundit.Core.Model;
 
 namespace EBerzosa.Pundit.Core.Repository
 {
@@ -22,6 +20,8 @@ namespace EBerzosa.Pundit.Core.Repository
       public bool CanPublish { get; set; } = false;
 
       public string RootPath { get; }
+
+      public string ApiKey { get; }
 
       public RepositoryType Type { get; }
 
@@ -39,6 +39,12 @@ namespace EBerzosa.Pundit.Core.Repository
          Type = type;
       }
 
+      public void Publish(string packagePath)
+      {
+         using (var packageStream = File.Open(packagePath, FileMode.Open, FileAccess.Read))
+            Publish(packageStream);
+      }
+
       public void Publish(Stream packageStream)
       {
          if (!CanPublish)
@@ -48,7 +54,6 @@ namespace EBerzosa.Pundit.Core.Repository
 
          using (Stream ts = File.Create(tempFile))
             packageStream.CopyTo(ts);
-
 
          PackageManifest manifest;
          using (Stream ts = File.OpenRead(tempFile))

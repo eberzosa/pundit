@@ -1,5 +1,4 @@
-﻿using System;
-using EBerzosa.Utils;
+﻿using EBerzosa.Utils;
 using NuGet.Versioning;
 
 namespace EBerzosa.Pundit.Core.Versioning
@@ -9,6 +8,11 @@ namespace EBerzosa.Pundit.Core.Versioning
       public VersionRange NuGetVersionRange { get; }
 
       public string ReleaseLabel { get; set; }
+
+      public VersionRangeExtended(VersionRange range)
+      {
+         NuGetVersionRange = range;
+      }
 
       public VersionRangeExtended(NuGetVersion minVersion)
       {

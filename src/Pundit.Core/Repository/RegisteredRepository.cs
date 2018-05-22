@@ -6,6 +6,8 @@
 
       public string Uri { get; set; }
 
+      public string ApiKey { get; set; }
+
       public RepositoryType Type { get; set; }
 
       public bool Disabled { get; set; }

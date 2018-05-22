@@ -19,7 +19,6 @@ namespace EBerzosa.Pundit.Core.Services
    {
       private readonly IPackageSerializer _packageSerializer;
       private readonly ManifestResolver _manifestResolver;
-      private readonly PackageReaderFactory _packageReaderFactory;
       private readonly DependencyResolution _dependencyResolution;
       private readonly PackageInstallerFactory _packageInstallerFactory;
 

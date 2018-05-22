@@ -4,7 +4,6 @@ using EBerzosa.Pundit.Core.Model.Package;
 using EBerzosa.Pundit.Core.Model.Xml;
 using EBerzosa.Pundit.Core.Repository;
 using EBerzosa.Pundit.Core.Repository.Xml;
-using EBerzosa.Pundit.Core.Versioning;
 using Mapster;
 using Pundit.Core.Model;
 
@@ -57,28 +56,28 @@ namespace EBerzosa.Pundit.Core.Converters
 
       private static void RegisterMappings()
       {
-         Mapster.TypeAdapterConfig<PackageSpec, XmlPackageSpec>.NewConfig();
-         Mapster.TypeAdapterConfig<XmlPackageSpec, PackageSpec>.NewConfig();
+         TypeAdapterConfig<PackageSpec, XmlPackageSpec>.NewConfig();
+         TypeAdapterConfig<XmlPackageSpec, PackageSpec>.NewConfig();
 
-         Mapster.TypeAdapterConfig<PackageManifest, XmlPackageManifest>.NewConfig()
+         TypeAdapterConfig<PackageManifest, XmlPackageManifest>.NewConfig()
             .Include<PackageSpec, XmlPackageSpec>()
             .Map(dst => dst.Version, src => src.Version.ToString())
             .Map(dst => dst.Platform, src => src.Framework.GetShortFolderName());
 
-         Mapster.TypeAdapterConfig<XmlPackageManifest, PackageManifest>.NewConfig()
+         TypeAdapterConfig<XmlPackageManifest, PackageManifest>.NewConfig()
             .Include<XmlPackageSpec, PackageSpec>()
             .Map(dst => dst.Version, src => NuGet.Versioning.NuGetVersion.Parse(src.Version))
             .Map(dst => dst.Framework, src => PunditFramework.Parse(src.Platform));
 
 
-         Mapster.TypeAdapterConfig<PackageDependency, XmlPackageDependency>.NewConfig()
+         TypeAdapterConfig<PackageDependency, XmlPackageDependency>.NewConfig()
             .Map(dst => dst.VersionPattern, src => src.AllowedVersions.NuGetVersionRange.OriginalString)
             .Map(dst => dst.Platform, src => src.Framework.GetShortFolderName());
 
-         Mapster.TypeAdapterConfig<XmlPackageDependency, PackageDependency>.NewConfig()
+         TypeAdapterConfig<XmlPackageDependency, PackageDependency>.NewConfig()
             .ConstructUsing(xml => new PackageDependency(xml.PackageId, VersionConverterExtensions.ConvertPunditDependencyVersionToVersionRangeExtended(xml.VersionPattern)))
             .Ignore(dst => dst.PackageId, src => src.AllowedVersions)
-            .Map(dst => dst.Framework, src => PunditFramework.Parse(src.Platform))
+            .Map(dst => dst.Framework, src => string.IsNullOrEmpty(src.Platform) ? PunditFramework.AnyFramework : PunditFramework.Parse(src.Platform))
             .AfterMapping((src, dst) =>
             {
                if (src.DevTimeOnly)
@@ -93,12 +92,12 @@ namespace EBerzosa.Pundit.Core.Converters
                }
             });
 
-         Mapster.TypeAdapterConfig<SourceFiles, XmlSourceFiles>.NewConfig();
-         Mapster.TypeAdapterConfig<XmlSourceFiles, SourceFiles>.NewConfig();
+         TypeAdapterConfig<SourceFiles, XmlSourceFiles>.NewConfig();
+         TypeAdapterConfig<XmlSourceFiles, SourceFiles>.NewConfig();
          
-         Mapster.TypeAdapterConfig<XmlRegisteredRepositories, RegisteredRepositories>.NewConfig();
-         Mapster.TypeAdapterConfig<XmlRegisteredRepository, RegisteredRepository>.NewConfig();
-         Mapster.TypeAdapterConfig<XmlRepositoryType, RepositoryType>.NewConfig();
+         TypeAdapterConfig<XmlRegisteredRepositories, RegisteredRepositories>.NewConfig();
+         TypeAdapterConfig<XmlRegisteredRepository, RegisteredRepository>.NewConfig();
+         TypeAdapterConfig<XmlRepositoryType, RepositoryType>.NewConfig();
       }
    }
 }

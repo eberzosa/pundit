@@ -153,10 +153,9 @@
     <Compile Include="Serializers\NuGetv3PackageSerializer.cs" />
     <Compile Include="Serializers\NuGetv3Serializer.cs" />
     <Compile Include="Services\ConvertService.cs" />
-    <Compile Include="Services\NuGetCommands\CommandLineMachineWideSettings.cs" />
-    <Compile Include="Services\NuGetCommands\PushCommand.cs" />
     <Compile Include="Services\PackType.cs" />
     <Compile Include="Services\UpdateService.cs" />
+    <Compile Include="Services\UtilService.cs" />
     <Compile Include="Utils\IWriter.cs" />
     <Compile Include="Repository\CacheRepository.cs" />
     <Compile Include="Converters\XmlConverterExtensions.cs" />

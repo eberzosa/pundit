@@ -8,8 +8,8 @@ namespace EBerzosa.Pundit.Core.Package
 {
    internal class NuGetv3PackageWriter : PackageWriter
    {
-      private Stream _stream;
-      private NuGet.Packaging.PackageBuilder _packageBuilder;
+      private readonly Stream _stream;
+      private readonly NuGet.Packaging.PackageBuilder _packageBuilder;
 
       public NuGetv3PackageWriter(string rootDirectory, PackageSpec packageSpec, Stream outputStream)
          : base(rootDirectory, packageSpec)
@@ -24,9 +24,8 @@ namespace EBerzosa.Pundit.Core.Package
 
       protected override void WriteManifest()
       {
-         var manifest = PackageSpec.ToNuGetManifestMetadata();
-
-         _packageBuilder.Populate(manifest);
+         var metadata = PackageSpec.ToNuGetManifestMetadata();
+         _packageBuilder.Populate(metadata);
       }
 
       protected override long GetCurrentSize()
@@ -36,7 +35,7 @@ namespace EBerzosa.Pundit.Core.Package
 
       protected override void WriteEmptyDirectory(string path)
       {
-         throw new NotImplementedException();
+         _packageBuilder.AddFiles("", null, path);
       }
 
       protected override void WriteFile(string filePath, long size, string relativePath)

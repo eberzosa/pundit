@@ -19,5 +19,8 @@ namespace EBerzosa.Pundit.Core.Repository.Xml
 
       [XmlAttribute("type")]
       public XmlRepositoryType Type { get; set; }
+
+      [XmlAttribute("apikey")]
+      public string ApiKey { get; set; }
    }
 }

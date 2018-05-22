@@ -64,5 +64,8 @@ namespace EBerzosa.Pundit.Core.Services
 
       public ConvertService GetConvertService() 
          => new ConvertService(new PackService(_packageSerializer, _manifestResolver, new NullWriter()), _writer);
+
+      public UtilService GetUtilService()
+         => new UtilService();
    }
 }

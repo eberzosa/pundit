@@ -2,8 +2,6 @@
 using System.IO;
 using EBerzosa.Pundit.Core.Model;
 using EBerzosa.Pundit.Core.Model.Package;
-using EBerzosa.Pundit.Core.Versioning;
-using Pundit.Core.Model;
 
 namespace EBerzosa.Pundit.Core.Repository
 {
@@ -13,11 +11,15 @@ namespace EBerzosa.Pundit.Core.Repository
 
       string RootPath { get; }
 
+      string ApiKey { get; }
+
       bool CanPublish { get; set; }
 
       RepositoryType Type { get; }
 
-      void Publish(Stream packageStream);
+      void Publish(string packagePath);
+
+      void Publish(Stream package);
       
       Stream Download(PackageKey key);
 

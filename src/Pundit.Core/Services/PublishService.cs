@@ -14,7 +14,6 @@ namespace EBerzosa.Pundit.Core.Services
 
       public string Repository { get; set; }
 
-      public string ApiKey { get; set; }
 
       public PublishService(RepositoryFactory repositoryFactory, IWriter writer)
       {
@@ -29,23 +28,12 @@ namespace EBerzosa.Pundit.Core.Services
       {
          if (!File.Exists(packagePath))
             throw new FileNotFoundException($"Package Manifest '{packagePath}' not found");
-
-         if (packagePath.EndsWith(PackageExtensions.NuGetPackageExtension, StringComparison.OrdinalIgnoreCase))
-         {
-            new NuGetCommands.NuGetPushService(packagePath)
-            {
-               Source = Repository,
-               ApiKey = ApiKey
-            }.Push();
-
-            return;
-         }
-
+         
          IRepository[] publishTo;
          
          if (Repository != null)
          {
-            var repo = _repositoryFactory.TryGetRepo(Repository);
+            var repo = _repositoryFactory.TryGetEnabledRepo(Repository);
             if (repo == null)
             {
                _writer.Error($"Repository '{Repository}' does not exist");
@@ -62,7 +50,8 @@ namespace EBerzosa.Pundit.Core.Services
          }
          else
          {
-            publishTo = _repositoryFactory.TryGetEnabledRepos(true, true).Where(r => r.CanPublish).ToArray();
+            throw new NotSupportedException();
+            //publishTo = _repositoryFactory.TryGetEnabledRepos(true, true).Where(r => r.CanPublish).ToArray();
          }
 
          if (publishTo.Length == 0)
@@ -77,8 +66,7 @@ namespace EBerzosa.Pundit.Core.Services
          {
             _writer.BeginWrite().Text($"Publishing package '{packagePath}' to repository '{repo.Name}' ('{repo.RootPath}')... ");
             
-            using (Stream packageContents = File.OpenRead(packagePath))
-               repo.Publish(packageContents);
+            repo.Publish(packagePath);
 
             _writer.Success("published").EndWrite();
          }

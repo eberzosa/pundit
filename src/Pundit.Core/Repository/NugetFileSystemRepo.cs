@@ -4,17 +4,13 @@ using System.IO;
 using System.Linq;
 using System.Threading;
 using EBerzosa.Pundit.Core.Converters;
-using EBerzosa.Pundit.Core.Framework;
 using EBerzosa.Pundit.Core.Model;
 using EBerzosa.Pundit.Core.Model.Package;
 using EBerzosa.Pundit.Core.Versioning;
 using EBerzosa.Utils;
-using Mapster;
 using NuGet.Common;
 using NuGet.Configuration;
 using NuGet.Frameworks;
-using NuGet.Packaging;
-using NuGet.Packaging.Core;
 using NuGet.Protocol;
 using NuGet.Protocol.Core.Types;
 
@@ -27,6 +23,8 @@ namespace EBerzosa.Pundit.Core.Repository
       public string Name { get; }
 
       public string RootPath { get; }
+
+      public string ApiKey { get; set; }
 
       public bool CanPublish { get; set; }
 
@@ -47,27 +45,24 @@ namespace EBerzosa.Pundit.Core.Repository
          var providers = new List<Lazy<INuGetResourceProvider>>();
          providers.AddRange(NuGet.Protocol.Core.Types.Repository.Provider.GetCoreV3());
 
-         _sourceRepository = new SourceRepository(new PackageSource(rootPath), providers);
+         _sourceRepository = new SourceRepository(new PackageSource(rootPath, Name), providers);
       }
 
-
-      public void Publish(Stream packageStream)
+      public void Publish(string filePath)
       {
-         if (!CanPublish)
-            throw new Exception("Publish is not allowed");
-         
          var packageUpdate = _sourceRepository.GetResource<PackageUpdateResource>();
-         
-         var fileStream = packageStream as FileStream;
 
-         packageUpdate.Push(fileStream.Name, null, 200, false, s => null, s => null, true, NullLogger.Instance).Wait();
-
-         packageStream.Dispose();
+         packageUpdate.Push(filePath, null, 10, true, 
+            endpoint => ApiKey != null ? EncryptionUtility.DecryptString(ApiKey) : null, 
+            symbolsEndpoint => null, 
+            true, NullLogger.Instance).Wait();
       }
+
+      public void Publish(Stream package) => throw new NotSupportedException();
 
       public Stream Download(PackageKey key)
       {
-         var packageIdentity = new PackageIdentity(key.PackageId, NuGet.Versioning.NuGetVersion.Parse(key.VersionString));
+         var packageIdentity = new NuGet.Packaging.Core.PackageIdentity(key.PackageId, NuGet.Versioning.NuGetVersion.Parse(key.VersionString));
 
          var downloadResource = _sourceRepository.GetResource<DownloadResource>();
          
@@ -81,26 +76,21 @@ namespace EBerzosa.Pundit.Core.Repository
       public ICollection<NuGet.Versioning.NuGetVersion> GetVersions(UnresolvedPackage package)
       {
          var packagesResource = _sourceRepository.GetResource<FindPackageByIdResource>();
-         var packageInfos = packagesResource.GetAllVersionsAsync(package.PackageId, NullSourceCacheContext.Instance, NullLogger.Instance, CancellationToken.None);
-         
-         // TODO: Finish this
-         throw new NotImplementedException();
-         //return packageInfos.Result.Where(p => package.AllowedVersions.IsFloating
-         //      ? package.AllowedVersions.Float.Satisfies(p.Adapt<PunditVersion>())
-         //      : package.AllowedVersions.Satisfies(p.Adapt<PunditVersion>()))
-         //   .Adapt<IEnumerable<PunditVersion>>().ToArray();
+         var packageVersions = packagesResource.GetAllVersionsAsync(package.PackageId, NullSourceCacheContext.Instance, NullLogger.Instance, CancellationToken.None);
+
+         return packageVersions.Result.Where(v => package.AllowedVersions.Satisfies(v)).ToArray();
       }
 
       public PackageManifest GetManifest(PackageKey key)
       {
-         var packageIdentity = new PackageIdentity(key.PackageId, NuGet.Versioning.NuGetVersion.Parse(key.VersionString));
+         var packageIdentity = new NuGet.Packaging.Core.PackageIdentity(key.PackageId, NuGet.Versioning.NuGetVersion.Parse(key.VersionString));
 
          var packagesResource = _sourceRepository.GetResource<PackageMetadataResource>();
          var packageInfo = packagesResource.GetMetadataAsync(packageIdentity, NullSourceCacheContext.Instance, NullLogger.Instance, CancellationToken.None).Result;
 
          var projectFramework = key.Framework;
 
-         PackageDependencyGroup dependencies = null;
+         NuGet.Packaging.PackageDependencyGroup dependencies = null;
          if (packageInfo.DependencySets.Any())
          {
             dependencies = NuGetFrameworkUtility.GetNearest(packageInfo.DependencySets, projectFramework.ToNuGetFramework());
@@ -113,17 +103,15 @@ namespace EBerzosa.Pundit.Core.Repository
          {
             PackageId = packageInfo.Identity.Id,
             Version = packageInfo.Identity.Version,
-            Dependencies = new List<Model.Package.PackageDependency>(),
+            Dependencies = new List<PackageDependency>(),
             Framework = dependencies?.TargetFramework.ToPunditFramework()
          };
 
          if (dependencies == null)
             return manifest;
 
-         //TODO: Finish this
-         throw new NotImplementedException();
-         //foreach (var dependency in dependencies.Packages)
-         //   manifest.Dependencies.Add(new PackageDependency(dependency.Id, dependency.VersionRange.Adapt<VersionRange>()) {Platform = manifest.Platform});
+         foreach (var dependency in dependencies.Packages)
+            manifest.Dependencies.Add(new PackageDependency(dependency.Id, new VersionRangeExtended(dependency.VersionRange)) {Framework = manifest.Framework});
 
          return manifest;
       }
@@ -132,28 +120,19 @@ namespace EBerzosa.Pundit.Core.Repository
       {
          var findLocalPackagesResource = _sourceRepository.GetResource<PackageMetadataResource>();
 
-         var packageIdentity = new PackageIdentity(package.PackageId, package.Version);
+         var packageIdentity = new NuGet.Packaging.Core.PackageIdentity(package.PackageId, package.Version);
          return findLocalPackagesResource.GetMetadataAsync(packageIdentity, NullSourceCacheContext.Instance, NullLogger.Instance, CancellationToken.None).Result != null;
       }
 
       public IEnumerable<PackageKey> Search(string substring)
       {
          var searchResource = _sourceRepository.GetResource<PackageSearchResource>();
-         var results = searchResource.SearchAsync(substring, new SearchFilter(true), 0, int.MaxValue, new NullLogger(), CancellationToken.None)
-            .Result;
+         var results = searchResource.SearchAsync(substring, new SearchFilter(true), 0, int.MaxValue, new NullLogger(), CancellationToken.None).Result;
 
          foreach (var result in results)
             yield return new PackageKey(result.Identity.Id, result.Identity.Version, null);
       }
-
-      private FileSystemRepository GetFsRepoOrDie(IRepository repo)
-      {
-         if (repo is FileSystemRepository fsRepo)
-            return fsRepo;
-
-         throw new ApplicationException("Only FileSystem repos are supported");
-      }
-
+      
       public override string ToString() => $"{Name} [{RootPath}]";
    }
 }

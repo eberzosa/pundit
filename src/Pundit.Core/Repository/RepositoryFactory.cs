@@ -7,24 +7,28 @@ using EBerzosa.Pundit.Core.Converters;
 using EBerzosa.Pundit.Core.Repository.Xml;
 using EBerzosa.Pundit.Core.Serializers;
 using EBerzosa.Utils;
-using Mapster;
-using NuGet.Configuration;
 
 namespace EBerzosa.Pundit.Core.Repository
 {
    public class RepositoryFactory
    {
+      public const string PunditCacheRepoName = "punditcache";
+      public const string NuGetCacheRepoName = "nugetcache";
+
       private const string PunditConfigFolder = ".pundit";
-      private const string LocalRepoFolder = "repository";
+      private const string PunditCacheRepoFolder = "repository";
+      private const string NuGetCacheRepoFolder = "nugetrepo";
       private const string RepositoriesConfigFile = "repositories.xml";
 
       private readonly PackageReaderFactory _packageReaderFactory;
       private readonly ISerializer _serializer;
 
       private readonly string _cacheRepoPath;
+      private readonly string _cacheNuGetRepoPath;
       private readonly string _repoConfigPath;
 
       private RegisteredRepositories _registeredRepositories;
+      
 
 
       public RepositoryFactory(PackageReaderFactory packageReaderFactory, ISerializer serializer)
@@ -35,8 +39,9 @@ namespace EBerzosa.Pundit.Core.Repository
          _packageReaderFactory = packageReaderFactory;
          _serializer = serializer;
 
-         var punditConfigPath = ResolveRootPath(PunditConfigFolder, LocalRepoFolder);
-         _cacheRepoPath = Path.Combine(punditConfigPath, LocalRepoFolder);
+         var punditConfigPath = ResolveRootPath();
+         _cacheRepoPath = Path.Combine(punditConfigPath, PunditCacheRepoFolder);
+         _cacheNuGetRepoPath = Path.Combine(punditConfigPath, NuGetCacheRepoFolder);
          _repoConfigPath = Path.Combine(punditConfigPath, RepositoriesConfigFile);
       }
 
@@ -45,17 +50,14 @@ namespace EBerzosa.Pundit.Core.Repository
       {
          return new[]
          {
-            //TODO: Finish this
-            //TryCreateRepo(new RegisteredRepository {Uri = SettingsUtility.GetGlobalPackagesFolder(NullSettings.Instance), Name = "nugetlocal", UseForPublishing = true, Type = RepositoryType.NuGet}),
-            TryCreateRepo(new RegisteredRepository {Uri = _cacheRepoPath, Name = "local", UseForPublishing = true})
+            TryCreateRepo(new RegisteredRepository {Uri = _cacheNuGetRepoPath, Name = NuGetCacheRepoName, UseForPublishing = true, Type = RepositoryType.NuGet}),
+            TryCreateRepo(new RegisteredRepository {Uri = _cacheRepoPath, Name = PunditCacheRepoName, UseForPublishing = true})
          };
       }
       
-      public IRepository TryGetRepo(string name)
+      public IRepository TryGetEnabledRepo(string name)
       {
-         var repo = GetRegistered().RepositoriesArray.FirstOrDefault(r => r.Name.Equals(name, StringComparison.OrdinalIgnoreCase));
-
-         return repo == null ? null : TryCreateRepo(repo);
+         return TryGetEnabledRepos(true, true).FirstOrDefault(r => r.Name.Equals(name, StringComparison.OrdinalIgnoreCase));
       }
 
       public IEnumerable<IRepository> TryGetEnabledRepos(bool includeCache, bool includeOther)
@@ -79,14 +81,11 @@ namespace EBerzosa.Pundit.Core.Repository
 
       private IRepository TryCreateRepo(RegisteredRepository repo)
       {
-         if (repo.Uri.StartsWith("http", StringComparison.OrdinalIgnoreCase))
-            throw new NotSupportedException("Only FileSystem repos are supported");
-
-         if (!Directory.Exists(repo.Uri))
+         if (!repo.Uri.StartsWith("http") && !Directory.Exists(repo.Uri))
             return null;
 
          if (repo.Type == RepositoryType.NuGet)
-            return new NuGetFileSystemRepo(repo.Uri, repo.Name, RepositoryType.NuGet) {CanPublish = repo.UseForPublishing};
+            return new NuGetFileSystemRepo(repo.Uri, repo.Name, RepositoryType.NuGet) {CanPublish = repo.UseForPublishing, ApiKey = repo.ApiKey};
 
          return new FileSystemRepository(_packageReaderFactory, repo.Uri, repo.Name, RepositoryType.Pundit) {CanPublish = repo.UseForPublishing};
       }
@@ -102,28 +101,25 @@ namespace EBerzosa.Pundit.Core.Repository
          using (var stream = File.OpenRead(_repoConfigPath))
          {
             var repos = _serializer.Read<XmlRegisteredRepositories>(stream);
-
             _registeredRepositories = repos.ToRegisteredRepositories();
-
-            //TODO: Finish this
-            foreach (var repository in _registeredRepositories.RepositoriesArray)
-               if (repository.Type == RepositoryType.NuGet)
-                  repository.Disabled = true;
          }
 
          return _registeredRepositories;
       }
 
-      private string ResolveRootPath(string punditConfigFolder, string localRepoFolder)
+      private string ResolveRootPath()
       {
-         var path = Path.Combine(Environment.GetFolderPath(Environment.SpecialFolder.UserProfile), punditConfigFolder);
+         var rootPath = Path.Combine(Environment.GetFolderPath(Environment.SpecialFolder.UserProfile), PunditConfigFolder);
+
+         if (!Directory.Exists(rootPath))
+            Directory.CreateDirectory(rootPath).Attributes |= (FileAttributes.System | FileAttributes.Hidden);
+
+         var path = Path.Combine(rootPath, PunditCacheRepoFolder);
 
          if (!Directory.Exists(path))
-            Directory.CreateDirectory(path).Attributes |= (FileAttributes.System | FileAttributes.Hidden);
+            Directory.CreateDirectory(path);
 
-         var rootPath = path;
-
-         path = Path.Combine(path, localRepoFolder);
+         path = Path.Combine(rootPath, NuGetCacheRepoFolder);
 
          if (!Directory.Exists(path))
             Directory.CreateDirectory(path);
