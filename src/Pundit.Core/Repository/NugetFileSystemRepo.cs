@@ -6,7 +6,6 @@ using System.Threading;
 using EBerzosa.Pundit.Core.Model;
 using EBerzosa.Pundit.Core.Model.Package;
 using EBerzosa.Pundit.Core.Versioning;
-using EBerzosa.Utils;
 using NuGet.Common;
 using NuGet.Configuration;
 using NuGet.Frameworks;
@@ -15,32 +14,16 @@ using NuGet.Protocol.Core.Types;
 
 namespace EBerzosa.Pundit.Core.Repository
 {
-   internal class NuGetFileSystemRepo : IRepository
+   internal class NuGetFileSystemRepo : Repository, IRepository
    {
       private readonly SourceRepository _sourceRepository;
 
-      public string Name { get; }
-
-      public string RootPath { get; }
-
       public string ApiKey { get; set; }
 
-      public bool CanPublish { get; set; }
 
-      public RepositoryType Type { get; }
-
-
-      public NuGetFileSystemRepo(string rootPath, string name, RepositoryType type)
+      public NuGetFileSystemRepo(string rootPath, string name)
+         : base(rootPath, name, RepositoryType.NuGet)
       {
-         Guard.NotNull(rootPath, nameof(rootPath));
-
-         if (!rootPath.StartsWith("http", StringComparison.OrdinalIgnoreCase) && !Directory.Exists(rootPath))
-            throw new ArgumentException($"Root directory '{rootPath}' does not exist");
-
-         RootPath = rootPath;
-         Name = name;
-         Type = type;
-         
          var providers = new List<Lazy<INuGetResourceProvider>>();
          providers.AddRange(NuGet.Protocol.Core.Types.Repository.Provider.GetCoreV3());
 
@@ -131,7 +114,5 @@ namespace EBerzosa.Pundit.Core.Repository
          foreach (var result in results)
             yield return new PackageKey(result.Identity.Id, result.Identity.Version, null);
       }
-      
-      public override string ToString() => $"{Name} [{RootPath}]";
    }
 }

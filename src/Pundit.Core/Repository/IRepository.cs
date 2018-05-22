@@ -11,8 +11,6 @@ namespace EBerzosa.Pundit.Core.Repository
 
       string RootPath { get; }
 
-      string ApiKey { get; }
-
       bool CanPublish { get; set; }
 
       RepositoryType Type { get; }

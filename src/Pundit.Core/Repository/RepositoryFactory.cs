@@ -85,9 +85,9 @@ namespace EBerzosa.Pundit.Core.Repository
             return null;
 
          if (repo.Type == RepositoryType.NuGet)
-            return new NuGetFileSystemRepo(repo.Uri, repo.Name, RepositoryType.NuGet) {CanPublish = repo.UseForPublishing, ApiKey = repo.ApiKey};
+            return new NuGetFileSystemRepo(repo.Uri, repo.Name) {CanPublish = repo.UseForPublishing, ApiKey = repo.ApiKey};
 
-         return new FileSystemRepository(_packageReaderFactory, repo.Uri, repo.Name, RepositoryType.Pundit) {CanPublish = repo.UseForPublishing};
+         return new FileSystemRepository(_packageReaderFactory, repo.Uri, repo.Name) {CanPublish = repo.UseForPublishing};
       }
 
       private RegisteredRepositories GetRegistered()

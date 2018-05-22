@@ -11,32 +11,17 @@ using EBerzosa.Utils;
 
 namespace EBerzosa.Pundit.Core.Repository
 {
-   public class FileSystemRepository : IRepository
+   public class FileSystemRepository : Repository, IRepository
    {
       private readonly PackageReaderFactory _packageReaderFactory;
 
-      public string Name { get; }
 
-      public bool CanPublish { get; set; } = false;
-
-      public string RootPath { get; }
-
-      public string ApiKey { get; }
-
-      public RepositoryType Type { get; }
-
-      public FileSystemRepository(PackageReaderFactory packageReaderFactory, string rootPath, string name, RepositoryType type)
+      public FileSystemRepository(PackageReaderFactory packageReaderFactory, string rootPath, string name)
+         : base(rootPath, name, RepositoryType.Pundit)
       {
          Guard.NotNull(packageReaderFactory, nameof(packageReaderFactory));
-         Guard.NotNull(rootPath, nameof(rootPath));
-
-         if (!Directory.Exists(rootPath))
-            throw new ArgumentException($"Root directory '{rootPath}' does not exist");
 
          _packageReaderFactory = packageReaderFactory;
-         RootPath = rootPath;
-         Name = name;
-         Type = type;
       }
 
       public void Publish(string packagePath)

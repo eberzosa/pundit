@@ -133,6 +133,7 @@
     <Compile Include="Package\Pundit\PunditPackageWriter.cs" />
     <Compile Include="Repository\NugetFileSystemRepo.cs" />
     <Compile Include="Repository\RegisteredRepository.cs" />
+    <Compile Include="Repository\Repository.cs" />
     <Compile Include="Repository\RepositoryType.cs" />
     <Compile Include="Repository\Xml\XmlRepositoryType.cs" />
     <Compile Include="Repository\Xml\XmlRegisteredRepository.cs" />
