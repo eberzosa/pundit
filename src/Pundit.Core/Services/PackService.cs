@@ -3,7 +3,6 @@ using System.IO;
 using EBerzosa.Pundit.Core.Package;
 using EBerzosa.Pundit.Core.Repository;
 using EBerzosa.Pundit.Core.Serializers;
-using EBerzosa.Pundit.Core.Versioning;
 using EBerzosa.Utils;
 using Pundit.Core.Model;
 using Pundit.Core.Utils;

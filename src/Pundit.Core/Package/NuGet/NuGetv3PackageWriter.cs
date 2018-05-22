@@ -25,12 +25,8 @@ namespace EBerzosa.Pundit.Core.Package
       protected override void WriteManifest()
       {
          var metadata = PackageSpec.ToNuGetManifestMetadata();
+         
          _packageBuilder.Populate(metadata);
-      }
-
-      protected override long GetCurrentSize()
-      {
-         return _stream.Length;
       }
 
       protected override void WriteEmptyDirectory(string path)

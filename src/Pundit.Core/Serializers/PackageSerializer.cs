@@ -17,12 +17,14 @@ namespace EBerzosa.Pundit.Core.Serializers
 
       public void SerializePackageManifest(PackageManifest package, Stream stream)
       {
-         _serializer.Write(package.ToXmlPackageManifest(), stream);
+         var manifest = package.ToXmlPackageManifest();
+         _serializer.Write(manifest, stream);
       }
 
       public void SerializePackageSpec(PackageSpec packageSpec, Stream stream)
       {
-         _serializer.Write(packageSpec.ToXmlPackageSpec(), stream);
+         var spec = packageSpec.ToXmlPackageSpec();
+         _serializer.Write(spec, stream);
       }
 
       public PackageManifest DeserializePackageManifest(Stream stream)

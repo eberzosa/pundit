@@ -27,7 +27,7 @@ namespace EBerzosa.Pundit.CommandLine.Builders
                var output = opt.SingleValue("o", "output", "directory", "Specifies the output directory for the package");
                var version = opt.SingleValue("v", "packageVersion", "versionNumber", "Overrides the version number inside the manifest");
                var releaseLabel = BuildReleaseLabel(opt);
-               var type = opt.SingleFixedValue("t", "type", "packageType", "The type of package to produce. Default Pundit", Enum.GetNames(typeof(PackType)));
+               var type = opt.SingleFixedValue("t", "type", "packageType", "The type of package to produce. Default: NuGet", Enum.GetNames(typeof(PackType)));
 
                cmd.OnExecute(() => _controller.Execute(manifest.Value, output.Value, version.Value, releaseLabel.Value, type.Value).ToInteger());
             });

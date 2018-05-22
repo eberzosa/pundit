@@ -44,17 +44,12 @@ namespace EBerzosa.Pundit.Core.Package
       public long WriteAll()
       {
          WriteManifest();
-
-         _bytesWritten += GetCurrentSize();
-
          WriteFiles();
 
          return _bytesWritten;
       }
 
       protected abstract void WriteManifest();
-
-      protected abstract long GetCurrentSize();
 
       protected abstract void WriteEmptyDirectory(string path);
 

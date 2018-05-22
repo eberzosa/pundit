@@ -31,7 +31,7 @@ namespace EBerzosa.Pundit.CommandLine.Controllers
 
          if (string.IsNullOrEmpty(typeString))
          {
-            service.Type = PackType.Pundit;
+            service.Type = PackType.NuGet;
          }
          else if (Enum.TryParse<PackType>(typeString, true, out var type))
          {

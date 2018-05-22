@@ -2,7 +2,7 @@
 {
    public enum PackType
    {
-      Pundit,
-      NuGet
+      NuGet,
+      Pundit
    }
 }

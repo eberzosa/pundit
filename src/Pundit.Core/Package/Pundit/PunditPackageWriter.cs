@@ -24,17 +24,13 @@ namespace EBerzosa.Pundit.Core.Package
          _zipStream.SetLevel(9);
       }
 
-      protected override long GetCurrentSize()
-      {
-         return _zipStream.Length;
-      }
 
       protected override void WriteManifest()
       {
          var entry = new ZipEntry(PackageManifest.DefaultManifestFileName);
 
          _zipStream.PutNextEntry(entry);
-
+         
          _packageSerializer.SerializePackageManifest(PackageSpec, _zipStream);
       }
 

@@ -2,6 +2,8 @@
 using System.Collections.Generic;
 using System.Linq;
 using EBerzosa.Pundit.Core.Model.Package;
+using NuGet.Frameworks;
+using NuGet.Packaging;
 using Pundit.Core.Model;
 
 namespace EBerzosa.Pundit.Core.Converters
@@ -34,11 +36,18 @@ namespace EBerzosa.Pundit.Core.Converters
 
       private static IEnumerable<NuGet.Packaging.PackageDependencyGroup> ToNuGetPackageDependencyGroup(this IEnumerable<PackageDependency> packageDependency)
       {
-         return packageDependency
-            .GroupBy(dependency => dependency.Framework, dependency => dependency)
-            .Select(grupedDepenencies => new NuGet.Packaging.PackageDependencyGroup(
-               grupedDepenencies.Key, 
-               grupedDepenencies.Select(dependency => dependency.ToNuGetPackageDependency())));
+         return new[]
+         {
+            new PackageDependencyGroup(
+               NuGetFramework.AnyFramework,
+               packageDependency.Select(p => p.ToNuGetPackageDependency()))
+         };
+
+         //return packageDependency
+         //   .GroupBy(dependency => dependency.Framework, dependency => dependency)
+         //   .Select(grupedDepenencies => new NuGet.Packaging.PackageDependencyGroup(
+         //      grupedDepenencies.Key, 
+         //      grupedDepenencies.Select(dependency => dependency.ToNuGetPackageDependency())));
       }
 
       private static NuGet.Packaging.Core.PackageDependency ToNuGetPackageDependency(this PackageDependency packageDependency)
