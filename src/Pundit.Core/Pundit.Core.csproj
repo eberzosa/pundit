@@ -207,7 +207,6 @@
     <Compile Include="Utils\PathUtils.cs" />
     <Compile Include="Versioning\VersionComparison.cs" />
     <Compile Include="Versioning\HashCodeCombiner.cs" />
-    <Compile Include="Versioning\FloatBehaviour.cs" />
     <Compile Include="Versioning\VersionComparer.cs" />
     <Compile Include="Versioning\VersionRangeExtended.cs" />
     <Compile Include="WiringModule.cs" />
