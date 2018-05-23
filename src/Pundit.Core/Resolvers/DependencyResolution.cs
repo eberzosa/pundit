@@ -128,8 +128,8 @@ namespace EBerzosa.Pundit.Core.Resolvers
 
             while (manifest == null && node.HasVersions)
             {
-               if (parentRepoType == RepositoryType.NuGet && node.ActiveRepository.Type != RepositoryType.NuGet)
-                  throw new NotSupportedException("NuGet packages can contain only NuGet packages");
+               //if (parentRepoType == RepositoryType.NuGet && node.ActiveRepository.Type != RepositoryType.NuGet)
+               //   throw new NotSupportedException("NuGet packages can contain only NuGet packages");
 
                manifest = node.ActiveRepository.GetManifest(node.ActiveVersionKey, _projectFramework);
 

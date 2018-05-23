@@ -4,6 +4,7 @@ using System.IO;
 using System.Linq;
 using System.Text.RegularExpressions;
 using EBerzosa.Pundit.Core.Application;
+using EBerzosa.Pundit.Core.Converters;
 using EBerzosa.Pundit.Core.Model;
 using EBerzosa.Pundit.Core.Model.Package;
 using EBerzosa.Pundit.Core.Package;
@@ -25,48 +26,21 @@ namespace EBerzosa.Pundit.Core.Repository
 
       public void Publish(string packagePath)
       {
-         using (var packageStream = File.Open(packagePath, FileMode.Open, FileAccess.Read))
-            Publish(packageStream);
-      }
-
-      public void Publish(Stream packageStream)
-      {
          if (!CanPublish)
             throw new Exception("Publish is not allowed");
+                     
+         var fileName = Path.GetFileName(packagePath);
+         
+         var searchPattern = PackageConverterExtensions.GetPackageKeyFromFileName(fileName).GetRelatedSearchFileName();
 
-         var tempFile = Path.Combine(RootPath, "download-" + Guid.NewGuid());
+         foreach (var relatedBuild in Directory.GetFiles(RootPath, searchPattern))
+            File.Delete(relatedBuild);
 
-         using (Stream ts = File.Create(tempFile))
-            packageStream.CopyTo(ts);
-
-         PackageManifest manifest;
-         using (Stream ts = File.OpenRead(tempFile))
-         using (var pr = _packageReaderFactory.Get(RepositoryType.Pundit, ts))
-            manifest = pr.ReadManifest();
-
-         Regex regEx;
-         if (string.IsNullOrEmpty(manifest.Version.Release))
-            regEx = new Regex(manifest.PackageId + "-[0-9.]+-[^A-Z].*", RegexOptions.IgnoreCase);
-         else
-         {
-            var parts = manifest.Version.Release.Split('.');
-            var releaseLabel = parts.Length > 0 ? parts[0] + "." : manifest.Version.Release;
-
-            regEx = new Regex(manifest.PackageId + "-[0-9.]+-" + releaseLabel + ".*", RegexOptions.IgnoreCase);
-         }
-
-         foreach (var relatedBuild in Directory.GetFiles(RootPath, manifest.GetRelatedSearchFileName()))
-         {
-            if (regEx.Match(Path.GetFileName(relatedBuild)).Success)
-               File.Delete(relatedBuild);
-         }
-
-
-         var targetPath = Path.Combine(RootPath, manifest.GetNewManifestFileName());
+         var targetPath = Path.Combine(RootPath, fileName);
          if (File.Exists(targetPath))
             File.Delete(targetPath);
 
-         File.Move(tempFile, targetPath);
+         File.Move(packagePath, targetPath);
       }
 
       public Stream Download(PackageKey key)
@@ -89,7 +63,9 @@ namespace EBerzosa.Pundit.Core.Repository
 
       public PackageManifest GetManifest(PackageKey key, NuGet.Frameworks.NuGetFramework projectFramework = null)
       {
-         var fullPath = Path.Combine(RootPath, key.GetFileName());
+         var fullPath = Path.Combine(RootPath, key.Framework != null
+            ? key.GetFileName()
+            : key.GetNoFrameworkFileName());
          
          if (!File.Exists(fullPath))
             throw new FileNotFoundException("package not found");

@@ -21,4 +21,4 @@ $punditExe = $(Get-Item $MergedName).FullName
 $version = [System.Diagnostics.FileVersionInfo]::GetVersionInfo($punditExe).FileVersion
 
 Write-Host "Packing $version to $TempFolder"
-pundit pack pundit.xml --version $version --output $TempFolder
+pundit pack pundit.xml --versionRelease $version --output $TempFolder

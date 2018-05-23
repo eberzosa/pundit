@@ -1,7 +1,9 @@
 ﻿using System;
+using System.CodeDom.Compiler;
 using System.Collections.Generic;
 using System.IO;
 using System.Linq;
+using EBerzosa.Pundit.Core.Package;
 using EBerzosa.Pundit.Core.Resolvers;
 using Pundit.Core.Model.EventArguments;
 
@@ -52,16 +54,29 @@ namespace EBerzosa.Pundit.Core.Repository
                   continue;
                }
 
+               string tempFileName = null;
+
                try
                {
                   using (var pckStream = info.Repo.Download(info.GetPackageKey()))
                   {
-                     repo.Publish(pckStream);
+                     tempFileName = Path.Combine(Path.GetTempPath(), info.GetPackageKey().GetFileName());
+
+                     if (File.Exists(tempFileName))
+                        File.Delete(tempFileName);
+
+                     using (var writer = File.OpenWrite(tempFileName))
+                        pckStream.CopyTo(writer);
+
+                     repo.Publish(tempFileName);
+
                      downloaded = true;
                   }
                }
-               catch (FileNotFoundException)
+               catch 
                {
+                  if (tempFileName != null && File.Exists(tempFileName))
+                     File.Delete(tempFileName);
                }
 
                break;

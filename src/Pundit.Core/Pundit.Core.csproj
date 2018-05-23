@@ -122,7 +122,9 @@
     <Compile Include="3rdparty\Options.cs" />
     <Compile Include="Converters\PackageConverterExtensions.cs" />
     <Compile Include="Converters\VersionConverterExtensions.cs" />
+    <Compile Include="PackageManager\InstalledPackagesManager.cs" />
     <Compile Include="PackageManager\Xml\XmlInstalledPackagesIndex.cs" />
+    <Compile Include="PackageManager\Xml\XmlPackageKey.cs" />
     <Compile Include="Package\IPackageInstaller.cs" />
     <Compile Include="Package\IPackageReader.cs" />
     <Compile Include="Package\NuGet\NuGetPackageReader.cs" />
@@ -177,7 +179,7 @@
     <Compile Include="Package\Pundit\Model\PackageDependency.cs" />
     <Compile Include="Repository\IRepository.cs" />
     <Compile Include="Package\Pundit\Model\PackageManifest.cs" />
-    <Compile Include="Package\Pundit\Model\PackageKey.cs" />
+    <Compile Include="PackageManager\Model\PackageKey.cs" />
     <Compile Include="Model\PackageKeyDiff.cs" />
     <Compile Include="Repository\RegisteredRepositories.cs" />
     <Compile Include="Package\Pundit\Model\SourceFiles.cs" />

@@ -16,8 +16,6 @@ namespace EBerzosa.Pundit.Core.Repository
       RepositoryType Type { get; }
 
       void Publish(string packagePath);
-
-      void Publish(Stream package);
       
       Stream Download(PackageKey key);
 

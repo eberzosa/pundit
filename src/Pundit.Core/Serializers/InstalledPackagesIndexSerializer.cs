@@ -18,11 +18,10 @@ namespace EBerzosa.Pundit.Core.Serializers
          _serializer.Write(manifest, stream);
       }
 
-      public InstalledPackagesIndex DeserializeInstalledPackagesIndex(Stream stream)
+      public InstalledPackagesIndex DeserializeInstalledPackagesIndex(Stream stream, string filePath)
       {
          var deserialisedIndex = _serializer.Read<XmlInstalledPackagesIndex>(stream);
-         return deserialisedIndex.ToInstalledPackagesIndex();
+         return deserialisedIndex.ToInstalledPackagesIndex(filePath);
       }
-
    }
 }

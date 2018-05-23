@@ -4,7 +4,7 @@ using System.Xml.Serialization;
 namespace EBerzosa.Pundit.Core.Model.Xml
 {
    [XmlRoot("package")]
-   public class XmlPackageSpec : XmlPackageManifest
+   public class XmlPackageSpec : XmlPackageManifestRoot
    {
       [XmlArray("files")]
       [XmlArrayItem("file")]

@@ -1,5 +1,4 @@
 ﻿using System;
-using System.Linq;
 using System.Text.RegularExpressions;
 using EBerzosa.Pundit.Core.Model;
 using EBerzosa.Pundit.Core.Model.Package;
@@ -21,12 +20,12 @@ namespace EBerzosa.Pundit.Core.Package
                "any");
       }
 
-      public static string GetRelatedSearchFileName(this PackageManifest manifest)
+      public static string GetRelatedSearchFileName(this PackageKey key)
       {
          return string.Format(PackageFileNamePattern,
-            manifest.PackageId,
-            ToPunditVersion(manifest.Version, true),
-            "*");
+            key.PackageId,
+            ToPunditVersion(key.Version, true),
+            key.Framework);
       }
 
       public static string GetFileName(this PackageKey key)
@@ -37,12 +36,12 @@ namespace EBerzosa.Pundit.Core.Package
             key.Framework);
       }
 
-      public static string GetSearchFileName(this PackageKey key)
+      public static string GetNoFrameworkFileName(this PackageKey key)
       {
          return string.Format(PackageFileNamePattern,
             key.PackageId,
             ToPunditVersion(key.Version, false),
-            key.Framework);
+            "*");
       }
 
       public static string GetSearchFileName(this UnresolvedPackage package)
@@ -50,7 +49,7 @@ namespace EBerzosa.Pundit.Core.Package
          return string.Format(PackageFileNamePattern,
             package.PackageId,
             ToPunditFileSearchVersion(package.AllowedVersions),
-            "*");
+            package.Framework);
       }
 
       // TODO: Move this to antoher place
@@ -78,14 +77,17 @@ namespace EBerzosa.Pundit.Core.Package
 
       private static string ToPunditFileSearchVersion(NuGet.Versioning.VersionRange range)
       {
-         if (range.MinVersion.Major < range.MaxVersion.Major)
-            return range.MinVersion.Major + ".*";
+         if (range.MaxVersion != null)
+         {
+            if (range.MinVersion.Major < range.MaxVersion.Major)
+               return range.MinVersion.Major + ".*";
 
-         if (range.MinVersion.Minor < range.MaxVersion.Minor)
-            return range.MinVersion.Major + "." + range.MinVersion.Minor + ".*";
+            if (range.MinVersion.Minor < range.MaxVersion.Minor)
+               return range.MinVersion.Major + "." + range.MinVersion.Minor + ".*";
 
-         if (range.MinVersion.Patch < range.MaxVersion.Patch)
-            return range.MinVersion.Major + "." + range.MinVersion.Minor + "." + range.MinVersion.Patch + "-*";
+            if (range.MinVersion.Patch < range.MaxVersion.Patch)
+               return range.MinVersion.Major + "." + range.MinVersion.Minor + "." + range.MinVersion.Patch + "-*";
+         }
 
          return range.MinVersion.Major + "." + range.MinVersion.Minor + "." + range.MinVersion.Patch + "-" +
                 range.MinVersion.Revision;
@@ -100,7 +102,7 @@ namespace EBerzosa.Pundit.Core.Package
       public static NuGet.Frameworks.NuGetFramework GetFramework(string frameworkString)
       {
          if (string.IsNullOrEmpty(frameworkString))
-            return NuGet.Frameworks.NuGetFramework.AnyFramework;
+            return NuGet.Frameworks.NuGetFramework.AgnosticFramework;
 
          if ("noarch".Equals(frameworkString, StringComparison.OrdinalIgnoreCase))
             return NuGet.Frameworks.NuGetFramework.AgnosticFramework;

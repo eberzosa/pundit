@@ -1,6 +1,5 @@
 ﻿using System;
-using System.Runtime.Serialization;
-using System.Xml.Serialization;
+using System.Diagnostics;
 using EBerzosa.Utils;
 
 namespace EBerzosa.Pundit.Core.Model.Package
@@ -8,12 +7,16 @@ namespace EBerzosa.Pundit.Core.Model.Package
    /// <summary>
    /// Unique identifier for a package
    /// </summary>
-   [DataContract]
+   [DebuggerDisplay("{PackageId} {Version} [{Framework}]")]
    public class PackageKey : ICloneable
    {
-      public PackageKey()
-      {
-      }
+      public string PackageId { get; set; }
+
+      public NuGet.Versioning.NuGetVersion Version { get; set; }
+
+      [Obsolete("Used in Pundit packages only.")]
+      public string Framework { get; set; }
+      
 
       public PackageKey(string packageId, NuGet.Versioning.NuGetVersion version, string framework)
       {
@@ -23,45 +26,18 @@ namespace EBerzosa.Pundit.Core.Model.Package
          Version = version;
          Framework = framework;
       }
-
-      [XmlAttribute("id")]
-      [DataMember]
-      public string PackageId { get; set; }
-
-      //[XmlAttribute("version")]
-      [XmlIgnore]
-      [DataMember]
-      public NuGet.Versioning.NuGetVersion Version { get; set; }
-
-      [XmlAttribute("version")]
-      [DataMember]
-      public string VersionString
-      {
-         get => Version.ToString();
-         set => Version = NuGet.Versioning.NuGetVersion.Parse(value);
-      }
-
-      [Obsolete("Used in Pundit packages only.")]
-      [XmlAttribute("platform")]
-      [DataMember]
-      public string Framework { get; set; }
       
       public override bool Equals(object obj)
       {
          if (obj is PackageKey packageKey)
-            return 
-               PackageId == packageKey.PackageId && 
-               Framework == packageKey.Framework && 
-               Version == packageKey.Version;
+            return PackageId == packageKey.PackageId && Framework == packageKey.Framework && Version == packageKey.Version;
 
          return false;
       }
 
       public bool LooseEquals(PackageKey key)
       {
-         return 
-            PackageId == key.PackageId && 
-            Framework == key.Framework;
+         return PackageId == key.PackageId && Framework == key.Framework;
       }
 
       public override int GetHashCode()

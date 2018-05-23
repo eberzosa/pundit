@@ -44,7 +44,7 @@ namespace EBerzosa.Pundit.Core.Repository
 
       public Stream Download(PackageKey key)
       {
-         var packageIdentity = new NuGet.Packaging.Core.PackageIdentity(key.PackageId, NuGet.Versioning.NuGetVersion.Parse(key.VersionString));
+         var packageIdentity = new NuGet.Packaging.Core.PackageIdentity(key.PackageId, key.Version);
 
          var downloadResource = _sourceRepository.GetResource<DownloadResource>();
          
@@ -67,7 +67,7 @@ namespace EBerzosa.Pundit.Core.Repository
       {
          Guard.NotNull(projectFramework, nameof(projectFramework));
 
-         var packageIdentity = new NuGet.Packaging.Core.PackageIdentity(key.PackageId, NuGet.Versioning.NuGetVersion.Parse(key.VersionString));
+         var packageIdentity = new NuGet.Packaging.Core.PackageIdentity(key.PackageId, key.Version);
 
          var packagesResource = _sourceRepository.GetResource<PackageMetadataResource>();
          var packageInfo = packagesResource.GetMetadataAsync(packageIdentity, NullSourceCacheContext.Instance, NullLogger.Instance, CancellationToken.None).Result;

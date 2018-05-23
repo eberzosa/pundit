@@ -2,6 +2,7 @@
 using EBerzosa.Pundit.Core.Model.Package;
 using EBerzosa.Pundit.Core.Model.Xml;
 using EBerzosa.Pundit.Core.Package;
+using EBerzosa.Pundit.Core.PackageManager.Xml;
 using EBerzosa.Pundit.Core.Repository;
 using EBerzosa.Pundit.Core.Repository.Xml;
 using Mapster;
@@ -74,9 +75,10 @@ namespace EBerzosa.Pundit.Core.Converters
          return xmlRegisteredRepositories.Adapt<RegisteredRepositories>();
       }
 
-      public static InstalledPackagesIndex ToInstalledPackagesIndex(this XmlInstalledPackagesIndex xmlInstalledPackagesIndex)
+      public static InstalledPackagesIndex ToInstalledPackagesIndex(this XmlInstalledPackagesIndex xmlInstalledPackagesIndex, string filePath)
       {
-         return xmlInstalledPackagesIndex.Adapt<InstalledPackagesIndex>();
+         return xmlInstalledPackagesIndex.BuildAdapter().AddParameters("location", filePath).AdaptToType<InstalledPackagesIndex>();
+            //.Adapt<InstalledPackagesIndex>();
       }
 
       public static XmlInstalledPackagesIndex ToXmlInstalledPackagesIndex(this InstalledPackagesIndex installedPackagesIndex)
@@ -89,8 +91,11 @@ namespace EBerzosa.Pundit.Core.Converters
       {
          // Packages
 
-         TypeAdapterConfig<PackageSpec, XmlPackageSpec>.NewConfig();
-         TypeAdapterConfig<XmlPackageSpec, PackageSpec>.NewConfig();
+         TypeAdapterConfig<PackageSpec, XmlPackageSpec>.NewConfig()
+            .Map(dst => dst.Platform, src => src.Framework.GetShortFolderName());
+
+         TypeAdapterConfig<XmlPackageSpec, PackageSpec>.NewConfig()
+            .Map(dst => dst.Framework, src => PackageExtensions.GetFramework(src.Platform));
 
          TypeAdapterConfig<PackageManifestRoot, XmlPackageManifestRoot>.NewConfig()
             .Map(dst => dst.Platform, src => src.Framework.GetShortFolderName());
@@ -143,7 +148,16 @@ namespace EBerzosa.Pundit.Core.Converters
 
 
          // PackagesManager
-         TypeAdapterConfig<XmlInstalledPackagesIndex, InstalledPackagesIndex>.NewConfig();
+         TypeAdapterConfig<XmlInstalledPackagesIndex, InstalledPackagesIndex>.NewConfig()
+            .ConstructUsing(src => new InstalledPackagesIndex(MapContext.Current.Parameters["location"].ToString()));
+
+         TypeAdapterConfig<InstalledPackagesIndex, XmlInstalledPackagesIndex>.NewConfig();
+
+         TypeAdapterConfig<XmlPackageKey, PackageKey>.NewConfig()
+            .ConstructUsing(src => new PackageKey(src.PackageId, NuGet.Versioning.NuGetVersion.Parse(src.Version), src.Framework));
+
+         TypeAdapterConfig<PackageKey, XmlPackageKey>.NewConfig()
+            .Map(dst => dst.Version, src => src.Version.OriginalVersion);
       }
    }
 }

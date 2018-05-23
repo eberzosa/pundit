@@ -10,6 +10,12 @@ namespace EBerzosa.Pundit.Core.Converters
 {
    internal static class PackageConverterExtensions
    {
+      public static PackageKey GetPackageKeyFromFileName(string fileName)
+      {
+         var chunks = fileName.Split(new[] { '-' }, 4);
+         return new PackageKey(chunks[0], NuGet.Versioning.NuGetVersion.Parse(chunks[1] + "." + chunks[2]), chunks[3]);
+      }
+
       public static NuGet.Packaging.ManifestMetadata ToNuGetManifestMetadata(this PackageSpec packageSpec)
       {
          var metadata = new NuGet.Packaging.ManifestMetadata

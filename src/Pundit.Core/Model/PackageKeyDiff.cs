@@ -16,10 +16,6 @@ namespace Pundit.Core.Model
 
       public RepositoryType PackageType { get; set; }
 
-      public PackageKeyDiff()
-      {
-         
-      }
 
       public PackageKeyDiff(DiffType diffType, string packageId, NuGet.Versioning.NuGetVersion version, string framework, RepositoryType packageType) 
          : base(packageId, version, framework)

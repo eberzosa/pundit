@@ -12,8 +12,8 @@ namespace EBerzosa.Pundit.Core.Model.Package
       {
          base.Validate();
 
-         if (!Framework.IsSpecificFramework)
-            throw new NotSupportedException("The framework must be specific, current: " + Framework);
+         if (Framework.IsAny || Framework.IsUnsupported)
+            throw new NotSupportedException("The framework cannot be any or unsupported, current: " + Framework);
       }
    }
 }
