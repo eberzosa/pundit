@@ -120,7 +120,12 @@ namespace EBerzosa.Pundit.Core.Package
             try
             {
 
-               if (File.Exists(targetPath)) File.Delete(targetPath);
+               if (File.Exists(targetPath))
+                  File.Delete(targetPath);
+               
+               var dir = Path.GetDirectoryName(targetPath);
+               if (!Directory.Exists(dir))
+                  Directory.CreateDirectory(dir);
 
                using (Stream ts = File.Create(targetPath))
                {
