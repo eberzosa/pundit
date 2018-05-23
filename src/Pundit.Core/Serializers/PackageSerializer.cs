@@ -15,10 +15,16 @@ namespace EBerzosa.Pundit.Core.Serializers
          _serializer = serializer;
       }
 
-      public void SerializePackageManifest(PackageManifest package, Stream stream)
+      public void SerializePackageManifest(PackageManifest manifest, Stream stream)
       {
-         var manifest = package.ToXmlPackageManifest();
-         _serializer.Write(manifest, stream);
+         var xmlManifest = manifest.ToXmlPackageManifest();
+         _serializer.Write(xmlManifest, stream);
+      }
+
+      public void SerializePackageManifestRoot(PackageManifestRoot manifestRoot, Stream stream)
+      {
+         var xmlManifest = manifestRoot.ToXmlPackageManifestRoot();
+         _serializer.Write(xmlManifest, stream);
       }
 
       public void SerializePackageSpec(PackageSpec packageSpec, Stream stream)
@@ -29,13 +35,20 @@ namespace EBerzosa.Pundit.Core.Serializers
 
       public PackageManifest DeserializePackageManifest(Stream stream)
       {
-         var deserializedPackage = _serializer.Read<XmlPackageManifest>(stream);
+
+         var deserializedPackage = _serializer.Read<XmlPackageLegacyCrap>(stream);
          return deserializedPackage.ToPackageManifest();
+      }
+
+      public PackageManifestRoot DeserializePackageManifestRoot(Stream stream)
+      {
+         var deserializedPackage = _serializer.Read<XmlPackageLegacyCrap>(stream);
+         return deserializedPackage.ToPackageManifestRoot();
       }
 
       public PackageSpec DeserializePackageSpec(Stream stream)
       {
-         var deserializedPackage = _serializer.Read<XmlPackageSpec>(stream);
+         var deserializedPackage = _serializer.Read<XmlPackageLegacyCrap>(stream);
          return deserializedPackage.ToPackageSpec();
       }
    }

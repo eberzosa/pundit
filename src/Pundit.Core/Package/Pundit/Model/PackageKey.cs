@@ -15,18 +15,13 @@ namespace EBerzosa.Pundit.Core.Model.Package
       {
       }
 
-      public PackageKey(string packageId, NuGet.Versioning.NuGetVersion version, NuGet.Frameworks.NuGetFramework framework)
+      public PackageKey(string packageId, NuGet.Versioning.NuGetVersion version, string framework)
       {
          Guard.NotNull(packageId, nameof(packageId));
 
          PackageId = packageId;
          Version = version;
          Framework = framework;
-      }
-
-      private PackageKey(string packageId, NuGet.Versioning.NuGetVersion version, string framework)
-         : this(packageId, version, NuGet.Frameworks.NuGetFramework.Parse(framework))
-      {
       }
 
       [XmlAttribute("id")]
@@ -46,9 +41,10 @@ namespace EBerzosa.Pundit.Core.Model.Package
          set => Version = NuGet.Versioning.NuGetVersion.Parse(value);
       }
 
+      [Obsolete("Used in Pundit packages only.")]
       [XmlAttribute("platform")]
       [DataMember]
-      public NuGet.Frameworks.NuGetFramework Framework { get; set; }
+      public string Framework { get; set; }
       
       public override bool Equals(object obj)
       {

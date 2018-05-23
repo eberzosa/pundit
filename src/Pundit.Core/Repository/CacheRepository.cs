@@ -71,6 +71,6 @@ namespace EBerzosa.Pundit.Core.Repository
          }
       }
 
-      private bool CanCache(SatisfyingInfoExtended info, IRepository repo) => info.Repo.GetType() == repo.GetType();
+      private bool CanCache(SatisfyingInfoExtended info, IRepository repo) => info.Repo.Type == repo.Type;
    }
 }

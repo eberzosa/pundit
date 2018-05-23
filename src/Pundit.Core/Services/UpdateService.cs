@@ -53,24 +53,22 @@ namespace EBerzosa.Pundit.Core.Services
 
          var packageId = "EBerzosa.Pundit";
          var assemblyVersion = assembly.GetName().Version;
-         var netFramework = NuGet.Frameworks.NuGetFramework.Parse("net46");
 
-         var packageSpec = new PackageSpec
+         var minVersion = new NuGet.Versioning.NuGetVersion(assemblyVersion.Major, 0, 0);
+         var maxVersion = new NuGet.Versioning.NuGetVersion(assemblyVersion.Major + 1, 0, 0);
+
+         var manifest = new PackageManifestRoot
          {
             PackageId = packageId,
-            Framework = netFramework,
+            Framework = NuGet.Frameworks.NuGetFramework.AgnosticFramework,
             Version = new NuGet.Versioning.NuGetVersion(1, 0, 0, 0),
             Dependencies =
             {
-               new PackageDependency(packageId, new VersionRangeExtended(NuGet.Versioning.NuGetVersion.Parse($"{assemblyVersion.Major}.*")))
-               {
-                  Scope = DependencyScope.Normal,
-                  Framework = netFramework
-               }
+               new PackageDependency(packageId, new NuGet.Versioning.VersionRange(minVersion, true, maxVersion)){Scope = DependencyScope.Normal}
             }
          };
          
-         packageSpec.Validate();
+         manifest.Validate();
 
          _writer.BeginWrite().Text("Getting repositories...");
 
@@ -82,14 +80,12 @@ namespace EBerzosa.Pundit.Core.Services
             return false;
          }
 
-         _writer.Text(" using repos:");
+         _writer.Text(" using repos:").EndWrite();
          foreach (var repository in repos)
             _writer.Info(repository.ToString());
-
-         _writer.EndWrite();
-
+         
          _writer.BeginWrite().Text("Resolving...");
-         var resolutionResult = _dependencyResolution.Resolve(packageSpec, repos, null);
+         var resolutionResult = _dependencyResolution.Resolve(manifest, repos, null);
 
          if (resolutionResult.Item1.HasConflicts)
          {
@@ -109,7 +105,7 @@ namespace EBerzosa.Pundit.Core.Services
 
          var currentPath = Path.GetDirectoryName(assembly.Location);
 
-         if (!Install(resolutionResult, packageSpec, currentPath))
+         if (!Install(resolutionResult, manifest, currentPath))
             return true;
 
          var oldPath = Path.Combine(currentPath, "old");
@@ -141,7 +137,7 @@ namespace EBerzosa.Pundit.Core.Services
          return true;
       }
       
-      private bool Install(Tuple<VersionResolutionTable, DependencyNode> resolutionResult, PackageSpec packageSpecSpecs, string folder)
+      private bool Install(Tuple<VersionResolutionTable, DependencyNode> resolutionResult, PackageManifest manifest, string folder)
       {
          var installed = false;
 
@@ -154,7 +150,7 @@ namespace EBerzosa.Pundit.Core.Services
          cacheRepository.PackageDownloadToCacheRepositoryStarted -= CacheRepositoryPackageDownloadToCacheRepositoryStarted;
          cacheRepository.PackageDownloadToCacheRepositoryFinished -= CacheRepositoryOnPackageDownloadToCacheRepositoryFinished;
 
-         using (var installer = _packageInstallerFactory.GetInstaller(folder, resolutionResult.Item1, packageSpecSpecs))
+         using (var installer = _packageInstallerFactory.GetInstaller(folder, resolutionResult.Item1, manifest))
          {
             installer.BeginInstallPackage += BeginInstallPackage;
             installer.FinishInstallPackage += FinishInstallPackage;

@@ -8,7 +8,11 @@ namespace EBerzosa.Pundit.Core.Serializers
    {
       void SerializePackageManifest(PackageManifest package, Stream stream);
 
+      void SerializePackageManifestRoot(PackageManifestRoot package, Stream stream);
+
       void SerializePackageSpec(PackageSpec packageSpec, Stream stream);
+
+      PackageManifestRoot DeserializePackageManifestRoot(Stream stream);
 
       PackageManifest DeserializePackageManifest(Stream stream);
 

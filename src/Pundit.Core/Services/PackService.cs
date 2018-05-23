@@ -81,7 +81,7 @@ namespace EBerzosa.Pundit.Core.Services
 
          var packageName = Type == PackType.NuGet
             ? new NuGet.Packaging.VersionFolderPathResolver(null).GetPackageFileName(packageSpec.PackageId, packageSpec.Version)
-            : packageSpec.GetFileName();
+            : packageSpec.GetNewManifestFileName();
          
          DestinationFile = Path.Combine(_resolvedOutputPath, packageName);
 

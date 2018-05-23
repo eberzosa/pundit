@@ -1,6 +1,7 @@
 ﻿using System.IO;
 using System.Text;
 using System.Xml;
+using System.Xml.Serialization;
 
 namespace EBerzosa.Pundit.Core.Serializers
 {
@@ -17,6 +18,7 @@ namespace EBerzosa.Pundit.Core.Serializers
          using (var writer = XmlWriter.Create(stream, settings))
          {
             var serializer = new System.Xml.Serialization.XmlSerializer(typeof(T));
+
             serializer.Serialize(writer, obj);
          }
       }

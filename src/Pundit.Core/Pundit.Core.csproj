@@ -122,15 +122,19 @@
     <Compile Include="3rdparty\Options.cs" />
     <Compile Include="Converters\PackageConverterExtensions.cs" />
     <Compile Include="Converters\VersionConverterExtensions.cs" />
+    <Compile Include="PackageManager\Xml\XmlInstalledPackagesIndex.cs" />
     <Compile Include="Package\IPackageInstaller.cs" />
     <Compile Include="Package\IPackageReader.cs" />
+    <Compile Include="Package\NuGet\NuGetPackageReader.cs" />
     <Compile Include="Package\NuGet\NuGetv3PackageWriter.cs" />
     <Compile Include="Package\PackageInstallerFactory.cs" />
-    <Compile Include="Package\NuGet\NuGetPackageReader.cs" />
     <Compile Include="Package\PackageExtensions.cs" />
     <Compile Include="Package\IPackageWriter.cs" />
     <Compile Include="Package\PackageReaderFactory.cs" />
+    <Compile Include="Package\Pundit\Model\PackageManifestRoot.cs" />
     <Compile Include="Package\Pundit\PunditPackageWriter.cs" />
+    <Compile Include="Package\Pundit\Xml\XmlPackageLegacyCrap.cs" />
+    <Compile Include="Package\Pundit\Xml\XmlPackageManifestRoot.cs" />
     <Compile Include="Repository\NugetFileSystemRepo.cs" />
     <Compile Include="Repository\RegisteredRepository.cs" />
     <Compile Include="Repository\Repository.cs" />
@@ -139,7 +143,7 @@
     <Compile Include="Repository\Xml\XmlRegisteredRepository.cs" />
     <Compile Include="Repository\Xml\XmlRegisteredRepositories.cs" />
     <Compile Include="Resolvers\DependencyResolution.cs" />
-    <Compile Include="Internal\InstalledPackagesIndex.cs" />
+    <Compile Include="PackageManager\InstalledPackagesIndex.cs" />
     <Compile Include="Package\PackageInstaller.cs" />
     <Compile Include="Package\Pundit\PackageReader.cs" />
     <Compile Include="Package\Pundit\PackageStreamer.cs" />
@@ -148,6 +152,7 @@
     <Compile Include="Resolvers\DependencyNodeComparer.cs" />
     <Compile Include="Resolvers\SatisfyingInfo.cs" />
     <Compile Include="Resolvers\SatisfyingInfoExtended.cs" />
+    <Compile Include="Serializers\InstalledPackagesIndexSerializer.cs" />
     <Compile Include="Serializers\IPackageSerializer.cs" />
     <Compile Include="Serializers\NuGetv3PackageSerializer.cs" />
     <Compile Include="Serializers\NuGetv3Serializer.cs" />
@@ -158,37 +163,37 @@
     <Compile Include="Utils\IWriter.cs" />
     <Compile Include="Repository\CacheRepository.cs" />
     <Compile Include="Converters\XmlConverterExtensions.cs" />
-    <Compile Include="Model\Enums\BuildConfiguration.cs" />
+    <Compile Include="Package\Pundit\Enums\BuildConfiguration.cs" />
     <Compile Include="Resolvers\DependencyNode.cs" />
-    <Compile Include="Model\Enums\DependencyScope.cs" />
-    <Compile Include="Model\Enums\PackageFileKind.cs" />
-    <Compile Include="Model\Package\PackageSpec.cs" />
-    <Compile Include="Model\Enums\DiffType.cs" />
+    <Compile Include="Package\Pundit\Enums\DependencyScope.cs" />
+    <Compile Include="Package\Pundit\Enums\PackageFileKind.cs" />
+    <Compile Include="Package\Pundit\Model\PackageSpec.cs" />
+    <Compile Include="Package\Pundit\Enums\DiffType.cs" />
     <Compile Include="Model\EventArguments\PackageKeyDiffEventArgs.cs" />
     <Compile Include="Model\EventArguments\PackageFileEventArgs.cs" />
     <Compile Include="Model\EventArguments\PackageKeyEventArgs.cs" />
     <Compile Include="Model\EventArguments\ResolvedFileEventArgs.cs" />
     <Compile Include="Model\InvalidPackageException.cs" />
-    <Compile Include="Model\Package\PackageDependency.cs" />
+    <Compile Include="Package\Pundit\Model\PackageDependency.cs" />
     <Compile Include="Repository\IRepository.cs" />
-    <Compile Include="Model\Package\PackageManifest.cs" />
-    <Compile Include="Model\Package\PackageKey.cs" />
+    <Compile Include="Package\Pundit\Model\PackageManifest.cs" />
+    <Compile Include="Package\Pundit\Model\PackageKey.cs" />
     <Compile Include="Model\PackageKeyDiff.cs" />
     <Compile Include="Repository\RegisteredRepositories.cs" />
-    <Compile Include="Model\Package\SourceFiles.cs" />
+    <Compile Include="Package\Pundit\Model\SourceFiles.cs" />
     <Compile Include="Model\UnresolvedPackage.cs" />
     <Compile Include="Model\VersionPattern.cs" />
     <Compile Include="Model\VersionResolutionTable.cs" />
     <Compile Include="Model\Xml\Nuget\XmlNugetSpec.cs" />
     <Compile Include="Model\Xml\Nuget\XmlNugetFiles.cs" />
     <Compile Include="Model\Xml\Nuget\XmlNugetMetadata.cs" />
-    <Compile Include="Model\Xml\XmlPackageFileKind.cs" />
-    <Compile Include="Model\Xml\XmlBuildConfiguration.cs" />
-    <Compile Include="Model\Xml\XmlDependencyScope.cs" />
-    <Compile Include="Model\Xml\XmlSourceFiles.cs" />
-    <Compile Include="Model\Xml\XmlPackageDependency.cs" />
-    <Compile Include="Model\Xml\XmlPackageManifest.cs" />
-    <Compile Include="Model\Xml\XmlPackageSpec.cs" />
+    <Compile Include="Package\Pundit\Xml\XmlPackageFileKind.cs" />
+    <Compile Include="Package\Pundit\Xml\XmlBuildConfiguration.cs" />
+    <Compile Include="Package\Pundit\Xml\XmlDependencyScope.cs" />
+    <Compile Include="Package\Pundit\Xml\XmlSourceFiles.cs" />
+    <Compile Include="Package\Pundit\Xml\XmlPackageDependency.cs" />
+    <Compile Include="Package\Pundit\Xml\XmlPackageManifest.cs" />
+    <Compile Include="Package\Pundit\Xml\XmlPackageSpec.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="Repository\ManifestResolver.cs" />
     <Compile Include="Repository\RepositoryFactory.cs" />
@@ -217,6 +222,9 @@
       <SubType>Designer</SubType>
     </None>
     <None Include="packages.config" />
+  </ItemGroup>
+  <ItemGroup>
+    <Folder Include="Internal\" />
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
   <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 

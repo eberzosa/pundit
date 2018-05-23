@@ -5,6 +5,7 @@ using EBerzosa.Pundit.Core.Package;
 using EBerzosa.Pundit.Core.Repository;
 using EBerzosa.Pundit.Core.Repository.Xml;
 using Mapster;
+using Pundit.Core.Application;
 using Pundit.Core.Model;
 
 namespace EBerzosa.Pundit.Core.Converters
@@ -28,6 +29,16 @@ namespace EBerzosa.Pundit.Core.Converters
          return xmlPackageSpec.Adapt<PackageSpec>();
       }
 
+      public static XmlPackageManifestRoot ToXmlPackageManifestRoot(this PackageManifestRoot packageManifestRoot)
+      {
+         return packageManifestRoot.Adapt<XmlPackageManifestRoot>();
+      }
+
+      public static PackageManifestRoot ToPackageManifestRoot(this XmlPackageManifestRoot xmlPackageManifestRoot)
+      {
+         return xmlPackageManifestRoot.Adapt<PackageManifestRoot>();
+      }
+
       public static XmlPackageManifest ToXmlPackageManifest(this PackageManifest packageManifest)
       {
          return packageManifest.Adapt<XmlPackageManifest>();
@@ -36,6 +47,16 @@ namespace EBerzosa.Pundit.Core.Converters
       public static PackageManifest ToPackageManifest(this XmlPackageManifest xmlPackageManifest)
       {
          return xmlPackageManifest.Adapt<PackageManifest>();
+      }
+
+      public static PackageManifestRoot ToPackageManifestRoot(this XmlPackageLegacyCrap xmlPackageLegacyCrap)
+      {
+         return xmlPackageLegacyCrap.Adapt<XmlPackageManifestRoot>().ToPackageManifestRoot();
+      }
+
+      public static PackageSpec ToPackageSpec(this XmlPackageLegacyCrap xmlPackageLegacyCrap)
+      {
+         return xmlPackageLegacyCrap.Adapt<XmlPackageSpec>().ToPackageSpec();
       }
 
       public static XmlPackageDependency ToXmlPackageDependency(this PackageDependency packageDependency)
@@ -53,31 +74,52 @@ namespace EBerzosa.Pundit.Core.Converters
          return xmlRegisteredRepositories.Adapt<RegisteredRepositories>();
       }
 
+      public static InstalledPackagesIndex ToInstalledPackagesIndex(this XmlInstalledPackagesIndex xmlInstalledPackagesIndex)
+      {
+         return xmlInstalledPackagesIndex.Adapt<InstalledPackagesIndex>();
+      }
+
+      public static XmlInstalledPackagesIndex ToXmlInstalledPackagesIndex(this InstalledPackagesIndex installedPackagesIndex)
+      {
+         return installedPackagesIndex.Adapt<XmlInstalledPackagesIndex>();
+      }
+
 
       private static void RegisterMappings()
       {
+         // Packages
+
          TypeAdapterConfig<PackageSpec, XmlPackageSpec>.NewConfig();
          TypeAdapterConfig<XmlPackageSpec, PackageSpec>.NewConfig();
 
+         TypeAdapterConfig<PackageManifestRoot, XmlPackageManifestRoot>.NewConfig()
+            .Map(dst => dst.Platform, src => src.Framework.GetShortFolderName());
+
+         TypeAdapterConfig<XmlPackageManifestRoot, PackageManifestRoot>.NewConfig()
+            .Map(dst => dst.Framework, src => PackageExtensions.GetFramework(src.Platform));
+
          TypeAdapterConfig<PackageManifest, XmlPackageManifest>.NewConfig()
             .Include<PackageSpec, XmlPackageSpec>()
-            .Map(dst => dst.Version, src => src.Version.ToString())
-            .Map(dst => dst.Platform, src => src.Framework.GetShortFolderName());
+            .Include<PackageManifestRoot, XmlPackageManifestRoot>()
+            .Map(dst => dst.Version, src => src.Version.ToString());
 
          TypeAdapterConfig<XmlPackageManifest, PackageManifest>.NewConfig()
             .Include<XmlPackageSpec, PackageSpec>()
-            .Map(dst => dst.Version, src => NuGet.Versioning.NuGetVersion.Parse(src.Version))
-            .Map(dst => dst.Framework, src => PackageExtensions.GetFramework(src.Platform));
+            .Include<XmlPackageManifestRoot, PackageManifestRoot>()
+            .Map(dst => dst.Version, src => NuGet.Versioning.NuGetVersion.Parse(src.Version));
+
+         TypeAdapterConfig<XmlPackageLegacyCrap, XmlPackageManifestRoot>.NewConfig();
+         TypeAdapterConfig<XmlPackageLegacyCrap, XmlPackageSpec>.NewConfig();
 
 
          TypeAdapterConfig<PackageDependency, XmlPackageDependency>.NewConfig()
-            .Map(dst => dst.VersionPattern, src => src.AllowedVersions.NuGetVersionRange.OriginalString)
-            .Map(dst => dst.Platform, src => src.Framework.GetShortFolderName());
+            .Map(dst => dst.VersionPattern, src => src.AllowedVersions.OriginalString)
+            .Map(dst => dst.Platform, src => src.Framework);
 
          TypeAdapterConfig<XmlPackageDependency, PackageDependency>.NewConfig()
-            .ConstructUsing(xml => new PackageDependency(xml.PackageId, VersionConverterExtensions.ConvertPunditDependencyVersionToVersionRangeExtended(xml.VersionPattern)))
+            .ConstructUsing(xml => new PackageDependency(xml.PackageId, VersionConverterExtensions.ConvertPunditDependencyVersionToVersionRange(xml.VersionPattern)))
             .Ignore(dst => dst.PackageId, src => src.AllowedVersions)
-            .Map(dst => dst.Framework, src => PackageExtensions.GetFramework(src.Platform))
+            .Map(dst => dst.Framework, src => src.Platform)
             .AfterMapping((src, dst) =>
             {
                if (src.DevTimeOnly)
@@ -98,6 +140,10 @@ namespace EBerzosa.Pundit.Core.Converters
          TypeAdapterConfig<XmlRegisteredRepositories, RegisteredRepositories>.NewConfig();
          TypeAdapterConfig<XmlRegisteredRepository, RegisteredRepository>.NewConfig();
          TypeAdapterConfig<XmlRepositoryType, RepositoryType>.NewConfig();
+
+
+         // PackagesManager
+         TypeAdapterConfig<XmlInstalledPackagesIndex, InstalledPackagesIndex>.NewConfig();
       }
    }
 }

@@ -7,6 +7,7 @@ using EBerzosa.Pundit.Core.Model.Enums;
 using EBerzosa.Pundit.Core.Model.Package;
 using EBerzosa.Pundit.Core.Repository;
 using EBerzosa.Pundit.Core.Resolvers;
+using EBerzosa.Pundit.Core.Serializers;
 using EBerzosa.Pundit.Core.Versioning;
 using EBerzosa.Utils;
 using Pundit.Core.Application;
@@ -20,8 +21,9 @@ namespace EBerzosa.Pundit.Core.Package
       private readonly PackageReaderFactory _packageReaderFactory;
       private readonly string _rootDirectory;
       private readonly VersionResolutionTable _versionTable;
-      private readonly PackageSpec _manifest;
+      private readonly PackageManifest _manifest;
       private readonly ICollection<IRepository> _cacheRepositories;
+      private readonly InstalledPackagesManager _installedPackagesManager;
       private InstalledPackagesIndex _index;
       private bool _indexCommitted;
 
@@ -34,7 +36,7 @@ namespace EBerzosa.Pundit.Core.Package
       public event EventHandler<PackageKeyDiffEventArgs> FinishInstallPackage;
 
       public PackageInstaller(PackageReaderFactory packageReaderFactory, string rootDirectory, VersionResolutionTable versionTable,
-         PackageSpec manifest, ICollection<IRepository> cacheRepositories)
+         PackageManifest manifest, ICollection<IRepository> cacheRepositories, InstalledPackagesManager installedPackagesManager)
       {
          Guard.NotNull(packageReaderFactory, nameof(packageReaderFactory));
          Guard.NotNull(rootDirectory, nameof(rootDirectory));
@@ -47,16 +49,17 @@ namespace EBerzosa.Pundit.Core.Package
          _versionTable = versionTable;
          _manifest = manifest;
          _cacheRepositories = cacheRepositories;
+         _installedPackagesManager = installedPackagesManager;
 
          _libFolderPath = Path.Combine(rootDirectory, "lib");
          _includeFolderPath = Path.Combine(rootDirectory, "include");
          _toolsFolderPath = Path.Combine(rootDirectory, "tools");
          _otherFolderPath = Path.Combine(rootDirectory, "other");
 
-         _index = InstalledPackagesIndex.ReadFromFolder(_rootDirectory);
+         _index = _installedPackagesManager.ReadFromFolder(_rootDirectory);
 
          foreach (var package in versionTable.GetPackages())
-            _manifest.Dependencies.Add(new PackageDependency(package.PackageId, new VersionRangeExtended(package.Version)) {Framework = package.Framework});
+            _manifest.Dependencies.Add(new PackageDependency(package.PackageId, new NuGet.Versioning.VersionRange(package.Version)));
       }
       
       /// <summary>
@@ -71,9 +74,7 @@ namespace EBerzosa.Pundit.Core.Package
 
          var diff = new List<PackageKeyDiff>();
 
-         bool indexEmpty = _index == null || _index.InstalledPackages == null || _index.InstalledPackages.Length == 0;
-
-         if(indexEmpty)
+         if(_index.IsEmpty())
          {
             diff.AddRange(resolutionResult.Select(rr => new PackageKeyDiff(DiffType.Add, rr.GetPackageKey(), rr.RepoType)));
          }
@@ -81,7 +82,7 @@ namespace EBerzosa.Pundit.Core.Package
          {
             foreach (var rr in resolutionResult)
             {
-               var pi = _index.InstalledPackages.FirstOrDefault(p => p.LooseEquals(rr.GetPackageKey()));
+               var pi = _index.GetLoose(rr.GetPackageKey());
 
                if (pi == null)
                   diff.Add(new PackageKeyDiff(DiffType.Add, rr.GetPackageKey(), rr.RepoType));
@@ -96,8 +97,7 @@ namespace EBerzosa.Pundit.Core.Package
                   diff.Add(new PackageKeyDiff(DiffType.Downgrade, rr.GetPackageKey(), pi, rr.RepoType));
             }
 
-            var deleted = _index.InstalledPackages
-               .Where(ip => resolutionResult.FirstOrDefault(rr => rr.GetPackageKey().LooseEquals(ip)) == null)
+            var deleted = _index.GetLooseNotIn(resolutionResult.Select(r => r.GetPackageKey()))
                .Select(ip => new PackageKeyDiff(DiffType.Delete, ip, RepositoryType.Pundit));
 
             diff.AddRange(deleted);
@@ -147,7 +147,7 @@ namespace EBerzosa.Pundit.Core.Package
       {
          ClearAllFolders();
 
-         _index = new InstalledPackagesIndex {Configuration = configuration};
+         _index = _installedPackagesManager.GetNew(_rootDirectory, configuration);
       }
 
       private void Install(PackageKeyDiff pck, PackageDependency originalDependency, BuildConfiguration configuration)
@@ -212,10 +212,8 @@ namespace EBerzosa.Pundit.Core.Package
 
       public void Dispose()
       {
-         if(_index != null && _indexCommitted)
-         {
-            _index.WriteToFolder(_rootDirectory);
-         }
+         if (_index != null && _indexCommitted)
+            _installedPackagesManager.Save(_index);
       }
    }
 }

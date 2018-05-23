@@ -5,7 +5,7 @@ using System.Linq;
 using System.Threading;
 using EBerzosa.Pundit.Core.Model;
 using EBerzosa.Pundit.Core.Model.Package;
-using EBerzosa.Pundit.Core.Versioning;
+using EBerzosa.Utils;
 using NuGet.Common;
 using NuGet.Configuration;
 using NuGet.Frameworks;
@@ -26,7 +26,7 @@ namespace EBerzosa.Pundit.Core.Repository
       {
          var providers = new List<Lazy<INuGetResourceProvider>>();
          providers.AddRange(NuGet.Protocol.Core.Types.Repository.Provider.GetCoreV3());
-
+         
          _sourceRepository = new SourceRepository(new PackageSource(rootPath, Name), providers);
       }
 
@@ -63,15 +63,15 @@ namespace EBerzosa.Pundit.Core.Repository
          return packageVersions.Result.Where(v => package.AllowedVersions.Satisfies(v)).ToArray();
       }
 
-      public PackageManifest GetManifest(PackageKey key)
+      public PackageManifest GetManifest(PackageKey key, NuGet.Frameworks.NuGetFramework projectFramework)
       {
+         Guard.NotNull(projectFramework, nameof(projectFramework));
+
          var packageIdentity = new NuGet.Packaging.Core.PackageIdentity(key.PackageId, NuGet.Versioning.NuGetVersion.Parse(key.VersionString));
 
          var packagesResource = _sourceRepository.GetResource<PackageMetadataResource>();
          var packageInfo = packagesResource.GetMetadataAsync(packageIdentity, NullSourceCacheContext.Instance, NullLogger.Instance, CancellationToken.None).Result;
-
-         var projectFramework = key.Framework;
-
+         
          NuGet.Packaging.PackageDependencyGroup dependencies = null;
          if (packageInfo.DependencySets.Any())
          {
@@ -85,15 +85,14 @@ namespace EBerzosa.Pundit.Core.Repository
          {
             PackageId = packageInfo.Identity.Id,
             Version = packageInfo.Identity.Version,
-            Dependencies = new List<PackageDependency>(),
-            Framework = dependencies?.TargetFramework
+            Dependencies = new List<PackageDependency>()
          };
 
          if (dependencies == null)
             return manifest;
 
          foreach (var dependency in dependencies.Packages)
-            manifest.Dependencies.Add(new PackageDependency(dependency.Id, new VersionRangeExtended(dependency.VersionRange)) {Framework = manifest.Framework});
+            manifest.Dependencies.Add(new PackageDependency(dependency.Id, dependency.VersionRange));
 
          return manifest;
       }

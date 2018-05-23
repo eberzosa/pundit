@@ -5,6 +5,7 @@ using EBerzosa.Pundit.Core.Resolvers;
 using EBerzosa.Pundit.Core.Serializers;
 using LightInject;
 using Mapster;
+using Pundit.Core.Application;
 
 namespace EBerzosa.Pundit.Core
 {
@@ -23,7 +24,11 @@ namespace EBerzosa.Pundit.Core
          serviceRegistry.Register<DependencyResolution>(new PerContainerLifetime());
 
          serviceRegistry.Register<IPackageSerializer>(f => new PackageSerializer(new XmlSerializer()));
-         
+
+         serviceRegistry.Register<InstalledPackagesIndexSerializer>();
+
+         serviceRegistry.Register<InstalledPackagesManager>();
+
          TypeAdapterConfig.GlobalSettings.Compile();
       }
    }

@@ -52,7 +52,7 @@ namespace EBerzosa.Pundit.Core.Converters
 
       private static NuGet.Packaging.Core.PackageDependency ToNuGetPackageDependency(this PackageDependency packageDependency)
       {
-         return new NuGet.Packaging.Core.PackageDependency(packageDependency.PackageId, packageDependency.AllowedVersions.NuGetVersionRange);
+         return new NuGet.Packaging.Core.PackageDependency(packageDependency.PackageId, packageDependency.AllowedVersions);
       }
    }
 }

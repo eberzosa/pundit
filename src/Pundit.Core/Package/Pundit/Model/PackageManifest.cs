@@ -7,7 +7,7 @@ using System.Text.RegularExpressions;
 
 namespace EBerzosa.Pundit.Core.Model.Package
 {
-   [DebuggerDisplay("{PackageId} [{Version.ToString()}] [{Framework?.GetShortFolderName()}]")]
+   [DebuggerDisplay("{PackageId} [{Version.ToString()}]")]
    public class PackageManifest
    {
       public const string DefaultManifestFileName = "pundit.xml"; //package definition
@@ -28,8 +28,6 @@ namespace EBerzosa.Pundit.Core.Model.Package
       public string PackageId { get; set; }
 
       public NuGet.Versioning.NuGetVersion Version { get; set; }
-
-      public NuGet.Frameworks.NuGetFramework Framework { get; set; }
 
       public string ProjectUrl { get; set; }
 
@@ -73,9 +71,9 @@ namespace EBerzosa.Pundit.Core.Model.Package
       
 
       public PackageDependency GetPackageDependency(PackageKey key) 
-         => Dependencies?.Where(d => d.PackageId == key.PackageId && d.Framework == key.Framework).FirstOrDefault();
+         => Dependencies?.Where(d => d.PackageId == key.PackageId).FirstOrDefault();
 
-      public override string ToString() => PackageId + " [" + Version + "] [" + Framework + "]";
+      public override string ToString() => PackageId + " " + Version;
 
       private bool IsValidPackageNameString(string s) => PackageStringRgx.IsMatch(s);
    }

@@ -57,7 +57,7 @@ namespace EBerzosa.Pundit.Core.Services
                _writer
                   .Text(packageKey.PackageId)
                   .Text(packageKey.Version.ToString())
-                  .Text(packageKey.Framework?.GetShortFolderName());
+                  .Text(packageKey.Framework);
 
                //var outputText = packageKey.ToString();
                

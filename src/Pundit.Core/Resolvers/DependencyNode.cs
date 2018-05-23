@@ -21,7 +21,8 @@ namespace EBerzosa.Pundit.Core.Resolvers
 
       public string PackageId { get; }
 
-      public NuGet.Frameworks.NuGetFramework Framework { get; }
+      [Obsolete("Used in Pundit packages only.")]
+      public string Framework { get; }
 
       public VersionRangeExtended AllowedVersions
       {
@@ -140,7 +141,7 @@ namespace EBerzosa.Pundit.Core.Resolvers
       }
 
 
-      public DependencyNode(DependencyNode parentNode, string packageId, NuGet.Frameworks.NuGetFramework framework, VersionRangeExtended allowedVersions)
+      public DependencyNode(DependencyNode parentNode, string packageId, string framework, VersionRangeExtended allowedVersions)
       {
          _parentNode = parentNode;
          PackageId = packageId;
@@ -187,7 +188,8 @@ namespace EBerzosa.Pundit.Core.Resolvers
          _children.Clear();
 
          foreach (PackageDependency pd in thisManifest.Dependencies)
-            _children.Add(new DependencyNode(this, pd.PackageId, pd.Framework ?? Framework, pd.AllowedVersions));
+            _children.Add(new DependencyNode(this, pd.PackageId, pd.Framework, 
+               new VersionRangeExtended(pd.AllowedVersions){ReleaseLabel = _allowedVersions.ReleaseLabel}));
 
          HasManifest = true;
       }

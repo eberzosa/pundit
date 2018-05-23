@@ -14,8 +14,7 @@ namespace EBerzosa.Pundit.Core.Repository
    public class FileSystemRepository : Repository, IRepository
    {
       private readonly PackageReaderFactory _packageReaderFactory;
-
-
+      
       public FileSystemRepository(PackageReaderFactory packageReaderFactory, string rootPath, string name)
          : base(rootPath, name, RepositoryType.Pundit)
       {
@@ -63,7 +62,7 @@ namespace EBerzosa.Pundit.Core.Repository
          }
 
 
-         var targetPath = Path.Combine(RootPath, manifest.GetFileName());
+         var targetPath = Path.Combine(RootPath, manifest.GetNewManifestFileName());
          if (File.Exists(targetPath))
             File.Delete(targetPath);
 
@@ -84,17 +83,14 @@ namespace EBerzosa.Pundit.Core.Repository
       {
          var filePattern = package.GetSearchFileName();
 
-         if (filePattern == null)
-            return new NuGet.Versioning.NuGetVersion[0];
-
          return new DirectoryInfo(RootPath).GetFiles(filePattern)
             .Select(i => PackageExtensions.GetPackageKeyFromFileName(i.Name).Version).ToArray();
       }
 
-      public PackageManifest GetManifest(PackageKey key)
+      public PackageManifest GetManifest(PackageKey key, NuGet.Frameworks.NuGetFramework projectFramework = null)
       {
          var fullPath = Path.Combine(RootPath, key.GetFileName());
-
+         
          if (!File.Exists(fullPath))
             throw new FileNotFoundException("package not found");
 

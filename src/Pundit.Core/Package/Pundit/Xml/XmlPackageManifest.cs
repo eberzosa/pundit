@@ -4,9 +4,8 @@ using System.Xml.Serialization;
 
 namespace EBerzosa.Pundit.Core.Model.Xml
 {
-   [DebuggerDisplay("{PackageId} [{Version}] [{Platform}] [Deps={Dependencies?.Count}]")]
+   [DebuggerDisplay("{PackageId} [{Version}] [Deps={Dependencies?.Count}]")]
    [XmlRoot("package")]
-   [XmlInclude(typeof(XmlPackageSpec))]
    public class XmlPackageManifest
    {
       [XmlAttribute("coreVersion")]
@@ -14,9 +13,6 @@ namespace EBerzosa.Pundit.Core.Model.Xml
       
       [XmlElement("packageId")]
       public string PackageId { get; set; }
-
-      [XmlElement("platform")]
-      public string Platform { get; set; }
 
       [XmlElement("project-url")]
       public string ProjectUrl { get; set; }

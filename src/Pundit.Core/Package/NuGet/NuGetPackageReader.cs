@@ -31,10 +31,12 @@ namespace EBerzosa.Pundit.Core.Package
 
       public void InstallTo(string rootFolder, PackageDependency originalDependency, BuildConfiguration configuration)
       {
+         throw new NotImplementedException();
+
          foreach (var frameworkSpecificGroup in _packageReader.GetReferenceItems())
          {
-            if (frameworkSpecificGroup.TargetFramework != originalDependency.Framework.Adapt<NuGetFramework>())
-               continue;
+            //if (frameworkSpecificGroup.TargetFramework != originalDependency.Framework.Adapt<NuGetFramework>())
+            //   continue;
 
             foreach (var item in frameworkSpecificGroup.Items)
                InstallLibrary(_packageReader.GetIdentity().Id, rootFolder, item, configuration);

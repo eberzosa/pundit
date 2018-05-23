@@ -25,7 +25,7 @@ namespace EBerzosa.Pundit.CommandLine.Builders
                var manifest = BuildManifestArgument(arg);
                //manifest = BuildManifestOption(opt);
                var output = opt.SingleValue("o", "output", "directory", "Specifies the output directory for the package");
-               var version = opt.SingleValue("v", "packageVersion", "versionNumber", "Overrides the version number inside the manifest");
+               var version = opt.SingleValue("v", "version", "versionNumber", "Overrides the version number inside the manifest");
                var releaseLabel = BuildReleaseLabel(opt);
                var type = opt.SingleFixedValue("t", "type", "packageType", "The type of package to produce. Default: NuGet", Enum.GetNames(typeof(PackType)));
 

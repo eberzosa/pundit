@@ -5,7 +5,7 @@ using System.Xml.Serialization;
 
 namespace EBerzosa.Pundit.Core.Model.Xml
 {
-   [DebuggerDisplay("{PackageId} [{VersionPattern}] [{Platform}] [{Scope}] [DevOnly={DevTimeOnly}]")]
+   [DebuggerDisplay("{PackageId} [{VersionPattern}] [{Scope}] [DevOnly={DevTimeOnly}]")]
    [XmlRoot("package")]
    [Serializable]
    public class XmlPackageDependency
@@ -18,7 +18,7 @@ namespace EBerzosa.Pundit.Core.Model.Xml
       
       [XmlAttribute("platform")]
       public string Platform { get; set; }
-      
+
       // Deprecated
       [Obsolete("This is only use for compatibility with old XML packages", false)]
       [XmlAttribute("devtime")]

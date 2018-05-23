@@ -23,7 +23,7 @@ namespace EBerzosa.Pundit.Core.Repository
 
       ICollection<NuGet.Versioning.NuGetVersion> GetVersions(UnresolvedPackage package);
 
-      PackageManifest GetManifest(PackageKey key);
+      PackageManifest GetManifest(PackageKey key, NuGet.Frameworks.NuGetFramework projectFramework);
 
       bool PackageExist(PackageKey package);
 

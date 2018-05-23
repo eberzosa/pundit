@@ -6,10 +6,10 @@ namespace EBerzosa.Pundit.Core.Resolvers
    {
       public string PackageId { get; set; }
 
-      public NuGet.Frameworks.NuGetFramework Framework { get; }
+      public string Framework { get; }
 
       
-      public SatisfyingInfoExtended(SatisfyingInfo satisfying, string packageId, NuGet.Frameworks.NuGetFramework framework)
+      public SatisfyingInfoExtended(SatisfyingInfo satisfying, string packageId, string framework)
          : base(satisfying.Version, satisfying.Repo)
       {
          PackageId = packageId;

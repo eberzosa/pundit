@@ -5,8 +5,11 @@ namespace EBerzosa.Pundit.Core.Model.Xml
 {
    [XmlRoot("package")]
    [XmlType("DevPackage")]
-   public class XmlPackageSpec : XmlPackageManifest
+   public class XmlPackageLegacyCrap : XmlPackageManifest
    {
+      [XmlElement("platform")]
+      public string Platform { get; set; }
+
       [XmlArray("files")]
       [XmlArrayItem("file")]
       public List<XmlSourceFiles> Files { get; set; }

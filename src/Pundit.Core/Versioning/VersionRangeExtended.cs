@@ -35,5 +35,10 @@ namespace EBerzosa.Pundit.Core.Versioning
             ? NuGetVersionRange.Satisfies(version, NuGet.Versioning.VersionComparison.VersionRelease)
             : NuGetVersionRange.Satisfies(version, VersionComparer.Pundit);
       }
+      
+      public override string ToString()
+      {
+         return NuGetVersionRange + (ReleaseLabel != null ? " Release: " + ReleaseLabel : "");
+      }
    }
 }

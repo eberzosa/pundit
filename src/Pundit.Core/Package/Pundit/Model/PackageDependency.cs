@@ -1,6 +1,6 @@
-﻿using System.Diagnostics;
+﻿using System;
+using System.Diagnostics;
 using EBerzosa.Pundit.Core.Model.Enums;
-using EBerzosa.Pundit.Core.Versioning;
 using EBerzosa.Utils;
 
 namespace EBerzosa.Pundit.Core.Model.Package
@@ -8,10 +8,10 @@ namespace EBerzosa.Pundit.Core.Model.Package
    ///<summary>
    /// Package dependency
    ///</summary>
-   [DebuggerDisplay("{PackageId} [{AllowedVersions.ToString()}] [{Framework.GetShortFolderName()}] [{Scope}]")]
+   [DebuggerDisplay("{PackageId} [{AllowedVersions.ToString()}] [{Framework}] [{Scope}]")]
    public class PackageDependency
    {
-      public PackageDependency(string packageId, VersionRangeExtended allowedVersions)
+      public PackageDependency(string packageId, NuGet.Versioning.VersionRange allowedVersions)
       {
          Guard.NotNull(packageId, nameof(packageId));
          Guard.NotNull(allowedVersions, nameof(allowedVersions));
@@ -22,13 +22,10 @@ namespace EBerzosa.Pundit.Core.Model.Package
 
       public string PackageId { get; set; }
 
-      public VersionRangeExtended AllowedVersions { get; set; }
+      public NuGet.Versioning.VersionRange AllowedVersions { get; set; }
 
-      /// <summary>
-      /// Dependency platform. If ommitted "noarch" assumed. If noarch is not found, no automatic
-      /// guess is performed
-      /// </summary>
-      public NuGet.Frameworks.NuGetFramework Framework { get; set; }
+      [Obsolete("This is kept for Punit packages. Do not used in NuGet")]
+      public string Framework { get; set; }
       
       /// <summary>
       /// Set to true if the dependency must exist at dev time only.

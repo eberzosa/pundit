@@ -2,9 +2,9 @@
 using System.Collections.Generic;
 using System.IO;
 using System.Linq;
-using EBerzosa.Pundit.Core.Application;
 using EBerzosa.Pundit.Core.Model;
 using EBerzosa.Pundit.Core.Model.Enums;
+using EBerzosa.Pundit.Core.Model.Package;
 using EBerzosa.Pundit.Core.Package;
 using EBerzosa.Pundit.Core.Repository;
 using EBerzosa.Pundit.Core.Resolvers;
@@ -68,8 +68,14 @@ namespace EBerzosa.Pundit.Core.Services
          PrintSettings();
 
          _writer.BeginWrite().Text("Reading manifest...");
-         var packageSpecs = _packageSerializer.DeserializePackageSpec(File.OpenRead(_resolvedManifestPath));
-         packageSpecs.Validate();
+
+         PackageManifestRoot manifest;
+         using (Stream stream = File.OpenRead(_resolvedManifestPath))
+         {
+            manifest = _packageSerializer.DeserializePackageManifestRoot(stream);
+            manifest.Validate();
+         }
+         
          _writer.Success(" ok").EndWrite();
 
          _writer.BeginWrite().Text("Getting repositories...");
@@ -90,7 +96,7 @@ namespace EBerzosa.Pundit.Core.Services
          _writer.EndWrite();
 
          _writer.BeginWrite().Text("Resolving...");
-         var resolutionResult = _dependencyResolution.Resolve(packageSpecs, repos, ReleaseLabel);
+         var resolutionResult = _dependencyResolution.Resolve(manifest, repos, ReleaseLabel);
 
          if (resolutionResult.Item1.HasConflicts)
          {
@@ -115,7 +121,7 @@ namespace EBerzosa.Pundit.Core.Services
             {
                packageIds.Add(infos.PackageId);
                versions.Add(infos.Version.ToString());
-               platforms.Add(infos.Framework.ToString());
+               platforms.Add(infos.Framework);
                inRepo.Add(infos.Repo.Name);
             }
 
@@ -132,12 +138,12 @@ namespace EBerzosa.Pundit.Core.Services
             return true;
          }
 
-         Install(resolutionResult, packageSpecs);
+         Install(resolutionResult, manifest);
 
          return true;
       }
 
-      private void Install(Tuple<VersionResolutionTable, DependencyNode> resolutionResult, PackageSpec packageSpec)
+      private void Install(Tuple<VersionResolutionTable, DependencyNode> resolutionResult, PackageManifestRoot manifest)
       {
          var cacheRepo = new CacheRepository(_repositoryFactory.TryGetCacheRepos());
          cacheRepo.PackageDownloadToCacheRepositoryStarted += CacheRepositoryPackageDownloadToCacheRepositoryStarted;
@@ -148,7 +154,7 @@ namespace EBerzosa.Pundit.Core.Services
          cacheRepo.PackageDownloadToCacheRepositoryStarted -= CacheRepositoryPackageDownloadToCacheRepositoryStarted;
          cacheRepo.PackageDownloadToCacheRepositoryFinished -= CacheRepositoryOnPackageDownloadToCacheRepositoryFinished;
 
-         using (var installer = _packageInstallerFactory.GetInstaller(_manifestResolver.CurrentDirectory, resolutionResult.Item1, packageSpec))
+         using (var installer = _packageInstallerFactory.GetInstaller(_manifestResolver.CurrentDirectory, resolutionResult.Item1, manifest))
          {
             installer.BeginInstallPackage += BeginInstallPackage;
             installer.FinishInstallPackage += FinishInstallPackage;

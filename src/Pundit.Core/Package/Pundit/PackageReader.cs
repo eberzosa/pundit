@@ -33,10 +33,8 @@ namespace EBerzosa.Pundit.Core.Package
 
          while((entry = _zipStream.GetNextEntry()) != null)
          {
-            if(entry.IsFile && entry.Name == PackageManifest.DefaultManifestFileName)
-            {
-               _packageSerializer.DeserializePackageManifest(_zipStream);
-            }
+            if (entry.IsFile && entry.Name == PackageManifest.DefaultManifestFileName)
+               return _packageSerializer.DeserializePackageManifest(_zipStream);
          }
 
          return null;

@@ -1,4 +1,5 @@
-﻿using System.Runtime.Serialization;
+﻿using System;
+using System.Runtime.Serialization;
 using EBerzosa.Pundit.Core.Versioning;
 using EBerzosa.Utils;
 
@@ -10,14 +11,16 @@ namespace EBerzosa.Pundit.Core.Model
       [DataMember]
       public string PackageId { get; }
 
+      [Obsolete("Used only for Pundit packages")]
       [DataMember]
-      public NuGet.Frameworks.NuGetFramework Framework { get; }
+      public string Framework { get; }
       
       [DataMember]
       public VersionRangeExtended AllowedVersions { get; }
 
 
-      public UnresolvedPackage(string packageId, NuGet.Frameworks.NuGetFramework framework, VersionRangeExtended allowedVersions)
+      [Obsolete("Used in Pundit packages only.")]
+      public UnresolvedPackage(string packageId, string framework, VersionRangeExtended allowedVersions)
       {
          Guard.NotNull(packageId, nameof(packageId));
 

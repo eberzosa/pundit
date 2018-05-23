@@ -69,7 +69,6 @@ namespace EBerzosa.Pundit.Core.Services
                }
 
                punditSpec.Dependencies = new List<PackageDependency>();
-               punditSpec.Framework = framework;
                punditSpec.Files = new List<SourceFiles>();
 
                var dependencies = reader.GetPackageDependencies().FirstOrDefault(d => d.TargetFramework == framework);

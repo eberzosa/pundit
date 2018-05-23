@@ -6,6 +6,7 @@ using EBerzosa.Pundit.Core.Converters;
 using EBerzosa.Pundit.Core.Model;
 using EBerzosa.Pundit.Core.Model.Package;
 using EBerzosa.Pundit.Core.Repository;
+using EBerzosa.Pundit.Core.Services;
 using EBerzosa.Pundit.Core.Versioning;
 using Pundit.Core.Model;
 
@@ -18,24 +19,27 @@ namespace EBerzosa.Pundit.Core.Resolvers
       private readonly IRepository[] _activeRepositories;
       private readonly DependencyNode _rootDependencyNode;
 
+      private readonly NuGet.Frameworks.NuGetFramework _projectFramework;
+
       public DependencyResolution(IWriter writer)
       {
          _writer = writer;
       }
 
-      private DependencyResolution(IWriter writer, PackageManifest rootManifest, IRepository[] activeRepositories, string releaseLabel)
+      private DependencyResolution(IWriter writer, PackageManifestRoot rootManifest, IRepository[] activeRepositories, string releaseLabel)
       {
          _writer = writer;
          _activeRepositories = activeRepositories;
 
          var version = new VersionRangeExtended(rootManifest.Version) {ReleaseLabel = releaseLabel};
 
-         _rootDependencyNode = new DependencyNode(null, rootManifest.PackageId, rootManifest.Framework, version);
+         _rootDependencyNode = new DependencyNode(null, rootManifest.PackageId, rootManifest.Framework.GetShortFolderName(), version);
          _rootDependencyNode.MarkAsRoot(rootManifest);
+
+         _projectFramework = rootManifest.Framework;
       }
 
-      public Tuple<VersionResolutionTable, DependencyNode> Resolve(PackageManifest rootManifest, IRepository[] activeRepositories,
-         string releaseLabel)
+      public Tuple<VersionResolutionTable, DependencyNode> Resolve(PackageManifestRoot rootManifest, IRepository[] activeRepositories, string releaseLabel)
       {
          return new DependencyResolution(_writer, rootManifest, activeRepositories, releaseLabel).Resolve();
       }
@@ -82,7 +86,7 @@ namespace EBerzosa.Pundit.Core.Resolvers
             ResolveVersions(_rootDependencyNode);
 
             //second step: resolve manifests
-            ResolveManifests(_rootDependencyNode);
+            ResolveManifests(_rootDependencyNode, RepositoryType.Pundit);
          }
       }
 
@@ -96,7 +100,7 @@ namespace EBerzosa.Pundit.Core.Resolvers
             {
                var versions = repo.GetVersions(node.UnresolvedPackage);
 
-               if (versions == null)
+               if (versions == null || versions.Count == 0)
                   continue;
 
                foreach (var version in versions)
@@ -116,7 +120,7 @@ namespace EBerzosa.Pundit.Core.Resolvers
             ResolveVersions(child);
       }
 
-      private void ResolveManifests(DependencyNode node)
+      private void ResolveManifests(DependencyNode node, RepositoryType parentRepoType)
       {
          if (node.HasVersions && !node.HasManifest)
          {
@@ -124,32 +128,30 @@ namespace EBerzosa.Pundit.Core.Resolvers
 
             while (manifest == null && node.HasVersions)
             {
-               try
-               {
-                  manifest = node.ActiveRepository.GetManifest(node.ActiveVersionKey);
+               if (parentRepoType == RepositoryType.NuGet && node.ActiveRepository.Type != RepositoryType.NuGet)
+                  throw new NotSupportedException("NuGet packages can contain only NuGet packages");
 
-                  if (manifest != null)
-                  {
-                     node.SetManifest(manifest);
-                     break;
-                  }
+               manifest = node.ActiveRepository.GetManifest(node.ActiveVersionKey, _projectFramework);
 
-                  if (node.ActiveSatisfayingData.Any())
-                     node.RemoveActiveVersion();
-                  else
-                     throw new ApplicationException("could not find manifest for node " + node.Path);
-               }
-               catch
+               if (manifest != null)
                {
+                  node.SetManifest(manifest);
+                  break;
                }
+
+               if (node.ActiveSatisfayingData.Any())
+                  node.RemoveActiveVersion();
+               else
+                  throw new ApplicationException("could not find manifest for node " + node.Path);
             }
          }
 
          if (!node.HasVersions)
             return;
 
+         // TODO : Hack for now to allow only NuGets inside NuGets due to the missing framework in the NuGet manifest
          foreach (var child in node.Children)
-            ResolveManifests(child);
+            ResolveManifests(child, node.ActiveRepository?.Type ?? RepositoryType.Pundit);
       }
 
       private void FlattenNode(DependencyNode node, VersionResolutionTable collector)

@@ -32,7 +32,6 @@ namespace EBerzosa.Pundit.Core.Services
          var packageSpec = new PackageSpec
          {
             PackageId = "MyApplication.Tool",
-            Framework = NuGet.Frameworks.NuGetFramework.Parse("net46"),
             Author = Environment.UserName,
             Description = "This is a sample package for a imaginaty tool.",
             License = "MIT license (or anything you want)",
@@ -60,20 +59,17 @@ namespace EBerzosa.Pundit.Core.Services
             },
             Dependencies =
             {
-               new PackageDependency("MyApplication.Common", VersionConverterExtensions.ConvertPunditDependencyVersionToVersionRangeExtended("1.0.4"))
+               new PackageDependency("MyApplication.Common", NuGet.Versioning.VersionRange.Parse("1.0.4"))
+               {
+                  Scope = DependencyScope.Normal
+               },
+               new PackageDependency("MyApplication.Test", NuGet.Versioning.VersionRange.Parse("1.0.4"))
+               {
+                  Scope = DependencyScope.Test
+               },
+               new PackageDependency("MyApplication.Legacy", NuGet.Versioning.VersionRange.Parse("1.0.4"))
                {
                   Scope = DependencyScope.Normal,
-                  Framework = NuGet.Frameworks.NuGetFramework.Parse("net46")
-               },
-               new PackageDependency("MyApplication.Test", VersionConverterExtensions.ConvertPunditDependencyVersionToVersionRangeExtended("1.0.4"))
-               {
-                  Scope = DependencyScope.Test,
-                  Framework = NuGet.Frameworks.NuGetFramework.Parse("net46")
-               },
-               new PackageDependency("MyApplication.Legacy", VersionConverterExtensions.ConvertPunditDependencyVersionToVersionRangeExtended("1.0.4"))
-               {
-                  Scope = DependencyScope.Normal,
-                  Framework = NuGet.Frameworks.NuGetFramework.Parse("net11"),
                   CreatePlatformFolder = true
                },
             }
