@@ -2,8 +2,8 @@
 using System.Collections.Generic;
 using System.IO;
 using System.Linq;
-using EBerzosa.Pundit.Core.Application;
 using EBerzosa.Pundit.Core.Converters;
+using EBerzosa.Pundit.Core.Package;
 using EBerzosa.Pundit.Core.Repository.Xml;
 using EBerzosa.Pundit.Core.Serializers;
 using EBerzosa.Utils;
@@ -28,7 +28,8 @@ namespace EBerzosa.Pundit.Core.Repository
       private readonly string _repoConfigPath;
 
       private RegisteredRepositories _registeredRepositories;
-      
+      private ICollection<IRepository> _cacheRepositories;
+      private ICollection<IRepository> _standardRepositories;
 
 
       public RepositoryFactory(PackageReaderFactory packageReaderFactory, ISerializer serializer)
@@ -46,31 +47,22 @@ namespace EBerzosa.Pundit.Core.Repository
       }
 
 
-      public ICollection<IRepository> TryGetCacheRepos()
-      {
-         return new[]
-         {
-            TryCreateRepo(new RegisteredRepository {Uri = _cacheNuGetRepoPath, Name = NuGetCacheRepoName, UseForPublishing = true, Type = RepositoryType.NuGet}),
-            TryCreateRepo(new RegisteredRepository {Uri = _cacheRepoPath, Name = PunditCacheRepoName, UseForPublishing = true})
-         };
-      }
-      
       public IRepository TryGetEnabledRepo(string name)
       {
-         return TryGetEnabledRepos(true, true).FirstOrDefault(r => r.Name.Equals(name, StringComparison.OrdinalIgnoreCase));
+         return TryGetEnabledRepos(RepositoryScope.Any).FirstOrDefault(r => r.Name.Equals(name, StringComparison.OrdinalIgnoreCase));
       }
 
-      public IEnumerable<IRepository> TryGetEnabledRepos(bool includeCache, bool includeOther)
+      public ICollection<IRepository> TryGetEnabledRepos(RepositoryScope scope)
       {
-         if (includeCache)
-            foreach (var repository in TryGetCacheRepos())
-               if (repository != null)
-                  yield return repository;
+         var repos = new List<IRepository>();
 
-         if (includeOther)
-            foreach (var repository in GetRegistered().RepositoriesArray.Where(r => !r.Disabled).OrderByDescending(r => r.Type).Select(TryCreateRepo))
-               if (repository != null)
-               yield return repository;
+         if ((scope & RepositoryScope.Cache) == RepositoryScope.Cache)
+            repos.AddRange(GetCacheRepos());
+
+         if ((scope & RepositoryScope.Standard) == RepositoryScope.Standard)
+            repos.AddRange(GetStandardRepos());
+
+         return repos;
       }
 
       public RegisteredRepositories GetRegisteredRepositories()
@@ -78,6 +70,48 @@ namespace EBerzosa.Pundit.Core.Repository
          return GetRegistered();
       }
 
+
+      private ICollection<IRepository> GetCacheRepos()
+      {
+         if (_cacheRepositories != null)
+            return _cacheRepositories;
+
+         _cacheRepositories = new[]
+            {
+               TryCreateRepo(new RegisteredRepository
+               {
+                  Uri = _cacheNuGetRepoPath,
+                  Name = NuGetCacheRepoName,
+                  UseForPublishing = true,
+                  Type = RepositoryType.NuGet
+               }),
+               TryCreateRepo(new RegisteredRepository
+               {
+                  Uri = _cacheRepoPath,
+                  Name = PunditCacheRepoName,
+                  UseForPublishing = true
+               })
+            }
+            .Where(r => r != null)
+            .ToArray();
+
+         return _cacheRepositories;
+      }
+
+      private ICollection<IRepository> GetStandardRepos()
+      {
+         if (_standardRepositories != null)
+            return _standardRepositories;
+
+         _standardRepositories = GetRegistered().RepositoriesArray
+            .Where(r => !r.Disabled)
+            .OrderByDescending(r => r.Type)
+            .Select(TryCreateRepo)
+            .Where(r => r != null)
+            .ToArray();
+
+         return _standardRepositories;
+      }
 
       private IRepository TryCreateRepo(RegisteredRepository repo)
       {

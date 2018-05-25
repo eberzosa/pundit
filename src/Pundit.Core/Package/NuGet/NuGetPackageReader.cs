@@ -1,22 +1,15 @@
 ﻿using System;
 using System.IO;
+using System.Linq;
 using EBerzosa.Pundit.Core.Model.Package;
 using EBerzosa.Utils;
-using Mapster;
-using NuGet.Frameworks;
 using NuGet.Packaging;
-using Pundit.Core.Application;
 using Pundit.Core.Model;
-using Pundit.Core.Model.EventArguments;
-using Pundit.Core.Utils;
-using PackageDependency = EBerzosa.Pundit.Core.Model.Package.PackageDependency;
 
 namespace EBerzosa.Pundit.Core.Package
 {
-   public class NuGetPackageReader : PackageStreamer, IPackageReader
+   public class NuGetPackageReader : PackageReader
    {
-      public event EventHandler<ResolvedFileEventArgs> InstallingResolvedFile;
-
       private readonly PackageArchiveReader _packageReader;
 
       public NuGetPackageReader(Stream packageStream)
@@ -26,41 +19,57 @@ namespace EBerzosa.Pundit.Core.Package
          _packageReader = new PackageArchiveReader(packageStream);
       }
       
-      public PackageManifest ReadManifest() => throw new NotSupportedException();
+      public override PackageManifest ReadManifest() => throw new NotSupportedException();
 
 
-      public void InstallTo(string rootFolder, PackageDependency originalDependency, BuildConfiguration configuration)
+      public override void InstallTo(string rootFolder, PackageDependency originalDependency, BuildConfiguration configuration)
       {
-         throw new NotImplementedException();
+         var packageId = _packageReader.GetIdentity().Id;
 
-         foreach (var frameworkSpecificGroup in _packageReader.GetReferenceItems())
-         {
-            //if (frameworkSpecificGroup.TargetFramework != originalDependency.Framework.Adapt<NuGetFramework>())
-            //   continue;
-
-            foreach (var item in frameworkSpecificGroup.Items)
-               InstallLibrary(_packageReader.GetIdentity().Id, rootFolder, item, configuration);
-         }
+         foreach (var file in _packageReader.GetFiles().Where(ShouldInclude))
+            InstallToInternal(rootFolder, packageId, configuration, file);
       }
 
-      private void InstallLibrary(string packageId, string root, string name, BuildConfiguration targetConfig)
+      public override void ExtractTo(string rootFolder)
       {
-         var fileName = name.Substring(name.LastIndexOf("/") + 1);
-
-         InstallingResolvedFile?.Invoke(null, new ResolvedFileEventArgs(packageId, PackageFileKind.Binary, targetConfig, fileName));
-
-         string targetPath = Path.Combine(root, "lib");
-         if (!Directory.Exists(targetPath)) Directory.CreateDirectory(targetPath);
-
-         targetPath = Path.Combine(targetPath, fileName);
-         
-         if (File.Exists(targetPath))
-            File.Delete(targetPath);
-
-         using (Stream ts = File.Create(targetPath))
-            _packageReader.GetStream(name).CopyTo(ts);
+         foreach (var file in _packageReader.GetFiles().Where(ShouldInclude))
+            ExtractFileTo(rootFolder, file, true);
       }
 
+
+      protected override Stream GetSourceStream(string fileToInstall) => _packageReader.GetStream(fileToInstall);
+      
       protected override void Dispose(bool disposing) => _packageReader?.Dispose();
+
+      private static bool ShouldInclude(string fullName)
+      {
+         // Not all the files from a zip file are needed
+         // So, files such as '.rels' and '[Content_Types].xml' are not extracted
+         var fileName = Path.GetFileName(fullName);
+         if (fileName != null)
+         {
+            if (fileName == ".rels")
+               return false;
+
+            if (fileName == "[Content_Types].xml")
+               return false;
+         }
+
+         var extension = Path.GetExtension(fullName);
+         if (extension == ".psmdcp")
+            return false;
+
+         //if (string.Equals(fullName, hashFileName, StringComparison.OrdinalIgnoreCase))
+         //   return false;
+
+         // Skip nupkgs and nuspec files found in the root, the valid ones are already extracted
+         if (PackageHelper.IsRoot(fullName) &&
+             (PackageHelper.IsNuspec(fullName) || fullName.EndsWith(".nupkg", StringComparison.OrdinalIgnoreCase)))
+         {
+            return false;
+         }
+
+         return true;
+      }
    }
 }

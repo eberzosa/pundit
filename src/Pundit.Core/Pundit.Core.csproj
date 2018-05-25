@@ -134,12 +134,14 @@
     <Compile Include="Package\IPackageWriter.cs" />
     <Compile Include="Package\PackageReaderFactory.cs" />
     <Compile Include="Package\Pundit\Model\PackageManifestRoot.cs" />
+    <Compile Include="Package\PackageReader.cs" />
     <Compile Include="Package\Pundit\PunditPackageWriter.cs" />
     <Compile Include="Package\Pundit\Xml\XmlPackageLegacyCrap.cs" />
     <Compile Include="Package\Pundit\Xml\XmlPackageManifestRoot.cs" />
     <Compile Include="Repository\NugetFileSystemRepo.cs" />
     <Compile Include="Repository\RegisteredRepository.cs" />
     <Compile Include="Repository\Repository.cs" />
+    <Compile Include="Repository\RepositoryScope.cs" />
     <Compile Include="Repository\RepositoryType.cs" />
     <Compile Include="Repository\Xml\XmlRepositoryType.cs" />
     <Compile Include="Repository\Xml\XmlRegisteredRepository.cs" />
@@ -147,8 +149,8 @@
     <Compile Include="Resolvers\DependencyResolution.cs" />
     <Compile Include="PackageManager\InstalledPackagesIndex.cs" />
     <Compile Include="Package\PackageInstaller.cs" />
-    <Compile Include="Package\Pundit\PackageReader.cs" />
-    <Compile Include="Package\Pundit\PackageStreamer.cs" />
+    <Compile Include="Package\Pundit\PunditPackageReader.cs" />
+    <Compile Include="Package\PackageStreamer.cs" />
     <Compile Include="Package\PackageWriter.cs" />
     <Compile Include="Repository\FileSystemRepository.cs" />
     <Compile Include="Resolvers\DependencyNodeComparer.cs" />

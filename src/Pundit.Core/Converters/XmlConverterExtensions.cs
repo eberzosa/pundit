@@ -106,12 +106,14 @@ namespace EBerzosa.Pundit.Core.Converters
          TypeAdapterConfig<PackageManifest, XmlPackageManifest>.NewConfig()
             .Include<PackageSpec, XmlPackageSpec>()
             .Include<PackageManifestRoot, XmlPackageManifestRoot>()
-            .Map(dst => dst.Version, src => src.Version.ToString());
+            .Map(dst => dst.Version, src => src.Version.ToString())
+            .Map(dst => dst.Platform, src => src.LegacyFramework);
 
          TypeAdapterConfig<XmlPackageManifest, PackageManifest>.NewConfig()
             .Include<XmlPackageSpec, PackageSpec>()
             .Include<XmlPackageManifestRoot, PackageManifestRoot>()
-            .Map(dst => dst.Version, src => NuGet.Versioning.NuGetVersion.Parse(src.Version));
+            .Map(dst => dst.Version, src => NuGet.Versioning.NuGetVersion.Parse(src.Version))
+            .Map(dst => dst.LegacyFramework, src => src.Platform);
 
          TypeAdapterConfig<XmlPackageLegacyCrap, XmlPackageManifestRoot>.NewConfig();
          TypeAdapterConfig<XmlPackageLegacyCrap, XmlPackageSpec>.NewConfig();

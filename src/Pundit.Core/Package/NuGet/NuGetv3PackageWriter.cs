@@ -24,7 +24,7 @@ namespace EBerzosa.Pundit.Core.Package
 
       protected override void WriteManifest()
       {
-         var metadata = PackageSpec.ToNuGetManifestMetadata();
+         var metadata = PackageSpec.ToNuGetManifestMetadata(PackageSpec.Framework);
          
          _packageBuilder.Populate(metadata);
       }

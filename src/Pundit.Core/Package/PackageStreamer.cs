@@ -4,7 +4,7 @@ using NAnt.Core;
 using Pundit.Core.Model;
 using Pundit.Core.Utils;
 
-namespace Pundit.Core.Application
+namespace EBerzosa.Pundit.Core.Package
 {
    public abstract class PackageStreamer : IDisposable
    {

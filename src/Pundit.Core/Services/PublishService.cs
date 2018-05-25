@@ -1,7 +1,6 @@
-﻿using System;
-using System.IO;
+﻿using System.IO;
 using System.Linq;
-using EBerzosa.Pundit.Core.Package;
+using EBerzosa.Pundit.Core.Model.Package;
 using EBerzosa.Pundit.Core.Repository;
 using EBerzosa.Utils;
 
@@ -25,6 +24,18 @@ namespace EBerzosa.Pundit.Core.Services
       }
 
       public void Publish(string packagePath)
+      {
+         if (!Directory.Exists(packagePath))
+         {
+            PublishInternal(packagePath);
+            return;
+         }
+
+         foreach (var file in Directory.GetFiles(packagePath, "*", SearchOption.TopDirectoryOnly))
+            PublishInternal(file);
+      }
+
+      private void PublishInternal(string packagePath)
       {
          if (!File.Exists(packagePath))
             throw new FileNotFoundException($"Package Manifest '{packagePath}' not found");
@@ -50,8 +61,8 @@ namespace EBerzosa.Pundit.Core.Services
          }
          else
          {
-            throw new NotSupportedException();
-            //publishTo = _repositoryFactory.TryGetEnabledRepos(true, true).Where(r => r.CanPublish).ToArray();
+            _writer.Info("Publishing with no repo specified. Trying to publish to cache repos only");
+            publishTo = _repositoryFactory.TryGetEnabledRepos(RepositoryScope.Cache).Where(r => r.CanPublish).ToArray();
          }
 
          if (publishTo.Length == 0)
@@ -60,16 +71,20 @@ namespace EBerzosa.Pundit.Core.Services
             return;
          }
 
-         _writer.Text($"Publishing package '{packagePath}' to {publishTo.Length} repositor{(publishTo.Length == 1 ? "y" : "ies")}");
-
          foreach (var repo in publishTo)
          {
-            _writer.BeginWrite().Text($"Publishing package '{packagePath}' to repository '{repo.Name}' ('{repo.RootPath}')... ");
-            
-            repo.Publish(packagePath);
+            _writer.BeginWrite().Text($"Publishing package '{packagePath}' to repository '{repo.Name}'... ");
 
-            _writer.Success("published").EndWrite();
+            if ((Path.GetExtension(packagePath) == PackageManifest.PunditPackageExtension && repo.Type == RepositoryType.Pundit) ||
+                (Path.GetExtension(packagePath) == PackageManifest.NuGetPackageExtension && repo.Type == RepositoryType.NuGet))
+            {
+               repo.Publish(packagePath);
+               _writer.Success("published").EndWrite();
+               return;
+            }
          }
+
+         _writer.Success("failed, no repo found").EndWrite();
       }
    }
 }

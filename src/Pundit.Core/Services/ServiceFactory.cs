@@ -1,5 +1,4 @@
-﻿using EBerzosa.Pundit.Core.Application;
-using EBerzosa.Pundit.Core.Package;
+﻿using EBerzosa.Pundit.Core.Package;
 using EBerzosa.Pundit.Core.Repository;
 using EBerzosa.Pundit.Core.Resolvers;
 using EBerzosa.Pundit.Core.Serializers;
@@ -63,7 +62,7 @@ namespace EBerzosa.Pundit.Core.Services
          => new UpdateService(_repositoryFactory, _packageInstallerFactory, _dependencyResolution, _writer);
 
       public ConvertService GetConvertService() 
-         => new ConvertService(new PackService(_packageSerializer, _manifestResolver, new NullWriter()), _writer);
+         => new ConvertService(new PackService(_packageSerializer, _manifestResolver, new NullWriter()), _packageReaderFactory, _packageSerializer, _writer);
 
       public UtilService GetUtilService()
          => new UtilService();

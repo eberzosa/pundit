@@ -3,6 +3,7 @@ using System.Text.RegularExpressions;
 using EBerzosa.Pundit.Core.Model;
 using EBerzosa.Pundit.Core.Model.Package;
 using EBerzosa.Pundit.Core.Versioning;
+using NuGet.Frameworks;
 
 namespace EBerzosa.Pundit.Core.Package
 {
@@ -49,7 +50,7 @@ namespace EBerzosa.Pundit.Core.Package
          return string.Format(PackageFileNamePattern,
             package.PackageId,
             ToPunditFileSearchVersion(package.AllowedVersions),
-            package.Framework);
+            package.Framework ?? "*");
       }
 
       // TODO: Move this to antoher place
@@ -107,7 +108,12 @@ namespace EBerzosa.Pundit.Core.Package
          if ("noarch".Equals(frameworkString, StringComparison.OrdinalIgnoreCase))
             return NuGet.Frameworks.NuGetFramework.AgnosticFramework;
 
-         return NuGet.Frameworks.NuGetFramework.Parse(frameworkString);
+         var parsedFramework = NuGet.Frameworks.NuGetFramework.Parse(frameworkString);
+
+         if (parsedFramework == NuGetFramework.UnsupportedFramework)
+            return new NuGet.Frameworks.NuGetFramework(frameworkString);
+
+         return parsedFramework;
       }
    }
 }

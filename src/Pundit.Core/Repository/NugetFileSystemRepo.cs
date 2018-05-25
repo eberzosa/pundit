@@ -34,7 +34,7 @@ namespace EBerzosa.Pundit.Core.Repository
       {
          var packageUpdate = _sourceRepository.GetResource<PackageUpdateResource>();
 
-         packageUpdate.Push(filePath, null, 10, true, 
+         packageUpdate.Push(filePath, null, 120, true, 
             endpoint => ApiKey != null ? EncryptionUtility.DecryptString(ApiKey) : null, 
             symbolsEndpoint => null, 
             true, NullLogger.Instance).Wait();

@@ -5,6 +5,7 @@ using EBerzosa.Pundit.Core.Model;
 using EBerzosa.Pundit.Core.Model.Package;
 using EBerzosa.Pundit.Core.Repository;
 using EBerzosa.Pundit.Core.Versioning;
+using NuGet.Packaging;
 
 namespace EBerzosa.Pundit.Core.Resolvers
 {
@@ -22,7 +23,7 @@ namespace EBerzosa.Pundit.Core.Resolvers
       public string PackageId { get; }
 
       [Obsolete("Used in Pundit packages only.")]
-      public string Framework { get; }
+      public string Framework { get; private set; }
 
       public VersionRangeExtended AllowedVersions
       {
@@ -192,6 +193,10 @@ namespace EBerzosa.Pundit.Core.Resolvers
                new VersionRangeExtended(pd.AllowedVersions){ReleaseLabel = _allowedVersions.ReleaseLabel}));
 
          HasManifest = true;
+
+         // TODO: Hack to populate the Framework to Pundit packages which come from a dependency of a NuGet as NuGet does not have a FW defined in the Manifest
+         if (Framework == null && thisManifest.LegacyFramework != null)
+            Framework = thisManifest.LegacyFramework;
       }
 
       public object Clone()

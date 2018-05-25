@@ -86,7 +86,7 @@ namespace EBerzosa.Pundit.Core.Resolvers
             ResolveVersions(_rootDependencyNode);
 
             //second step: resolve manifests
-            ResolveManifests(_rootDependencyNode, RepositoryType.Pundit);
+            ResolveManifests(_rootDependencyNode);
          }
       }
 
@@ -120,7 +120,7 @@ namespace EBerzosa.Pundit.Core.Resolvers
             ResolveVersions(child);
       }
 
-      private void ResolveManifests(DependencyNode node, RepositoryType parentRepoType)
+      private void ResolveManifests(DependencyNode node)
       {
          if (node.HasVersions && !node.HasManifest)
          {
@@ -149,9 +149,8 @@ namespace EBerzosa.Pundit.Core.Resolvers
          if (!node.HasVersions)
             return;
 
-         // TODO : Hack for now to allow only NuGets inside NuGets due to the missing framework in the NuGet manifest
          foreach (var child in node.Children)
-            ResolveManifests(child, node.ActiveRepository?.Type ?? RepositoryType.Pundit);
+            ResolveManifests(child);
       }
 
       private void FlattenNode(DependencyNode node, VersionResolutionTable collector)

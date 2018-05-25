@@ -19,7 +19,7 @@ namespace EBerzosa.Pundit.CommandLine.Controllers
       public ExitCode Execute(string configuration, bool localOnly, bool force, bool dryRun)
       {
          var service = _serviceFactory.GetUpdateService();
-         service.LocalReposOnly = localOnly;
+         service.CacheReposOnly = localOnly;
          service.Force = force;
          service.DryRun = dryRun;
 

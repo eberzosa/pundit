@@ -2,8 +2,6 @@
 using System.Collections.Generic;
 using System.IO;
 using System.Linq;
-using System.Text.RegularExpressions;
-using EBerzosa.Pundit.Core.Application;
 using EBerzosa.Pundit.Core.Converters;
 using EBerzosa.Pundit.Core.Model;
 using EBerzosa.Pundit.Core.Model.Package;
@@ -31,7 +29,7 @@ namespace EBerzosa.Pundit.Core.Repository
                      
          var fileName = Path.GetFileName(packagePath);
          
-         var searchPattern = PackageConverterExtensions.GetPackageKeyFromFileName(fileName).GetRelatedSearchFileName();
+         var searchPattern = PackageExtensions.GetPackageKeyFromFileName(fileName).GetRelatedSearchFileName();
 
          foreach (var relatedBuild in Directory.GetFiles(RootPath, searchPattern))
             File.Delete(relatedBuild);
@@ -61,16 +59,43 @@ namespace EBerzosa.Pundit.Core.Repository
             .Select(i => PackageExtensions.GetPackageKeyFromFileName(i.Name).Version).ToArray();
       }
 
-      public PackageManifest GetManifest(PackageKey key, NuGet.Frameworks.NuGetFramework projectFramework = null)
+      public PackageManifest GetManifest(PackageKey key, NuGet.Frameworks.NuGetFramework projectFramework)
       {
-         var fullPath = Path.Combine(RootPath, key.Framework != null
-            ? key.GetFileName()
-            : key.GetNoFrameworkFileName());
-         
-         if (!File.Exists(fullPath))
-            throw new FileNotFoundException("package not found");
 
-         using (IPackageReader reader = _packageReaderFactory.Get(RepositoryType.Pundit, File.OpenRead(fullPath)))
+         if (key.Framework != null)
+         {
+            var fullPath = Path.Combine(RootPath, key.GetFileName());
+
+            if (!File.Exists(fullPath))
+               throw new FileNotFoundException("package not found");
+
+            using (IPackageReader reader = _packageReaderFactory.Get(RepositoryType.Pundit, File.OpenRead(fullPath)))
+               return reader.ReadManifest();
+         }
+
+         // From here on, we resolve packages that come from a NuGet package and therefore, have no FW
+
+         var filePattern = key.GetNoFrameworkFileName();
+
+         var results = new DirectoryInfo(RootPath).GetFiles(filePattern).ToArray();
+         
+         if (results.Length == 0)
+            return null;
+
+         var matches = 0;
+         foreach (var info in results)
+         {
+            var tempKey = PackageExtensions.GetPackageKeyFromFileName(info.Name);
+            var nearestFw = NuGet.Frameworks.NuGetFrameworkUtility.GetNearest(new[] {new FakedFrameworkGroup(tempKey.Framework)}, projectFramework);
+
+            if (nearestFw.TargetFramework.GetShortFolderName() == tempKey.Framework)
+               matches++;
+         }
+
+         if (matches != 1)
+            throw new NotSupportedException("Error, 0 or more than 1 package found matching the framework.");
+
+         using (IPackageReader reader = _packageReaderFactory.Get(RepositoryType.Pundit, File.OpenRead(results[0].FullName)))
             return reader.ReadManifest();
       }
 
@@ -99,5 +124,13 @@ namespace EBerzosa.Pundit.Core.Repository
       }
 
       public override string ToString() => $"{Name} [{RootPath}]";
+
+
+      private class FakedFrameworkGroup : NuGet.Frameworks.IFrameworkSpecific
+      {
+         public NuGet.Frameworks.NuGetFramework TargetFramework { get; }
+
+         public FakedFrameworkGroup(string framework) => TargetFramework = PackageExtensions.GetFramework(framework);
+      }
    }
 }

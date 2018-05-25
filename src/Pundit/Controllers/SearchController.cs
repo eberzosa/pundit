@@ -20,7 +20,7 @@ namespace EBerzosa.Pundit.CommandLine.Controllers
          Guard.NotNull(searchText, nameof(searchText));
          
          var service = _serviceFactory.GetSearchService();
-         service.LocalRepoOnly = localRepoOnly;
+         service.CacheRepoOnly = localRepoOnly;
          service.ToXml = xml;
 
          service.Search(searchText);

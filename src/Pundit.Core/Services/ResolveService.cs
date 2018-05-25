@@ -37,7 +37,7 @@ namespace EBerzosa.Pundit.Core.Services
 
       public bool DryRun { get; set; }
 
-      public bool LocalReposOnly { get; set; }
+      public bool CacheReposOnly { get; set; }
 
       public string ReleaseLabel { get; set; }
 
@@ -80,7 +80,9 @@ namespace EBerzosa.Pundit.Core.Services
 
          _writer.BeginWrite().Text("Getting repositories...");
 
-         var repos = _repositoryFactory.TryGetEnabledRepos(true, !LocalReposOnly).ToArray();
+         var scope = CacheReposOnly ? RepositoryScope.Cache : RepositoryScope.Any;
+
+         var repos = _repositoryFactory.TryGetEnabledRepos(scope).ToArray();
 
          if (repos.Length == 0)
          {
@@ -145,7 +147,7 @@ namespace EBerzosa.Pundit.Core.Services
 
       private void Install(Tuple<VersionResolutionTable, DependencyNode> resolutionResult, PackageManifestRoot manifest)
       {
-         var cacheRepo = new CacheRepository(_repositoryFactory.TryGetCacheRepos());
+         var cacheRepo = new CacheRepository(_repositoryFactory.TryGetEnabledRepos(RepositoryScope.Cache));
          cacheRepo.PackageDownloadToCacheRepositoryStarted += CacheRepositoryPackageDownloadToCacheRepositoryStarted;
          cacheRepo.PackageDownloadToCacheRepositoryFinished += CacheRepositoryOnPackageDownloadToCacheRepositoryFinished;
 
@@ -210,7 +212,7 @@ namespace EBerzosa.Pundit.Core.Services
             _writer.Success(Configuration.ToString());
 
          _writer.Reserved(names[2]);
-         if (LocalReposOnly)
+         if (CacheReposOnly)
             _writer.Warning("yes");
          else
             _writer.Text("no");

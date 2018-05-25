@@ -49,7 +49,9 @@ namespace EBerzosa.Pundit.Core.Services
 
          var solutionDirectory = Path.GetDirectoryName(_packageSpecFile);
 
-         _resolvedOutputPath = Path.Combine(_manifestResolver.CurrentDirectory, OutputPath ?? solutionDirectory);
+         _resolvedOutputPath =  OutputPath == null || !Path.IsPathRooted(OutputPath)
+            ? Path.Combine(_manifestResolver.CurrentDirectory, OutputPath ?? solutionDirectory)
+            : OutputPath;
          
          if (!Directory.Exists(_resolvedOutputPath))
             throw new DirectoryNotFoundException($"Destination directory '{_resolvedOutputPath}' does not exist");
@@ -103,7 +105,10 @@ namespace EBerzosa.Pundit.Core.Services
 
          var packageSize = new FileInfo(DestinationFile).Length;
 
-         _writer.Text($"Packed {PathUtils.FileSizeToString(bytesWritten)} to {PathUtils.FileSizeToString(packageSize)} (ratio: {packageSize * 100 / bytesWritten:D2}%)");
+         var written = PathUtils.FileSizeToString(bytesWritten);
+         var packed = PathUtils.FileSizeToString(packageSize);
+         var ratio = bytesWritten == 0 ? 100 : packageSize * 100 / bytesWritten;
+         _writer.Text($"Packed {written} to {packed} (ratio: {ratio:D2}%)");
       }
 
       private IPackageWriter GetWriter(string rootDirectory, PackageSpec packageSpec, Stream outputStream)

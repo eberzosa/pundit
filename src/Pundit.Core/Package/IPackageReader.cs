@@ -9,5 +9,7 @@ namespace EBerzosa.Pundit.Core.Package
       PackageManifest ReadManifest();
 
       void InstallTo(string rootFolder, PackageDependency originalDependency, BuildConfiguration configuration);
+
+      void ExtractTo(string rootFolder);
    }
 }

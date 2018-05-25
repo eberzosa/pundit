@@ -1,10 +1,10 @@
 ﻿using System.IO;
-using EBerzosa.Pundit.Core.Package;
+using EBerzosa.Pundit.Core.Package.Pundit;
 using EBerzosa.Pundit.Core.Repository;
 using EBerzosa.Pundit.Core.Serializers;
 using EBerzosa.Utils;
 
-namespace EBerzosa.Pundit.Core.Application
+namespace EBerzosa.Pundit.Core.Package
 {
    public class PackageReaderFactory
    {
@@ -22,7 +22,7 @@ namespace EBerzosa.Pundit.Core.Application
          if (repoType == RepositoryType.NuGet)
             return new NuGetPackageReader(stream);
 
-         return new PackageReader(_packageSerializer, stream);
+         return new PunditPackageReader(_packageSerializer, stream);
       }
    }
 }

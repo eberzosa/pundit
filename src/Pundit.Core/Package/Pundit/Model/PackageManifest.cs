@@ -11,7 +11,8 @@ namespace EBerzosa.Pundit.Core.Model.Package
    public class PackageManifest
    {
       public const string DefaultManifestFileName = "pundit.xml"; //package definition
-      public const string PackedExtension = ".pundit";
+      public const string PunditPackageExtension = ".pundit";
+      public const string NuGetPackageExtension = ".nupkg";
 
       private const string PackageStringDescr = "allowed characters: letters (A-Z, a-z), numbers, underscore (_) and dot sign (.)";
 
@@ -28,6 +29,9 @@ namespace EBerzosa.Pundit.Core.Model.Package
       public string PackageId { get; set; }
 
       public NuGet.Versioning.NuGetVersion Version { get; set; }
+
+      // This needs to be moved to the root. Is here to be able to resolve Pundit packages dependencies for NuGet as NuGet does not have a FW declared
+      public string LegacyFramework { get; set; }
 
       public string ProjectUrl { get; set; }
 

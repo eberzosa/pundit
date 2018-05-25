@@ -1,5 +1,4 @@
-﻿using EBerzosa.Pundit.Core.Application;
-using EBerzosa.Pundit.Core.Model.Package;
+﻿using EBerzosa.Pundit.Core.Model.Package;
 using EBerzosa.Pundit.Core.Repository;
 using EBerzosa.Utils;
 using Pundit.Core.Application;
@@ -26,7 +25,7 @@ namespace EBerzosa.Pundit.Core.Package
       public IPackageInstaller GetInstaller(string rootDirectory, VersionResolutionTable versionTable, PackageManifest manifest)
       {
          return new PackageInstaller(_packageReaderFactory, rootDirectory, versionTable, manifest, 
-            _repositoryFactory.TryGetCacheRepos(), _installedPackagesManager);
+            _repositoryFactory.TryGetEnabledRepos(RepositoryScope.Cache), _installedPackagesManager);
       }
    }
 }

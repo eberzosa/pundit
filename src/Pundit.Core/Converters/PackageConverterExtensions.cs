@@ -2,21 +2,27 @@
 using System.Collections.Generic;
 using System.Linq;
 using EBerzosa.Pundit.Core.Model.Package;
-using NuGet.Frameworks;
-using NuGet.Packaging;
+using Mapster;
 using Pundit.Core.Model;
 
 namespace EBerzosa.Pundit.Core.Converters
 {
    internal static class PackageConverterExtensions
    {
-      public static PackageKey GetPackageKeyFromFileName(string fileName)
+      static PackageConverterExtensions()
       {
-         var chunks = fileName.Split(new[] { '-' }, 4);
-         return new PackageKey(chunks[0], NuGet.Versioning.NuGetVersion.Parse(chunks[1] + "." + chunks[2]), chunks[3]);
+         RegisterMappings();
       }
 
-      public static NuGet.Packaging.ManifestMetadata ToNuGetManifestMetadata(this PackageSpec packageSpec)
+      public static PackageSpec ToPackageSpec(this PackageManifest manifest) //, NuGet.Frameworks.NuGetFramework framework)
+      {
+         var spec = manifest.Adapt<PackageSpec>();
+         //spec.Framework = framework;
+
+         return spec;
+      }
+
+      public static NuGet.Packaging.ManifestMetadata ToNuGetManifestMetadata(this PackageSpec packageSpec, NuGet.Frameworks.NuGetFramework framework)
       {
          var metadata = new NuGet.Packaging.ManifestMetadata
          {
@@ -31,7 +37,7 @@ namespace EBerzosa.Pundit.Core.Converters
             ReleaseNotes = packageSpec.ReleaseNotes,
             PackageTypes = new[] {new NuGet.Packaging.Core.PackageType("Pundit", new Version(2, 0))},
 
-            DependencyGroups = packageSpec.Dependencies.ToNuGetPackageDependencyGroup(),
+            DependencyGroups = packageSpec.Dependencies.ToNuGetPackageDependencyGroup(framework),
          };
 
          metadata.SetLicenseUrl("http://localhost/" + packageSpec.License);
@@ -40,14 +46,10 @@ namespace EBerzosa.Pundit.Core.Converters
          return metadata;
       }
 
-      private static IEnumerable<NuGet.Packaging.PackageDependencyGroup> ToNuGetPackageDependencyGroup(this IEnumerable<PackageDependency> packageDependency)
+      private static IEnumerable<NuGet.Packaging.PackageDependencyGroup> ToNuGetPackageDependencyGroup(
+         this IEnumerable<PackageDependency> packageDependency, NuGet.Frameworks.NuGetFramework framework)
       {
-         return new[]
-         {
-            new PackageDependencyGroup(
-               NuGetFramework.AnyFramework,
-               packageDependency.Select(p => p.ToNuGetPackageDependency()))
-         };
+         return new[] {new NuGet.Packaging.PackageDependencyGroup(framework, packageDependency.Select(p => p.ToNuGetPackageDependency()))};
 
          //return packageDependency
          //   .GroupBy(dependency => dependency.Framework, dependency => dependency)
@@ -59,6 +61,15 @@ namespace EBerzosa.Pundit.Core.Converters
       private static NuGet.Packaging.Core.PackageDependency ToNuGetPackageDependency(this PackageDependency packageDependency)
       {
          return new NuGet.Packaging.Core.PackageDependency(packageDependency.PackageId, packageDependency.AllowedVersions);
+      }
+
+
+
+      private static void RegisterMappings()
+      {
+         TypeAdapterConfig<PackageManifest, PackageSpec>.NewConfig();
+         TypeAdapterConfig<PackageDependency, PackageDependency>.NewConfig()
+            .ConstructUsing(src => new PackageDependency(src.PackageId, src.AllowedVersions));
       }
    }
 }

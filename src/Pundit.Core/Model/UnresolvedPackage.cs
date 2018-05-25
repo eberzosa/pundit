@@ -37,7 +37,7 @@ namespace EBerzosa.Pundit.Core.Model
           return false;
       }
 
-      public override int GetHashCode()  => PackageId.GetHashCode() * Framework.GetHashCode();
+      public override int GetHashCode()  => PackageId.GetHashCode() * (Framework?.GetHashCode() ?? 1);
 
       public override string ToString() => $"{PackageId} [{AllowedVersions}] [{Framework}]";
    }

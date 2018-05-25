@@ -12,7 +12,7 @@ namespace EBerzosa.Pundit.Core.Services
       private readonly RepositoryFactory _repositoryFactory;
       private readonly IWriter _writer;
 
-      public bool LocalRepoOnly { get; set; }
+      public bool CacheRepoOnly { get; set; }
 
       public bool ToXml { get; set; }
 
@@ -32,7 +32,9 @@ namespace EBerzosa.Pundit.Core.Services
 
          var anyFound = false;
 
-         foreach (var repo in _repositoryFactory.TryGetEnabledRepos(true, !LocalRepoOnly))
+         var scope = CacheRepoOnly ? RepositoryScope.Cache : RepositoryScope.Any;
+
+         foreach (var repo in _repositoryFactory.TryGetEnabledRepos(scope))
          {
             _writer.Empty().Text($"Searching repository '{repo.Name}' [{repo.RootPath}]...").Empty();
 

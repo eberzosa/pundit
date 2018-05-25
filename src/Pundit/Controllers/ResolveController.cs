@@ -33,7 +33,7 @@ namespace EBerzosa.Pundit.CommandLine.Controllers
          else
             throw new NotSupportedException($"Configuration '{configuration}' is not supported.");
 
-         service.LocalReposOnly = localOnly;
+         service.CacheReposOnly = localOnly;
          service.Force = force;
          service.DryRun = dryRun;
          service.ReleaseLabel = releaseLabel;

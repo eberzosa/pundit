@@ -20,6 +20,10 @@ namespace EBerzosa.Pundit.Core.Model.Xml
       [XmlElement("version")]
       public string Version { get; set; }
 
+      // This needs to be moved to the root. Is here to be able to resolve Pundit packages dependencies for NuGet as NuGet does not have a FW declared
+      [XmlElement("platform")]
+      public string Platform { get; set; }
+
       [XmlElement("author")]
       public string Author { get; set; }
 

@@ -42,7 +42,7 @@ namespace EBerzosa.Pundit.Core.Model.Package
 
       public override int GetHashCode()
       {
-         return PackageId.GetHashCode() * Version.GetHashCode() * Framework.GetHashCode();
+         return PackageId.GetHashCode() * Version.GetHashCode() * (Framework != null ? Framework.GetHashCode() : 1);
       }
 
       public object Clone()

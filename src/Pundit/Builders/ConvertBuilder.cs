@@ -19,22 +19,33 @@ namespace EBerzosa.Pundit.CommandLine.Builders
          var parent = root.NewSubCommand("convert", "Converts between NuGet and Pundit packages and Specs");
 
          BuildNuGetToPundit(parent);
+         BuildPunditToNuGet(parent);
       }
 
       public void BuildNuGetToPundit(ISubCommand parent)
       {
-         IArgument source = null;
-         IOption output = null;
-         IOption framework = null;
-
-         parent.NewSubCommand("NuGetToPundit", "Converts between NuGet Package and Pundit Package")
+         parent.NewSubCommand("NuGetToPundit", "Converts a NuGet Package to a Pundit Package")
             .Build((cmd, arg, opt) =>
             {
-               source = arg.SingleValue("sourceFile", "The NuGet Package file to convert");
-               output = opt.SingleValue("o", "output", "directory", "Specifies the output directory for the converted file(s)");
-               framework = opt.SingleValue("f", "framework", "version", "The framework version to use. Default, convert all");
-            })
-            .OnExecute(() => _controller.NuGetToPundit(source.Value, output.Value, framework.Value).ToInteger());
+               var source = arg.SingleValue("sourceFile", "The NuGet Package file to convert");
+               var output = opt.SingleValue("o", "output", "directory", "Specifies the output directory for the converted file(s)");
+               var framework = opt.SingleValue("f", "framework", "version", "The framework version to use. Default, convert all");
+
+               cmd.OnExecute(() => _controller.NuGetToPundit(source.Value, output.Value, framework.Value).ToInteger());
+            });
+
+      }
+
+      public void BuildPunditToNuGet(ISubCommand parent)
+      {
+         parent.NewSubCommand("PunditToNuGet", "Converts a Pundit Package to a NuGet Package")
+            .Build((cmd, arg, opt) =>
+            {
+               var source = arg.SingleValue("sourceFile", "The NuGet Package file to convert");
+               var output = opt.SingleValue("o", "output", "directory", "Specifies the output directory for the converted file(s)");
+
+               cmd.OnExecute(() => _controller.PunditToNuGet(source.Value, output.Value).ToInteger());
+            });
       }
    }
 }

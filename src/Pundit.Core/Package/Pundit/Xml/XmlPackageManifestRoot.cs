@@ -7,7 +7,7 @@ namespace EBerzosa.Pundit.Core.Model.Xml
    [XmlRoot("package")]
    public class XmlPackageManifestRoot : XmlPackageManifest
    {
-      [XmlElement("platform")]
-      public string Platform { get; set; }
+      //[XmlElement("platform")]
+      //public string Platform { get; set; }
    }
 }
