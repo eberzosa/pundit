@@ -121,7 +121,6 @@
     <Compile Include="3rdparty\DirectoryScanner.cs" />
     <Compile Include="3rdparty\Options.cs" />
     <Compile Include="Converters\PackageConverterExtensions.cs" />
-    <Compile Include="Converters\VersionConverterExtensions.cs" />
     <Compile Include="PackageManager\InstalledPackagesManager.cs" />
     <Compile Include="PackageManager\Xml\XmlInstalledPackagesIndex.cs" />
     <Compile Include="PackageManager\Xml\XmlPackageKey.cs" />
@@ -214,10 +213,13 @@
     <Compile Include="Utils\ByteFormatProvider.cs" />
     <Compile Include="Utils\NullWriter.cs" />
     <Compile Include="Utils\PathUtils.cs" />
+    <Compile Include="Versioning\VersionComparerExtended.cs" />
     <Compile Include="Versioning\VersionComparison.cs" />
     <Compile Include="Versioning\HashCodeCombiner.cs" />
     <Compile Include="Versioning\VersionComparer.cs" />
+    <Compile Include="Versioning\VersionExtensions.cs" />
     <Compile Include="Versioning\VersionRangeExtended.cs" />
+    <Compile Include="Versioning\VersionPart.cs" />
     <Compile Include="WiringModule.cs" />
   </ItemGroup>
   <ItemGroup>

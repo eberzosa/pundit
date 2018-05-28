@@ -147,7 +147,7 @@ namespace EBerzosa.Pundit.CommandLine.Utils
          if (!pad.HasValue)
             return message;
 
-         return message.PadRight(pad.Value, ' ');
+         return (message ?? "").PadRight(pad.Value, ' ');
       }
    }
 }

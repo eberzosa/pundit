@@ -128,7 +128,7 @@ namespace EBerzosa.Pundit.Core.Services
             }
 
             _writer.Title("Resolved packages")
-               .BeginColumns(new int?[] {packageIds.Max(p => p.Length + 2), versions.Max(v => v.Length + 2), platforms.Max(p => p.Length +2), null});
+               .BeginColumns(new int?[] {packageIds.Max(p => p.Length + 2), versions.Max(v => v.Length + 2), platforms.Max(p => (p?.Length ?? 0) + 2), null});
 
             _writer.Header("PackageId").Header("Version").Header("Fmwk").Header("Repository");
 

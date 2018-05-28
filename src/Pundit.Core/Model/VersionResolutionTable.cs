@@ -52,7 +52,7 @@ namespace Pundit.Core.Model
       public SatisfyingInfo GetActiveSatisfyingInfo(UnresolvedPackage package)
       {
          if (_resolution.ContainsKey(package) && _resolution[package] != null && _resolution[package].Count > 0)
-            return _resolution[package].OrderByDescending(p => p).FirstOrDefault();
+            return _resolution[package].OrderByDescending(p => p.Version, package.AllowedVersions.Comparer).FirstOrDefault();
          
          return null;
       }

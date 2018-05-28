@@ -98,14 +98,13 @@ namespace EBerzosa.Pundit.Core.Resolvers
 
             foreach (var repo in _activeRepositories)
             {
-               var versions = repo.GetVersions(node.UnresolvedPackage);
-
-               if (versions == null || versions.Count == 0)
-                  continue;
+               var versions = repo.GetVersions(node.UnresolvedPackage)
+                  .Where(v => node.AllowedVersions.HasReleaseLabel || node.AllowedVersions.NuGetVersionRange.MinVersion.ReleaseLabels.Any() || !v.IsPrerelease)
+                  .Where(v => node.AllowedVersions.Satisfies(v))
+                  .Where(v => !punditVersions.ContainsKey(v));
 
                foreach (var version in versions)
-                  if (node.AllowedVersions.Satisfies(version) && !punditVersions.ContainsKey(version))
-                     punditVersions.Add(version, new SatisfyingInfo(version, repo));
+                  punditVersions.Add(version, new SatisfyingInfo(version, repo));
             }
 
             node.SetVersions(punditVersions.Values);
@@ -139,7 +138,7 @@ namespace EBerzosa.Pundit.Core.Resolvers
                   break;
                }
 
-               if (node.ActiveSatisfayingData.Any())
+               if (node.CanDowngrade)
                   node.RemoveActiveVersion();
                else
                   throw new ApplicationException("could not find manifest for node " + node.Path);

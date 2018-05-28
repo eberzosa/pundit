@@ -3,7 +3,6 @@ using System.Text.RegularExpressions;
 using EBerzosa.Pundit.Core.Model;
 using EBerzosa.Pundit.Core.Model.Package;
 using EBerzosa.Pundit.Core.Versioning;
-using NuGet.Frameworks;
 
 namespace EBerzosa.Pundit.Core.Package
 {
@@ -70,9 +69,6 @@ namespace EBerzosa.Pundit.Core.Package
 
       private static string ToPunditFileSearchVersion(VersionRangeExtended range)
       {
-         if (range.ReleaseLabel != null)
-            throw new NotSupportedException();
-
          return ToPunditFileSearchVersion(range.NuGetVersionRange);
       }
 
@@ -110,7 +106,7 @@ namespace EBerzosa.Pundit.Core.Package
 
          var parsedFramework = NuGet.Frameworks.NuGetFramework.Parse(frameworkString);
 
-         if (parsedFramework == NuGetFramework.UnsupportedFramework)
+         if (parsedFramework == NuGet.Frameworks.NuGetFramework.UnsupportedFramework)
             return new NuGet.Frameworks.NuGetFramework(frameworkString);
 
          return parsedFramework;

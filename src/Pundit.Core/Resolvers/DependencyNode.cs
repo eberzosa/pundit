@@ -5,7 +5,6 @@ using EBerzosa.Pundit.Core.Model;
 using EBerzosa.Pundit.Core.Model.Package;
 using EBerzosa.Pundit.Core.Repository;
 using EBerzosa.Pundit.Core.Versioning;
-using NuGet.Packaging;
 
 namespace EBerzosa.Pundit.Core.Resolvers
 {
@@ -13,41 +12,17 @@ namespace EBerzosa.Pundit.Core.Resolvers
    {
       private readonly DependencyNode _parentNode;
       
-      private SatisfyingInfo[] _satisfyingData;
-      private int _activeVersionIndex = -1;
-
+      private List<SatisfyingInfo> _satisfyingData;
+      
       //node's dependencies
       private readonly List<DependencyNode> _children = new List<DependencyNode>();
-      private readonly VersionRangeExtended _allowedVersions;
 
       public string PackageId { get; }
 
       [Obsolete("Used in Pundit packages only.")]
       public string Framework { get; private set; }
 
-      public VersionRangeExtended AllowedVersions
-      {
-         get
-         {
-            //if (_useReleasePackages == null)
-            //   return _allowedVersions;
-
-            //FloatBehaviour behaviour;
-            //if (_allowedVersions.FloatBehaviour == FloatBehaviour.Major)
-            //   behaviour = FloatBehaviour.MajorPrerelease;
-            //else if (_allowedVersions.FloatBehaviour == FloatBehaviour.Minor)
-            //   behaviour = FloatBehaviour.MinorPrerelease;
-            //else if (_allowedVersions.FloatBehaviour == FloatBehaviour.Patch)
-            //   behaviour = FloatBehaviour.PatchPrerelease;
-            //else if (_allowedVersions.FloatBehaviour == FloatBehaviour.Revision)
-            //   behaviour = FloatBehaviour.RevisionPrerelease;
-            //else
-            //   behaviour = _allowedVersions.FloatBehaviour;
-
-            //return new FloatRange(behaviour, _allowedVersions.MinVersion, _useReleasePackages);
-            return _allowedVersions;
-         }
-      }
+      public VersionRangeExtended AllowedVersions { get; }
 
       public IEnumerable<DependencyNode> Children => _children;
 
@@ -59,7 +34,6 @@ namespace EBerzosa.Pundit.Core.Resolvers
          get
          {
             var pp = new List<string>();
-
             var current = this;
 
             do
@@ -73,9 +47,9 @@ namespace EBerzosa.Pundit.Core.Resolvers
          }
       }
 
-      public UnresolvedPackage UnresolvedPackage => new UnresolvedPackage(PackageId, Framework, _allowedVersions);
+      public UnresolvedPackage UnresolvedPackage => new UnresolvedPackage(PackageId, Framework, AllowedVersions);
 
-      public bool CanDowngrade => _activeVersionIndex > 0;
+      public bool CanDowngrade => _satisfyingData.Count > 0;
 
       public bool HasVersions => _satisfyingData != null;
 
@@ -88,12 +62,8 @@ namespace EBerzosa.Pundit.Core.Resolvers
          get
          {
             foreach (DependencyNode child in _children)
-            {
                if (!child.IsRecursivelyFull)
-               {
                   return false;
-               }
-            }
 
             return IsFull;
          }
@@ -101,23 +71,13 @@ namespace EBerzosa.Pundit.Core.Resolvers
 
       public IEnumerable<NuGet.Versioning.NuGetVersion> AllVersions => _satisfyingData.Select(v => v.Version);
 
-      public SatisfyingInfo ActiveVersion => _activeVersionIndex == -1 ? null : _satisfyingData[_activeVersionIndex];
+      public SatisfyingInfo ActiveVersion { get; private set; }
+
 
       /// <summary>
       /// Versions from lowest to latest active (<see cref="ActiveVersion"/>)
       /// </summary>
-      public IEnumerable<SatisfyingInfo> ActiveSatisfayingData
-      {
-         get
-         {
-            var active = new List<SatisfyingInfo>();
-
-            for (int i = 0; i <= _activeVersionIndex; i++)
-               active.Add(_satisfyingData[i]);
-
-            return active;
-         }
-      }
+      public IEnumerable<SatisfyingInfo> ActiveSatisfayingData => _satisfyingData;
 
       public PackageKey ActiveVersionKey
       {
@@ -147,7 +107,7 @@ namespace EBerzosa.Pundit.Core.Resolvers
          _parentNode = parentNode;
          PackageId = packageId;
          Framework = framework;
-         _allowedVersions = allowedVersions;
+         AllowedVersions = allowedVersions;
       }
 
 
@@ -162,23 +122,22 @@ namespace EBerzosa.Pundit.Core.Resolvers
          if (versions == null)
             throw new ArgumentNullException(nameof(versions));
 
-         _satisfyingData = versions.ToArray();
-         Array.Sort(_satisfyingData);
-
-         if(_satisfyingData.Length > 0)
-            _activeVersionIndex = _satisfyingData.Length - 1;
+         _satisfyingData = versions.OrderByDescending(s => s.Version, AllowedVersions.Comparer).ToList();
 
          _children.Clear();
-         HasManifest = _satisfyingData.Length == 0; //if there are no versions, no point to fetch manifest
+         HasManifest = _satisfyingData.Count == 0; //if there are no versions, no point to fetch manifest
+
+         SetActiveVersion();
       }
 
       public void RemoveActiveVersion()
       {
-         if (_activeVersionIndex < 0)
+         if (_satisfyingData.Count <= 0)
             return;
 
-         Array.Resize(ref _satisfyingData, _satisfyingData.Length - 1);
-         _activeVersionIndex--;
+         _satisfyingData.Remove(ActiveVersion);
+
+         SetActiveVersion();
       }
 
       public void SetManifest(PackageManifest thisManifest)
@@ -189,8 +148,8 @@ namespace EBerzosa.Pundit.Core.Resolvers
          _children.Clear();
 
          foreach (PackageDependency pd in thisManifest.Dependencies)
-            _children.Add(new DependencyNode(this, pd.PackageId, pd.Framework, 
-               new VersionRangeExtended(pd.AllowedVersions){ReleaseLabel = _allowedVersions.ReleaseLabel}));
+            _children.Add(new DependencyNode(this, pd.PackageId, pd.Framework,
+               new VersionRangeExtended(pd.AllowedVersions) {ReleaseLabel = AllowedVersions.ReleaseLabel}));
 
          HasManifest = true;
 
@@ -201,30 +160,43 @@ namespace EBerzosa.Pundit.Core.Resolvers
 
       public object Clone()
       {
-         var node = new DependencyNode(_parentNode, PackageId, Framework, _allowedVersions);
+         var node = new DependencyNode(_parentNode, PackageId, Framework, AllowedVersions);
 
          if (_satisfyingData != null)
          {
-            node._satisfyingData = new SatisfyingInfo[_satisfyingData.Length];
+            node._satisfyingData = new List<SatisfyingInfo>();
 
-            for (int i = 0; i < node._satisfyingData.Length; i++)
-               node._satisfyingData[i] = new SatisfyingInfo(_satisfyingData[0].Version, _satisfyingData[0].Repo);
+            for (int i = 0; i < node._satisfyingData.Count; i++)
+               node._satisfyingData.Add(new SatisfyingInfo(_satisfyingData[0].Version, _satisfyingData[0].Repo));
          }
 
-         node._activeVersionIndex = _activeVersionIndex;
+         node.ActiveVersion = new SatisfyingInfo(ActiveVersion.Version, ActiveVersion.Repo);
 
          //manifest
 
          node.HasManifest = HasManifest;
 
          foreach (DependencyNode child in _children)
-         {
             node._children.Add((DependencyNode)child.Clone());
-         }
 
          return node;
       }
 
       public override string ToString() => PackageId + "[" + AllowedVersions + "]" + "[" + Framework + "]";
+
+      private void SetActiveVersion()
+      {
+         if (_satisfyingData.Count == 0)
+         {
+            ActiveVersion = null;
+            return;
+         }
+
+         var version = AllowedVersions.FindBestMatch(_satisfyingData.Select(s => s.Version));
+         if (version == null)
+            throw new InvalidOperationException("No best version found");
+
+         ActiveVersion = _satisfyingData.FirstOrDefault(s => s.Version == version);
+      }
    }
 }

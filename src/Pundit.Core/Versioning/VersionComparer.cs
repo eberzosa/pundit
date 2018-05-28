@@ -9,217 +9,21 @@ namespace EBerzosa.Pundit.Core.Versioning
    /// <summary>
    /// An IVersionComparer for NuGetVersion and NuGetVersion types.
    /// </summary>
-   public sealed class VersionComparer : NuGet.Versioning.IVersionComparer
+   public class VersionComparer : NuGet.Versioning.IVersionComparer
    {
       private readonly VersionComparison _mode;
 
       /// <summary>
       /// Creates a VersionComparer using the default mode.
       /// </summary>
-      public VersionComparer()
-      {
-         _mode = VersionComparison.Default;
-      }
+      public VersionComparer() => _mode = VersionComparison.Default;
 
       /// <summary>
       /// Creates a VersionComparer that respects the given comparison mode.
       /// </summary>
       /// <param name="versionComparison">comparison mode</param>
-      public VersionComparer(VersionComparison versionComparison)
-      {
-         _mode = versionComparison;
-      }
+      public VersionComparer(VersionComparison versionComparison) => _mode = versionComparison;
 
-      /// <summary>
-      /// Determines if both versions are equal.
-      /// </summary>
-      public bool Equals(NuGet.Versioning.SemanticVersion x, NuGet.Versioning.SemanticVersion y)
-      {
-         if (ReferenceEquals(x, y))
-         {
-            return true;
-         }
-
-         if (ReferenceEquals(y, null))
-         {
-            return false;
-         }
-
-         if (ReferenceEquals(x, null))
-         {
-            return false;
-         }
-
-         if (_mode == VersionComparison.Default || _mode == VersionComparison.VersionRelease)
-         {
-            // Compare the version and release labels
-            return (x.Major == y.Major
-                && x.Minor == y.Minor
-                && x.Patch == y.Patch
-                && GetRevisionOrZero(x) == GetRevisionOrZero(y)
-                && AreReleaseLabelsEqual(x, y));
-         }
-
-         // Use the full comparer for non-default scenarios
-         return Compare(x, y) == 0;
-      }
-
-      /// <summary>
-      /// Compares the given versions using the VersionComparison mode.
-      /// </summary>
-      public static int Compare(NuGet.Versioning.SemanticVersion version1, NuGet.Versioning.SemanticVersion version2, VersionComparison versionComparison)
-      {
-         NuGet.Versioning.IVersionComparer comparer = new VersionComparer(versionComparison);
-         return comparer.Compare(version1, version2);
-      }
-
-      /// <summary>
-      /// Gives a hash code based on the normalized version string.
-      /// </summary>
-      public int GetHashCode(NuGet.Versioning.SemanticVersion version)
-      {
-         if (ReferenceEquals(version, null))
-         {
-            return 0;
-         }
-
-         var combiner = new HashCodeCombiner();
-
-         combiner.AddObject(version.Major);
-         combiner.AddObject(version.Minor);
-         combiner.AddObject(version.Patch);
-
-         var nuGetVersion = version as NuGet.Versioning.NuGetVersion;
-         if (nuGetVersion != null
-             && nuGetVersion.Revision > 0)
-         {
-            combiner.AddObject(nuGetVersion.Revision);
-         }
-
-         if (_mode == VersionComparison.Default
-             || _mode == VersionComparison.VersionRelease
-             || _mode == VersionComparison.VersionReleaseMetadata)
-         {
-            var labels = GetReleaseLabelsOrNull(version);
-
-            if (labels != null)
-            {
-               var comparer = StringComparer.OrdinalIgnoreCase;
-               foreach (var label in labels)
-               {
-                  combiner.AddObject(label, comparer);
-               }
-            }
-         }
-
-         if (_mode == VersionComparison.VersionReleaseMetadata && version.HasMetadata)
-         {
-            combiner.AddObject(version.Metadata, StringComparer.OrdinalIgnoreCase);
-         }
-
-         return combiner.CombinedHash;
-      }
-
-      /// <summary>
-      /// Compare versions.
-      /// </summary>
-      public int Compare(NuGet.Versioning.SemanticVersion x, NuGet.Versioning.SemanticVersion y)
-      {
-         if (ReferenceEquals(x, y))
-            return 0;
-
-         if (ReferenceEquals(y, null))
-            return 1;
-
-         if (ReferenceEquals(x, null))
-            return -1;
-
-         // compare version
-         var result = x.Major.CompareTo(y.Major);
-         if (result != 0)
-            return result;
-
-         result = x.Minor.CompareTo(y.Minor);
-         if (result != 0)
-            return result;
-
-         result = x.Patch.CompareTo(y.Patch);
-         if (result != 0)
-            return result;
-
-         var legacyX = x as NuGet.Versioning.NuGetVersion;
-         var legacyY = y as NuGet.Versioning.NuGetVersion;
-
-         if (_mode == VersionComparison.PunditVersion)
-         {
-            legacyX = GetFinalVersion(legacyX);
-            legacyY = GetFinalVersion(legacyY);
-         }
-
-         result = CompareLegacyVersion(legacyX, legacyY);
-         if (result != 0)
-            return result;
-         
-         if (_mode != VersionComparison.Version)
-         {
-            // compare release labels
-            var xLabels = GetReleaseLabelsOrNull(x);
-            var yLabels = GetReleaseLabelsOrNull(y);
-
-            if (xLabels != null && yLabels == null)
-               return -1;
-
-            if (xLabels == null && yLabels != null)
-               return 1;
-
-            if (xLabels != null && yLabels != null)
-            {
-               result = CompareReleaseLabels(xLabels, yLabels, 
-                  legacyX.IsLegacyVersion ? legacyX.Revision : (int?)null, legacyY.IsLegacyVersion ? legacyY.Revision : (int?)null);
-
-               if (result != 0)
-               {
-                  return result;
-               }
-            }
-
-            // compare the metadata
-            if (_mode == VersionComparison.VersionReleaseMetadata)
-            {
-               result = StringComparer.OrdinalIgnoreCase.Compare(x.Metadata ?? string.Empty, y.Metadata ?? string.Empty);
-               if (result != 0)
-               {
-                  return result;
-               }
-            }
-         }
-
-         return 0;
-      }
-
-      /// <summary>
-      /// Compares the 4th digit of the version number.
-      /// </summary>
-      private static int CompareLegacyVersion(NuGet.Versioning.NuGetVersion legacyX, NuGet.Versioning.NuGetVersion legacyY)
-      {
-         var result = 0;
-
-         // true if one has a 4th version number
-         if (legacyX != null && legacyY != null)
-         {
-            result = legacyX.Version.CompareTo(legacyY.Version);
-         }
-         else if (legacyX != null && legacyX.Version.Revision > 0)
-         {
-            result = 1;
-         }
-         else if (legacyY != null && legacyY.Version.Revision > 0)
-         {
-            result = -1;
-         }
-
-         return result;
-      }
 
       /// <summary>
       /// A default comparer that compares metadata as strings.
@@ -236,24 +40,212 @@ namespace EBerzosa.Pundit.Core.Versioning
       /// </summary>
       public static readonly NuGet.Versioning.IVersionComparer VersionRelease = new VersionComparer(VersionComparison.VersionRelease);
 
-      
+      /// <summary>
+      /// Compares versions as Version + Revision with special handling for Releases.
+      /// </summary>
       public static readonly NuGet.Versioning.IVersionComparer Pundit = new VersionComparer(VersionComparison.PunditVersion);
 
       /// <summary>
       /// A version comparer that follows SemVer 2.0.0 rules.
       /// </summary>
-      public static NuGet.Versioning.IVersionComparer VersionReleaseMetadata = new VersionComparer( VersionComparison.VersionReleaseMetadata);
+      public static NuGet.Versioning.IVersionComparer VersionReleaseMetadata = new VersionComparer(VersionComparison.VersionReleaseMetadata);
+
+      /// <summary>
+      /// Compares the given versions using the VersionComparison mode.
+      /// </summary>
+      public static int Compare(NuGet.Versioning.SemanticVersion version1, NuGet.Versioning.SemanticVersion version2, VersionComparison versionComparison) 
+         => new VersionComparer(versionComparison).Compare(version1, version2);
+
+
+      /// <summary>
+      /// Determines if both versions are equal.
+      /// </summary>
+      public bool Equals(NuGet.Versioning.SemanticVersion x, NuGet.Versioning.SemanticVersion y)
+      {
+         if (ReferenceEquals(x, y))
+            return true;
+
+         if (ReferenceEquals(y, null) || ReferenceEquals(x, null))
+            return false;
+
+         if (_mode == VersionComparison.Default || _mode == VersionComparison.VersionRelease)
+         {
+            return x.Major == y.Major && x.Minor == y.Minor && x.Patch == y.Patch &&
+                   GetRevisionOrZero(x) == GetRevisionOrZero(y) && AreReleaseLabelsEqual(x, y);
+         }
+
+         // Use the full comparer for non-default scenarios
+         return Compare(x, y) == 0;
+      }
+
+
+      /// <summary>
+      /// Gives a hash code based on the normalized version string.
+      /// </summary>
+      public int GetHashCode(NuGet.Versioning.SemanticVersion version)
+      {
+         if (ReferenceEquals(version, null))
+            return 0;
+
+         var combiner = new HashCodeCombiner();
+
+         combiner.AddObject(version.Major);
+         combiner.AddObject(version.Minor);
+         combiner.AddObject(version.Patch);
+
+         var nuGetVersion = version as NuGet.Versioning.NuGetVersion;
+
+         if (nuGetVersion != null && nuGetVersion.Revision > 0)
+            combiner.AddObject(nuGetVersion.Revision);
+
+         if (_mode == VersionComparison.Default || _mode == VersionComparison.VersionRelease || _mode == VersionComparison.VersionReleaseMetadata)
+         {
+            var labels = GetReleaseLabelsOrNull(version);
+
+            if (labels != null)
+            {
+               var comparer = StringComparer.OrdinalIgnoreCase;
+               foreach (var label in labels)
+                  combiner.AddObject(label, comparer);
+            }
+         }
+
+         if (_mode == VersionComparison.VersionReleaseMetadata && version.HasMetadata)
+            combiner.AddObject(version.Metadata, StringComparer.OrdinalIgnoreCase);
+
+         return combiner.CombinedHash;
+      }
+
+      /// <summary>
+      /// Compare versions.
+      /// </summary>
+      public int Compare(NuGet.Versioning.SemanticVersion x, NuGet.Versioning.SemanticVersion y)
+      {
+         var result = CompareSemVersion(x, y);
+         if (result != 0)
+            return result;
+
+         var legacyX = x as NuGet.Versioning.NuGetVersion;
+         var legacyY = y as NuGet.Versioning.NuGetVersion;
+
+         result = CompareLegacyVersion(legacyX, legacyY);
+         if (result != 0)
+            return result;
+
+         if (_mode == VersionComparison.Version)
+            return 0;
+
+         if (_mode == VersionComparison.PunditVersion)
+         {
+            legacyX = GetFinalVersion(legacyX);
+            legacyY = GetFinalVersion(legacyY);
+         }
+
+         // compare release labels
+         var xLabels = GetReleaseLabelsOrNull(legacyX ?? x);
+         var yLabels = GetReleaseLabelsOrNull(legacyY ?? y);
+
+         if (xLabels != null && yLabels == null)
+            return -1;
+
+         if (xLabels == null && yLabels != null)
+            return 1;
+
+         if (xLabels != null && yLabels != null)
+         {
+            result = CompareReleaseLabels(xLabels, yLabels, 
+               legacyX.IsLegacyVersion ? legacyX.Revision : (int?)null, legacyY.IsLegacyVersion ? legacyY.Revision : (int?)null);
+
+            if (result != 0)
+               return result;
+         }
+
+         if (_mode == VersionComparison.PunditVersion)
+         {
+            result = CompareLegacyVersion(legacyX, legacyY);
+            if (result != 0)
+               return result;
+         }
+
+         // compare the metadata
+         if (_mode == VersionComparison.VersionReleaseMetadata)
+         {
+            result = StringComparer.OrdinalIgnoreCase.Compare(x.Metadata ?? string.Empty, y.Metadata ?? string.Empty);
+            if (result != 0)
+               return result;
+         }
+
+         return 0;
+      }
+
+      public static int CompareSemVersion(NuGet.Versioning.SemanticVersion x, NuGet.Versioning.SemanticVersion y)
+      {
+         if (ReferenceEquals(x, y))
+            return 0;
+
+         if (ReferenceEquals(x, null))
+            return -1;
+
+         if (ReferenceEquals(y, null))
+            return 1;
+
+         // compare version
+         var result = x.Major.CompareTo(y.Major);
+         if (result != 0)
+            return result;
+
+         result = x.Minor.CompareTo(y.Minor);
+         if (result != 0)
+            return result;
+
+         result = x.Patch.CompareTo(y.Patch);
+         if (result != 0)
+            return result;
+
+         return 0;
+      }
+
+      /// <summary>
+      /// Compares the 4th digit of the version number.
+      /// </summary>
+      private static int CompareLegacyVersion(NuGet.Versioning.NuGetVersion legacyX, NuGet.Versioning.NuGetVersion legacyY)
+      {
+         // true if one has a 4th version number
+         if (legacyX != null && legacyY != null)
+            return legacyX.Version.CompareTo(legacyY.Version);
+
+         if (legacyX != null && legacyX.Version.Revision > 0)
+            return 1;
+
+         if (legacyY != null && legacyY.Version.Revision > 0)
+            return -1;
+
+         return 0;
+      }
+
+      private static NuGet.Versioning.NuGetVersion GetFinalVersion(NuGet.Versioning.NuGetVersion version)
+      {
+         if (version == null)
+            return null;
+
+         var last = version.ReleaseLabels != null && version.ReleaseLabels.Any()
+            ? version.ReleaseLabels.Last()
+            : null;
+
+         if (last == null || !int.TryParse(last, out var revision))
+            return new NuGet.Versioning.NuGetVersion(version.Major, version.Minor, version.Patch, 0, version.ReleaseLabels, version.Metadata);
+
+         var labels = version.ReleaseLabels.Take(version.ReleaseLabels.Count() - 1);
+         return new NuGet.Versioning.NuGetVersion(version.Major, version.Minor, version.Patch, revision, labels, version.Metadata);
+      }
 
       /// <summary>
       /// Compares sets of release labels.
       /// </summary>
-      private static int CompareReleaseLabels(string[] version1, string[] version2, int? version1Revision, int? version2Revisiton)
+      private static int CompareReleaseLabels(string[] version1, string[] version2, int? version1Revision, int? version2Revision)
       {
          var result = 0;
-
-         if (version1Revision != null)
-            return version1Revision.Value.CompareTo(version1Revision);
-
+         
          var count = Math.Max(version1.Length, version2.Length);
          
          for (var i = 0; i < count; i++)
@@ -283,38 +275,20 @@ namespace EBerzosa.Pundit.Core.Versioning
       /// </summary>
       private static int CompareRelease(string version1, string version2)
       {
-         var version1Num = 0;
-         var version2Num = 0;
-         var result = 0;
-
          // check if the identifiers are numeric
-         var v1IsNumeric = int.TryParse(version1, out version1Num);
-         var v2IsNumeric = int.TryParse(version2, out version2Num);
-
+         var v1IsNumeric = int.TryParse(version1, out var version1Num);
+         var v2IsNumeric = int.TryParse(version2, out var version2Num);
+         
          // if both are numeric compare them as numbers
          if (v1IsNumeric && v2IsNumeric)
-         {
-            result = version1Num.CompareTo(version2Num);
-         }
-         else if (v1IsNumeric || v2IsNumeric)
-         {
-            // numeric labels come before alpha labels
-            if (v1IsNumeric)
-            {
-               result = -1;
-            }
-            else
-            {
-               result = 1;
-            }
-         }
-         else
-         {
-            // Ignoring 2.0.0 case sensitive compare. Everything will be compared case insensitively as 2.0.1 specifies.
-            result = StringComparer.OrdinalIgnoreCase.Compare(version1, version2);
-         }
+            return version1Num.CompareTo(version2Num);
 
-         return result;
+         // numeric labels come before alpha labels
+         if (v1IsNumeric || v2IsNumeric)
+            return v1IsNumeric ? -1 : 1;
+
+         // Ignoring 2.0.0 case sensitive compare. Everything will be compared case insensitively as 2.0.1 specifies.
+         return StringComparer.OrdinalIgnoreCase.Compare(version1, version2);
       }
 
       /// <summary>
@@ -322,20 +296,17 @@ namespace EBerzosa.Pundit.Core.Versioning
       /// </summary>
       private static string[] GetReleaseLabelsOrNull(NuGet.Versioning.SemanticVersion version)
       {
-         string[] labels = null;
-
          // Check if labels exist
-         if (version.IsPrerelease)
-         {
-            // Try to use string[] which is how labels are normally stored.
-            var enumerable = version.ReleaseLabels;
-            labels = enumerable as string[];
+         if (!version.IsPrerelease)
+            return null;
 
-            if (labels != null && enumerable != null)
-            {
-               // This is not the expected type, enumerate and convert to an array.
-               labels = enumerable.ToArray();
-            }
+         // Try to use string[] which is how labels are normally stored.
+         var labels = version.ReleaseLabels as string[];
+
+         if (labels == null && version.ReleaseLabels != null)
+         {
+            // This is not the expected type, enumerate and convert to an array.
+            labels = version.ReleaseLabels.ToArray();
          }
 
          return labels;
@@ -350,32 +321,22 @@ namespace EBerzosa.Pundit.Core.Versioning
          var yLabels = GetReleaseLabelsOrNull(y);
 
          if (xLabels == null && yLabels != null)
-         {
             return false;
-         }
 
          if (xLabels != null && yLabels == null)
-         {
             return false;
-         }
 
-         if (xLabels != null && yLabels != null)
-         {
-            // Both versions must have the same number of labels to be equal
-            if (xLabels.Length != yLabels.Length)
-            {
+         if (xLabels == null || yLabels == null)
+            return true;
+
+         // Both versions must have the same number of labels to be equal
+         if (xLabels.Length != yLabels.Length)
+            return false;
+
+         // Check if the labels are the same
+         for (var i = 0; i < xLabels.Length; i++)
+            if (!StringComparer.OrdinalIgnoreCase.Equals(xLabels[i], yLabels[i]))
                return false;
-            }
-
-            // Check if the labels are the same
-            for (var i = 0; i < xLabels.Length; i++)
-            {
-               if (!StringComparer.OrdinalIgnoreCase.Equals(xLabels[i], yLabels[i]))
-               {
-                  return false;
-               }
-            }
-         }
 
          // labels are equal
          return true;
@@ -390,17 +351,5 @@ namespace EBerzosa.Pundit.Core.Versioning
          return nugetVersion?.Revision ?? 0;
       }
 
-
-      private static NuGet.Versioning.NuGetVersion GetFinalVersion(NuGet.Versioning.NuGetVersion version)
-      {
-         if (version == null)
-            return null;
-
-         var last = version.ReleaseLabels != null && version.ReleaseLabels.Any() ? version.ReleaseLabels.Last() : null;
-
-         return last != null && int.TryParse(last, out var revision)
-            ? new NuGet.Versioning.NuGetVersion(version.Major, version.Minor, version.Patch, revision, version.ReleaseLabels, version.Metadata)
-            : version;
-      }
    }
 }

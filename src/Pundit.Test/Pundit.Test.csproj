@@ -110,6 +110,9 @@
     <Compile Include="Core\PunditVersionTest.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="Utils\ByteFormatProviderTest.cs" />
+    <Compile Include="Versioning\VersionComparerExtendedTest.cs" />
+    <Compile Include="Versioning\VersionExtensionsTest.cs" />
+    <Compile Include="Versioning\VersionRangeExtendedTest.cs" />
     <Compile Include="Versioning\VersionComparerTest.cs" />
   </ItemGroup>
   <ItemGroup>

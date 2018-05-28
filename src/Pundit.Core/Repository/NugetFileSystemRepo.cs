@@ -18,7 +18,10 @@ namespace EBerzosa.Pundit.Core.Repository
    {
       private readonly SourceRepository _sourceRepository;
 
+
       public string ApiKey { get; set; }
+
+      public TimeSpan TimeOut { get; set; } = TimeSpan.FromSeconds(30);
 
 
       public NuGetFileSystemRepo(string rootPath, string name)
@@ -34,7 +37,7 @@ namespace EBerzosa.Pundit.Core.Repository
       {
          var packageUpdate = _sourceRepository.GetResource<PackageUpdateResource>();
 
-         packageUpdate.Push(filePath, null, 120, true, 
+         packageUpdate.Push(filePath, null, (int)TimeOut.TotalSeconds, true, 
             endpoint => ApiKey != null ? EncryptionUtility.DecryptString(ApiKey) : null, 
             symbolsEndpoint => null, 
             true, NullLogger.Instance).Wait();
@@ -60,7 +63,7 @@ namespace EBerzosa.Pundit.Core.Repository
          var packagesResource = _sourceRepository.GetResource<FindPackageByIdResource>();
          var packageVersions = packagesResource.GetAllVersionsAsync(package.PackageId, NullSourceCacheContext.Instance, NullLogger.Instance, CancellationToken.None);
 
-         return packageVersions.Result.Where(v => package.AllowedVersions.Satisfies(v)).ToArray();
+         return packageVersions.Result.ToArray();
       }
 
       public PackageManifest GetManifest(PackageKey key, NuGet.Frameworks.NuGetFramework projectFramework)
@@ -73,7 +76,11 @@ namespace EBerzosa.Pundit.Core.Repository
          var packageInfo = packagesResource.GetMetadataAsync(packageIdentity, NullSourceCacheContext.Instance, NullLogger.Instance, CancellationToken.None).Result;
          
          NuGet.Packaging.PackageDependencyGroup dependencies = null;
-         if (packageInfo.DependencySets.Any())
+
+         if (packageInfo.DependencySets.Count() == 1 && packageInfo.DependencySets.First().TargetFramework.IsUnsupported)
+            dependencies = packageInfo.DependencySets.First();
+
+         else if (packageInfo.DependencySets.Any())
          {
             dependencies = NuGetFrameworkUtility.GetNearest(packageInfo.DependencySets, projectFramework);
 

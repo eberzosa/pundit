@@ -119,7 +119,7 @@ namespace EBerzosa.Pundit.Core.Repository
             return null;
 
          if (repo.Type == RepositoryType.NuGet)
-            return new NuGetFileSystemRepo(repo.Uri, repo.Name) {CanPublish = repo.UseForPublishing, ApiKey = repo.ApiKey};
+            return new NuGetFileSystemRepo(repo.Uri, repo.Name) {CanPublish = repo.UseForPublishing, ApiKey = repo.ApiKey, TimeOut = TimeSpan.FromMinutes(5)};
 
          return new FileSystemRepository(_packageReaderFactory, repo.Uri, repo.Name) {CanPublish = repo.UseForPublishing};
       }

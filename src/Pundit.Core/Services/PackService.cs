@@ -1,8 +1,10 @@
 ﻿using System;
 using System.IO;
+using System.Linq;
 using EBerzosa.Pundit.Core.Package;
 using EBerzosa.Pundit.Core.Repository;
 using EBerzosa.Pundit.Core.Serializers;
+using EBerzosa.Pundit.Core.Versioning;
 using EBerzosa.Utils;
 using Pundit.Core.Model;
 using Pundit.Core.Utils;
@@ -80,6 +82,9 @@ namespace EBerzosa.Pundit.Core.Services
             packageSpec.Version = new NuGet.Versioning.NuGetVersion(packageSpec.Version.Major,
                packageSpec.Version.Minor, packageSpec.Version.Patch, ReleaseLabel + "." + packageSpec.Version.Revision, null);
          }
+
+         if (!string.IsNullOrEmpty(packageSpec.Version.Release))
+            packageSpec.Version = packageSpec.Version.RevisionToLabel();
 
          var packageName = Type == PackType.NuGet
             ? new NuGet.Packaging.VersionFolderPathResolver(null).GetPackageFileName(packageSpec.PackageId, packageSpec.Version)

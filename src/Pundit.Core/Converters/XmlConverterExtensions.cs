@@ -5,6 +5,7 @@ using EBerzosa.Pundit.Core.Package;
 using EBerzosa.Pundit.Core.PackageManager.Xml;
 using EBerzosa.Pundit.Core.Repository;
 using EBerzosa.Pundit.Core.Repository.Xml;
+using EBerzosa.Pundit.Core.Versioning;
 using Mapster;
 using Pundit.Core.Application;
 using Pundit.Core.Model;
@@ -124,7 +125,7 @@ namespace EBerzosa.Pundit.Core.Converters
             .Map(dst => dst.Platform, src => src.Framework);
 
          TypeAdapterConfig<XmlPackageDependency, PackageDependency>.NewConfig()
-            .ConstructUsing(xml => new PackageDependency(xml.PackageId, VersionConverterExtensions.ConvertPunditDependencyVersionToVersionRange(xml.VersionPattern)))
+            .ConstructUsing(xml => new PackageDependency(xml.PackageId, VersionExtensions.GetVersionRangeFromDependency(xml.VersionPattern)))
             .Ignore(dst => dst.PackageId, src => src.AllowedVersions)
             .Map(dst => dst.Framework, src => src.Platform)
             .AfterMapping((src, dst) =>

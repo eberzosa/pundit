@@ -30,8 +30,8 @@ namespace EBerzosa.Pundit.Core.Converters
 
             Id = packageSpec.PackageId,
             Version = packageSpec.Version,
-            Description = packageSpec.Description,
-            Authors = new[] {packageSpec.Author},
+            Description = string.IsNullOrEmpty(packageSpec.Description) ? packageSpec.PackageId : packageSpec.Description,
+            Authors = new[] {string.IsNullOrEmpty(packageSpec.Author) ? "Unknown" : packageSpec.Author},
 
             // Optional
             ReleaseNotes = packageSpec.ReleaseNotes,
@@ -40,8 +40,16 @@ namespace EBerzosa.Pundit.Core.Converters
             DependencyGroups = packageSpec.Dependencies.ToNuGetPackageDependencyGroup(framework),
          };
 
-         metadata.SetLicenseUrl("http://localhost/" + packageSpec.License);
-         metadata.SetProjectUrl(packageSpec.ProjectUrl);
+         if (!string.IsNullOrEmpty(packageSpec.License))
+         {
+            if (packageSpec.License.StartsWith("http", StringComparison.OrdinalIgnoreCase))
+               metadata.SetLicenseUrl(packageSpec.License);
+            else
+               metadata.SetLicenseUrl("http://localhost/" + packageSpec.License);
+         }
+
+         if (!string.IsNullOrEmpty(packageSpec.ProjectUrl))
+            metadata.SetProjectUrl(packageSpec.ProjectUrl);
 
          return metadata;
       }
@@ -49,8 +57,10 @@ namespace EBerzosa.Pundit.Core.Converters
       private static IEnumerable<NuGet.Packaging.PackageDependencyGroup> ToNuGetPackageDependencyGroup(
          this IEnumerable<PackageDependency> packageDependency, NuGet.Frameworks.NuGetFramework framework)
       {
-         return new[] {new NuGet.Packaging.PackageDependencyGroup(framework, packageDependency.Select(p => p.ToNuGetPackageDependency()))};
+         var dependencies = new NuGet.Packaging.PackageDependencyGroup(framework, packageDependency.Select(p => p.ToNuGetPackageDependency()));
 
+         return dependencies.Packages.Any() ? new[] {dependencies} : new NuGet.Packaging.PackageDependencyGroup[0];
+         
          //return packageDependency
          //   .GroupBy(dependency => dependency.Framework, dependency => dependency)
          //   .Select(grupedDepenencies => new NuGet.Packaging.PackageDependencyGroup(

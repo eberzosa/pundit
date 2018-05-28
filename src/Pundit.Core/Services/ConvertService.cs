@@ -79,9 +79,7 @@ namespace EBerzosa.Pundit.Core.Services
 
             var packageSpec = reader.ReadManifest().ToPackageSpec(); 
             //var packageSpec =  manifest.ToPackageSpec(PackageExtensions.GetFramework(manifest.LegacyFramework));
-
-            FillMissingRequiredNuGetProperties(packageSpec);
-
+            
             _writer.BeginWrite().Text($" Extracting {packageSpec.PackageId} [{packageSpec.Version}]... ");
             
             reader.ExtractTo(tmpFolder);
@@ -228,19 +226,6 @@ namespace EBerzosa.Pundit.Core.Services
                }
             }
          }
-      }
-
-      private void FillMissingRequiredNuGetProperties(PackageSpec packageSpec)
-      {
-         // Fill missing fields from Pundit (happens quite often)
-         if (string.IsNullOrEmpty(packageSpec.Description))
-            packageSpec.Description = packageSpec.PackageId;
-
-         if (string.IsNullOrEmpty(packageSpec.Author))
-            packageSpec.Author = "Unknown";
-
-         if (string.IsNullOrEmpty(packageSpec.ProjectUrl))
-            packageSpec.ProjectUrl = "http://localhost/";
       }
    }
 }
