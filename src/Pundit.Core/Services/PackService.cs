@@ -78,10 +78,7 @@ namespace EBerzosa.Pundit.Core.Services
          }
 
          if (ReleaseLabel != null)
-         {
-            packageSpec.Version = new NuGet.Versioning.NuGetVersion(packageSpec.Version.Major,
-               packageSpec.Version.Minor, packageSpec.Version.Patch, ReleaseLabel + "." + packageSpec.Version.Revision, null);
-         }
+            packageSpec.Version = packageSpec.Version.Append(ReleaseLabel).RevisionToLabel();
 
          if (!string.IsNullOrEmpty(packageSpec.Version.Release))
             packageSpec.Version = packageSpec.Version.RevisionToLabel();

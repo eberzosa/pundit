@@ -1,4 +1,6 @@
-﻿using System.Collections.Generic;
+﻿using System;
+using System.Collections.Generic;
+using System.Linq;
 
 namespace EBerzosa.Pundit.Core.Versioning
 {
@@ -33,6 +35,48 @@ namespace EBerzosa.Pundit.Core.Versioning
             x = x.Append("-").RevisionToLabel();
 
          return _comparer.Compare(x, y);
+      }
+
+      public bool Equals(NuGet.Versioning.NuGetVersion x, NuGet.Versioning.NuGetVersion y)
+      {
+         if (ReferenceEquals(x, y))
+            return true;
+
+         if (ReferenceEquals(y, null))
+            return false;
+
+         if (ReferenceEquals(x, null))
+            return false;
+
+         if (_comparer != VersionComparer.Pundit)
+            return _comparer.Compare(x, y) == 0;
+
+         return x.RemoveRevision().Equals(y.RemoveRevision(), NuGet.Versioning.VersionComparison.Version)
+                && CompareLabels(x.ReleaseLabels.ToArray(), y.ReleaseLabels.ToArray());
+      }
+
+      private bool CompareLabels(string[] labels1, string[] labels2)
+      {
+         var limit1 = labels1.Length - 1;
+         var limit2 = labels2.Length - 1;
+
+         if (limit1 > -1 && int.TryParse(labels1[limit1], out _))
+            limit1--;
+
+         if (limit2 > -1 && int.TryParse(labels2[limit2], out _))
+            limit2--;
+
+         if (limit1 == -1 && limit2 == -1)
+            return true;
+
+         if (limit1 != limit2)
+            return false;
+
+         for (int i = 0; i < limit1; i++)
+            if (!labels1[i].Equals(labels2[i], StringComparison.OrdinalIgnoreCase))
+               return false;
+
+         return true;
       }
    }
 }

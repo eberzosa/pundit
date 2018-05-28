@@ -5,12 +5,14 @@ using System.Linq;
 using System.Threading;
 using EBerzosa.Pundit.Core.Model;
 using EBerzosa.Pundit.Core.Model.Package;
+using EBerzosa.Pundit.Core.Package;
 using EBerzosa.Utils;
 using NuGet.Common;
 using NuGet.Configuration;
 using NuGet.Frameworks;
 using NuGet.Protocol;
 using NuGet.Protocol.Core.Types;
+using EBerzosa.Pundit.Core.Versioning;
 
 namespace EBerzosa.Pundit.Core.Repository
 {
@@ -35,8 +37,27 @@ namespace EBerzosa.Pundit.Core.Repository
 
       public void Publish(string filePath)
       {
+         NuGet.Packaging.Core.PackageIdentity packageIdentity;
+
+         using (var stream = File.OpenRead(filePath))
+            packageIdentity = new NuGet.Packaging.PackageArchiveReader(stream, false).NuspecReader.GetIdentity();
+
+         var packageSearch = _sourceRepository.GetResource<FindPackageByIdResource>();
+         var versions = packageSearch.GetAllVersionsAsync(packageIdentity.Id, NullSourceCacheContext.Instance, NullLogger.Instance, CancellationToken.None).Result;
+         
          var packageUpdate = _sourceRepository.GetResource<PackageUpdateResource>();
 
+         var comparer = new VersionComparerExtended(VersionComparer.Pundit);
+         foreach (var version in versions)
+         {
+            if (comparer.Equals(packageIdentity.Version, version))
+            {
+               packageUpdate.Delete(packageIdentity.Id, version.ToString(),
+                  endpoint => ApiKey != null ? EncryptionUtility.DecryptString(ApiKey) : null,
+                  confirm => true, true, NullLogger.Instance).Wait();
+            }
+         }
+         
          packageUpdate.Push(filePath, null, (int)TimeOut.TotalSeconds, true, 
             endpoint => ApiKey != null ? EncryptionUtility.DecryptString(ApiKey) : null, 
             symbolsEndpoint => null, 
