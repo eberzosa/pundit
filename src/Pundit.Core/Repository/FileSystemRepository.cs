@@ -123,6 +123,8 @@ namespace EBerzosa.Pundit.Core.Repository
          }
       }
 
+      public void SetApiKey(string apiKey) { }
+
       public override string ToString() => $"{Name} [{RootPath}]";
 
 

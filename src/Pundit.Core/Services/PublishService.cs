@@ -13,6 +13,7 @@ namespace EBerzosa.Pundit.Core.Services
 
       public string Repository { get; set; }
 
+      public string ApiKey { get; set; }
 
       public PublishService(RepositoryFactory repositoryFactory, IWriter writer)
       {
@@ -73,6 +74,9 @@ namespace EBerzosa.Pundit.Core.Services
 
          foreach (var repo in publishTo)
          {
+            if (!string.IsNullOrEmpty(ApiKey))
+               repo.SetApiKey(ApiKey);
+
             _writer.BeginWrite().Text($"Publishing package '{packagePath}' to repository '{repo.Name}'... ");
 
             if ((Path.GetExtension(packagePath) == PackageManifest.PunditPackageExtension && repo.Type == RepositoryType.Pundit) ||

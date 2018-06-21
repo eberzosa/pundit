@@ -26,5 +26,7 @@ namespace EBerzosa.Pundit.Core.Repository
       bool PackageExist(PackageKey package);
 
       IEnumerable<PackageKey> Search(string substring);
+
+      void SetApiKey(string apiKey);
    }
 }

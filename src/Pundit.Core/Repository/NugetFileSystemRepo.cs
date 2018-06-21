@@ -5,7 +5,6 @@ using System.Linq;
 using System.Threading;
 using EBerzosa.Pundit.Core.Model;
 using EBerzosa.Pundit.Core.Model.Package;
-using EBerzosa.Pundit.Core.Package;
 using EBerzosa.Utils;
 using NuGet.Common;
 using NuGet.Configuration;
@@ -19,6 +18,7 @@ namespace EBerzosa.Pundit.Core.Repository
    internal class NuGetFileSystemRepo : Repository, IRepository
    {
       private readonly SourceRepository _sourceRepository;
+      private bool _apiKeyEncrypted = true;
 
 
       public string ApiKey { get; set; }
@@ -53,13 +53,13 @@ namespace EBerzosa.Pundit.Core.Repository
             if (comparer.Equals(packageIdentity.Version, version))
             {
                packageUpdate.Delete(packageIdentity.Id, version.ToString(),
-                  endpoint => ApiKey != null ? EncryptionUtility.DecryptString(ApiKey) : null,
+                  endpoint => GetApiKey(),
                   confirm => true, true, NullLogger.Instance).Wait();
             }
          }
          
          packageUpdate.Push(filePath, null, (int)TimeOut.TotalSeconds, true, 
-            endpoint => ApiKey != null ? EncryptionUtility.DecryptString(ApiKey) : null, 
+            endpoint => GetApiKey(), 
             symbolsEndpoint => null, 
             true, NullLogger.Instance).Wait();
       }
@@ -140,6 +140,19 @@ namespace EBerzosa.Pundit.Core.Repository
 
          foreach (var result in results)
             yield return new PackageKey(result.Identity.Id, result.Identity.Version, null);
+      }
+
+      public void SetApiKey(string apiKey)
+      {
+         ApiKey = apiKey;
+         _apiKeyEncrypted = false;
+      }
+
+      private string GetApiKey()
+      {
+         return _apiKeyEncrypted && ApiKey != null
+            ? EncryptionUtility.DecryptString(ApiKey)
+            : ApiKey;
       }
    }
 }
