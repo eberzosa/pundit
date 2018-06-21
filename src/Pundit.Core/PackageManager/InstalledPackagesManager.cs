@@ -26,7 +26,8 @@ namespace Pundit.Core.Application
       {
          var fullPath = Path.Combine(rootFolder, CacheFileName);
 
-         if (!File.Exists(fullPath))
+         var fileInfo = new FileInfo(fullPath);
+         if (!fileInfo.Exists || fileInfo.Length == 0)
             return new InstalledPackagesIndex(fullPath);
 
          using (Stream stream = File.OpenRead(fullPath))
