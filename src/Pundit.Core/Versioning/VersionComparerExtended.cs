@@ -72,7 +72,7 @@ namespace EBerzosa.Pundit.Core.Versioning
          if (limit1 != limit2)
             return false;
 
-         for (int i = 0; i < limit1; i++)
+         for (int i = 0; i <= limit1; i++)
             if (!labels1[i].Equals(labels2[i], StringComparison.OrdinalIgnoreCase))
                return false;
 
