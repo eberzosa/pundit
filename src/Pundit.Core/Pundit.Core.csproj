@@ -213,6 +213,7 @@
     <Compile Include="Utils\ByteFormatProvider.cs" />
     <Compile Include="Utils\NullWriter.cs" />
     <Compile Include="Utils\PathUtils.cs" />
+    <Compile Include="Utils\PerformanceTracker.cs" />
     <Compile Include="Versioning\PunditVersion.cs" />
     <Compile Include="Versioning\VersionComparerExtended.cs" />
     <Compile Include="Versioning\VersionComparison.cs" />

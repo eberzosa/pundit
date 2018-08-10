@@ -1,25 +1,63 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Diagnostics;
 using System.Linq;
 using System.Text;
-using EBerzosa.Pundit.Core.Converters;
 using EBerzosa.Pundit.Core.Model;
 using EBerzosa.Pundit.Core.Model.Package;
 using EBerzosa.Pundit.Core.Repository;
-using EBerzosa.Pundit.Core.Services;
+using EBerzosa.Pundit.Core.Utils;
 using EBerzosa.Pundit.Core.Versioning;
 using Pundit.Core.Model;
 
 namespace EBerzosa.Pundit.Core.Resolvers
 {
+   internal class DependencyResolutionCache
+   {
+      private readonly Dictionary<string, List<SatisfyingInfo>> _versionCache;
+      private readonly Dictionary<PackageKey, PackageManifest> _manifestCache;
+
+      private readonly Func<DependencyNode, IEnumerable<SatisfyingInfo>> _fallbackSatisfyingInfos;
+      private readonly NuGet.Frameworks.NuGetFramework _framework;
+
+      public DependencyResolutionCache(Func<DependencyNode, IEnumerable<SatisfyingInfo>> fallbackSatisfyingInfos, NuGet.Frameworks.NuGetFramework framework)
+      {
+         _versionCache = new Dictionary<string, List<SatisfyingInfo>>();
+         _manifestCache = new Dictionary<PackageKey, PackageManifest>();
+
+         _fallbackSatisfyingInfos = fallbackSatisfyingInfos;
+         _framework = framework;
+      }
+
+      public IEnumerable<SatisfyingInfo> GetSatisfyingInfos(DependencyNode node)
+      {
+         if (_versionCache.ContainsKey(node.PackageId))
+            return _versionCache[node.PackageId];
+
+         _versionCache.Add(node.PackageId, new List<SatisfyingInfo>());
+
+         _versionCache[node.PackageId].AddRange(_fallbackSatisfyingInfos(node));
+
+         return _versionCache[node.PackageId];
+      }
+
+      public PackageManifest GetManifest(DependencyNode node)
+      {
+         if (!_manifestCache.ContainsKey(node.ActiveVersionKey))
+            _manifestCache[node.ActiveVersionKey] = node.ActiveRepository.GetManifest(node.ActiveVersionKey, _framework);
+
+         return _manifestCache[node.ActiveVersionKey];
+      }
+   }
+
    public class DependencyResolution
    {
       private readonly IWriter _writer;
+      private readonly DependencyResolutionCache _cache;
 
       private readonly IRepository[] _activeRepositories;
       private readonly DependencyNode _rootDependencyNode;
-
-      private readonly NuGet.Frameworks.NuGetFramework _projectFramework;
+      
 
       public DependencyResolution(IWriter writer)
       {
@@ -28,6 +66,8 @@ namespace EBerzosa.Pundit.Core.Resolvers
 
       private DependencyResolution(IWriter writer, PackageManifestRoot rootManifest, IRepository[] activeRepositories, string releaseLabel)
       {
+         _cache = new DependencyResolutionCache(GetAllAvailableVersions, rootManifest.Framework);
+
          _writer = writer;
          _activeRepositories = activeRepositories;
 
@@ -35,8 +75,6 @@ namespace EBerzosa.Pundit.Core.Resolvers
 
          _rootDependencyNode = new DependencyNode(null, rootManifest.PackageId, rootManifest.Framework.GetShortFolderName(), version);
          _rootDependencyNode.MarkAsRoot(rootManifest);
-
-         _projectFramework = rootManifest.Framework;
       }
 
       public Tuple<VersionResolutionTable, DependencyNode> Resolve(PackageManifestRoot rootManifest, IRepository[] activeRepositories, string releaseLabel)
@@ -70,8 +108,11 @@ namespace EBerzosa.Pundit.Core.Resolvers
       /// <returns></returns>
       private Tuple<VersionResolutionTable, DependencyNode> Resolve()
       {
-         //steps 1-2-3
-         ResolveAll();
+         using (new TimeMeasurer(_writer.Text))
+         {
+            //steps 1-2-3
+            ResolveAll();
+         }
 
          //steps 4-5
          return Tuple.Create(Flatten(), _rootDependencyNode);
@@ -96,24 +137,19 @@ namespace EBerzosa.Pundit.Core.Resolvers
          {
             var punditVersions = new Dictionary<NuGet.Versioning.NuGetVersion, SatisfyingInfo>();
 
-            foreach (var repo in _activeRepositories)
-            {
-               var versions = repo.GetVersions(node.UnresolvedPackage)
-                  .Where(v => node.AllowedVersions.HasReleaseLabel || node.AllowedVersions.NuGetVersionRange.MinVersion.ReleaseLabels.Any() || !v.IsPrerelease)
-                  .Where(v => node.AllowedVersions.Satisfies(v))
-                  .Where(v => !punditVersions.ContainsKey(v));
+            var versions = _cache.GetSatisfyingInfos(node)
+               .Where(v => node.AllowedVersions.HasReleaseLabel || node.AllowedVersions.NuGetVersionRange.MinVersion.ReleaseLabels.Any() || !v.Version.IsPrerelease)
+               .Where(v => node.AllowedVersions.Satisfies(v.Version))
+               .Where(v => !punditVersions.ContainsKey(v.Version));
 
-               foreach (var version in versions)
-                  punditVersions.Add(version, new SatisfyingInfo(version, repo));
-            }
-
+            foreach (var version in versions)
+               punditVersions.Add(version.Version, new SatisfyingInfo(version.Version, version.Repo));
+            
             node.SetVersions(punditVersions.Values);
          }
 
          if (!node.HasManifest)
             return;
-
-         _writer.Text("´");
 
          foreach (var child in node.Children)
             ResolveVersions(child);
@@ -130,7 +166,7 @@ namespace EBerzosa.Pundit.Core.Resolvers
                //if (parentRepoType == RepositoryType.NuGet && node.ActiveRepository.Type != RepositoryType.NuGet)
                //   throw new NotSupportedException("NuGet packages can contain only NuGet packages");
 
-               manifest = node.ActiveRepository.GetManifest(node.ActiveVersionKey, _projectFramework);
+               manifest = _cache.GetManifest(node);
 
                if (manifest != null)
                {
@@ -154,8 +190,6 @@ namespace EBerzosa.Pundit.Core.Resolvers
 
       private void FlattenNode(DependencyNode node, VersionResolutionTable collector)
       {
-         _writer.Text("`");
-
          if (node == null)
             return;
 
@@ -239,6 +273,13 @@ namespace EBerzosa.Pundit.Core.Resolvers
 
             sb.Append("]");
          }
+      }
+
+      private IEnumerable<SatisfyingInfo> GetAllAvailableVersions(DependencyNode node)
+      {
+         _writer.Text(".");
+
+         return _activeRepositories.SelectMany(repo => repo.GetVersions(node.UnresolvedPackage).Select(v => new SatisfyingInfo(v, repo)));
       }
    }
 }
