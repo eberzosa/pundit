@@ -20,6 +20,6 @@ namespace EBerzosa.Pundit.Core.Resolvers
 
       public override int GetHashCode() => Version.GetHashCode();
       
-      public override bool Equals(object obj) => Version.Equals(obj);
+      public override bool Equals(object obj) => Version.Equals((obj as SatisfyingInfo)?.Version);
    }
 }
