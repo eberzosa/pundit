@@ -13,7 +13,7 @@ namespace EBerzosa.Pundit.Core.Services
       private readonly ManifestResolver _manifestResolver;
       
       private readonly PackageReaderFactory _packageReaderFactory;
-      private readonly DependencyResolution _dependencyResolution;
+      private readonly DependencyResolver _dependencyResolver;
       private readonly IPackageSerializer _packageSerializer;
       private readonly PackageInstallerFactory _packageInstallerFactory;
 
@@ -21,14 +21,14 @@ namespace EBerzosa.Pundit.Core.Services
       private readonly IWriter _writer;
 
       public ServiceFactory(RepositoryFactory repositoryFactory, ManifestResolver manifestResolver, 
-         PackageReaderFactory packageReaderFactory, DependencyResolution dependencyResolution,
+         PackageReaderFactory packageReaderFactory, DependencyResolver dependencyResolver,
          IPackageSerializer packageSerializer,
          PackageInstallerFactory packageInstallerFactory, IWriter writer)
       {
          Guard.NotNull(repositoryFactory, nameof(repositoryFactory));
          Guard.NotNull(manifestResolver, nameof(manifestResolver));
          Guard.NotNull(packageReaderFactory, nameof(packageReaderFactory));
-         Guard.NotNull(dependencyResolution, nameof(dependencyResolution));
+         Guard.NotNull(dependencyResolver, nameof(dependencyResolver));
          Guard.NotNull(packageInstallerFactory, nameof(packageInstallerFactory));
          Guard.NotNull(writer, nameof(writer));
 
@@ -37,14 +37,14 @@ namespace EBerzosa.Pundit.Core.Services
          _repositoryFactory = repositoryFactory;
          _manifestResolver = manifestResolver;
          _packageReaderFactory = packageReaderFactory;
-         _dependencyResolution = dependencyResolution;
+         _dependencyResolver = dependencyResolver;
          _packageSerializer = packageSerializer;
          _packageInstallerFactory = packageInstallerFactory;
          _writer = writer;
       }
 
       public ResolveService GetResolveService() 
-         => new ResolveService(_packageSerializer, _manifestResolver, _repositoryFactory, _dependencyResolution, _packageInstallerFactory, _writer);
+         => new ResolveService(_packageSerializer, _manifestResolver, _repositoryFactory, _dependencyResolver, _packageInstallerFactory, _writer);
 
       public SpecService GetSpecService()
          => new SpecService(_packageSerializer, _manifestResolver.CurrentDirectory, _writer);
@@ -59,7 +59,7 @@ namespace EBerzosa.Pundit.Core.Services
          => new PublishService(_repositoryFactory, _writer);
 
       public UpdateService GetUpdateService() 
-         => new UpdateService(_repositoryFactory, _packageInstallerFactory, _dependencyResolution, _writer);
+         => new UpdateService(_repositoryFactory, _packageInstallerFactory, _dependencyResolver, _writer);
 
       public ConvertService GetConvertService() 
          => new ConvertService(new PackService(_packageSerializer, _manifestResolver, new NullWriter()), _packageReaderFactory, _packageSerializer, _writer);

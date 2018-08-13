@@ -19,7 +19,7 @@ namespace EBerzosa.Pundit.Core.Services
    public class UpdateService
    {  
       private readonly PackageInstallerFactory _packageInstallerFactory;
-      private readonly DependencyResolution _dependencyResolution;
+      private readonly DependencyResolver _dependencyResolver;
 
       private readonly RepositoryFactory _repositoryFactory;
 
@@ -34,15 +34,15 @@ namespace EBerzosa.Pundit.Core.Services
 
 
       public UpdateService(RepositoryFactory repositoryFactory, PackageInstallerFactory packageInstallerFactory,
-         DependencyResolution dependencyResolution, IWriter writer)
+         DependencyResolver dependencyResolver, IWriter writer)
       {
          Guard.NotNull(repositoryFactory, nameof(repositoryFactory));
          Guard.NotNull(packageInstallerFactory, nameof(packageInstallerFactory));
-         Guard.NotNull(dependencyResolution, nameof(dependencyResolution));
+         Guard.NotNull(dependencyResolver, nameof(dependencyResolver));
          Guard.NotNull(writer, nameof(writer));
 
          _packageInstallerFactory = packageInstallerFactory;
-         _dependencyResolution = dependencyResolution;
+         _dependencyResolver = dependencyResolver;
          _repositoryFactory = repositoryFactory;
          _writer = writer;
       }
@@ -87,15 +87,15 @@ namespace EBerzosa.Pundit.Core.Services
             _writer.Info(repository.ToString());
          
          _writer.BeginWrite().Text("Resolving...");
-         var resolutionResult = _dependencyResolution.Resolve(manifest, repos, null);
+         var resolutionResult = _dependencyResolver.Resolve(manifest, repos, null);
 
-         if (resolutionResult.Item1.HasConflicts)
+         if (resolutionResult.ResolutionTable.HasConflicts)
          {
             _writer.Error(" failed").EndWrite()
                .Empty()
                .BeginWrite().Error("Could not resolve manifest due to conflicts...").EndWrite();
 
-            PrintConflicts(_dependencyResolution, resolutionResult.Item1, resolutionResult.Item2);
+            PrintConflicts(_dependencyResolver, resolutionResult);
 
             return false;
          }
@@ -139,7 +139,7 @@ namespace EBerzosa.Pundit.Core.Services
          return true;
       }
       
-      private bool Install(Tuple<VersionResolutionTable, DependencyNode> resolutionResult, PackageManifest manifest, string folder)
+      private bool Install(IResolutionResult resolutionResult, PackageManifest manifest, string folder)
       {
          var installed = false;
 
@@ -147,25 +147,25 @@ namespace EBerzosa.Pundit.Core.Services
          cacheRepository.PackageDownloadToCacheRepositoryStarted += CacheRepositoryPackageDownloadToCacheRepositoryStarted;
          cacheRepository.PackageDownloadToCacheRepositoryFinished += CacheRepositoryOnPackageDownloadToCacheRepositoryFinished;
 
-         cacheRepository.DownloadLocally(resolutionResult.Item1.GetSatisfyingInfos());
+         cacheRepository.DownloadLocally(resolutionResult.ResolutionTable.GetSatisfyingInfos());
 
          cacheRepository.PackageDownloadToCacheRepositoryStarted -= CacheRepositoryPackageDownloadToCacheRepositoryStarted;
          cacheRepository.PackageDownloadToCacheRepositoryFinished -= CacheRepositoryOnPackageDownloadToCacheRepositoryFinished;
 
-         using (var installer = _packageInstallerFactory.GetInstaller(folder, resolutionResult.Item1, manifest))
+         using (var installer = _packageInstallerFactory.GetInstaller(folder, resolutionResult.ResolutionTable, manifest))
          {
             installer.BeginInstallPackage += BeginInstallPackage;
             installer.FinishInstallPackage += FinishInstallPackage;
 
             if (Force)
             {
-               _writer.Text($"Reinstalling {resolutionResult.Item1.GetPackages().Count()} packages... ");
+               _writer.Text($"Reinstalling {resolutionResult.ResolutionTable.GetPackages().Count()} packages... ");
                installer.Reinstall(BuildConfiguration.Release);
                installed = true;
             }
             else
             {
-               var diff = installer.GetDiffWithCurrent(resolutionResult.Item1.GetSatisfyingInfos()).ToArray();
+               var diff = installer.GetDiffWithCurrent(resolutionResult.ResolutionTable.GetSatisfyingInfos()).ToArray();
 
                int changed = PrintSuccess(diff);
                if (changed > 0)
@@ -223,15 +223,15 @@ namespace EBerzosa.Pundit.Core.Services
          _writer.EndColumns();
       }
 
-      private void PrintConflicts(DependencyResolution dependencyResolution, VersionResolutionTable versionResolutionTable, DependencyNode dependencyNode)
+      private void PrintConflicts(DependencyResolver dependencyResolver, IResolutionResult resolutionResult)
       {
          var allNodes = new List<DependencyNode>();
 
-         foreach (UnresolvedPackage conflict in versionResolutionTable.GetConflictedPackages())
-            _writer.Error(dependencyResolution.DescribeConflict(dependencyNode, conflict, allNodes));
+         foreach (UnresolvedPackage conflict in resolutionResult.ResolutionTable.GetConflictedPackages())
+            _writer.Error(dependencyResolver.DescribeConflict(resolutionResult.DependencyNode, conflict, allNodes));
 
          _writer.Empty();
-         _writer.Error(dependencyResolution.PrintDependencyNodes(allNodes.Distinct(DependencyNodeComparer.PackageId).OrderBy(n => n.PackageId)));
+         _writer.Error(dependencyResolver.PrintDependencyNodes(allNodes.Distinct(DependencyNodeComparer.PackageId).OrderBy(n => n.PackageId)));
          }
 
       private int PrintSuccess(IEnumerable<PackageKeyDiff> diffs1)

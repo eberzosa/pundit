@@ -20,7 +20,7 @@ namespace EBerzosa.Pundit.Core
          
          serviceRegistry.Register<PackageInstallerFactory>(new PerContainerLifetime());
 
-         serviceRegistry.Register<DependencyResolution>(new PerContainerLifetime());
+         serviceRegistry.Register<DependencyResolver>(new PerContainerLifetime());
 
          serviceRegistry.Register<IPackageSerializer>(f => new PackageSerializer(new XmlSerializer()));
 

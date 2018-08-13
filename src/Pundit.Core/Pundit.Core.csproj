@@ -145,7 +145,7 @@
     <Compile Include="Repository\Xml\XmlRepositoryType.cs" />
     <Compile Include="Repository\Xml\XmlRegisteredRepository.cs" />
     <Compile Include="Repository\Xml\XmlRegisteredRepositories.cs" />
-    <Compile Include="Resolvers\DependencyResolution.cs" />
+    <Compile Include="Resolvers\DependencyResolver.cs" />
     <Compile Include="PackageManager\InstalledPackagesIndex.cs" />
     <Compile Include="Package\PackageInstaller.cs" />
     <Compile Include="Package\Pundit\PunditPackageReader.cs" />
@@ -153,6 +153,9 @@
     <Compile Include="Package\PackageWriter.cs" />
     <Compile Include="Repository\FileSystemRepository.cs" />
     <Compile Include="Resolvers\DependencyNodeComparer.cs" />
+    <Compile Include="Resolvers\DependencyResolverCache.cs" />
+    <Compile Include="Resolvers\DependencyResolverImplementation.cs" />
+    <Compile Include="Resolvers\IResolutionResult.cs" />
     <Compile Include="Resolvers\SatisfyingInfo.cs" />
     <Compile Include="Resolvers\SatisfyingInfoExtended.cs" />
     <Compile Include="Serializers\InstalledPackagesIndexSerializer.cs" />
@@ -231,9 +234,7 @@
     </None>
     <None Include="packages.config" />
   </ItemGroup>
-  <ItemGroup>
-    <Folder Include="Internal\" />
-  </ItemGroup>
+  <ItemGroup />
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
   <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 
        Other similar extension points exist, see Microsoft.Common.targets.
