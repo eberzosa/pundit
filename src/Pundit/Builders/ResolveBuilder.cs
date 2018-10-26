@@ -27,9 +27,10 @@ namespace EBerzosa.Pundit.CommandLine.Builders
                var force = BuildForceOption(opt);
                var ping = BuildDryRunOption(opt);
                var releaseLabel = BuildReleaseLabel(opt);
+               var repository = BuildRepositoryOption(opt);
 
                cmd.OnExecute(() => _controller.Execute(manifest.Value, configuration.Value, local.HasValue, force.HasValue,
-                  ping.HasValue, releaseLabel.Value).ToInteger());
+                  ping.HasValue, releaseLabel.Value, repository.Value).ToInteger());
             });
       }
 

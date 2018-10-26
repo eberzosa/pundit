@@ -41,6 +41,9 @@ namespace EBerzosa.Pundit.CommandLine.Builders
       protected IOption BuildReleaseLabel(IOptionCreator optionCreator)
          => optionCreator.SingleValue("b", "releaseLabel", "label", "Filters packages by a release label");
 
+      protected IOption BuildRepositoryOption(IOptionCreator optionCreator)
+         => optionCreator.SingleValue("p", "repositoryPath", "path", "Sets a manual repository path");
+
       protected void ReorderArgs(ref string[] args, string optionToBeConvertedToArgument)
       {
          for (int i = 2; i < args.Length; i++)

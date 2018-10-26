@@ -65,6 +65,11 @@ namespace EBerzosa.Pundit.Core.Repository
          return repos;
       }
 
+      public IRepository GetCustomRepository(string path)
+      {
+         return TryCreateRepo(new RegisteredRepository {Uri = path, Name = "ManualRepo", Type = RepositoryType.NuGet});
+      }
+
       public RegisteredRepositories GetRegisteredRepositories()
       {
          return GetRegistered();

@@ -41,6 +41,8 @@ namespace EBerzosa.Pundit.Core.Services
 
       public string ReleaseLabel { get; set; }
 
+      public string Repository { get; set; }
+
 
       public ResolveService(IPackageSerializer packageSerializer, ManifestResolver manifestResolver, RepositoryFactory repositoryFactory, DependencyResolver dependencyResolver, 
          PackageInstallerFactory packageInstallerFactory, IWriter writer)
@@ -82,9 +84,11 @@ namespace EBerzosa.Pundit.Core.Services
 
          var scope = CacheReposOnly ? RepositoryScope.Cache : RepositoryScope.Any;
 
-         var repos = _repositoryFactory.TryGetEnabledRepos(scope).ToArray();
+         var repos = Repository == null
+            ? _repositoryFactory.TryGetEnabledRepos(scope).ToArray()
+            : new[] {_repositoryFactory.GetCustomRepository(Repository)};
 
-         if (repos.Length == 0)
+         if (repos.Length == 0 || repos[0] == null)
          {
             _writer.Error(" no available repos");
             return false;

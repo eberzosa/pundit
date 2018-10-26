@@ -1,4 +1,5 @@
 ﻿using System;
+using System.IO;
 using EBerzosa.CommandLineProcess;
 using EBerzosa.Pundit.Core.Services;
 using Pundit.Core.Model;
@@ -15,7 +16,7 @@ namespace EBerzosa.Pundit.CommandLine.Controllers
          _serviceFactory = serviceFactory;
       }
 
-      public ExitCode Execute(string manifest, string configuration, bool localOnly, bool force, bool dryRun, string releaseLabel)
+      public ExitCode Execute(string manifest, string configuration, bool localOnly, bool force, bool dryRun, string releaseLabel, string repository)
       {
          var service = _serviceFactory.GetResolveService();
 
@@ -37,6 +38,9 @@ namespace EBerzosa.Pundit.CommandLine.Controllers
          service.Force = force;
          service.DryRun = dryRun;
          service.ReleaseLabel = releaseLabel;
+
+         if (repository != null)
+            service.Repository = Path.GetFullPath(repository);
 
          service.Resolve();
        
