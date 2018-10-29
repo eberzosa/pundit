@@ -1,5 +1,5 @@
 
-@set pundit=..\out\Debug\pundit 
+@set pundit=..\src\Pundit\bin\Debug\pundit 
 
 %pundit% pack pundit-MyApplication.Common.xml
 %pundit% pack pundit-MyApplication.Test.xml
