@@ -1,6 +1,6 @@
 ﻿<?xml version="1.0" encoding="utf-8"?>
 <package xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:xsd="http://www.w3.org/2001/XMLSchema" coreVersion="2.0.6555.11467">
-  <packageId>MyApplication.Tool</packageId>
+  <packageId>MyApplication.ConfigTest</packageId>
   <platform>net46</platform>
   <project-url>http://myapplication.myweb.com</project-url>
   <version>1.0.0.0</version>
@@ -9,10 +9,10 @@
   <release-notes>Initial version of this imaginary tool with lots of features.</release-notes>
   <license>MIT license (or anything you want)</license>
   <dependencies>
-    <package id="MyApplication.Common" version="1.1" platform="net46" />
-    <package id="MyApplication.Test" version="1.0" platform="net46" scope="test" />
   </dependencies>
   <files>
-    <file kind="lib" include="*.dll" flatten="false" basedir="src/tool" includeemptydirs="true" />
+    <file configuration="release" kind="lib" include="*.dll" flatten="false" basedir="src/release" includeemptydirs="true" />
+	<file configuration="debug" kind="lib" include="*.dll" flatten="false" basedir="src/debug" includeemptydirs="true" />
+	<file configuration="any" kind="lib" include="*.dll" flatten="false" basedir="src/any" includeemptydirs="true" />
   </files>
 </package>

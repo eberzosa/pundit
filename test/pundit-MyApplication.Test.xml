@@ -11,6 +11,6 @@
   <dependencies>
   </dependencies>
   <files>
-    <file kind="bin" include="*.dll" flatten="false" basedir="src" targetdir="libs" includeemptydirs="true" />
+    <file kind="bin" include="*.dll" flatten="false" basedir="src/test" targetdir="libs" includeemptydirs="true" />
   </files>
 </package>

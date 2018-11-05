@@ -3,7 +3,7 @@
   <packageId>MyApplication.Common</packageId>
   <platform>net46</platform>
   <project-url>http://myapplication.myweb.com</project-url>
-  <version>1.0.0.0</version>
+  <version>1.1.0.0</version>
   <author>Enrique</author>
   <description>This is a sample package for a imaginaty tool.</description>
   <release-notes>Initial version of this imaginary tool with lots of features.</release-notes>
@@ -11,6 +11,6 @@
   <dependencies>
   </dependencies>
   <files>
-    <file kind="bin" include="*.dll" flatten="false" basedir="src" targetdir="libs" includeemptydirs="true" />
+    <file kind="bin" include="*.dll" flatten="false" basedir="src/common" includeemptydirs="true" />
   </files>
 </package>

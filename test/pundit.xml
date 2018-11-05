@@ -7,5 +7,6 @@
   <author>Enrique</author>
   <dependencies>
     <package id="MyApplication.Tool" version="1.0" platform="net46" />
+	<package id="MyApplication.ConfigTest" version="1.0" platform="net46" />
   </dependencies>
 </package>
