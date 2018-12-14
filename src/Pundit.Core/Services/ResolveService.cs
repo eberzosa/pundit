@@ -82,7 +82,7 @@ namespace EBerzosa.Pundit.Core.Services
 
          _writer.BeginWrite().Text("Getting repositories...");
 
-         var scope = CacheReposOnly ? RepositoryScope.Cache : RepositoryScope.Any;
+         var scope = CacheReposOnly || Repository != null ? RepositoryScope.Cache : RepositoryScope.Any;
 
          var repos = Repository == null
             ? _repositoryFactory.TryGetEnabledRepos(scope).ToArray()
@@ -144,14 +144,14 @@ namespace EBerzosa.Pundit.Core.Services
             return true;
          }
 
-         Install(resolutionResult, manifest, repos);
+         Install(resolutionResult, manifest, scope);
 
          return true;
       }
 
-      private void Install(IResolutionResult resolutionResult, PackageManifestRoot manifest, ICollection<IRepository> repos)
+      private void Install(IResolutionResult resolutionResult, PackageManifestRoot manifest, RepositoryScope scope)
       {
-         if (repos == null)
+         if (scope != RepositoryScope.Cache)
          {
             var cacheRepo = new CacheRepository(_repositoryFactory.TryGetEnabledRepos(RepositoryScope.Cache));
             cacheRepo.PackageDownloadToCacheRepositoryStarted += CacheRepositoryPackageDownloadToCacheRepositoryStarted;
@@ -163,7 +163,7 @@ namespace EBerzosa.Pundit.Core.Services
             cacheRepo.PackageDownloadToCacheRepositoryFinished -= CacheRepositoryOnPackageDownloadToCacheRepositoryFinished;
          }
 
-         using (var installer = _packageInstallerFactory.GetInstaller(_manifestResolver.CurrentDirectory, resolutionResult.ResolutionTable, manifest, repos))
+         using (var installer = _packageInstallerFactory.GetInstaller(_manifestResolver.CurrentDirectory, resolutionResult.ResolutionTable, manifest))
          {
             installer.BeginInstallPackage += BeginInstallPackage;
             installer.FinishInstallPackage += FinishInstallPackage;
