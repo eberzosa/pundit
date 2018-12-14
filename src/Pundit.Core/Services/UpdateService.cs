@@ -11,6 +11,7 @@ using EBerzosa.Pundit.Core.Repository;
 using EBerzosa.Pundit.Core.Resolvers;
 using EBerzosa.Pundit.Core.Versioning;
 using EBerzosa.Utils;
+using NuGet.Versioning;
 using Pundit.Core.Model;
 using Pundit.Core.Model.EventArguments;
 
@@ -107,10 +108,10 @@ namespace EBerzosa.Pundit.Core.Services
 
          var currentPath = Path.GetDirectoryName(assembly.Location);
 
-         if (!Install(resolutionResult, manifest, currentPath))
+         if (!Install(resolutionResult, manifest, currentPath, out var oldVersion))
             return true;
 
-         var oldPath = Path.Combine(currentPath, "old");
+         var oldPath = Path.Combine(currentPath, "old", DateTime.Now.ToString("yyyy-MM-dd-hh-mm-ss") + "_" + oldVersion);
          var updatePath = Path.Combine(currentPath, "lib");
 
          if (Directory.Exists(oldPath))
@@ -139,9 +140,10 @@ namespace EBerzosa.Pundit.Core.Services
          return true;
       }
       
-      private bool Install(IResolutionResult resolutionResult, PackageManifest manifest, string folder)
+      private bool Install(IResolutionResult resolutionResult, PackageManifest manifest, string folder, out NuGetVersion oldVersion)
       {
          var installed = false;
+         oldVersion = null;
 
          var cacheRepository = new CacheRepository(_repositoryFactory.TryGetEnabledRepos(RepositoryScope.Cache));
          cacheRepository.PackageDownloadToCacheRepositoryStarted += CacheRepositoryPackageDownloadToCacheRepositoryStarted;
@@ -162,6 +164,7 @@ namespace EBerzosa.Pundit.Core.Services
                _writer.Text($"Reinstalling {resolutionResult.ResolutionTable.GetPackages().Count()} packages... ");
                installer.Reinstall(BuildConfiguration.Release);
                installed = true;
+               oldVersion = new NuGetVersion(0,0,0);
             }
             else
             {
@@ -172,6 +175,7 @@ namespace EBerzosa.Pundit.Core.Services
                {
                   installer.Upgrade(BuildConfiguration.Release, diff);
                   installed = true;
+                  oldVersion = diff[0].OldPackageKey.Version;
                }
                else
                   _writer.Success("No changes detected");
@@ -180,7 +184,7 @@ namespace EBerzosa.Pundit.Core.Services
             installer.BeginInstallPackage -= BeginInstallPackage;
             installer.FinishInstallPackage -= FinishInstallPackage;
          }
-
+         
          return installed;
       }
       
