@@ -1,6 +1,7 @@
 ﻿using System;
 using System.IO;
 using EBerzosa.Pundit.Core.Model.Package;
+using NuGet.Frameworks;
 using Pundit.Core.Model;
 using Pundit.Core.Model.EventArguments;
 using Pundit.Core.Utils;
@@ -59,6 +60,9 @@ namespace EBerzosa.Pundit.Core.Package
          if (install)
          {
             name = name.Substring(name.IndexOf("/") + 1);
+
+            if (name.IndexOf('/') != -1 && name.StartsWith("net"))
+               name = name.Substring(name.IndexOf('/') + 1);
 
             InstallingResolvedFile?.Invoke(null, new ResolvedFileEventArgs(packageId, PackageFileKind.Binary, config, name));
 
