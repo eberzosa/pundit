@@ -11,8 +11,8 @@
   <dependencies>
   </dependencies>
   <files>
-    <file configuration="release" kind="lib" include="*.dll" flatten="false" basedir="src/release" includeemptydirs="true" />
-	<file configuration="debug" kind="lib" include="*.dll" flatten="false" basedir="src/debug" includeemptydirs="true" />
-	<file configuration="any" kind="lib" include="*.dll" flatten="false" basedir="src/any" includeemptydirs="true" />
+    <file configuration="release" kind="bin" include="*.dll" flatten="false" basedir="src/release" includeemptydirs="true" />
+	<file configuration="debug" kind="bin" include="*.dll" flatten="false" basedir="src/debug" includeemptydirs="true" />
+	<file configuration="any" kind="bin" include="*.dll" flatten="false" basedir="src/any" includeemptydirs="true" />
   </files>
 </package>

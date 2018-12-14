@@ -13,6 +13,6 @@
     <package id="MyApplication.Test" version="1.0" platform="net46" scope="test" />
   </dependencies>
   <files>
-    <file kind="lib" include="*.dll" flatten="false" basedir="src/tool" includeemptydirs="true" />
+    <file kind="bin" include="*.dll" flatten="false" basedir="src/tool" includeemptydirs="true" />
   </files>
 </package>
