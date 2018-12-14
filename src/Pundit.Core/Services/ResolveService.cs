@@ -82,7 +82,7 @@ namespace EBerzosa.Pundit.Core.Services
 
          _writer.BeginWrite().Text("Getting repositories...");
 
-         var scope = CacheReposOnly || Repository != null ? RepositoryScope.Cache : RepositoryScope.Any;
+         var scope = CacheReposOnly ? RepositoryScope.Cache : RepositoryScope.Any;
 
          var repos = Repository == null
             ? _repositoryFactory.TryGetEnabledRepos(scope).ToArray()
