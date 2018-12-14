@@ -144,23 +144,26 @@ namespace EBerzosa.Pundit.Core.Services
             return true;
          }
 
-         Install(resolutionResult, manifest);
+         Install(resolutionResult, manifest, Repository == null ? null : repos);
 
          return true;
       }
 
-      private void Install(IResolutionResult resolutionResult, PackageManifestRoot manifest)
+      private void Install(IResolutionResult resolutionResult, PackageManifestRoot manifest, ICollection<IRepository> repos)
       {
-         var cacheRepo = new CacheRepository(_repositoryFactory.TryGetEnabledRepos(RepositoryScope.Cache));
-         cacheRepo.PackageDownloadToCacheRepositoryStarted += CacheRepositoryPackageDownloadToCacheRepositoryStarted;
-         cacheRepo.PackageDownloadToCacheRepositoryFinished += CacheRepositoryOnPackageDownloadToCacheRepositoryFinished;
+         if (repos == null)
+         {
+            var cacheRepo = new CacheRepository(_repositoryFactory.TryGetEnabledRepos(RepositoryScope.Cache));
+            cacheRepo.PackageDownloadToCacheRepositoryStarted += CacheRepositoryPackageDownloadToCacheRepositoryStarted;
+            cacheRepo.PackageDownloadToCacheRepositoryFinished += CacheRepositoryOnPackageDownloadToCacheRepositoryFinished;
 
-         cacheRepo.DownloadLocally(resolutionResult.ResolutionTable.GetSatisfyingInfos());
+            cacheRepo.DownloadLocally(resolutionResult.ResolutionTable.GetSatisfyingInfos());
 
-         cacheRepo.PackageDownloadToCacheRepositoryStarted -= CacheRepositoryPackageDownloadToCacheRepositoryStarted;
-         cacheRepo.PackageDownloadToCacheRepositoryFinished -= CacheRepositoryOnPackageDownloadToCacheRepositoryFinished;
+            cacheRepo.PackageDownloadToCacheRepositoryStarted -= CacheRepositoryPackageDownloadToCacheRepositoryStarted;
+            cacheRepo.PackageDownloadToCacheRepositoryFinished -= CacheRepositoryOnPackageDownloadToCacheRepositoryFinished;
+         }
 
-         using (var installer = _packageInstallerFactory.GetInstaller(_manifestResolver.CurrentDirectory, resolutionResult.ResolutionTable, manifest))
+         using (var installer = _packageInstallerFactory.GetInstaller(_manifestResolver.CurrentDirectory, resolutionResult.ResolutionTable, manifest, repos))
          {
             installer.BeginInstallPackage += BeginInstallPackage;
             installer.FinishInstallPackage += FinishInstallPackage;
