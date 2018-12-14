@@ -1,120 +1,36 @@
-﻿<?xml version="1.0" encoding="utf-8"?>
-<Project ToolsVersion="12.0" DefaultTargets="Build" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+﻿<Project Sdk="Microsoft.NET.Sdk">
   <PropertyGroup>
-    <Configuration Condition=" '$(Configuration)' == '' ">Debug</Configuration>
-    <Platform Condition=" '$(Platform)' == '' ">AnyCPU</Platform>
-    <ProductVersion>8.0.30703</ProductVersion>
-    <SchemaVersion>2.0</SchemaVersion>
-    <ProjectGuid>{9296FDE6-2BE9-472B-9E82-FC023959CBA2}</ProjectGuid>
-    <OutputType>Exe</OutputType>
-    <AppDesignerFolder>Properties</AppDesignerFolder>
+	<OutputType>Exe</OutputType>
+    <TargetFrameworks>net461;netcoreapp2.1</TargetFrameworks>
+  </PropertyGroup>
+  <PropertyGroup>
     <RootNamespace>EBerzosa.Pundit.CommandLine</RootNamespace>
-    <AssemblyName>Pundit</AssemblyName>
-    <TargetFrameworkVersion>v4.6</TargetFrameworkVersion>
-    <TargetFrameworkProfile>
-    </TargetFrameworkProfile>
-    <FileAlignment>512</FileAlignment>
-  </PropertyGroup>
-  <PropertyGroup Condition="'$(Configuration)|$(Platform)' == 'Debug|AnyCPU'">
-    <DebugSymbols>true</DebugSymbols>
-    <DebugType>full</DebugType>
-    <Optimize>false</Optimize>
-    <BaseIntermediateOutputPath>..\..\out\obj\</BaseIntermediateOutputPath>
-    <OutputPath>bin\Debug\</OutputPath>
-    <DefineConstants>DEBUG;TRACE</DefineConstants>
-    <ErrorReport>prompt</ErrorReport>
-    <WarningLevel>4</WarningLevel>
-    <Prefer32Bit>false</Prefer32Bit>
-  </PropertyGroup>
-  <PropertyGroup Condition="'$(Configuration)|$(Platform)' == 'Release|AnyCPU'">
-    <DebugType>pdbonly</DebugType>
-    <Optimize>true</Optimize>
-    <BaseIntermediateOutputPath>..\..\out\obj\</BaseIntermediateOutputPath>
-    <OutputPath>bin\Release\</OutputPath>
-    <DefineConstants>TRACE</DefineConstants>
-    <ErrorReport>prompt</ErrorReport>
-    <WarningLevel>4</WarningLevel>
-    <Prefer32Bit>false</Prefer32Bit>
-  </PropertyGroup>
-  <PropertyGroup>
     <SignAssembly>true</SignAssembly>
-  </PropertyGroup>
-  <PropertyGroup>
     <AssemblyOriginatorKeyFile>..\..\..\eberzosagh.snk</AssemblyOriginatorKeyFile>
+    <Authors>Enrique Berzosa</Authors>
+    <Description>EBerzosa Pundit Tool</Description>
+    <Copyright>Enrique Berzosa 2017-2018</Copyright>
+    <AssemblyVersion>3.0.*</AssemblyVersion>
+    <FileVersion>3.0.0.0</FileVersion>
   </PropertyGroup>
-  <PropertyGroup />
   <PropertyGroup>
+    <VersionPrefix>3.0.0</VersionPrefix>
+  </PropertyGroup>
+  <PropertyGroup>
+    <Deterministic>false</Deterministic>
+    <AssemblyName>Pundit</AssemblyName>
     <StartupObject>EBerzosa.Pundit.CommandLine.Program</StartupObject>
   </PropertyGroup>
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)' == 'Debug|AnyCPU'">
+    <NoWarn>CS1591</NoWarn>
+  </PropertyGroup>
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)' == 'Release|AnyCPU'">
+    <NoWarn>CS1591</NoWarn>
+  </PropertyGroup>
   <ItemGroup>
-    <Reference Include="EBerzosa.CommandLineProcess, Version=2.0.6615.30109, Culture=neutral, PublicKeyToken=cdc6b3c7115622fb, processorArchitecture=MSIL">
-      <SpecificVersion>False</SpecificVersion>
-      <HintPath>..\..\packages\EBerzosa.CommandLineProcess.2.0.6624.22922\lib\net46\EBerzosa.CommandLineProcess.dll</HintPath>
-    </Reference>
-    <Reference Include="EBerzosa.Common">
-      <HintPath>..\..\packages\EBerzosa.Common.1.1.6601.34981\lib\net46\EBerzosa.Common.dll</HintPath>
-    </Reference>
-    <Reference Include="EBerzosa.Utils, Version=1.1.6538.21967, Culture=neutral, PublicKeyToken=cdc6b3c7115622fb, processorArchitecture=MSIL">
-      <SpecificVersion>False</SpecificVersion>
-      <HintPath>..\..\packages\EBerzosa.Utils.1.1.6603.38765\lib\net46\EBerzosa.Utils.dll</HintPath>
-    </Reference>
-    <Reference Include="LightInject, Version=4.0.0.0, Culture=neutral, PublicKeyToken=3176f7f42fdb7007, processorArchitecture=MSIL">
-      <SpecificVersion>False</SpecificVersion>
-      <HintPath>..\..\packages\LightInject.Signed.5.1.1\lib\net46\LightInject.dll</HintPath>
-    </Reference>
-    <Reference Include="System" />
-    <Reference Include="System.Core" />
-    <Reference Include="System.Xml.Linq" />
-    <Reference Include="System.Data.DataSetExtensions" />
-    <Reference Include="Microsoft.CSharp" />
-    <Reference Include="System.Data" />
-    <Reference Include="System.Xml" />
+    <PackageReference Include="EBerzosa.CommandLineProcess" Version="2.2.0" />
   </ItemGroup>
   <ItemGroup>
-    <Compile Include="Builders\Builder.cs" />
-    <Compile Include="Builders\ConvertBuilder.cs" />
-    <Compile Include="Builders\SourcesBuilder.cs" />
-    <Compile Include="Builders\PackBuilder.cs" />
-    <Compile Include="Builders\PublishBuilder.cs" />
-    <Compile Include="Builders\ResolveBuilder.cs" />
-    <Compile Include="Builders\SearchBuilder.cs" />
-    <Compile Include="Builders\SpecBuilder.cs" />
-    <Compile Include="Builders\UtilBuilder.cs" />
-    <Compile Include="Builders\UpdateBuilder.cs" />
-    <Compile Include="Controllers\ConvertController.cs" />
-    <Compile Include="Controllers\Controller.cs" />
-    <Compile Include="Controllers\IController.cs" />
-    <Compile Include="Controllers\SourcesController.cs" />
-    <Compile Include="Controllers\PackController.cs" />
-    <Compile Include="Controllers\PublishController.cs" />
-    <Compile Include="Controllers\ResolveController.cs" />
-    <Compile Include="Controllers\SearchController.cs" />
-    <Compile Include="Controllers\SpecController.cs" />
-    <Compile Include="Controllers\UtilController.cs" />
-    <Compile Include="Controllers\UpdateController.cs" />
-    <Compile Include="Program.cs" />
-    <Compile Include="Properties\AssemblyInfo.cs" />
-    <Compile Include="Startup.cs" />
-    <Compile Include="Utils\ConsoleWriter.cs" />
-    <Compile Include="WiringModule.cs" />
+    <ProjectReference Include="..\Pundit.Core\Pundit.Core.csproj" />
   </ItemGroup>
-  <ItemGroup>
-    <ProjectReference Include="..\Pundit.Core\Pundit.Core.csproj">
-      <Project>{BEEA1FD6-D6DB-44BC-A4C4-F42321A6796F}</Project>
-      <Name>Pundit.Core</Name>
-    </ProjectReference>
-  </ItemGroup>
-  <ItemGroup>
-    <None Include="App.config" />
-    <None Include="packages.config" />
-  </ItemGroup>
-  <ItemGroup />
-  <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
-  <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 
-       Other similar extension points exist, see Microsoft.Common.targets.
-  <Target Name="BeforeBuild">
-  </Target>
-  <Target Name="AfterBuild">
-  </Target>
-  -->
 </Project>

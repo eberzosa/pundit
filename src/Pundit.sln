@@ -3,11 +3,9 @@ Microsoft Visual Studio Solution File, Format Version 12.00
 # Visual Studio 15
 VisualStudioVersion = 15.0.27130.2026
 MinimumVisualStudioVersion = 10.0.40219.1
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Pundit.Core", "Pundit.Core\Pundit.Core.csproj", "{BEEA1FD6-D6DB-44BC-A4C4-F42321A6796F}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Pundit.Core", "Pundit.Core\Pundit.Core.csproj", "{BEEA1FD6-D6DB-44BC-A4C4-F42321A6796F}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Pundit.Console", "Pundit\Pundit.Console.csproj", "{9296FDE6-2BE9-472B-9E82-FC023959CBA2}"
-EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Pundit.Test", "Pundit.Test\Pundit.Test.csproj", "{5BF2B578-7F5A-4604-B49A-DBDB53B7AA13}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Pundit.Console", "Pundit\Pundit.Console.csproj", "{9296FDE6-2BE9-472B-9E82-FC023959CBA2}"
 EndProject
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Solution Items", "Solution Items", "{3B681723-FAC7-435A-A3CD-954EC94E2A6D}"
 	ProjectSection(SolutionItems) = preProject
@@ -32,10 +30,6 @@ Global
 		{9296FDE6-2BE9-472B-9E82-FC023959CBA2}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{9296FDE6-2BE9-472B-9E82-FC023959CBA2}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{9296FDE6-2BE9-472B-9E82-FC023959CBA2}.Release|Any CPU.Build.0 = Release|Any CPU
-		{5BF2B578-7F5A-4604-B49A-DBDB53B7AA13}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
-		{5BF2B578-7F5A-4604-B49A-DBDB53B7AA13}.Debug|Any CPU.Build.0 = Debug|Any CPU
-		{5BF2B578-7F5A-4604-B49A-DBDB53B7AA13}.Release|Any CPU.ActiveCfg = Release|Any CPU
-		{5BF2B578-7F5A-4604-B49A-DBDB53B7AA13}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE

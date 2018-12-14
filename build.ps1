@@ -2,12 +2,12 @@ $Root="X:\"
 $ILMerge=$Root + "tools\ilmerge.exe"
 
 $Solution = "src\Pundit.sln"
-$ReleaseFolder = "src\Pundit\bin\Release"
+$ReleaseFolder = "src\Pundit\bin\Release\net461"
 
 $TempFolder = "tmp"
 $MergedName = "$TempFolder\Pundit.exe"
 
-MsBuild.exe $Solution /t:Build /p:Configuration=Release
+dotnet build $Solution /t:Build /p:Configuration=Release
 
 New-Item tmp -ItemType Directory -ErrorAction SilentlyContinue
 
