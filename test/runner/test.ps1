@@ -52,12 +52,12 @@ function CheckFile([string]$fileName)
 
 function Resolve([string]$resolveFile)
 {
-    & "..\src\Pundit\bin\Debug\pundit.exe" resolve -p repo -f -m $resolveFile > NULL
+    & "..\src\Pundit\bin\Debug\net461\pundit.exe" resolve -p repo -f -m $resolveFile > NULL
 }
 
 function ResolveWithConfig([string]$resolveFile, [string]$config)
 {
-    & "..\src\Pundit\bin\Debug\pundit.exe" resolve --repositoryPath repo -f --manifest $resolveFile --configuration $config > NULL
+    & "..\src\Pundit\bin\Debug\net461\pundit.exe" resolve --repositoryPath repo -f --manifest $resolveFile --configuration $config > NULL
 }
 
 function Clean 
