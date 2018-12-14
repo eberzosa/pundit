@@ -144,7 +144,7 @@ namespace EBerzosa.Pundit.Core.Services
             return true;
          }
 
-         Install(resolutionResult, manifest, Repository == null ? null : repos);
+         Install(resolutionResult, manifest, repos);
 
          return true;
       }
